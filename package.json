@@ -1,0 +1,31 @@
+{
+  "name": "react-native-navigation-app",
+  "version": "0.0.1",
+  "description": "React Native Navigation (Wix) App",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eightyfive/react-native-navigation-app.git"
+  },
+  "keywords": [
+    "React",
+    "Native",
+    "React",
+    "Native",
+    "Navigation",
+    "Wix"
+  ],
+  "author": "benoit.sagols@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eightyfive/react-native-navigation-app/issues"
+  },
+  "homepage": "https://github.com/eightyfive/react-native-navigation-app#readme",
+  "dependencies": {
+    "lodash.merge": "^4.6.1",
+    "lodash.set": "^4.3.2"
+  }
+}
