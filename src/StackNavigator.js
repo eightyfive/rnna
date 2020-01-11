@@ -32,6 +32,7 @@ export default class StackNavigator extends Navigator {
 
   mount() {
     this.history = [this.initialComponentId];
+
     Navigation.setRoot({ root: this.getInitialLayout() });
   }
 
@@ -96,6 +97,8 @@ export default class StackNavigator extends Navigator {
   }
 
   popToTop(fromId) {
+    this.history = [this.initialComponentId];
+
     Navigation.popToRoot(fromId);
   }
 }
