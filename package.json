@@ -1,14 +1,14 @@
 {
-  "name": "react-native-navigation-app",
-  "version": "0.0.1",
-  "description": "React Native Navigation (Wix) App",
+  "name": "rnna",
+  "version": "0.0.0",
+  "description": "react-native-navigation Standalone Application",
   "main": "src/index.js",
   "scripts": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eightyfive/react-native-navigation-app.git"
+    "url": "git+https://github.com/eightyfive/rnna.git"
   },
   "keywords": [
     "React",
@@ -21,9 +21,9 @@
   "author": "benoit.sagols@gmail.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eightyfive/react-native-navigation-app/issues"
+    "url": "https://github.com/eightyfive/rnna/issues"
   },
-  "homepage": "https://github.com/eightyfive/react-native-navigation-app#readme",
+  "homepage": "https://github.com/eightyfive/rnna#readme",
   "dependencies": {
     "lodash.merge": "^4.6.1",
     "lodash.set": "^4.3.2"
