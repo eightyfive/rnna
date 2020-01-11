@@ -2,6 +2,8 @@ import { Navigation } from 'react-native-navigation';
 
 import Navigator from './Navigator';
 
+const events = Navigation.events();
+
 export default class StackNavigator extends Navigator {
   constructor(name, stack, config = {}) {
     super(name);
@@ -10,8 +12,6 @@ export default class StackNavigator extends Navigator {
     this.order = config.order || this.stack.getOrder();
     this.initialComponentId = config.initialRouteName || this.order[0];
     this.history = [];
-
-    const events = Navigation.events();
 
     this.didDisappearListener = events.registerComponentDidDisappearListener(
       this.handleDidDisappear,

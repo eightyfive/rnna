@@ -13,6 +13,8 @@ import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
 import SwitchNavigator from './SwitchNavigator';
 
+const events = Navigation.events();
+
 export function createStackNavigator(name, routes, navigatorConfig = {}) {
   const stack = createStack(name, routes, navigatorConfig);
 
@@ -184,7 +186,7 @@ export function setDefaultOptions({ navigationOptions, ...options }) {
     Layout.getNavigationOptions(navigationOptions),
   );
 
-  Navigation.events().registerAppLaunchedListener(() =>
+  events.registerAppLaunchedListener(() =>
     Navigation.setDefaultOptions(defaultOptions),
   );
 }

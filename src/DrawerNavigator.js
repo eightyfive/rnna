@@ -2,6 +2,8 @@ import { Navigation } from 'react-native-navigation';
 
 import StackNavigator from './StackNavigator';
 
+const events = Navigation.events();
+
 export default class DrawerNavigator extends StackNavigator {
   constructor(name, sideMenu, config = {}) {
     super(name, sideMenu.center, config);
@@ -9,8 +11,6 @@ export default class DrawerNavigator extends StackNavigator {
     this.drawer = sideMenu.menu;
     this.sideMenu = sideMenu;
     this.visible = false;
-
-    const events = Navigation.events();
 
     this.didAppearListener = events.registerComponentDidAppearListener(
       this.handleDidAppear,
