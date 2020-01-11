@@ -1,3 +1,6 @@
+import Component from './Component';
+import Stack from './Stack';
+
 export default class SideMenu {
   constructor(menu, center, options, config = {}) {
     this.menu = menu;
@@ -15,7 +18,6 @@ export default class SideMenu {
   }
 
   getLayout(componentId = null) {
-    // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=sidemenu
     const layout = {
       center: this.center.getLayout(componentId),
       [this.side]: this.menu.getLayout(),

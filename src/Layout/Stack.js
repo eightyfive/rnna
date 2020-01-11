@@ -1,3 +1,5 @@
+import Component from './Component';
+
 export default class Stack {
   constructor(id, children, options) {
     this.id = id;
@@ -26,7 +28,6 @@ export default class Stack {
       children = children.slice(0, index + 1);
     }
 
-    // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=stack
     const layout = {
       id: this.id,
       name: this.name,

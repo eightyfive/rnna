@@ -1,3 +1,6 @@
+import Component from './Component';
+import Stack from './Stack';
+
 export default class BottomTabs {
   constructor(id, children, options) {
     this.id = id;
@@ -21,7 +24,6 @@ export default class BottomTabs {
   }
 
   getLayout() {
-    // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=bottomtabs
     const layout = {
       id: this.id,
       name: this.name,

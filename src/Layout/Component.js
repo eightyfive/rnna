@@ -5,8 +5,7 @@ export default class Component {
     this.options = options;
   }
 
-  getLayout(passProps = null) {
-    // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=component
+  getLayout(passProps) {
     const layout = {
       id: this.id,
       name: this.name,
