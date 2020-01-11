@@ -7,14 +7,14 @@ import StackNavigator from './StackNavigator';
 let stack;
 let navigator;
 
+const componentA = new Component('A');
 const componentB = new Component('B');
 const componentC = new Component('C');
-const componentD = new Component('D');
 
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  stack = new Stack('A', [componentB, componentC, componentD]);
+  stack = new Stack('STACK', [componentA, componentB, componentC]);
 
   navigator = new StackNavigator('E', stack);
 
@@ -22,8 +22,8 @@ beforeEach(() => {
 });
 
 test('mount', () => {
-  const initialLayout = stack.getLayout('B');
-  const initialComponentId = 'B';
+  const initialLayout = stack.getLayout('A');
+  const initialComponentId = 'A';
 
   expect(navigator.initialComponentId).toBe(initialComponentId);
   expect(navigator.activeId).toBe(initialComponentId);
@@ -33,73 +33,73 @@ test('mount', () => {
 });
 
 test('push', () => {
-  navigator.push('C', params, 'B');
+  navigator.push('B', params, 'A');
 
-  expect(navigator.history).toEqual(['B', 'C']);
+  expect(navigator.history).toEqual(['A', 'B']);
   expect(Navigation.push).toHaveBeenCalledWith(
-    'B',
-    componentC.getLayout(params),
+    'A',
+    componentB.getLayout(params),
   );
 });
 
 test('popToIndex', () => {
+  navigator.push('B', params, 'A');
   navigator.push('C', params, 'B');
-  navigator.push('D', params, 'C');
   navigator.popToIndex(0);
 
-  expect(navigator.history).toEqual(['B']);
-  expect(Navigation.popTo).toHaveBeenCalledWith('B');
+  expect(navigator.history).toEqual(['A']);
+  expect(Navigation.popTo).toHaveBeenCalledWith('A');
 });
 
 test('pop 1', () => {
+  navigator.push('B', params, 'A');
   navigator.push('C', params, 'B');
-  navigator.push('D', params, 'C');
   navigator.pop();
 
-  expect(navigator.history).toEqual(['B', 'C']);
-  expect(Navigation.popTo).toHaveBeenCalledWith('C');
-});
-
-test('pop 2', () => {
-  navigator.push('C', params, 'B');
-  navigator.push('D', params, 'C');
-  navigator.pop(2);
-
-  expect(navigator.history).toEqual(['B']);
+  expect(navigator.history).toEqual(['A', 'B']);
   expect(Navigation.popTo).toHaveBeenCalledWith('B');
 });
 
-test('popToTop', () => {
+test('pop 2', () => {
+  navigator.push('B', params, 'A');
   navigator.push('C', params, 'B');
-  navigator.push('D', params, 'C');
-  navigator.popToTop('D');
+  navigator.pop(2);
 
-  expect(navigator.history).toEqual(['B']);
-  expect(Navigation.popToRoot).toHaveBeenCalledWith('D');
+  expect(navigator.history).toEqual(['A']);
+  expect(Navigation.popTo).toHaveBeenCalledWith('A');
+});
+
+test('popToTop', () => {
+  navigator.push('B', params, 'A');
+  navigator.push('C', params, 'B');
+  navigator.popToTop('C');
+
+  expect(navigator.history).toEqual(['A']);
+  expect(Navigation.popToRoot).toHaveBeenCalledWith('C');
 });
 
 test('navigate (push)', () => {
   navigator.push = jest.fn();
-  navigator.navigate('C', params, 'B');
+  navigator.navigate('B', params, 'A');
 
-  expect(navigator.push).toHaveBeenCalledWith('C', params, 'B');
+  expect(navigator.push).toHaveBeenCalledWith('B', params, 'A');
 });
 
 test('navigate (popToIndex)', () => {
   navigator.popToIndex = jest.fn();
 
+  navigator.navigate('B', params, 'A');
   navigator.navigate('C', params, 'B');
-  navigator.navigate('D', params, 'C');
-  navigator.navigate('C', params, 'D');
+  navigator.navigate('B', params, 'C');
 
   expect(navigator.popToIndex).toHaveBeenCalledWith(1);
 });
 
 test('goBack', () => {
+  navigator.navigate('B', params, 'A');
   navigator.navigate('C', params, 'B');
-  navigator.navigate('D', params, 'C');
-  navigator.goBack('D');
+  navigator.goBack('C');
 
-  expect(navigator.history).toEqual(['B', 'C']);
-  expect(Navigation.pop).toHaveBeenCalledWith('D');
+  expect(navigator.history).toEqual(['A', 'B']);
+  expect(Navigation.pop).toHaveBeenCalledWith('C');
 });
