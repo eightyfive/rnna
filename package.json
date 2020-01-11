@@ -4,7 +4,8 @@
   "description": "react-native-navigation Standalone Application",
   "main": "src/index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "format": "prettier --write 'src/*.js'"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,8 @@
   "dependencies": {
     "lodash.merge": "^4.6.1",
     "lodash.set": "^4.3.2"
+  },
+  "devDependencies": {
+    "prettier": "1.19.1"
   }
 }
