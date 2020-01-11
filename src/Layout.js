@@ -41,12 +41,6 @@ export class Stack {
     }
   }
 
-  getInitialLayout() {
-    const [component] = this.children;
-
-    return this.getLayout(component.id);
-  }
-
   getLayout(componentId = null) {
     let { children } = this;
 
@@ -111,7 +105,7 @@ export class BottomTabs {
     const layout = {
       id: this.id,
       name: this.name,
-      children: this.children.map(child => child.getInitialLayout()),
+      children: this.children.map(child => child.getLayout()),
     };
 
     if (this.options) {
@@ -127,9 +121,10 @@ export class BottomTabs {
 }
 
 export class SideMenu {
-  constructor(menu, center, config = {}) {
+  constructor(menu, center, options, config = {}) {
     this.menu = menu;
     this.center = center;
+    this.options = options;
     this.side = config.side || 'left';
 
     if (!(menu instanceof Component)) {
@@ -147,6 +142,10 @@ export class SideMenu {
       center: this.center.getLayout(componentId),
       [this.side]: this.menu.getLayout(),
     };
+
+    if (this.options) {
+      layout.options = { ...this.options };
+    }
 
     return { sideMenu: layout };
   }

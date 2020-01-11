@@ -32,7 +32,11 @@ export default class StackNavigator extends Navigator {
 
   mount() {
     this.history = [this.initialComponentId];
-    Navigation.setRoot({ root: this.stack.getInitialLayout() });
+    Navigation.setRoot({ root: this.getInitialLayout() });
+  }
+
+  getInitialLayout() {
+    return this.stack.getLayout(this.initialComponentId);
   }
 
   navigate(toId, params, fromId) {
@@ -65,8 +69,12 @@ export default class StackNavigator extends Navigator {
       throw new Error(`Unknown stack child: ${toId}`);
     }
 
-    Navigation.push(fromId, component.getLayout(params));
-    this.history.push(toId);
+    if (toId !== this.activeId) {
+      Navigation.push(fromId, component.getLayout(params));
+      this.history.push(toId);
+    } else if (__DEV__) {
+      console.warn(`Stack: Trying to push the same screen "${toId}" twice`);
+    }
   }
 
   pop(n = 1) {

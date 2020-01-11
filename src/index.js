@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
-import _merge from 'lodash/merge';
+import _mergeWith from 'lodash/mergeWith';
 
 import * as Layout from './Layout';
 import ComponentNavigator from './ComponentNavigator';
@@ -42,26 +42,33 @@ export function createOverlayNavigator(name, Component, navigatorConfig) {
   return new OverlayNavigator(name, overlay);
 }
 
-export function createBottomTabNavigator(id, routes, navigatorConfig = {}) {
-  const navigators = [];
-  const bottomTabs = new Layout.BottomTabs(id, [], navigatorConfig.options);
+export function createBottomTabNavigator(name, routes, config) {
+  // return new BottomTabNavigator(name, bottomTabs, config);
 
-  Object.keys(routes).forEach(name => {
-    const navigator = routes[name];
-
-    if (!(navigator instanceof StackNavigator)) {
-      throw new Error(
-        'BottomTabNavigator only accepts StackNavigator children',
-      );
-    }
-
-    bottomTabs.children.push(navigator.stack);
-
-    navigators.push(navigator);
-  });
-
-  return new BottomTabNavigator(id, navigators, bottomTabs, navigatorConfig);
+  // TODO
+  return null;
 }
+
+// export function createBottomTabNavigator(id, routes, navigatorConfig = {}) {
+//   const navigators = [];
+//   const bottomTabs = new Layout.BottomTabs(id, [], navigatorConfig.options);
+
+//   Object.keys(routes).forEach(name => {
+//     const navigator = routes[name];
+
+//     if (!(navigator instanceof StackNavigator)) {
+//       throw new Error(
+//         'BottomTabNavigator only accepts StackNavigator children',
+//       );
+//     }
+
+//     bottomTabs.children.push(navigator.stack);
+
+//     navigators.push(navigator);
+//   });
+
+//   return new BottomTabNavigator(id, navigators, bottomTabs, navigatorConfig);
+// }
 
 // TODO: https://reactnavigation.org/docs/en/drawer-navigator.html
 export function createDrawerNavigator(
@@ -172,7 +179,7 @@ export function createWidget(id, Component, config) {
 }
 
 export function setDefaultOptions({ navigationOptions, ...options }) {
-  const defaultOptions = _merge(
+  const defaultOptions = merge(
     options,
     Layout.getNavigationOptions(navigationOptions),
   );
@@ -194,10 +201,15 @@ function createStack(id, routes, navigatorConfig) {
   return new Layout.Stack(id, children, navigatorConfig.defaultOptions);
 }
 
-function createSideMenu(drawer, routes, navigatorConfig) {
+function createSideMenu(drawer, routes, navigatorConfig, config = {}) {
   const center = createStack(`${drawer.id}-Center`, routes, navigatorConfig);
 
-  return new Layout.SideMenu(drawer, center);
+  return new Layout.SideMenu(
+    drawer,
+    center,
+    navigatorConfig.defaultOptions || {},
+    config,
+  );
 }
 
 function createComponent(id, options, Component, config) {
@@ -235,15 +247,15 @@ function getComponentOptions(route, navigatorConfig) {
   const { defaultOptions = {} } = navigatorConfig;
   const Component = route.screen || route;
   const routeConfig = route.screen ? route : {};
-  const { options, navigationOptions } = routeConfig;
 
-  return _merge(
+  return merge(
     {},
     defaultOptions,
     Layout.getNavigationOptions(defaultOptions.navigationOptions),
-    options,
-    Layout.getNavigationOptions(navigationOptions),
+    Layout.getNavigationOptions(routeConfig.navigationOptions),
     Layout.getNavigationOptions(Component.navigationOptions),
+    routeConfig.options,
+    typeof Component.options !== 'function' ? Component.options : {},
   );
 }
 
@@ -265,4 +277,17 @@ function provideComponent(Component, Provider, store) {
       <Component {...props} />
     </Provider>
   );
+}
+
+// function customizer(objValue, srcValue, key, object, source, stack)
+function mergeCustomizer(objValue, srcValue, key) {
+  if (key === 'rightButtons' || key === 'leftButtons') {
+    return srcValue;
+  }
+
+  return undefined;
+}
+
+function merge(dest, ...sources) {
+  return _mergeWith(dest, ...sources, mergeCustomizer);
 }

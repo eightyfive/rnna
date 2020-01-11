@@ -8,7 +8,7 @@ export default class SwitchNavigator extends Navigator {
     this.history = [];
   }
 
-  get active() {
+  get navigator() {
     return this.getNavigator(this.history[this.history.length - 1]);
   }
 
@@ -23,36 +23,38 @@ export default class SwitchNavigator extends Navigator {
   }
 
   mount() {
-    const navigator = this.active || this.navigators[0];
+    const navigator = this.navigator || this.navigators[0];
 
     this.history = [];
     this.navigate(navigator.name);
   }
 
-  navigate(path, params, fromId) {
-    const [name, rest] = this.splitPath(path);
+  navigate(route, params, fromId) {
+    const name = this.getRouteNavigator(route);
     const navigator = this.getNavigator(name);
 
     if (!navigator) {
-      throw new Error(`Unknown navigator: ${navigator} (${path})`);
+      throw new Error(`Unknown navigator: ${name} (${route})`);
     }
 
-    if (this.active.name !== name) {
+    if (this.navigator.name !== name) {
       this.history.push(name);
       navigator.mount();
     }
 
-    if (rest) {
-      navigator.navigate(rest, params, fromId);
+    const next = this.getRouteNext(route);
+
+    if (next) {
+      navigator.navigate(next, params, fromId);
     }
   }
 
   goBack(fromId) {
     try {
-      this.active.goBack(fromId);
+      this.navigator.goBack(fromId);
     } catch (err) {
       if (this.history.length > 1) {
-        this.active.unmount(fromId);
+        this.navigator.unmount(fromId);
         this.history.pop();
 
         this.navigate(this.history[this.history.length - 1]);
@@ -63,35 +65,35 @@ export default class SwitchNavigator extends Navigator {
   }
 
   push(name, params, fromId) {
-    if (!this.active.push) {
-      throwNotSupported(this.active, 'push');
+    if (!this.navigator.push) {
+      throwNotSupported(this.navigator, 'push');
     }
 
-    this.active.push(name, params, fromId);
+    this.navigator.push(name, params, fromId);
   }
 
   pop(n = 1) {
-    if (!this.active.pop) {
-      throwNotSupported(this.active, 'pop');
+    if (!this.navigator.pop) {
+      throwNotSupported(this.navigator, 'pop');
     }
 
-    this.active.pop(n);
+    this.navigator.pop(n);
   }
 
   popToTop(fromId) {
-    if (!this.active.popToTop) {
-      throwNotSupported(this.active, 'popToTop');
+    if (!this.navigator.popToTop) {
+      throwNotSupported(this.navigator, 'popToTop');
     }
 
-    this.active.popToTop(fromId);
+    this.navigator.popToTop(fromId);
   }
 
   dismiss(fromId) {
-    if (!this.active.dismiss) {
-      throwNotSupported(this.active, 'dismiss');
+    if (!this.navigator.dismiss) {
+      throwNotSupported(this.navigator, 'dismiss');
     }
 
-    this.active.dismiss(fromId);
+    this.navigator.dismiss(fromId);
   }
 }
 

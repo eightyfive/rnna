@@ -9,10 +9,22 @@ export default /** abstract */ class Navigator {
 
   unmount(fromId) {}
 
-  splitPath(path) {
-    const [root, ...rest] = path.split('/');
+  getRouteNavigator(route) {
+    return this.getRouteSegments(route).shift();
+  }
 
-    return [root, rest.join('/') || null];
+  getRouteNext(route) {
+    const [, ...rest] = this.getRouteSegments(route);
+
+    return rest.length ? rest.join('/') : null;
+  }
+
+  getRouteComponentId(route) {
+    return this.getRouteSegments(route).pop();
+  }
+
+  getRouteSegments(route) {
+    return route ? route.split('/') : [];
   }
 }
 
