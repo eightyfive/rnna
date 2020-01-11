@@ -1,25 +1,23 @@
-/* eslint-disable class-methods-use-this */
-
 export default /** abstract */ class Navigator {
-  getName() {
-    if (!this.name) {
-      throw new Error("Navigator must have a name");
-    }
-
-    return this.name;
+  constructor(name) {
+    this.name = name;
   }
 
   mount() {
-    throwAbstract("mount");
+    throwAbstract('mount');
   }
 
-  splitPath(path) {
-    const [root, ...rest] = path.split("/");
+  unmount(fromId) {}
 
-    return [root, rest.join("/") || null];
+  splitPath(path) {
+    const [root, ...rest] = path.split('/');
+
+    return [root, rest.join('/') || null];
   }
 }
 
 function throwAbstract(method) {
-  throw new Error(`Abstract: Implement Navigator.${method}`);
+  if (__DEV__) {
+    throw new Error(`Abstract: Implement Navigator.${method}`);
+  }
 }

@@ -1,18 +1,17 @@
-/* eslint-disable react/no-multi-comp */
-import _set from "lodash.set";
+import _set from 'lodash/set';
 
 export class Component {
-  constructor(name, options) {
-    this.id = name;
-    this.name = name;
+  constructor(id, options) {
+    this.id = id;
+    this.name = id;
     this.options = options;
   }
 
   getLayout(passProps = null) {
     // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=component
     const layout = {
-      id: this.name,
-      name: this.name
+      id: this.id,
+      name: this.name,
     };
 
     if (this.options) {
@@ -28,15 +27,24 @@ export class Component {
 }
 
 export class Stack {
-  constructor(children, options) {
+  constructor(id, children, options) {
+    this.id = id;
+    this.name = id;
+
     this.children = children;
     this.options = options;
 
     const invalid = children.some(child => !(child instanceof Component));
 
     if (invalid) {
-      throw new Error("Stack: All children must be `Component`");
+      throw new Error('Stack: All children must be `Component`');
     }
+  }
+
+  getInitialLayout() {
+    const [component] = this.children;
+
+    return this.getLayout(component.id);
   }
 
   getLayout(componentId = null) {
@@ -54,7 +62,9 @@ export class Stack {
 
     // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=stack
     const layout = {
-      children: children.map(child => child.getLayout())
+      id: this.id,
+      name: this.name,
+      children: children.map(child => child.getLayout()),
     };
 
     if (this.options) {
@@ -77,29 +87,31 @@ export class Stack {
 export class BottomTabs {
   constructor(id, children, options) {
     this.id = id;
+    this.name = id;
     this.children = children;
     this.options = options;
 
     const invalid = children.some(
-      child => !(child instanceof Stack) && !(child instanceof Component)
+      child => !(child instanceof Stack) && !(child instanceof Component),
     );
 
     if (invalid) {
       throw new Error(
-        "BottomTabs: All children must be either `Stack` or `Component`"
+        'BottomTabs: All children must be either `Stack` or `Component`',
       );
     }
   }
 
-  getTab(tabName) {
-    return this.children.find(component => component.id === tabName);
+  getTab(tabId) {
+    return this.children.find(component => component.id === tabId);
   }
 
   getLayout() {
     // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=bottomtabs
     const layout = {
       id: this.id,
-      children: this.children.map(child => child.getLayout())
+      name: this.name,
+      children: this.children.map(child => child.getInitialLayout()),
     };
 
     if (this.options) {
@@ -118,14 +130,14 @@ export class SideMenu {
   constructor(menu, center, config = {}) {
     this.menu = menu;
     this.center = center;
-    this.side = config.side || "left";
+    this.side = config.side || 'left';
 
     if (!(menu instanceof Component)) {
-      throw new Error("SideMenu: Left/Right must be `Component`");
+      throw new Error('SideMenu: Left/Right must be `Component`');
     }
 
     if (!(center instanceof Stack)) {
-      throw new Error("SideMenu: Center must be `Stack`");
+      throw new Error('SideMenu: Center must be `Stack`');
     }
   }
 
@@ -133,7 +145,7 @@ export class SideMenu {
     // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=sidemenu
     const layout = {
       center: this.center.getLayout(componentId),
-      [this.side]: this.menu.getLayout()
+      [this.side]: this.menu.getLayout(),
     };
 
     return { sideMenu: layout };
@@ -141,7 +153,7 @@ export class SideMenu {
 
   getVisibleLayout(visible) {
     const layout = {
-      [this.side]: { visible }
+      [this.side]: { visible },
     };
 
     return { sideMenu: layout };
@@ -149,22 +161,14 @@ export class SideMenu {
 }
 
 export class OverlayComponent extends Component {
-  constructor(name, options) {
-    super(`overlay-${name}`, options);
-  }
-
-  getShortName() {
-    return this.name.replace("overlay-", "");
+  constructor(id, options) {
+    super(`overlay-${id}`, options);
   }
 }
 
 export class WidgetComponent extends Component {
-  constructor(name, options) {
-    super(`widget-${name}`, options);
-  }
-
-  getShortName() {
-    return this.name.replace("widget-", "");
+  constructor(id, options) {
+    super(`widget-${id}`, options);
   }
 }
 
@@ -176,27 +180,27 @@ export function getNavigationOptions(nav) {
   }
 
   if (nav.header === null) {
-    _set(options, "topBar.visible", false);
-    _set(options, "topBar.drawBehind", true);
+    _set(options, 'topBar.visible', false);
+    _set(options, 'topBar.drawBehind', true);
   } else {
     if (nav.title) {
-      _set(options, "topBar.title.text", nav.title);
+      _set(options, 'topBar.title.text', nav.title);
     }
 
     if (nav.headerTintColor) {
-      _set(options, "topBar.title.color", nav.headerTintColor);
+      _set(options, 'topBar.title.color', nav.headerTintColor);
     }
 
     let style;
 
     style = nav.headerStyle;
     if (style && style.backgroundColor) {
-      _set(options, "topBar.background.color", style.backgroundColor);
+      _set(options, 'topBar.background.color', style.backgroundColor);
     }
 
     style = nav.headerBackTitleStyle;
     if (style && style.color) {
-      _set(options, "topBar.backButton.color", style.color);
+      _set(options, 'topBar.backButton.color', style.color);
     }
   }
 

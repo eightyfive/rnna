@@ -1,15 +1,15 @@
-import Navigator from "./Navigator";
+import { Navigation } from 'react-native-navigation';
+
+import Navigator from './Navigator';
 
 export default class ComponentNavigator extends Navigator {
-  constructor(navigation, component) {
-    super();
+  constructor(name, component) {
+    super(name);
 
-    this.navigation = navigation;
-    this.name = component.name;
     this.component = component;
   }
 
   mount() {
-    this.navigation.setRoot({ root: this.component.getLayout() });
+    Navigation.setRoot({ root: this.component.getLayout() });
   }
 }

@@ -1,10 +1,11 @@
-import StackNavigator from "./StackNavigator";
+import { Navigation } from 'react-native-navigation';
+
+import StackNavigator from './StackNavigator';
 
 export default class DrawerNavigator extends StackNavigator {
-  constructor(navigation, sideMenu, config = {}) {
-    super(navigation, sideMenu.center, {});
+  constructor(name, sideMenu, config = {}) {
+    super(name, sideMenu.center, config);
 
-    this.name = config.name;
     this.drawer = sideMenu.menu;
     this.sideMenu = sideMenu;
     this.visible = false;
@@ -36,18 +37,18 @@ export default class DrawerNavigator extends StackNavigator {
   }
 
   openDrawer() {
-    this.navigation.mergeOptions(
+    Navigation.mergeOptions(
       this.drawer.id,
-      this.sideMenu.getVisibleLayout(true)
+      this.sideMenu.getVisibleLayout(true),
     );
 
     this.visible = true;
   }
 
   closeDrawer() {
-    this.navigation.mergeOptions(
+    Navigation.mergeOptions(
       this.drawer.id,
-      this.sideMenu.getVisibleLayout(false)
+      this.sideMenu.getVisibleLayout(false),
     );
 
     this.visible = false;

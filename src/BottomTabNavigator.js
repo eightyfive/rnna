@@ -1,55 +1,58 @@
-import Navigator from "./Navigator";
+import { Navigation } from 'react-native-navigation';
+
+import Navigator from './Navigator';
 
 export default class BottomTabNavigator extends Navigator {
-  constructor(navigation, bottomTabs, config = {}) {
-    super();
+  constructor(name, navigators, bottomTabs, config = {}) {
+    super(name);
 
-    this.navigation = navigation;
-    this.name = bottomTabs.id;
+    this.navigators = navigators;
+
     this.bottomTabs = bottomTabs;
     this.order = config.order || this.bottomTabs.getOrder();
     this.initialComponentId = config.initialRouteName || this.order[0];
     this.tabIndex = 0;
   }
 
+  get active() {
+    return this.navigators[this.tabIndex];
+  }
+
   mount() {
-    this.navigation.setRoot({ root: this.bottomTabs.getLayout() });
+    Navigation.setRoot({ root: this.bottomTabs.getLayout() });
   }
 
   navigate(path, params, fromId) {
-    const [tabId, name] = this.splitPath(path);
-
-    const layout = this.bottomTabs.getTab(tabId);
-
-    if (!layout) {
-      throw new Error(`Unknown bottomTabs tab: ${tabId} (${path})`);
-    }
+    const [tabId, rest] = this.splitPath(path);
 
     const index = this.getTabIndex(tabId);
 
     if (this.tabIndex !== index) {
       this.tabIndex = index;
 
-      this.navigation.mergeOptions(this.bottomTabs.id, {
-        bottomTabs: { currentTabIndex: index }
+      const layoutId = this.bottomTabs.id;
+
+      Navigation.mergeOptions(layoutId, {
+        bottomTabs: { currentTabIndex: index },
       });
     }
 
-    if (name && layout instanceof Navigator) {
-      layout.navigate(name, params, fromId);
+    if (rest) {
+      this.active.navigate(rest, params, fromId);
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   goBack() {
     // TODO
   }
 
-  getTabIndex(componentId) {
-    const index = this.order.findIndex(id => id === componentId);
+  getTabIndex(name) {
+    const index = this.navigators.findIndex(
+      navigator => navigator.name === name,
+    );
 
     if (index === -1) {
-      throw new Error(`Unknown bottomTabs child: ${componentId}`);
+      throw new Error(`Unknown bottomTabs tab: ${name}`);
     }
 
     return index;

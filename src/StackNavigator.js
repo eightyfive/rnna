@@ -1,42 +1,38 @@
-import Navigator from "./Navigator";
+import { Navigation } from 'react-native-navigation';
+
+import Navigator from './Navigator';
 
 export default class StackNavigator extends Navigator {
-  constructor(navigation, stack, config = {}) {
-    super();
+  constructor(name, stack, config = {}) {
+    super(name);
 
-    this.navigation = navigation;
-    this.name = config.name;
     this.stack = stack;
     this.order = config.order || this.stack.getOrder();
     this.initialComponentId = config.initialRouteName || this.order[0];
+    this.history = [];
 
-    this.history = [this.initialComponentId];
-
-    const events = this.navigation.events();
+    const events = Navigation.events();
 
     this.didDisappearListener = events.registerComponentDidDisappearListener(
-      this.handleDidDisappear
+      this.handleDidDisappear,
     );
   }
 
+  get activeId() {
+    return this.history[this.history.length - 1];
+  }
+
   handleDidDisappear = ({ componentId }) => {
-    if (componentId === this.getActiveId()) {
+    if (componentId === this.activeId) {
       // FIXME: Hacky
       // Native back button has been pressed
       this.history.pop();
     }
   };
 
-  getActiveId() {
-    return this.history[this.history.length - 1];
-  }
-
   mount() {
-    this.navigation.setRoot({ root: this.getInitialLayout() });
-  }
-
-  getInitialLayout() {
-    return this.stack.getLayout(this.initialComponentId);
+    this.history = [this.initialComponentId];
+    Navigation.setRoot({ root: this.stack.getInitialLayout() });
   }
 
   navigate(toId, params, fromId) {
@@ -50,17 +46,15 @@ export default class StackNavigator extends Navigator {
   }
 
   goBack(fromId) {
-    const componentId = this.getActiveId();
-
-    if (fromId !== componentId) {
-      throw new Error(`goBack from mismatch: ${fromId} != ${componentId}`);
+    if (fromId !== this.activeId) {
+      throw new Error(`goBack from mismatch: ${fromId} != ${this.activeId}`);
     }
 
     if (this.history.length === 1) {
-      throw new Error("No route to go back to");
+      throw new Error('No route to go back to');
     }
 
-    this.navigation.pop(fromId);
+    Navigation.pop(fromId);
     this.history.pop();
   }
 
@@ -71,7 +65,7 @@ export default class StackNavigator extends Navigator {
       throw new Error(`Unknown stack child: ${toId}`);
     }
 
-    this.navigation.push(fromId, component.getLayout(params));
+    Navigation.push(fromId, component.getLayout(params));
     this.history.push(toId);
   }
 
@@ -90,15 +84,10 @@ export default class StackNavigator extends Navigator {
 
     const componentId = this.history[index];
 
-    this.navigation.popTo(componentId);
+    Navigation.popTo(componentId);
   }
 
   popToTop(fromId) {
-    this.navigation.popToRoot(fromId);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  dismiss() {
-    throw new Error("'modal' mode not supported, use `ModalNavigator` instead");
+    Navigation.popToRoot(fromId);
   }
 }

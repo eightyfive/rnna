@@ -1,19 +1,20 @@
-import StackNavigator from "./StackNavigator";
+import { Navigation } from 'react-native-navigation';
+
+import StackNavigator from './StackNavigator';
 
 export default class ModalNavigator extends StackNavigator {
   mount() {
-    this.navigation.showModal(this.getInitialLayout());
+    // TOFIX: Duplicate with Stack.mount
+    this.history = [this.initialComponentId];
+
+    Navigation.showModal(this.stack.getInitialLayout());
+  }
+
+  unmount(fromId) {
+    this.dismiss(fromId);
   }
 
   dismiss(fromId) {
-    this.navigation.dismissModal(fromId);
-  }
-
-  goBack(fromId) {
-    try {
-      super.goBack(fromId);
-    } catch (err) {
-      this.dismiss(fromId);
-    }
+    Navigation.dismissModal(fromId);
   }
 }

@@ -1,39 +1,19 @@
-import Navigator from "./Navigator";
-import ModalNavigator from "./ModalNavigator";
+import Navigator from './Navigator';
 
 export default class SwitchNavigator extends Navigator {
-  constructor(navigators, config = {}) {
-    super();
+  constructor(name, navigators) {
+    super(name);
 
-    this.name = config.name;
     this.navigators = navigators;
     this.history = [];
   }
 
-  getActiveId() {
-    return this.history[this.history.length - 1];
-  }
-
-  getActive() {
-    return this.getNavigator(this.getActiveId());
-  }
-
-  isActive(name) {
-    return this.getActiveId() === name;
-  }
-
-  getInitialNavigator() {
-    return this.navigators[0];
-  }
-
-  mount() {
-    const navigator = this.getInitialNavigator();
-
-    this.navigate(navigator.getName());
+  get active() {
+    return this.getNavigator(this.history[this.history.length - 1]);
   }
 
   getNavigator(name) {
-    const navigator = this.navigators.find(nav => nav.getName() === name);
+    const navigator = this.navigators.find(nav => nav.name === name);
 
     if (!navigator) {
       throw new Error(`Unknown navigator: ${name}`);
@@ -42,94 +22,83 @@ export default class SwitchNavigator extends Navigator {
     return navigator;
   }
 
+  mount() {
+    const navigator = this.active || this.navigators[0];
+
+    this.history = [];
+    this.navigate(navigator.name);
+  }
+
   navigate(path, params, fromId) {
-    const [navigatorName, name] = this.splitPath(path);
-    const navigator = this.getNavigator(navigatorName);
+    const [name, rest] = this.splitPath(path);
+    const navigator = this.getNavigator(name);
 
     if (!navigator) {
       throw new Error(`Unknown navigator: ${navigator} (${path})`);
     }
 
-    if (!this.isActive(navigatorName)) {
-      this.history.push(navigatorName);
-
+    if (this.active.name !== name) {
+      this.history.push(name);
       navigator.mount();
     }
 
-    if (name) {
-      navigator.navigate(name, params, fromId);
+    if (rest) {
+      navigator.navigate(rest, params, fromId);
     }
   }
 
   goBack(fromId) {
-    const navigator = this.getActive();
-    const isModal = navigator instanceof ModalNavigator;
-
     try {
-      navigator.goBack(fromId);
-
-      if (isModal) {
-        this.history.pop();
-      }
+      this.active.goBack(fromId);
     } catch (err) {
-      this.switchBack();
+      if (this.history.length > 1) {
+        this.active.unmount(fromId);
+        this.history.pop();
+
+        this.navigate(this.history[this.history.length - 1]);
+      } else {
+        throw err;
+      }
     }
-  }
-
-  switchBack() {
-    if (this.history.length === 1) {
-      throw new Error("No route to switch back to");
-    }
-
-    const name = this.history.pop();
-    const navigator = this.getNavigator(name);
-
-    navigator.mount();
   }
 
   push(name, params, fromId) {
-    const navigator = this.getActive();
-
-    if (!navigator.push) {
-      throwNotSupported(navigator, "push");
+    if (!this.active.push) {
+      throwNotSupported(this.active, 'push');
     }
 
-    navigator.push(name, params, fromId);
+    this.active.push(name, params, fromId);
   }
 
   pop(n = 1) {
-    const navigator = this.getActive();
-
-    if (!navigator.pop) {
-      throwNotSupported(navigator, "pop");
+    if (!this.active.pop) {
+      throwNotSupported(this.active, 'pop');
     }
 
-    navigator.pop(n);
+    this.active.pop(n);
   }
 
   popToTop(fromId) {
-    const navigator = this.getActive();
-
-    if (!navigator.popToTop) {
-      throwNotSupported(navigator, "popToTop");
+    if (!this.active.popToTop) {
+      throwNotSupported(this.active, 'popToTop');
     }
 
-    navigator.popToTop(fromId);
+    this.active.popToTop(fromId);
   }
 
   dismiss(fromId) {
-    const navigator = this.getActive();
-
-    if (!navigator.dismiss) {
-      throwNotSupported(navigator, "dismiss");
+    if (!this.active.dismiss) {
+      throwNotSupported(this.active, 'dismiss');
     }
 
-    navigator.dismiss(fromId);
+    this.active.dismiss(fromId);
   }
 }
 
 function throwNotSupported(navigator, method) {
-  throw new Error(
-    `${navigator.constructor.name} does not support \`${method}\``
-  );
+  if (__DEV__) {
+    throw new Error(
+      `${navigator.constructor.name} does not support \`${method}\``,
+    );
+  }
 }
