@@ -98,22 +98,8 @@ export function createSwitchNavigator(routes, navigatorConfig = {}) {
   return new SwitchNavigator(navigators);
 }
 
-export function createRootNavigator(
-  routes,
-  modals,
-  overlays,
-  navigatorConfig = {},
-) {
-  // Routes
-  let navigators = getNavigators(routes, navigatorConfig);
-
-  // Modals
-  navigators = navigators.concat(getModalNavigators(modals, navigatorConfig));
-
-  // Overlays
-  navigators = navigators.concat(
-    getOverlayNavigators(overlays, navigatorConfig),
-  );
+export function createRootNavigator(routes, navigatorConfig = {}) {
+  const navigators = getNavigators(routes, navigatorConfig);
 
   return new RootNavigator(navigators, navigatorConfig);
 }
@@ -140,30 +126,6 @@ function getNavigators(routes, navigatorConfig) {
 
       navigator = new ComponentNavigator(name, component);
     }
-
-    navigators.push(navigator);
-  });
-
-  return navigators;
-}
-
-function getModalNavigators(routes, navigatorConfig) {
-  const navigators = [];
-
-  Object.keys(routes).forEach(name => {
-    const navigator = createModalNavigator(routes[name], navigatorConfig);
-
-    navigators.push(navigator);
-  });
-
-  return navigators;
-}
-
-function getOverlayNavigators(routes, navigatorConfig) {
-  const navigators = [];
-
-  Object.keys(routes).forEach(name => {
-    const navigator = createOverlayNavigator(routes[name], navigatorConfig);
 
     navigators.push(navigator);
   });
