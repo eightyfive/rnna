@@ -1,26 +1,26 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Layout/Component';
-import Stack from './Layout/Stack';
-import StackNavigator from './StackNavigator';
+import { createStackNavigator } from './index';
 
 let navigator;
 
-const componentA = new Component('A');
-const componentB = new Component('B');
-const componentC = new Component('C');
-
-const stack = new Stack([componentA, componentB, componentC]);
+function ComponentA() {}
+function ComponentB() {}
+function ComponentC() {}
 
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  navigator = new StackNavigator(stack);
+  navigator = createStackNavigator({
+    A: ComponentA,
+    B: ComponentB,
+    C: ComponentC,
+  });
   navigator.mount();
 });
 
 test('mount', () => {
-  const initialLayout = stack.getLayout('A');
+  const initialLayout = navigator.stack.getLayout('A');
   const initialComponentId = 'A';
 
   expect(navigator.initialComponentId).toBe(initialComponentId);
@@ -34,10 +34,14 @@ test('push', () => {
   navigator.push('B', params, 'A');
 
   expect(navigator.history).toEqual(['A', 'B']);
-  expect(Navigation.push).toHaveBeenCalledWith(
-    'A',
-    componentB.getLayout(params),
-  );
+  expect(Navigation.push).toHaveBeenCalledWith('A', {
+    component: {
+      id: 'B',
+      name: 'B',
+      options: {},
+      passProps: params,
+    },
+  });
 });
 
 test('popToIndex', () => {

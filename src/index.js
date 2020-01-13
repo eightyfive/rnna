@@ -99,9 +99,9 @@ export function createSwitchNavigator(routes, navigatorConfig = {}) {
 }
 
 export function createRootNavigator(routes, navigatorConfig = {}) {
-  const navigators = getNavigators(routes, navigatorConfig);
+  // const navigators = getNavigators(routes, navigatorConfig);
 
-  return new RootNavigator(navigators, navigatorConfig);
+  return new RootNavigator(routes, navigatorConfig);
 }
 
 function getNavigators(routes, navigatorConfig) {

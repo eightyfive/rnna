@@ -1,6 +1,9 @@
 const events = jest.fn().mockReturnValue({
   registerComponentDidDisappearListener: jest.fn(),
   registerComponentDidAppearListener: jest.fn(),
+  registerModalDismissedListener: jest.fn(),
+  registerBottomTabSelectedListener: jest.fn(),
+  registerAppLaunchedListener: jest.fn(),
 });
 
 export const Navigation = {

@@ -7,14 +7,18 @@ import OverlayNavigator from './OverlayNavigator';
 const events = Navigation.events();
 
 export default class RootNavigator extends Navigator {
-  constructor(navigators, options = {}) {
+  constructor(routes, options = {}) {
     super();
 
-    this.navigators = navigators;
+    this.routes = routes;
+    this.order = options.order || Object.keys(routes);
+    this.initialRouteName = options.initialRouteName || this.order[0];
     this.route = null;
-    this.launched = false;
+    this.mounted = false;
+
     this.stack = [];
     this.overlays = [];
+
     this.fromId = options.initialComponentId || 'Splash';
     this.onLaunched = [];
     this.onTabSelected = [];
@@ -45,25 +49,32 @@ export default class RootNavigator extends Navigator {
   }
 
   handleAppLaunched = () => {
-    if (this.launched) {
-      this.relaunch();
+    if (this.mounted) {
+      this.remount();
     } else {
-      this.launch();
+      this.mount();
     }
   };
 
-  launch() {
-    this.launched = true;
+  getNavigator(key) {
+    const navigator = this.routes[key];
 
-    const navigator = this.navigators.find((el, i) => i === 0);
-    this.navigate(navigator.name);
+    if (!navigator) {
+      throw new Error(`Unknown navigator: ${key}`);
+    }
 
+    return navigator;
+  }
+
+  mount() {
+    this.mounted = true;
+    this.navigate(this.initialRouteName);
     this.onLaunched.forEach(cb => cb());
   }
 
-  relaunch() {
-    this.stack.forEach(navigator => navigator.mount());
-    this.overlays.forEach(overlay => overlay.mount());
+  remount() {
+    this.stack.forEach(key => this.getNavigator(key).mount());
+    this.overlays.forEach(key => this.getNavigator(key).mount());
   }
 
   handleDidAppear = ({ componentId }) => {
@@ -95,7 +106,7 @@ export default class RootNavigator extends Navigator {
     // We need to remove/"pop" the top-most modal
     this.stack = this.stack.filter(
       // navigator instanceof ModalNavigator
-      navigator => navigator.name !== componentId,
+      key => key !== componentId,
     );
   };
 
@@ -106,68 +117,69 @@ export default class RootNavigator extends Navigator {
     this.onTabSelected.push(cb);
   }
 
+  get main() {
+    const name = this.stack[0];
+
+    return this.routes[name];
+  }
+
+  get modal() {
+    if (this.stack.length > 1) {
+      const name = this.stack[1];
+
+      return this.routes[name];
+    }
+
+    // return undefined;
+  }
+
   get active() {
-    return this.stack[this.stack.length - 1];
+    return this.modal || this.main;
   }
 
   isActive(name) {
-    return Boolean(this.active && this.active.name === name);
+    const active = this.stack[this.stack.length - 1];
+
+    return active === name;
   }
 
   isVisible(name) {
-    return (
-      this.isActive(name) ||
-      this.overlays.some(overlay => overlay.name === name)
-    );
-  }
-
-  getNavigator(name) {
-    return this.navigators.find(nav => nav.name === name);
+    return this.isActive(name) || this.overlays.some(key => key === name);
   }
 
   navigate(route, params) {
-    if (!this.launched) {
-      throw new Error('RNN not launched yet');
+    if (!this.mounted) {
+      throw new Error('RNN not mounted yet');
     }
 
     this.route = route;
 
     const name = this.getRouteNavigator(route);
-    const navigator = this.getNavigator(name);
 
-    if (!navigator) {
-      throw new Error(`Unknown navigator: ${name} (${route})`);
-    }
-
-    // Unmount modals ?
-    if (!this.isActive(name) && this.stack.length > 1) {
-      const index = this.stack.findIndex(nav => nav.name === name) + 1;
-
-      if (index > 0 && index < this.stack.length) {
-        this.stack.splice(index).forEach(nav => nav.unmount(this.fromId));
-      }
-    }
-
-    // Unmount main ?
-    if (
-      !this.isActive(name) &&
-      this.stack.length === 1 &&
-      !(navigator instanceof ModalNavigator)
-    ) {
-      this.active.unmount(this.fromId);
-      this.stack = [];
-    }
-
-    // Mount ?
     if (!this.isActive(name)) {
+      // Unmount modal
+      if (this.modal) {
+        this.modal.unmount(this.fromId);
+        this.stack.pop(); // [main]
+      }
+
+      const navigator = this.getNavigator(name);
+
+      // Unmount main ?
+      if (this.main && !this.modal && !(navigator instanceof ModalNavigator)) {
+        this.main.unmount(this.fromId);
+        this.stack.pop(); // []
+      }
+
+      // Mount
       navigator.mount();
-      this.stack.push(navigator);
+      this.stack.push(name);
     }
 
     const next = this.getRouteNext(route);
 
     if (next) {
-      navigator.navigate(next, params, this.fromId);
+      this.active.navigate(next, params, this.fromId);
     }
   }
 
@@ -241,9 +253,11 @@ export default class RootNavigator extends Navigator {
   dismissAllModals() {
     const total = this.stack.length;
 
-    this.stack = this.stack.filter(
-      navigator => !(navigator instanceof ModalNavigator),
-    );
+    this.stack = this.stack.filter(key => {
+      const navigator = this.getNavigator(key);
+
+      return !(navigator instanceof ModalNavigator);
+    });
 
     if (this.stack.length < total) {
       Navigation.dismissAllModals();
@@ -251,7 +265,7 @@ export default class RootNavigator extends Navigator {
   }
 
   dismissAllOverlays() {
-    this.overlays.forEach(overlay => overlay.unmount());
+    this.overlays.forEach(key => this.getNavigator(key).unmount());
     this.overlays = [];
   }
 
@@ -262,25 +276,25 @@ export default class RootNavigator extends Navigator {
   showOverlay(name) {
     const overlay = this.getNavigator(name);
 
-    if (!overlay || !(overlay instanceof OverlayNavigator)) {
+    if (!(overlay instanceof OverlayNavigator)) {
       throw new Error(`Unknown Overlay: ${name}`);
     }
 
     overlay.mount();
 
-    this.overlays.push(overlay);
+    this.overlays.push(name);
   }
 
   hideOverlay(name) {
-    const index = this.overlays.findIndex(ov => ov.name === name);
+    const index = this.overlays.findIndex(key => key === name);
     const visible = index !== -1;
 
     if (visible) {
-      const [overlay] = this.overlays.splice(index, 1);
+      const [key] = this.overlays.splice(index, 1);
 
-      overlay.unmount();
+      this.getNavigator(key).unmount();
     } else if (__DEV__) {
-      console.warn(`Cannot hide overlay. Overlay "${name}" is not visible`);
+      console.error(`Cannot hide overlay. Overlay "${name}" is not visible`);
     }
   }
 
