@@ -99,23 +99,18 @@ export function createSwitchNavigator(routes, navigatorConfig = {}) {
 }
 
 export function createRootNavigator(routes, navigatorConfig = {}) {
-  // const navigators = getNavigators(routes, navigatorConfig);
-
-  return new RootNavigator(routes, navigatorConfig);
+  return new RootNavigator(
+    getNavigators(routes, navigatorConfig),
+    navigatorConfig,
+  );
 }
 
 function getNavigators(routes, navigatorConfig) {
-  const navigators = [];
-
   Object.keys(routes).forEach(name => {
-    const route = routes[name];
+    const navigator = routes[name];
 
-    let navigator;
-
-    if (route instanceof Navigator) {
-      navigator = route;
-    } else {
-      const [Component, options] = normalizeRoute(route, navigatorConfig);
+    if (!(navigator instanceof Navigator)) {
+      const [Component, options] = normalizeRoute(navigator, navigatorConfig);
 
       const component = createComponent(
         name,
@@ -124,13 +119,11 @@ function getNavigators(routes, navigatorConfig) {
         navigatorConfig,
       );
 
-      navigator = new ComponentNavigator(name, component);
+      routes[name] = new ComponentNavigator(component);
     }
-
-    navigators.push(navigator);
   });
 
-  return navigators;
+  return routes;
 }
 
 export function createWidget(id, Component, config) {

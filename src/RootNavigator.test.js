@@ -7,6 +7,8 @@ let root;
 let stack1;
 let stack2;
 
+function Splash() {}
+
 function ComponentA() {}
 function ComponentB() {}
 function ComponentC() {}
@@ -18,12 +20,12 @@ beforeEach(() => {
 
   stack1.mount = jest.fn();
 
-  root = createRootNavigator({ stack1, stack2 });
+  root = createRootNavigator({ Splash, stack1, stack2 });
   root.mount();
 });
 
 test('mount', () => {
-  expect(stack1.mount).toHaveBeenCalled();
+  expect(stack1.mount).not.toHaveBeenCalled();
 });
 
 test('navigate', () => {
