@@ -4,20 +4,18 @@ import Component from './Layout/Component';
 import Stack from './Layout/Stack';
 import StackNavigator from './StackNavigator';
 
-let stack;
 let navigator;
 
 const componentA = new Component('A');
 const componentB = new Component('B');
 const componentC = new Component('C');
 
+const stack = new Stack('stack', [componentA, componentB, componentC]);
+
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  stack = new Stack('STACK', [componentA, componentB, componentC]);
-
-  navigator = new StackNavigator('E', stack);
-
+  navigator = new StackNavigator('STACK', stack);
   navigator.mount();
 });
 

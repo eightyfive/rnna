@@ -22,9 +22,8 @@ export default class BottomTabNavigator extends Navigator {
     Navigation.setRoot({ root: this.bottomTabs.getLayout() });
   }
 
-  navigate(path, params, fromId) {
-    const [tabId, rest] = this.splitPath(path);
-
+  navigate(route, params, fromId) {
+    const tabId = this.getRouteNavigator(route);
     const index = this.getTabIndex(tabId);
 
     if (this.tabIndex !== index) {
@@ -36,6 +35,8 @@ export default class BottomTabNavigator extends Navigator {
         bottomTabs: { currentTabIndex: index },
       });
     }
+
+    const rest = this.getRouteNext(route);
 
     if (rest) {
       this.active.navigate(rest, params, fromId);
