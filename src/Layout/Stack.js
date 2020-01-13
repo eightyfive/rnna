@@ -1,10 +1,7 @@
 import Component from './Component';
 
 export default class Stack {
-  constructor(id, children, options) {
-    this.id = id;
-    this.name = id;
-
+  constructor(children, options) {
     this.children = children;
     this.options = options;
 
@@ -29,8 +26,6 @@ export default class Stack {
     }
 
     const layout = {
-      id: this.id,
-      name: this.name,
       children: children.map(child => child.getLayout()),
     };
 

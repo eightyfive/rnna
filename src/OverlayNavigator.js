@@ -3,8 +3,8 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class OverlayNavigator extends Navigator {
-  constructor(name, overlay) {
-    super(name);
+  constructor(overlay) {
+    super();
 
     this.overlay = overlay;
   }

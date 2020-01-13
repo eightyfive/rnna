@@ -5,8 +5,8 @@ import StackNavigator from './StackNavigator';
 const events = Navigation.events();
 
 export default class DrawerNavigator extends StackNavigator {
-  constructor(name, sideMenu, config = {}) {
-    super(name, sideMenu.center, config);
+  constructor(sideMenu, config = {}) {
+    super(sideMenu.center, config);
 
     this.drawer = sideMenu.menu;
     this.sideMenu = sideMenu;

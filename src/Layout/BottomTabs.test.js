@@ -4,7 +4,7 @@ import Stack from './Stack';
 
 // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=bottomtabs
 test('getLayout', () => {
-  const stack = new Stack('STACK', [new Component('A')]);
+  const stack = new Stack([new Component('A')]);
   const bottomTabs = new BottomTabs('TABS', [stack, new Component('B')], {
     C: 'D',
   });
@@ -16,8 +16,6 @@ test('getLayout', () => {
       children: [
         {
           stack: {
-            id: 'STACK',
-            name: 'STACK',
             children: [{ component: { id: 'A', name: 'A' } }],
           },
         },

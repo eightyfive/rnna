@@ -15,23 +15,23 @@ import SwitchNavigator from './SwitchNavigator';
 
 const events = Navigation.events();
 
-export function createStackNavigator(name, routes, navigatorConfig = {}) {
-  const stack = createStack(name, routes, navigatorConfig);
+export function createStackNavigator(routes, navigatorConfig = {}) {
+  const stack = createStack(routes, navigatorConfig);
 
   if (navigatorConfig.mode === 'modal') {
-    return new ModalNavigator(name, stack, navigatorConfig);
+    return new ModalNavigator(stack, navigatorConfig);
   }
 
-  return new StackNavigator(name, stack, navigatorConfig);
+  return new StackNavigator(stack, navigatorConfig);
 }
 
-export function createModalNavigator(name, routes, config = {}) {
+export function createModalNavigator(routes, config = {}) {
   config.mode = 'modal';
 
-  return createStackNavigator(name, routes, config);
+  return createStackNavigator(routes, config);
 }
 
-export function createOverlayNavigator(name, Component, navigatorConfig) {
+export function createOverlayNavigator(Component, navigatorConfig = {}) {
   const options = getComponentOptions(Component, navigatorConfig);
 
   const overlay = createOverlayComponent(
@@ -41,7 +41,7 @@ export function createOverlayNavigator(name, Component, navigatorConfig) {
     navigatorConfig,
   );
 
-  return new OverlayNavigator(name, overlay);
+  return new OverlayNavigator(overlay);
 }
 
 export function createBottomTabNavigator(name, routes, config) {
@@ -74,7 +74,6 @@ export function createBottomTabNavigator(name, routes, config) {
 
 // TODO: https://reactnavigation.org/docs/en/drawer-navigator.html
 export function createDrawerNavigator(
-  name,
   DrawerComponent,
   routes,
   navigatorConfig = {},
@@ -90,7 +89,7 @@ export function createDrawerNavigator(
   // sideMenu
   const sideMenu = createSideMenu(drawer, routes, navigatorConfig);
 
-  return new DrawerNavigator(name, sideMenu);
+  return new DrawerNavigator(sideMenu);
 }
 
 export function createSwitchNavigator(name, routes, navigatorConfig = {}) {
@@ -191,7 +190,7 @@ export function setDefaultOptions({ navigationOptions, ...options }) {
   );
 }
 
-function createStack(id, routes, navigatorConfig) {
+function createStack(routes, navigatorConfig) {
   const children = [];
 
   Object.keys(routes).forEach(name => {
@@ -200,7 +199,7 @@ function createStack(id, routes, navigatorConfig) {
     children.push(createComponent(name, options, Component, navigatorConfig));
   });
 
-  return new Layout.Stack(id, children, navigatorConfig.defaultOptions);
+  return new Layout.Stack(children, navigatorConfig.defaultOptions);
 }
 
 function createSideMenu(drawer, routes, navigatorConfig, config = {}) {

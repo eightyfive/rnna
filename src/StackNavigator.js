@@ -5,8 +5,8 @@ import Navigator from './Navigator';
 const events = Navigation.events();
 
 export default class StackNavigator extends Navigator {
-  constructor(name, stack, config = {}) {
-    super(name);
+  constructor(stack, config = {}) {
+    super();
 
     this.stack = stack;
     this.order = config.order || this.stack.getOrder();

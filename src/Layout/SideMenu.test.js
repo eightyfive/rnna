@@ -5,7 +5,7 @@ import Stack from './Stack';
 // https://wix.github.io/react-native-navigation/#/docs/layout-types?id=sidemenu
 test('getLayout', () => {
   const menu = new Component('MENU');
-  const center = new Stack('CENTER', [new Component('A')]);
+  const center = new Stack([new Component('A')]);
   const sideMenu = new SideMenu(menu, center, { B: 'C' });
 
   expect(sideMenu.getLayout()).toEqual({
@@ -15,8 +15,6 @@ test('getLayout', () => {
       },
       center: {
         stack: {
-          id: 'CENTER',
-          name: 'CENTER',
           children: [{ component: { id: 'A', name: 'A' } }],
         },
       },

@@ -14,5 +14,6 @@ export const Navigation = {
   popTo: jest.fn(),
   popToRoot: jest.fn(),
   mergeOptions: jest.fn(),
+  registerComponent: jest.fn(),
   events,
 };

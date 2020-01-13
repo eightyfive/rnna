@@ -12,8 +12,8 @@ let navigator;
 const componentA = new Component('a');
 const componentB = new Component('b');
 
-const stack = new Stack('stack', [componentA, componentB]);
-const stackNavigator = new StackNavigator('STACK', stack);
+const stack = new Stack([componentA, componentB]);
+const stackNavigator = new StackNavigator(stack);
 
 // Side menu
 const drawer = new Component('drawer');
@@ -22,7 +22,7 @@ const sideMenu = new SideMenu(drawer, stack);
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  navigator = new DrawerNavigator('DRAWER', sideMenu);
+  navigator = new DrawerNavigator(sideMenu);
   navigator.mount();
 });
 

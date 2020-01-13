@@ -14,8 +14,8 @@ const componentC = new Component('C');
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  stack = new Stack('ID', [componentA, componentB, componentC]);
-  navigator = new ModalNavigator('STACK', stack);
+  stack = new Stack([componentA, componentB, componentC]);
+  navigator = new ModalNavigator(stack);
   navigator.mount();
 });
 

@@ -10,12 +10,12 @@ const componentA = new Component('A');
 const componentB = new Component('B');
 const componentC = new Component('C');
 
-const stack = new Stack('stack', [componentA, componentB, componentC]);
+const stack = new Stack([componentA, componentB, componentC]);
 
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  navigator = new StackNavigator('STACK', stack);
+  navigator = new StackNavigator(stack);
   navigator.mount();
 });
 

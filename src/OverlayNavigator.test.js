@@ -1,36 +1,36 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Layout/Component';
+import OverlayComponent from './Layout/OverlayComponent';
 import OverlayNavigator from './OverlayNavigator';
 
-let component;
+let overlay;
 let navigator;
 
 beforeEach(() => {
-  component = new Component('A');
-  navigator = new OverlayNavigator('B', component);
+  overlay = new OverlayComponent('A');
+  navigator = new OverlayNavigator(overlay);
 });
 
 test('mount', () => {
   navigator.mount();
 
-  expect(Navigation.showOverlay).toHaveBeenCalledWith(component.getLayout());
+  expect(Navigation.showOverlay).toHaveBeenCalledWith(overlay.getLayout());
 });
 
 test('unmount', () => {
   navigator.unmount();
 
-  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
+  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('overlay-A');
 });
 
 test('goBack', () => {
   navigator.goBack();
 
-  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
+  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('overlay-A');
 });
 
 test('dismiss', () => {
   navigator.dismiss();
 
-  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
+  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('overlay-A');
 });
