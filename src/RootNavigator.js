@@ -8,7 +8,7 @@ const events = Navigation.events();
 
 export default class RootNavigator extends Navigator {
   constructor(navigators, options = {}) {
-    super(options.name || 'Root');
+    super();
 
     this.navigators = navigators;
     this.route = null;

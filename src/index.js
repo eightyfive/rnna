@@ -44,8 +44,8 @@ export function createOverlayNavigator(Component, navigatorConfig = {}) {
   return new OverlayNavigator(overlay);
 }
 
-export function createBottomTabNavigator(name, routes, config) {
-  // return new BottomTabNavigator(name, bottomTabs, config);
+export function createBottomTabNavigator(routes, config) {
+  // return new BottomTabNavigator(bottomTabs, config);
 
   // TODO
   return null;
@@ -92,10 +92,10 @@ export function createDrawerNavigator(
   return new DrawerNavigator(sideMenu);
 }
 
-export function createSwitchNavigator(name, routes, navigatorConfig = {}) {
+export function createSwitchNavigator(routes, navigatorConfig = {}) {
   const navigators = getNavigators(routes, navigatorConfig);
 
-  return new SwitchNavigator(name, navigators);
+  return new SwitchNavigator(navigators);
 }
 
 export function createRootNavigator(
@@ -151,7 +151,7 @@ function getModalNavigators(routes, navigatorConfig) {
   const navigators = [];
 
   Object.keys(routes).forEach(name => {
-    const navigator = createModalNavigator(name, routes[name], navigatorConfig);
+    const navigator = createModalNavigator(routes[name], navigatorConfig);
 
     navigators.push(navigator);
   });
@@ -163,11 +163,7 @@ function getOverlayNavigators(routes, navigatorConfig) {
   const navigators = [];
 
   Object.keys(routes).forEach(name => {
-    const navigator = createOverlayNavigator(
-      name,
-      routes[name],
-      navigatorConfig,
-    );
+    const navigator = createOverlayNavigator(routes[name], navigatorConfig);
 
     navigators.push(navigator);
   });

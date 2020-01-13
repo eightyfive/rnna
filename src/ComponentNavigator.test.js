@@ -5,7 +5,7 @@ import ComponentNavigator from './ComponentNavigator';
 
 test('mount', () => {
   const component = new Component('A');
-  const navigator = new ComponentNavigator('B', component);
+  const navigator = new ComponentNavigator(component);
 
   navigator.mount();
 

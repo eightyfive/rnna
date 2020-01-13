@@ -3,8 +3,8 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class BottomTabNavigator extends Navigator {
-  constructor(name, navigators, bottomTabs, config = {}) {
-    super(name);
+  constructor(navigators, bottomTabs, config = {}) {
+    super();
 
     this.navigators = navigators;
 

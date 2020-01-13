@@ -1,18 +1,13 @@
 import Component from './Layout/Component';
 import ComponentNavigator from './ComponentNavigator';
 
-let component;
 let navigator;
 
+const component = new Component('A');
 const route = 'main/users/User';
 
 beforeEach(() => {
-  component = new Component('A');
-  navigator = new ComponentNavigator('B', component);
-});
-
-test('name', () => {
-  expect(navigator.name).toBe('B');
+  navigator = new ComponentNavigator(component);
 });
 
 test('getRouteSegments', () => {

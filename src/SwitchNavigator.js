@@ -1,8 +1,8 @@
 import Navigator from './Navigator';
 
 export default class SwitchNavigator extends Navigator {
-  constructor(name, navigators) {
-    super(name);
+  constructor(navigators) {
+    super();
 
     this.navigators = navigators;
     this.history = [];

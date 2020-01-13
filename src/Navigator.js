@@ -1,8 +1,4 @@
 export default /** abstract */ class Navigator {
-  constructor(name) {
-    this.name = name;
-  }
-
   mount() {
     throwAbstract('mount');
   }

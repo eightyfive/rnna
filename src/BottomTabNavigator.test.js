@@ -11,7 +11,7 @@ let navigator;
 
 // Component A
 const componentA = new Component('a');
-const componentANavigator = new ComponentNavigator('A', componentA);
+const componentANavigator = new ComponentNavigator(componentA);
 
 // Stack
 const componentB = new Component('B');
@@ -26,7 +26,6 @@ const params = { foo: 'bar' };
 
 beforeEach(() => {
   navigator = new BottomTabNavigator(
-    'TABS',
     [componentANavigator, stackNavigator],
     tabs,
   );
