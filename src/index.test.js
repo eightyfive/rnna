@@ -5,8 +5,9 @@ import {
   createModalNavigator,
   createOverlayNavigator,
   createStackNavigator,
+  createWidget,
 } from './index';
-import * as Layout from './Layout';
+import WidgetComponent from './WidgetComponent';
 import ComponentNavigator from './ComponentNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import OverlayNavigator from './OverlayNavigator';
@@ -60,4 +61,11 @@ test('create Drawer Navigator', () => {
 
   expect(navigator instanceof DrawerNavigator).toBe(true);
   expect(navigator.drawer instanceof ComponentNavigator).toBe(true);
+});
+
+test('create Widget', () => {
+  const widget = createWidget(A);
+
+  expect(widget instanceof WidgetComponent).toBe(true);
+  expect(widget.id).toBe('widget-A');
 });

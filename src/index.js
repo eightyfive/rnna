@@ -2,8 +2,9 @@ import React from 'react';
 import { Navigation } from 'react-native-navigation';
 import _mapValues from 'lodash/mapValues';
 import _mergeWith from 'lodash/mergeWith';
+import _set from 'lodash/set';
 
-import * as Layout from './Layout';
+import WidgetComponent from './WidgetComponent';
 import ComponentNavigator from './ComponentNavigator';
 import Navigator from './Navigator';
 import BottomTabNavigator from './BottomTabNavigator';
@@ -80,7 +81,7 @@ function createNavigators(routes, config) {
 }
 
 function createComponentNavigator(name, route, config) {
-  const [Component, options] = normalizeRoute(navigator, config);
+  const [Component, options] = normalizeRoute(route, config);
 
   registerComponent(name, Component, config);
 
@@ -89,35 +90,23 @@ function createComponentNavigator(name, route, config) {
   return new ComponentNavigator(name, config);
 }
 
-export function createWidget(id, Component, config) {
-  return createWidgetComponent(id, {}, Component, config);
+export function createWidget(Component, config = {}) {
+  const component = new WidgetComponent(Component.name);
+
+  registerComponent(component.id, Component, config);
+
+  return component;
 }
 
 export function setDefaultOptions({ navigationOptions, ...options }) {
   const defaultOptions = merge(
     options,
-    Layout.getNavigationOptions(navigationOptions),
+    getNavigationOptions(navigationOptions),
   );
 
   events.registerAppLaunchedListener(() =>
     Navigation.setDefaultOptions(defaultOptions),
   );
-}
-
-function createOverlayComponent(id, options, Component, config) {
-  const component = new Layout.OverlayComponent(id, options);
-
-  registerComponent(component.id, Component, config);
-
-  return component;
-}
-
-function createWidgetComponent(id, options, Component, config) {
-  const component = new Layout.WidgetComponent(id, options);
-
-  registerComponent(component.id, Component, config);
-
-  return component;
 }
 
 function normalizeRoute(route, config) {
@@ -135,9 +124,9 @@ function getComponentOptions(route, config) {
   const options = merge(
     {},
     defaultOptions,
-    Layout.getNavigationOptions(defaultOptions.navigationOptions),
-    Layout.getNavigationOptions(routeConfig.navigationOptions),
-    Layout.getNavigationOptions(Component.navigationOptions),
+    getNavigationOptions(defaultOptions.navigationOptions),
+    getNavigationOptions(routeConfig.navigationOptions),
+    getNavigationOptions(Component.navigationOptions),
     routeConfig.options,
     typeof Component.options !== 'function' ? Component.options : {},
   );
@@ -147,6 +136,41 @@ function getComponentOptions(route, config) {
   }
 
   // return undefined;
+}
+
+function getNavigationOptions(nav) {
+  const options = {};
+
+  if (!nav) {
+    return options;
+  }
+
+  if (nav.header === null) {
+    _set(options, 'topBar.visible', false);
+    _set(options, 'topBar.drawBehind', true);
+  } else {
+    if (nav.title) {
+      _set(options, 'topBar.title.text', nav.title);
+    }
+
+    if (nav.headerTintColor) {
+      _set(options, 'topBar.title.color', nav.headerTintColor);
+    }
+
+    let style;
+
+    style = nav.headerStyle;
+    if (style && style.backgroundColor) {
+      _set(options, 'topBar.background.color', style.backgroundColor);
+    }
+
+    style = nav.headerBackTitleStyle;
+    if (style && style.color) {
+      _set(options, 'topBar.backButton.color', style.color);
+    }
+  }
+
+  return options;
 }
 
 function registerComponent(id, Component, { Provider, store }) {
