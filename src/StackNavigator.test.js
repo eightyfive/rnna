@@ -4,30 +4,26 @@ import { createStackNavigator } from './index';
 
 let navigator;
 
-function ComponentA() {}
-function ComponentB() {}
-function ComponentC() {}
+function A() {}
+function B() {}
+function C() {}
 
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  navigator = createStackNavigator({
-    A: ComponentA,
-    B: ComponentB,
-    C: ComponentC,
-  });
+  navigator = createStackNavigator({ A, B, C });
   navigator.mount();
 });
 
 test('mount', () => {
-  const initialLayout = navigator.stack.getLayout('A');
-  const initialComponentId = 'A';
-
-  expect(navigator.initialComponentId).toBe(initialComponentId);
-  expect(navigator.activeId).toBe(initialComponentId);
-  expect(navigator.history).toEqual([initialComponentId]);
-  expect(navigator.getInitialLayout()).toEqual(initialLayout);
-  expect(Navigation.setRoot).toHaveBeenCalledWith({ root: initialLayout });
+  expect(navigator.history).toEqual(['A']);
+  expect(Navigation.setRoot).toHaveBeenCalledWith({
+    root: {
+      stack: {
+        children: [{ component: { id: 'A', name: 'A' } }],
+      },
+    },
+  });
 });
 
 test('push', () => {
@@ -35,12 +31,7 @@ test('push', () => {
 
   expect(navigator.history).toEqual(['A', 'B']);
   expect(Navigation.push).toHaveBeenCalledWith('A', {
-    component: {
-      id: 'B',
-      name: 'B',
-      options: {},
-      passProps: params,
-    },
+    component: { id: 'B', name: 'B', passProps: params },
   });
 });
 

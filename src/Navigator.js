@@ -20,7 +20,7 @@ export default /** abstract */ class Navigator {
   }
 
   getRouteSegments(route) {
-    return route ? route.split('/') : [];
+    return route.split('/');
   }
 }
 

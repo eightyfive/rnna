@@ -1,15 +1,17 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Layout/Component';
 import ComponentNavigator from './ComponentNavigator';
 
 test('mount', () => {
-  const component = new Component('A');
-  const navigator = new ComponentNavigator(component);
-
+  const navigator = new ComponentNavigator('A');
   navigator.mount();
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: component.getLayout(),
+    root: {
+      component: {
+        id: 'A',
+        name: 'A',
+      },
+    },
   });
 });

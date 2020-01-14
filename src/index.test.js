@@ -7,54 +7,57 @@ import {
   createStackNavigator,
 } from './index';
 import * as Layout from './Layout';
+import ComponentNavigator from './ComponentNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import StackNavigator from './StackNavigator';
 
-function ComponentA() {}
-function ComponentB() {}
+function A() {}
+function B() {}
 function Drawer() {}
 
 test('create Stack Navigator', () => {
-  const navigator = createStackNavigator({ ComponentA, ComponentB });
+  const navigator = createStackNavigator({ A, B });
 
   expect(Navigation.registerComponent).toHaveBeenNthCalledWith(
     1,
-    'ComponentA',
+    'A',
     expect.anything(),
   );
   expect(Navigation.registerComponent).toHaveBeenNthCalledWith(
     2,
-    'ComponentB',
+    'B',
     expect.anything(),
   );
 
   expect(navigator instanceof StackNavigator).toBe(true);
-  expect(navigator.stack instanceof Layout.Stack).toBe(true);
 });
 
 test('create Modal Navigator', () => {
-  const navigator = createModalNavigator({ ComponentA, ComponentB });
+  const navigator = createModalNavigator({ A, B });
 
   expect(navigator instanceof StackNavigator).toBe(true);
 });
 
 test('create Overlay Navigator', () => {
-  const navigator = createOverlayNavigator({ ComponentA, ComponentB });
+  const navigator = createOverlayNavigator({ A, B });
 
   expect(navigator instanceof OverlayNavigator).toBe(true);
   expect(navigator.overlay instanceof Layout.OverlayComponent).toBe(true);
 });
 
 test('create Drawer Navigator', () => {
-  const navigator = createDrawerNavigator(Drawer, { ComponentA, ComponentB });
+  const navigator = createDrawerNavigator(
+    Drawer,
+    { A, B },
+    { drawerId: 'customDrawerId' },
+  );
 
   expect(Navigation.registerComponent).toHaveBeenCalledWith(
-    'Drawer',
+    'customDrawerId',
     expect.anything(),
   );
 
   expect(navigator instanceof DrawerNavigator).toBe(true);
-  expect(navigator.sideMenu instanceof Layout.SideMenu).toBe(true);
-  expect(navigator.sideMenu.menu instanceof Layout.Component).toBe(true);
+  expect(navigator.drawer instanceof ComponentNavigator).toBe(true);
 });

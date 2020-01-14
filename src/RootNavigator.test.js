@@ -4,44 +4,44 @@ import { createStackNavigator, createRootNavigator } from './index';
 
 let root;
 
-let stack1;
-let stack2;
+let ab;
+let cd;
 
 function Splash() {}
 
-function ComponentA() {}
-function ComponentB() {}
-function ComponentC() {}
-function ComponentD() {}
+function A() {}
+function B() {}
+function C() {}
+function D() {}
 
 beforeEach(() => {
-  stack1 = createStackNavigator({ ComponentA, ComponentB });
-  stack2 = createStackNavigator({ ComponentC, ComponentD });
+  ab = createStackNavigator({ A, B });
+  cd = createStackNavigator({ C, D });
 
-  stack1.mount = jest.fn();
-
-  root = createRootNavigator({ Splash, stack1, stack2 });
+  root = createRootNavigator({ Splash, ab, cd });
   root.mount();
 });
 
 test('mount', () => {
-  expect(stack1.mount).not.toHaveBeenCalled();
+  ab.mount = jest.fn();
+
+  expect(ab.mount).not.toHaveBeenCalled();
 });
 
 test('navigate', () => {
-  stack2.mount = jest.fn();
+  cd.mount = jest.fn();
 
-  root.navigate('stack2');
+  root.navigate('cd');
 
-  expect(stack2.mount).toHaveBeenCalled();
+  expect(cd.mount).toHaveBeenCalled();
 });
 
 test('navigate deep', () => {
-  stack2.mount = jest.fn();
-  stack2.push = jest.fn();
+  cd.mount = jest.fn();
+  cd.push = jest.fn();
 
-  root.navigate('stack2/D');
+  root.navigate('cd/D');
 
-  expect(stack2.mount).toHaveBeenCalled();
-  expect(stack2.push).toHaveBeenCalledWith('D', undefined, 'Splash');
+  expect(cd.mount).toHaveBeenCalled();
+  expect(cd.push).toHaveBeenCalledWith('D', undefined, 'Splash');
 });

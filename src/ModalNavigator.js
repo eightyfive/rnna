@@ -4,10 +4,10 @@ import StackNavigator from './StackNavigator';
 
 export default class ModalNavigator extends StackNavigator {
   mount() {
-    // TOFIX: Duplicate with Stack.mount
+    // TOFIX: Duplicate with StackNavigator.mount
     this.history = [this.initialComponentId];
 
-    Navigation.showModal(this.getInitialLayout());
+    Navigation.showModal(this.getLayout(this.initialRouteName));
   }
 
   unmount(fromId) {

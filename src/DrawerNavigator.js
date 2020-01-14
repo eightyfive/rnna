@@ -5,12 +5,13 @@ import StackNavigator from './StackNavigator';
 const events = Navigation.events();
 
 export default class DrawerNavigator extends StackNavigator {
-  constructor(sideMenu, config = {}) {
-    super(sideMenu.center, config);
+  constructor(routes, drawer, config = {}) {
+    super(routes, config);
 
-    this.drawer = sideMenu.menu;
-    this.sideMenu = sideMenu;
+    this.drawer = drawer;
+    this.side = config.side || 'left';
     this.visible = false;
+    this.options = config.options;
 
     this.didAppearListener = events.registerComponentDidAppearListener(
       this.handleDidAppear,
@@ -33,8 +34,23 @@ export default class DrawerNavigator extends StackNavigator {
     }
   };
 
-  getInitialLayout() {
-    return this.sideMenu.getLayout(this.initialComponentId);
+  mount() {
+    this.history = [this.initialRouteName];
+
+    Navigation.setRoot({ root: this.getLayout(this.initialRouteName) });
+  }
+
+  getLayout(componentId) {
+    const layout = {
+      center: super.getLayout(componentId),
+      [this.side]: this.drawer.getLayout(),
+    };
+
+    if (this.options) {
+      layout.options = { ...this.options };
+    }
+
+    return { sideMenu: layout };
   }
 
   navigate(toId, params) {
@@ -59,17 +75,11 @@ export default class DrawerNavigator extends StackNavigator {
   }
 
   openDrawer() {
-    Navigation.mergeOptions(
-      this.drawer.id,
-      this.sideMenu.getVisibleLayout(true),
-    );
+    Navigation.mergeOptions(this.drawer.id, this.getVisibleLayout(true));
   }
 
   closeDrawer() {
-    Navigation.mergeOptions(
-      this.drawer.id,
-      this.sideMenu.getVisibleLayout(false),
-    );
+    Navigation.mergeOptions(this.drawer.id, this.getVisibleLayout(false));
   }
 
   toggleDrawer() {
@@ -78,5 +88,13 @@ export default class DrawerNavigator extends StackNavigator {
     } else {
       this.openDrawer();
     }
+  }
+
+  getVisibleLayout(visible) {
+    const layout = {
+      [this.side]: { visible },
+    };
+
+    return { sideMenu: layout };
   }
 }

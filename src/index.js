@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
+import _mapValues from 'lodash/mapValues';
 import _mergeWith from 'lodash/mergeWith';
 
 import * as Layout from './Layout';
@@ -15,14 +16,14 @@ import SwitchNavigator from './SwitchNavigator';
 
 const events = Navigation.events();
 
-export function createStackNavigator(routes, navigatorConfig = {}) {
-  const stack = createStack(routes, navigatorConfig);
+export function createStackNavigator(routes, config = {}) {
+  const navigators = createNavigators(routes, config);
 
-  if (navigatorConfig.mode === 'modal') {
-    return new ModalNavigator(stack, navigatorConfig);
+  if (config.mode === 'modal') {
+    return new ModalNavigator(navigators, config);
   }
 
-  return new StackNavigator(stack, navigatorConfig);
+  return new StackNavigator(navigators, config);
 }
 
 export function createModalNavigator(routes, config = {}) {
@@ -31,99 +32,63 @@ export function createModalNavigator(routes, config = {}) {
   return createStackNavigator(routes, config);
 }
 
-export function createOverlayNavigator(Component, navigatorConfig = {}) {
-  const options = getComponentOptions(Component, navigatorConfig);
+export function createOverlayNavigator(Component, config = {}) {
+  const options = getComponentOptions(Component, config);
 
-  const overlay = createOverlayComponent(
-    name,
-    options,
-    Component,
-    navigatorConfig,
-  );
+  const overlay = createOverlayComponent(name, options, Component, config);
 
   return new OverlayNavigator(overlay);
 }
 
 export function createBottomTabNavigator(routes, config) {
-  // return new BottomTabNavigator(bottomTabs, config);
-
   // TODO
+  // return new BottomTabNavigator(routes, config);
+
   return null;
 }
 
-// export function createBottomTabNavigator(id, routes, navigatorConfig = {}) {
-//   const navigators = [];
-//   const bottomTabs = new Layout.BottomTabs(id, [], navigatorConfig.options);
+export function createDrawerNavigator(DrawerComponent, routes, config = {}) {
+  const navigators = createNavigators(routes, config);
 
-//   Object.keys(routes).forEach(name => {
-//     const navigator = routes[name];
-
-//     if (!(navigator instanceof StackNavigator)) {
-//       throw new Error(
-//         'BottomTabNavigator only accepts StackNavigator children',
-//       );
-//     }
-
-//     bottomTabs.children.push(navigator.stack);
-
-//     navigators.push(navigator);
-//   });
-
-//   return new BottomTabNavigator(id, navigators, bottomTabs, navigatorConfig);
-// }
-
-// TODO: https://reactnavigation.org/docs/en/drawer-navigator.html
-export function createDrawerNavigator(
-  DrawerComponent,
-  routes,
-  navigatorConfig = {},
-) {
-  // Drawer
-  const drawer = createComponent(
-    'Drawer',
-    {},
+  const drawer = createComponentNavigator(
+    config.drawerId || 'Drawer',
     DrawerComponent,
-    navigatorConfig,
+    config,
   );
 
-  // sideMenu
-  const sideMenu = createSideMenu(drawer, routes, navigatorConfig);
-
-  return new DrawerNavigator(sideMenu);
+  return new DrawerNavigator(navigators, drawer, config);
 }
 
-export function createSwitchNavigator(routes, navigatorConfig = {}) {
-  const navigators = getNavigators(routes, navigatorConfig);
+export function createSwitchNavigator(routes, config = {}) {
+  const navigators = createNavigators(routes, config);
 
   return new SwitchNavigator(navigators);
 }
 
-export function createRootNavigator(routes, navigatorConfig = {}) {
-  return new RootNavigator(
-    getNavigators(routes, navigatorConfig),
-    navigatorConfig,
-  );
+export function createRootNavigator(routes, config = {}) {
+  return new RootNavigator(createNavigators(routes, config), config);
 }
 
-function getNavigators(routes, navigatorConfig) {
-  Object.keys(routes).forEach(name => {
-    const navigator = routes[name];
+function createNavigators(routes, config) {
+  return _mapValues(routes, (navigator, name) => {
+    const isNavigator = navigator instanceof Navigator;
 
-    if (!(navigator instanceof Navigator)) {
-      const [Component, options] = normalizeRoute(navigator, navigatorConfig);
-
-      const component = createComponent(
-        name,
-        options,
-        Component,
-        navigatorConfig,
-      );
-
-      routes[name] = new ComponentNavigator(component);
+    if (!isNavigator) {
+      return createComponentNavigator(name, navigator, config);
     }
-  });
 
-  return routes;
+    return navigator;
+  });
+}
+
+function createComponentNavigator(name, route, config) {
+  const [Component, options] = normalizeRoute(navigator, config);
+
+  registerComponent(name, Component, config);
+
+  config.options = options;
+
+  return new ComponentNavigator(name, config);
 }
 
 export function createWidget(id, Component, config) {
@@ -139,37 +104,6 @@ export function setDefaultOptions({ navigationOptions, ...options }) {
   events.registerAppLaunchedListener(() =>
     Navigation.setDefaultOptions(defaultOptions),
   );
-}
-
-function createStack(routes, navigatorConfig) {
-  const children = [];
-
-  Object.keys(routes).forEach(name => {
-    const [Component, options] = normalizeRoute(routes[name], navigatorConfig);
-
-    children.push(createComponent(name, options, Component, navigatorConfig));
-  });
-
-  return new Layout.Stack(children, navigatorConfig.defaultOptions);
-}
-
-function createSideMenu(drawer, routes, navigatorConfig, config = {}) {
-  const center = createStack(`${drawer.id}-Center`, routes, navigatorConfig);
-
-  return new Layout.SideMenu(
-    drawer,
-    center,
-    navigatorConfig.defaultOptions || {},
-    config,
-  );
-}
-
-function createComponent(id, options, Component, config) {
-  const component = new Layout.Component(id, options);
-
-  registerComponent(component.id, Component, config);
-
-  return component;
 }
 
 function createOverlayComponent(id, options, Component, config) {
@@ -188,19 +122,19 @@ function createWidgetComponent(id, options, Component, config) {
   return component;
 }
 
-function normalizeRoute(route, navigatorConfig) {
+function normalizeRoute(route, config) {
   const Component = route.screen || route;
-  const options = getComponentOptions(route, navigatorConfig);
+  const options = getComponentOptions(route, config);
 
   return [Component, options];
 }
 
-function getComponentOptions(route, navigatorConfig) {
-  const { defaultOptions = {} } = navigatorConfig;
+function getComponentOptions(route, config) {
+  const { defaultOptions = {} } = config;
   const Component = route.screen || route;
   const routeConfig = route.screen ? route : {};
 
-  return merge(
+  const options = merge(
     {},
     defaultOptions,
     Layout.getNavigationOptions(defaultOptions.navigationOptions),
@@ -209,6 +143,12 @@ function getComponentOptions(route, navigatorConfig) {
     routeConfig.options,
     typeof Component.options !== 'function' ? Component.options : {},
   );
+
+  if (Object.keys(options).length) {
+    return options;
+  }
+
+  // return undefined;
 }
 
 function registerComponent(id, Component, { Provider, store }) {

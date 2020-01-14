@@ -1,64 +1,65 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Layout/Component';
-import Stack from './Layout/Stack';
-import StackNavigator from './StackNavigator';
-import DrawerNavigator from './DrawerNavigator';
-import SideMenu from './Layout/SideMenu';
+import { createDrawerNavigator } from './index';
 
 let navigator;
 
-// Stack
-const componentA = new Component('a');
-const componentB = new Component('b');
+function A() {}
+function B() {}
 
-const stack = new Stack([componentA, componentB]);
-const stackNavigator = new StackNavigator(stack);
-
-// Side menu
-const drawer = new Component('drawer');
-const sideMenu = new SideMenu(drawer, stack);
-
-const params = { foo: 'bar' };
+function Drawer() {}
 
 beforeEach(() => {
-  navigator = new DrawerNavigator(sideMenu);
+  navigator = createDrawerNavigator(Drawer, { A, B });
   navigator.mount();
 });
 
 test('navigate', () => {
-  navigator.navigate('a');
+  navigator.navigate('A');
+
   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
 });
 
 test('go back', () => {
-  navigator.navigate('b');
-  navigator.goBack('b');
+  navigator.navigate('B');
+  navigator.goBack('B');
 
   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
 });
 
 test('mount', () => {
   expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: sideMenu.getLayout('a'),
+    root: {
+      sideMenu: {
+        left: {
+          component: { id: 'Drawer', name: 'Drawer' },
+        },
+        center: {
+          stack: {
+            children: [{ component: { id: 'A', name: 'A' } }],
+          },
+        },
+      },
+    },
   });
 });
 
 test('open drawer', () => {
-  navigator.navigate('drawer');
+  navigator.navigate('Drawer');
+
   expect(Navigation.mergeOptions).toHaveBeenCalledWith(
-    'drawer',
-    sideMenu.getVisibleLayout(true),
+    'Drawer',
+    navigator.getVisibleLayout(true),
   );
 });
 
 test('close drawer', () => {
-  navigator.navigate('drawer');
-  navigator.handleDidAppear({ componentId: 'drawer' });
+  navigator.navigate('Drawer');
+  navigator.handleDidAppear({ componentId: 'Drawer' });
   navigator.goBack();
 
   expect(Navigation.mergeOptions).toHaveBeenCalledWith(
-    'drawer',
-    sideMenu.getVisibleLayout(false),
+    'Drawer',
+    navigator.getVisibleLayout(false),
   );
 });

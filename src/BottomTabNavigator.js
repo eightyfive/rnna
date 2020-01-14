@@ -14,6 +14,23 @@ export default class BottomTabNavigator extends Navigator {
     this.tabIndex = 0;
   }
 
+  getLayout() {
+    // TODO
+    return { bottomTabs: {} };
+
+    // const layout = {
+    //   id: this.id,
+    //   name: this.name,
+    //   children: this.children.map(child => child.getLayout()),
+    // };
+
+    // if (this.options) {
+    //   layout.options = { ...this.options };
+    // }
+
+    // return { bottomTabs: layout };
+  }
+
   get active() {
     return this.navigators[this.tabIndex];
   }
