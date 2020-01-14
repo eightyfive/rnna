@@ -40,10 +40,10 @@ test('create Modal Navigator', () => {
 });
 
 test('create Overlay Navigator', () => {
-  const navigator = createOverlayNavigator({ A, B });
+  const navigator = createOverlayNavigator(A);
 
   expect(navigator instanceof OverlayNavigator).toBe(true);
-  expect(navigator.overlay instanceof Layout.OverlayComponent).toBe(true);
+  expect(navigator.id).toBe('overlay-A');
 });
 
 test('create Drawer Navigator', () => {

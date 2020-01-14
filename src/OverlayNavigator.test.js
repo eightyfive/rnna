@@ -1,20 +1,24 @@
 import { Navigation } from 'react-native-navigation';
 
-import OverlayComponent from './Layout/OverlayComponent';
-import OverlayNavigator from './OverlayNavigator';
+import { createOverlayNavigator } from './index';
 
-let overlay;
 let navigator;
 
+function A() {}
+
 beforeEach(() => {
-  overlay = new OverlayComponent('A');
-  navigator = new OverlayNavigator(overlay);
+  navigator = createOverlayNavigator(A);
 });
 
 test('mount', () => {
   navigator.mount();
 
-  expect(Navigation.showOverlay).toHaveBeenCalledWith(overlay.getLayout());
+  expect(Navigation.showOverlay).toHaveBeenCalledWith({
+    component: {
+      id: 'overlay-A',
+      name: 'overlay-A',
+    },
+  });
 });
 
 test('unmount', () => {

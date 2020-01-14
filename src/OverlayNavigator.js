@@ -1,20 +1,18 @@
 import { Navigation } from 'react-native-navigation';
 
-import Navigator from './Navigator';
+import ComponentNavigator from './ComponentNavigator';
 
-export default class OverlayNavigator extends Navigator {
-  constructor(overlay) {
-    super();
-
-    this.overlay = overlay;
+export default class OverlayNavigator extends ComponentNavigator {
+  constructor(id, config) {
+    super(`overlay-${id}`, config);
   }
 
   mount() {
-    Navigation.showOverlay(this.overlay.getLayout());
+    Navigation.showOverlay(this.getLayout());
   }
 
   unmount() {
-    Navigation.dismissOverlay(this.overlay.name);
+    Navigation.dismissOverlay(this.id);
   }
 
   // Alias

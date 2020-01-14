@@ -33,11 +33,9 @@ export function createModalNavigator(routes, config = {}) {
 }
 
 export function createOverlayNavigator(Component, config = {}) {
-  const options = getComponentOptions(Component, config);
+  registerComponent(Component.name, Component, config);
 
-  const overlay = createOverlayComponent(name, options, Component, config);
-
-  return new OverlayNavigator(overlay);
+  return new OverlayNavigator(Component.name);
 }
 
 export function createBottomTabNavigator(routes, config) {
@@ -51,7 +49,7 @@ export function createDrawerNavigator(DrawerComponent, routes, config = {}) {
   const navigators = createNavigators(routes, config);
 
   const drawer = createComponentNavigator(
-    config.drawerId || 'Drawer',
+    config.drawerId || DrawerComponent.name,
     DrawerComponent,
     config,
   );
