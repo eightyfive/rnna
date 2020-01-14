@@ -3,52 +3,62 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class BottomTabNavigator extends Navigator {
-  constructor(navigators, bottomTabs, config = {}) {
+  constructor(routes, config = {}) {
     super();
 
-    this.navigators = navigators;
-
-    this.bottomTabs = bottomTabs;
-    this.order = config.order || this.bottomTabs.getOrder();
-    this.initialComponentId = config.initialRouteName || this.order[0];
+    this.routes = routes;
+    this.order = config.order || Object.keys(routes);
+    this.initialRouteName = options.initialRouteName || this.order[0];
+    this.layoutId = config.layoutId || this.order.join('-');
     this.tabIndex = 0;
   }
 
   getLayout() {
-    // TODO
-    return { bottomTabs: {} };
+    const layout = {
+      id: this.layoutId,
+      name: this.layoutId,
+      children: this.order.map(key => this.getNavigator(key).getLayout()),
+    };
 
-    // const layout = {
-    //   id: this.id,
-    //   name: this.name,
-    //   children: this.children.map(child => child.getLayout()),
-    // };
+    if (this.options) {
+      layout.options = { ...this.options };
+    }
 
-    // if (this.options) {
-    //   layout.options = { ...this.options };
-    // }
+    return { bottomTabs: layout };
+  }
 
-    // return { bottomTabs: layout };
+  getNavigator(key) {
+    const navigator = this.routes[key];
+
+    if (!navigator) {
+      throw new Error(`Unknown navigator: ${key}`);
+    }
+
+    return navigator;
   }
 
   get active() {
-    return this.navigators[this.tabIndex];
+    const name = this.order[this.tabIndex];
+
+    return this.getNavigator(name);
   }
 
   mount() {
-    Navigation.setRoot({ root: this.bottomTabs.getLayout() });
+    Navigation.setRoot({ root: this.getLayout() });
   }
 
   navigate(route, params, fromId) {
-    const tabId = this.getRouteNavigator(route);
-    const index = this.getTabIndex(tabId);
+    const name = this.getRouteNavigator(route);
+    const index = this.order.findIndex(key => key === name);
+
+    if (index === -1) {
+      throw new Error(`Unknown tab: ${name}`);
+    }
 
     if (this.tabIndex !== index) {
       this.tabIndex = index;
 
-      const layoutId = this.bottomTabs.id;
-
-      Navigation.mergeOptions(layoutId, {
+      Navigation.mergeOptions(this.layoutId, {
         bottomTabs: { currentTabIndex: index },
       });
     }
@@ -62,17 +72,5 @@ export default class BottomTabNavigator extends Navigator {
 
   goBack() {
     // TODO
-  }
-
-  getTabIndex(name) {
-    const index = this.navigators.findIndex(
-      navigator => navigator.name === name,
-    );
-
-    if (index === -1) {
-      throw new Error(`Unknown bottomTabs tab: ${name}`);
-    }
-
-    return index;
   }
 }

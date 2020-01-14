@@ -19,7 +19,7 @@ export default class RootNavigator extends Navigator {
     this.stack = [];
     this.overlays = [];
 
-    this.fromId = options.initialComponentId || 'Splash';
+    this.fromId = this.initialRouteName;
     this.onLaunched = [];
     this.onTabSelected = [];
 

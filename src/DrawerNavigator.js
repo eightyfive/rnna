@@ -62,7 +62,7 @@ export default class DrawerNavigator extends StackNavigator {
       }
 
       // StackNavigator.push
-      super.navigate(toId, params, this.initialComponentId);
+      super.navigate(toId, params, this.initialRouteName);
     }
   }
 
