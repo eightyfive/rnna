@@ -7,7 +7,7 @@ import _set from 'lodash/set';
 import WidgetComponent from './WidgetComponent';
 import ComponentNavigator from './ComponentNavigator';
 import Navigator from './Navigator';
-import BottomTabNavigator from './BottomTabNavigator';
+import BottomTabsNavigator from './BottomTabsNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import StackNavigator from './StackNavigator';
 import ModalNavigator from './ModalNavigator';
@@ -39,11 +39,10 @@ export function createOverlayNavigator(Component, config = {}) {
   return new OverlayNavigator(Component.name);
 }
 
-export function createBottomTabNavigator(routes, config) {
-  // TODO
-  // return new BottomTabNavigator(routes, config);
+export function createBottomTabsNavigator(routes, config) {
+  const navigators = createNavigators(routes, config);
 
-  return null;
+  return new BottomTabsNavigator(navigators, config);
 }
 
 export function createDrawerNavigator(DrawerComponent, routes, config = {}) {
