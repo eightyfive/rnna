@@ -39,7 +39,7 @@ export function createOverlayNavigator(Component, config = {}) {
   return new OverlayNavigator(Component.name);
 }
 
-export function createBottomTabsNavigator(routes, config) {
+export function createBottomTabsNavigator(routes, config = {}) {
   const navigators = createNavigators(routes, config);
 
   return new BottomTabsNavigator(navigators, config);

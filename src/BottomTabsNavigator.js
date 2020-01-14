@@ -8,9 +8,11 @@ export default class BottomTabsNavigator extends Navigator {
 
     this.routes = routes;
     this.order = config.order || Object.keys(routes);
-    this.initialRouteName = options.initialRouteName || this.order[0];
+    this.initialRouteName = config.initialRouteName || this.order[0];
     this.layoutId = config.layoutId || this.order.join('-');
     this.tabIndex = 0;
+
+    this.options = config.options;
   }
 
   getLayout() {
