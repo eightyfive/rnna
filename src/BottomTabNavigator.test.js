@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createBottomTabsNavigator } from './index';
+import { createBottomTabNavigator } from './index';
 
 let navigator;
 
@@ -10,7 +10,7 @@ function B() {}
 function Drawer() {}
 
 beforeEach(() => {
-  navigator = createBottomTabsNavigator({ A, B });
+  navigator = createBottomTabNavigator({ A, B });
   navigator.mount();
 });
 
