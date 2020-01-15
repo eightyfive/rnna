@@ -4,6 +4,8 @@ import _mapValues from 'lodash/mapValues';
 import _mergeWith from 'lodash/mergeWith';
 import _set from 'lodash/set';
 import _pick from 'lodash/pick';
+import _isPlainObject from 'lodash/isPlainObject';
+import _isEmpty from 'lodash/isEmpty';
 
 import WidgetComponent from './WidgetComponent';
 import ComponentNavigator from './ComponentNavigator';
@@ -19,14 +21,15 @@ import SwitchNavigator from './SwitchNavigator';
 const events = Navigation.events();
 
 export function createStackNavigator(routes, config = {}, Provider, store) {
-  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes);
   const navigatorConfig = getStackNavigatorConfig(config);
+  const navigators = createNavigators(routeConfigs, config, Provider, store);
 
   if (navigatorConfig.mode === 'modal') {
-    return new ModalNavigator(routeConfigs, navigatorConfig);
+    return new ModalNavigator(navigators, navigatorConfig);
   }
 
-  return new StackNavigator(routeConfigs, navigatorConfig);
+  return new StackNavigator(navigators, navigatorConfig);
 }
 
 export function createModalNavigator(routes, config = {}, Provider, store) {
@@ -52,10 +55,11 @@ export function createBottomTabsNavigator(
   Provider,
   store,
 ) {
-  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes);
+  const navigators = createNavigators(routeConfigs, config, Provider, store);
   const navigatorConfig = getBottomTabNavigatorConfig(config);
 
-  return new BottomTabsNavigator(routeConfigs, navigatorConfig);
+  return new BottomTabsNavigator(navigators, navigatorConfig);
 }
 
 export function createDrawerNavigator(
@@ -65,57 +69,86 @@ export function createDrawerNavigator(
   Provider,
   store,
 ) {
-  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes);
   const navigatorConfig = getDrawerNavigatorConfig(config);
-
-  const drawer = createComponentNavigator(
-    DrawerComponent,
-    config,
+  const navigators = createNavigators(
+    routeConfigs,
+    navigatorConfig,
     Provider,
     store,
   );
 
-  return new DrawerNavigator(routeConfigs, drawer, navigatorConfig);
+  const drawer = createComponentNavigator(
+    DrawerComponent.name,
+    DrawerComponent,
+    getComponentOptions(DrawerComponent),
+    Provider,
+    store,
+  );
+
+  return new DrawerNavigator(navigators, drawer, navigatorConfig);
 }
 
 // TODO: https://reactnavigation.org/docs/en/switch-navigator.html
 export function createSwitchNavigator(routes, config = {}, Provider, store) {
-  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes);
+  const navigators = createNavigators(routeConfigs, config, Provider, store);
+  const navigatorConfig = getSwitchNavigatorConfig(config);
 
-  return new SwitchNavigator(routeConfigs);
+  return new SwitchNavigator(navigators, navigatorConfig);
 }
 
 export function createRootNavigator(routes, config = {}, Provider, store) {
-  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes);
+  const navigators = createNavigators(routeConfigs, config, Provider, store);
 
-  return new RootNavigator(routeConfigs, config);
+  return new RootNavigator(navigators, config);
 }
 
-function createRouteConfigs(routes, config, Provider, store) {
-  return _mapValues(routes, (navigator, name) => {
-    const isNavigator = navigator instanceof Navigator;
-
-    if (!isNavigator) {
-      return createComponentNavigator(navigator, config, Provider, store);
+function createRouteConfigs(routes) {
+  return _mapValues(routes, (route, routeName) => {
+    if (_isPlainObject(route)) {
+      return route;
     }
 
-    return navigator;
+    return {
+      screen: route,
+    };
   });
 }
 
-function createComponentNavigator(route, config, Provider, store) {
-  const Component = route.screen || route;
-  const routeConfig = route.screen ? route : {};
+function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
+  return _mapValues(routeConfigs, (routeConfig, routeName) => {
+    const { screen, options, navigationOptions } = routeConfig;
 
-  registerComponent(Component.name, Component, Provider, store);
+    if (screen instanceof Navigator) {
+      return routeConfig;
+    }
 
-  config.options = getComponentOptions(
-    Component,
-    routeConfig,
-    config.defaultOptions,
-  );
+    const { defaultOptions, defaultNavigationOptions } = navigatorConfig;
 
-  return new ComponentNavigator(Component.name, config);
+    const options = getComponentOptions(
+      screen,
+      options,
+      navigationOptions,
+      defaultOptions,
+      defaultNavigationOptions,
+    );
+
+    return createComponentNavigator(
+      routeName,
+      routeConfig.screen,
+      options,
+      Provider,
+      store,
+    );
+  });
+}
+
+function createComponentNavigator(name, Component, options, Provider, store) {
+  registerComponent(name, Component, Provider, store);
+
+  return new ComponentNavigator(name, { options });
 }
 
 export function createWidget(Component, config = {}, Provider, store) {
@@ -129,7 +162,7 @@ export function createWidget(Component, config = {}, Provider, store) {
 export function setDefaultOptions({ navigationOptions, ...options }) {
   const defaultOptions = merge(
     options,
-    getNavigationOptions(navigationOptions),
+    getNavigationOptions(navigationOptions || {}),
   );
 
   events.registerAppLaunchedListener(() =>
@@ -137,18 +170,24 @@ export function setDefaultOptions({ navigationOptions, ...options }) {
   );
 }
 
-function getComponentOptions(Component, routeConfig, defaultOptions = {}) {
+function getComponentOptions(
+  Component,
+  routeOptions = {},
+  routeNavigationOptions = {},
+  defaultOptions = {},
+  defaultNavigationOptions = {},
+) {
   const options = merge(
     {},
+    getNavigationOptions(defaultNavigationOptions),
     defaultOptions,
-    getNavigationOptions(defaultOptions.navigationOptions),
-    getNavigationOptions(routeConfig.navigationOptions),
-    getNavigationOptions(Component.navigationOptions),
-    routeConfig.options,
+    getNavigationOptions(routeNavigationOptions),
+    getNavigationOptions(Component.navigationOptions || {}),
+    routeOptions,
     typeof Component.options !== 'function' ? Component.options : {},
   );
 
-  if (Object.keys(options).length) {
+  if (!_isEmpty(options)) {
     return options;
   }
 
@@ -157,10 +196,6 @@ function getComponentOptions(Component, routeConfig, defaultOptions = {}) {
 
 function getNavigationOptions(navigationOptions) {
   const options = {};
-
-  if (!navigationOptions) {
-    return options;
-  }
 
   const {
     header,
@@ -196,40 +231,29 @@ function getNavigationOptions(navigationOptions) {
 
 // https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
 function getStackNavigatorConfig(config) {
-  return _pick(
-    config,
-    'initialRouteName',
+  return getNavigatorConfig(config, [
     'initialRouteParams',
     'initialRouteKey',
-    'navigationOptions',
-    'defaultNavigationOptions',
-    'paths',
     'mode',
     'headerMode',
-  );
+  ]);
 }
 
 // https://reactnavigation.org/docs/en/bottom-tab-navigator.html#bottomtabnavigatorconfig
 function getBottomTabNavigatorConfig(config) {
-  return _pick(
-    config,
-    'initialRouteName',
-    'navigationOptions',
-    'defaultNavigationOptions',
+  return getNavigatorConfig(config, [
     'resetOnBlur',
     'order',
-    'paths',
     'backBehavior',
     'lazy',
     'tabBarComponent',
     'tabBarOptions',
-  );
+  ]);
 }
 
 // https://reactnavigation.org/docs/en/drawer-navigator.html#drawernavigatorconfig
 function getDrawerNavigatorConfig(config) {
-  return _pick(
-    config,
+  return getNavigatorConfig(config, [
     'drawerBackgroundColor',
     'drawerPosition',
     'drawerType',
@@ -245,14 +269,27 @@ function getDrawerNavigatorConfig(config) {
     'unmountInactiveRoutes',
     'contentComponent',
     'contentOptions',
-    'navigationOptions',
-    'defaultNavigationOptions',
     //
-    'initialRouteName',
     'order',
-    'paths',
     'backBehavior',
-  );
+  ]);
+}
+
+// https://reactnavigation.org/docs/en/switch-navigator.html#switchnavigatorconfig
+function getSwitchNavigatorConfig(config) {
+  return getNavigatorConfig(config, ['resetOnBlur', 'backBehavior']);
+}
+
+const navigatorConfigKeys = [
+  'initialRouteName',
+  'navigationOptions',
+  'defaultOptions', // N/S
+  'defaultNavigationOptions',
+  'paths',
+];
+
+function getNavigatorConfig(config, keys) {
+  return _pick(config, navigatorConfigKeys.concat(keys));
 }
 
 function registerComponent(id, Component, Provider, store) {
