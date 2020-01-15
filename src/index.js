@@ -17,8 +17,8 @@ import SwitchNavigator from './SwitchNavigator';
 
 const events = Navigation.events();
 
-export function createStackNavigator(routes, config = {}) {
-  const navigators = createNavigators(routes, config);
+export function createStackNavigator(routes, config = {}, Provider, store) {
+  const navigators = createNavigators(routes, config, Provider, store);
 
   if (config.mode === 'modal') {
     return new ModalNavigator(navigators, config);
@@ -27,72 +27,98 @@ export function createStackNavigator(routes, config = {}) {
   return new StackNavigator(navigators, config);
 }
 
-export function createModalNavigator(routes, config = {}) {
+export function createModalNavigator(routes, config = {}, Provider, store) {
   config.mode = 'modal';
 
-  return createStackNavigator(routes, config);
+  return createStackNavigator(routes, config, Provider, store);
 }
 
-export function createOverlayNavigator(Component, config = {}) {
-  registerComponent(Component.name, Component, config);
+export function createOverlayNavigator(
+  Component,
+  config = {},
+  Provider,
+  store,
+) {
+  registerComponent(Component.name, Component, Provider, store);
 
-  return new OverlayNavigator(Component.name);
+  return new OverlayNavigator(Component.name, config);
 }
 
-export function createBottomTabsNavigator(routes, config = {}) {
-  const navigators = createNavigators(routes, config);
+export function createBottomTabsNavigator(
+  routes,
+  config = {},
+  Provider,
+  store,
+) {
+  const navigators = createNavigators(routes, config, Provider, store);
 
   return new BottomTabsNavigator(navigators, config);
 }
 
-export function createDrawerNavigator(DrawerComponent, routes, config = {}) {
-  const navigators = createNavigators(routes, config);
+export function createDrawerNavigator(
+  DrawerComponent,
+  routes,
+  config = {},
+  Provider,
+  store,
+) {
+  const navigators = createNavigators(routes, config, Provider, store);
 
   const drawer = createComponentNavigator(
     config.drawerId || DrawerComponent.name,
     DrawerComponent,
     config,
+    Provider,
+    store,
   );
 
   return new DrawerNavigator(navigators, drawer, config);
 }
 
-export function createSwitchNavigator(routes, config = {}) {
-  const navigators = createNavigators(routes, config);
+// TODO: https://reactnavigation.org/docs/en/switch-navigator.html
+export function createSwitchNavigator(routes, config = {}, Provider, store) {
+  const navigators = createNavigators(routes, config, Provider, store);
 
   return new SwitchNavigator(navigators);
 }
 
-export function createRootNavigator(routes, config = {}) {
-  return new RootNavigator(createNavigators(routes, config), config);
+export function createRootNavigator(routes, config = {}, Provider, store) {
+  const navigators = createNavigators(routes, config, Provider, store);
+
+  return new RootNavigator(navigators, config);
 }
 
-function createNavigators(routes, config) {
+function createNavigators(routes, config, Provider, store) {
   return _mapValues(routes, (navigator, name) => {
     const isNavigator = navigator instanceof Navigator;
 
     if (!isNavigator) {
-      return createComponentNavigator(name, navigator, config);
+      return createComponentNavigator(name, navigator, config, Provider, store);
     }
 
     return navigator;
   });
 }
 
-function createComponentNavigator(name, route, config) {
-  const [Component, options] = normalizeRoute(route, config);
+function createComponentNavigator(name, route, config, Provider, store) {
+  const Component = route.screen || route;
+  const routeConfig = route.screen ? route : {};
 
-  registerComponent(name, Component, config);
+  registerComponent(name, Component, Provider, store);
 
-  config.options = options;
+  config.options = getComponentOptions(
+    Component,
+    routeConfig,
+    config.defaultOptions,
+  );
 
   return new ComponentNavigator(name, config);
 }
 
-export function createWidget(Component, config = {}) {
+export function createWidget(Component, config = {}, Provider, store) {
   const component = new WidgetComponent(Component.name);
 
-  registerComponent(component.id, Component, config);
+  registerComponent(component.id, Component, Provider, store);
 
   return component;
 }
@@ -108,18 +134,7 @@ export function setDefaultOptions({ navigationOptions, ...options }) {
   );
 }
 
-function normalizeRoute(route, config) {
-  const Component = route.screen || route;
-  const options = getComponentOptions(route, config);
-
-  return [Component, options];
-}
-
-function getComponentOptions(route, config) {
-  const { defaultOptions = {} } = config;
-  const Component = route.screen || route;
-  const routeConfig = route.screen ? route : {};
-
+function getComponentOptions(Component, routeConfig, defaultOptions = {}) {
   const options = merge(
     {},
     defaultOptions,
@@ -137,42 +152,51 @@ function getComponentOptions(route, config) {
   // return undefined;
 }
 
-function getNavigationOptions(nav) {
+function getNavigationOptions(navigationOptions) {
   const options = {};
 
-  if (!nav) {
+  if (!navigationOptions) {
     return options;
   }
 
-  if (nav.header === null) {
+  const {
+    header,
+    headerTintColor,
+    headerStyle,
+    headerBackTitleStyle,
+    title,
+  } = navigationOptions;
+
+  if (header === null) {
     _set(options, 'topBar.visible', false);
     _set(options, 'topBar.drawBehind', true);
   } else {
-    if (nav.title) {
-      _set(options, 'topBar.title.text', nav.title);
+    if (title) {
+      _set(options, 'topBar.title.text', title);
     }
 
-    if (nav.headerTintColor) {
-      _set(options, 'topBar.title.color', nav.headerTintColor);
+    if (headerTintColor) {
+      _set(options, 'topBar.title.color', headerTintColor);
     }
 
-    let style;
-
-    style = nav.headerStyle;
-    if (style && style.backgroundColor) {
+    if (headerStyle && headerStyle.backgroundColor) {
       _set(options, 'topBar.background.color', style.backgroundColor);
     }
 
-    style = nav.headerBackTitleStyle;
-    if (style && style.color) {
-      _set(options, 'topBar.backButton.color', style.color);
+    if (headerBackTitleStyle && headerBackTitleStyle.color) {
+      _set(options, 'topBar.backButton.color', headerBackTitleStyle.color);
     }
   }
 
   return options;
 }
 
-function registerComponent(id, Component, { Provider, store }) {
+// https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
+function getStackNavigatorConfig() {
+  return;
+}
+
+function registerComponent(id, Component, Provider, store) {
   if (Provider) {
     Navigation.registerComponent(
       id,
