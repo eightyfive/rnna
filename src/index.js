@@ -18,13 +18,13 @@ import SwitchNavigator from './SwitchNavigator';
 const events = Navigation.events();
 
 export function createStackNavigator(routes, config = {}, Provider, store) {
-  const navigators = createNavigators(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
 
   if (config.mode === 'modal') {
-    return new ModalNavigator(navigators, config);
+    return new ModalNavigator(routeConfigs, config);
   }
 
-  return new StackNavigator(navigators, config);
+  return new StackNavigator(routeConfigs, config);
 }
 
 export function createModalNavigator(routes, config = {}, Provider, store) {
@@ -50,9 +50,9 @@ export function createBottomTabsNavigator(
   Provider,
   store,
 ) {
-  const navigators = createNavigators(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
 
-  return new BottomTabsNavigator(navigators, config);
+  return new BottomTabsNavigator(routeConfigs, config);
 }
 
 export function createDrawerNavigator(
@@ -62,7 +62,7 @@ export function createDrawerNavigator(
   Provider,
   store,
 ) {
-  const navigators = createNavigators(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
 
   const drawer = createComponentNavigator(
     DrawerComponent,
@@ -71,23 +71,23 @@ export function createDrawerNavigator(
     store,
   );
 
-  return new DrawerNavigator(navigators, drawer, config);
+  return new DrawerNavigator(routeConfigs, drawer, config);
 }
 
 // TODO: https://reactnavigation.org/docs/en/switch-navigator.html
 export function createSwitchNavigator(routes, config = {}, Provider, store) {
-  const navigators = createNavigators(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
 
-  return new SwitchNavigator(navigators);
+  return new SwitchNavigator(routeConfigs);
 }
 
 export function createRootNavigator(routes, config = {}, Provider, store) {
-  const navigators = createNavigators(routes, config, Provider, store);
+  const routeConfigs = createRouteConfigs(routes, config, Provider, store);
 
-  return new RootNavigator(navigators, config);
+  return new RootNavigator(routeConfigs, config);
 }
 
-function createNavigators(routes, config, Provider, store) {
+function createRouteConfigs(routes, config, Provider, store) {
   return _mapValues(routes, (navigator, name) => {
     const isNavigator = navigator instanceof Navigator;
 
