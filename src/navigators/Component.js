@@ -1,9 +1,6 @@
-export default class Component {
-  constructor(id, options) {
-    this.id = id;
-    this.options = options;
-  }
+import Layout from './Layout';
 
+export default class Component extends Layout {
   getLayout(passProps) {
     const layout = {
       id: this.id,

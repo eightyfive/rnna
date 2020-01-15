@@ -1,8 +1,8 @@
 import { Navigation } from 'react-native-navigation';
 
-import ComponentNavigator from './ComponentNavigator';
+import Component from './Component';
 
-export default class OverlayNavigator extends ComponentNavigator {
+export default class OverlayNavigator extends Component {
   constructor(id, config) {
     super(`overlay-${id}`, config);
   }

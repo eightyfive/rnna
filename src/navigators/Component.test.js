@@ -1,9 +1,9 @@
 import { Navigation } from 'react-native-navigation';
 
-import ComponentNavigator from './ComponentNavigator';
+import Component from './Component';
 
 test('mount', () => {
-  const navigator = new ComponentNavigator('A');
+  const navigator = new Componentfrom('A');
   navigator.mount();
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({

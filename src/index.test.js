@@ -7,12 +7,13 @@ import {
   createStackNavigator,
   createWidget,
 } from './index';
-import WidgetComponent from './WidgetComponent';
+
 import {
-  ComponentNavigator,
+  Component,
   DrawerNavigator,
   OverlayNavigator,
   StackNavigator,
+  WidgetComponent,
 } from './navigators';
 
 function A() {}
@@ -62,7 +63,7 @@ test('create Drawer Navigator', () => {
   );
 
   expect(navigator instanceof DrawerNavigator).toBe(true);
-  expect(navigator.drawer instanceof ComponentNavigator).toBe(true);
+  expect(navigator.drawer instanceof Component).toBe(true);
 });
 
 test('create Widget', () => {

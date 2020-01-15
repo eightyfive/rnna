@@ -7,10 +7,9 @@ import _pick from 'lodash/pick';
 import _isPlainObject from 'lodash/isPlainObject';
 import _isEmpty from 'lodash/isEmpty';
 
-import WidgetComponent from './WidgetComponent';
 import {
   BottomTabNavigator,
-  ComponentNavigator,
+  Component as ComponentNavigator,
   DrawerNavigator,
   ModalNavigator,
   Navigator,
@@ -18,6 +17,7 @@ import {
   RootNavigator,
   StackNavigator,
   SwitchNavigator,
+  WidgetComponent,
 } from './navigators';
 
 const events = Navigation.events();
@@ -75,7 +75,7 @@ export function createDrawerNavigator(
     store,
   );
 
-  const drawer = createComponentNavigator(
+  const drawer = createComponent(
     DrawerComponent.name,
     DrawerComponent,
     getComponentOptions(DrawerComponent),
@@ -132,7 +132,7 @@ function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
       defaultNavigationOptions,
     );
 
-    return createComponentNavigator(
+    return createComponent(
       routeName,
       routeConfig.screen,
       options,
@@ -142,7 +142,7 @@ function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
   });
 }
 
-function createComponentNavigator(name, Component, options, Provider, store) {
+function createComponent(name, Component, options, Provider, store) {
   registerComponent(name, Component, Provider, store);
 
   return new ComponentNavigator(name, { options });

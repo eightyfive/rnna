@@ -1,11 +1,11 @@
-import ComponentNavigator from './ComponentNavigator';
+import Component from './Component';
 
 let navigator;
 
 const route = 'main/users/User';
 
 beforeEach(() => {
-  navigator = new ComponentNavigator('A');
+  navigator = new Component('A');
 });
 
 test('getRouteSegments', () => {
