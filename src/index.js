@@ -53,8 +53,9 @@ export function createBottomTabsNavigator(
   store,
 ) {
   const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const navigatorConfig = getBottomTabNavigatorConfig(config);
 
-  return new BottomTabsNavigator(routeConfigs, config);
+  return new BottomTabsNavigator(routeConfigs, navigatorConfig);
 }
 
 export function createDrawerNavigator(
@@ -204,6 +205,23 @@ function getStackNavigatorConfig(config) {
     'paths',
     'mode',
     'headerMode',
+  );
+}
+
+// https://reactnavigation.org/docs/en/bottom-tab-navigator.html#bottomtabnavigatorconfig
+function getBottomTabNavigatorConfig(config) {
+  return _pick(
+    config,
+    'initialRouteName',
+    'navigationOptions',
+    'defaultNavigationOptions',
+    'resetOnBlur',
+    'order',
+    'paths',
+    'backBehavior',
+    'lazy',
+    'tabBarComponent',
+    'tabBarOptions',
   );
 }
 
