@@ -66,6 +66,7 @@ export function createDrawerNavigator(
   store,
 ) {
   const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const navigatorConfig = getDrawerNavigatorConfig(config);
 
   const drawer = createComponentNavigator(
     DrawerComponent,
@@ -74,7 +75,7 @@ export function createDrawerNavigator(
     store,
   );
 
-  return new DrawerNavigator(routeConfigs, drawer, config);
+  return new DrawerNavigator(routeConfigs, drawer, navigatorConfig);
 }
 
 // TODO: https://reactnavigation.org/docs/en/switch-navigator.html
@@ -222,6 +223,35 @@ function getBottomTabNavigatorConfig(config) {
     'lazy',
     'tabBarComponent',
     'tabBarOptions',
+  );
+}
+
+// https://reactnavigation.org/docs/en/drawer-navigator.html#drawernavigatorconfig
+function getDrawerNavigatorConfig(config) {
+  return _pick(
+    config,
+    'drawerBackgroundColor',
+    'drawerPosition',
+    'drawerType',
+    'drawerWidth',
+    'edgeWidth',
+    'hideStatusBar',
+    'statusBarAnimation',
+    'keyboardDismissMode',
+    'minSwipeDistance',
+    'overlayColor',
+    'gestureHandlerProps',
+    'lazy',
+    'unmountInactiveRoutes',
+    'contentComponent',
+    'contentOptions',
+    'navigationOptions',
+    'defaultNavigationOptions',
+    //
+    'initialRouteName',
+    'order',
+    'paths',
+    'backBehavior',
   );
 }
 
