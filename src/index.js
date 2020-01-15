@@ -8,15 +8,17 @@ import _isPlainObject from 'lodash/isPlainObject';
 import _isEmpty from 'lodash/isEmpty';
 
 import WidgetComponent from './WidgetComponent';
-import ComponentNavigator from './ComponentNavigator';
-import Navigator from './Navigator';
-import BottomTabNavigator from './BottomTabNavigator';
-import DrawerNavigator from './DrawerNavigator';
-import StackNavigator from './StackNavigator';
-import ModalNavigator from './ModalNavigator';
-import OverlayNavigator from './OverlayNavigator';
-import RootNavigator from './RootNavigator';
-import SwitchNavigator from './SwitchNavigator';
+import {
+  BottomTabNavigator,
+  ComponentNavigator,
+  DrawerNavigator,
+  ModalNavigator,
+  Navigator,
+  OverlayNavigator,
+  RootNavigator,
+  StackNavigator,
+  SwitchNavigator,
+} from './navigators';
 
 const events = Navigation.events();
 
