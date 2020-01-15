@@ -1,6 +1,17 @@
-import Layout from './Layout';
+import Navigator from './Navigator';
 
-export default class Component extends Layout {
+export default class Component extends Navigator {
+  constructor(id, config = {}) {
+    super();
+
+    this.id = id;
+    this.options = config.options;
+  }
+
+  mount() {
+    Navigation.setRoot({ root: this.getLayout() });
+  }
+
   getLayout(passProps) {
     const layout = {
       id: this.id,
