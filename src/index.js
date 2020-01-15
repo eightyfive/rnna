@@ -65,7 +65,6 @@ export function createDrawerNavigator(
   const navigators = createNavigators(routes, config, Provider, store);
 
   const drawer = createComponentNavigator(
-    config.drawerId || DrawerComponent.name,
     DrawerComponent,
     config,
     Provider,
@@ -93,18 +92,18 @@ function createNavigators(routes, config, Provider, store) {
     const isNavigator = navigator instanceof Navigator;
 
     if (!isNavigator) {
-      return createComponentNavigator(name, navigator, config, Provider, store);
+      return createComponentNavigator(navigator, config, Provider, store);
     }
 
     return navigator;
   });
 }
 
-function createComponentNavigator(name, route, config, Provider, store) {
+function createComponentNavigator(route, config, Provider, store) {
   const Component = route.screen || route;
   const routeConfig = route.screen ? route : {};
 
-  registerComponent(name, Component, Provider, store);
+  registerComponent(Component.name, Component, Provider, store);
 
   config.options = getComponentOptions(
     Component,
@@ -112,7 +111,7 @@ function createComponentNavigator(name, route, config, Provider, store) {
     config.defaultOptions,
   );
 
-  return new ComponentNavigator(name, config);
+  return new ComponentNavigator(Component.name, config);
 }
 
 export function createWidget(Component, config = {}, Provider, store) {
