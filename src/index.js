@@ -3,6 +3,7 @@ import { Navigation } from 'react-native-navigation';
 import _mapValues from 'lodash/mapValues';
 import _mergeWith from 'lodash/mergeWith';
 import _set from 'lodash/set';
+import _pick from 'lodash/pick';
 
 import WidgetComponent from './WidgetComponent';
 import ComponentNavigator from './ComponentNavigator';
@@ -19,12 +20,13 @@ const events = Navigation.events();
 
 export function createStackNavigator(routes, config = {}, Provider, store) {
   const routeConfigs = createRouteConfigs(routes, config, Provider, store);
+  const navigatorConfig = getStackNavigatorConfig(config);
 
-  if (config.mode === 'modal') {
-    return new ModalNavigator(routeConfigs, config);
+  if (navigatorConfig.mode === 'modal') {
+    return new ModalNavigator(routeConfigs, navigatorConfig);
   }
 
-  return new StackNavigator(routeConfigs, config);
+  return new StackNavigator(routeConfigs, navigatorConfig);
 }
 
 export function createModalNavigator(routes, config = {}, Provider, store) {
@@ -191,8 +193,18 @@ function getNavigationOptions(navigationOptions) {
 }
 
 // https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
-function getStackNavigatorConfig() {
-  return;
+function getStackNavigatorConfig(config) {
+  return _pick(
+    config,
+    'initialRouteName',
+    'initialRouteParams',
+    'initialRouteKey',
+    'navigationOptions',
+    'defaultNavigationOptions',
+    'paths',
+    'mode',
+    'headerMode',
+  );
 }
 
 function registerComponent(id, Component, Provider, store) {
