@@ -1,11 +1,10 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
-import _mapValues from 'lodash/mapValues';
-import _mergeWith from 'lodash/mergeWith';
-import _set from 'lodash/set';
-import _pick from 'lodash/pick';
-import _isPlainObject from 'lodash/isPlainObject';
-import _isEmpty from 'lodash/isEmpty';
+import _mapValues from 'lodash.mapvalues';
+import _mergeWith from 'lodash.mergewith';
+import _set from 'lodash.set';
+import _pick from 'lodash.pick';
+import _isEmpty from 'lodash.isempty';
 
 import BottomTabNavigator from './BottomTabNavigator';
 import Component from './Component';
@@ -119,15 +118,9 @@ export function createAppNavigator(
 }
 
 function createRouteConfigs(routes) {
-  return _mapValues(routes, (route, routeName) => {
-    if (_isPlainObject(route)) {
-      return route;
-    }
-
-    return {
-      screen: route,
-    };
-  });
+  return _mapValues(routes, route =>
+    route.screen ? route : { screen: route },
+  );
 }
 
 function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
