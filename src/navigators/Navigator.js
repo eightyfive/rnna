@@ -1,8 +1,6 @@
-export default /** abstract */ class Navigator {
-  mount() {
-    throwAbstract('mount');
-  }
+import Mountable from './Mountable';
 
+export default /** abstract */ class Navigator extends Mountable {
   unmount(fromId) {}
 
   getRouteNavigator(route) {

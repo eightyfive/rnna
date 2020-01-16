@@ -1,6 +1,6 @@
-import Navigator from './Navigator';
+import Mountable from './Mountable';
 
-export default class Component extends Navigator {
+export default class Component extends Mountable {
   constructor(id, config = {}) {
     super();
 
