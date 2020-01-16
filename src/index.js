@@ -40,10 +40,11 @@ export function createModalNavigator(routes, config = {}, Provider, store) {
   return createStackNavigator(routes, config, Provider, store);
 }
 
-export function createOverlayNavigator(Comp, config = {}, Provider, store) {
-  registerComponent(Comp.name, Comp, Provider, store);
+export function createOverlayNavigator(routes, config = {}, Provider, store) {
+  const routeConfigs = createRouteConfigs(routes);
+  const navigators = createNavigators(routeConfigs, config, Provider, store);
 
-  return new OverlayNavigator(Comp.name, config);
+  return new OverlayNavigator(navigators, config);
 }
 
 export function createBottomTabNavigator(routes, config = {}, Provider, store) {

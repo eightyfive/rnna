@@ -16,16 +16,6 @@ export default class StackNavigator extends Navigator {
     );
   }
 
-  getNavigator(key) {
-    const navigator = this.routes[key];
-
-    if (!navigator) {
-      throw new Error(`Unknown navigator: ${key}`);
-    }
-
-    return navigator;
-  }
-
   getLayout(componentId) {
     const index = this.order.findIndex(id => id === componentId);
     const children = this.order.slice(0, index + 1);

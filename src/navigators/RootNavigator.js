@@ -53,16 +53,6 @@ export default class RootNavigator extends Navigator {
     }
   };
 
-  getNavigator(key) {
-    const navigator = this.routes[key];
-
-    if (!navigator) {
-      throw new Error(`Unknown navigator: ${key}`);
-    }
-
-    return navigator;
-  }
-
   mount() {
     this.mounted = true;
     this.navigate(this.initialRouteName);

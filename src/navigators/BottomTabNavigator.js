@@ -26,16 +26,6 @@ export default class BottomTabNavigator extends Navigator {
     return { bottomTabs: layout };
   }
 
-  getNavigator(key) {
-    const navigator = this.routes[key];
-
-    if (!navigator) {
-      throw new Error(`Unknown navigator: ${key}`);
-    }
-
-    return navigator;
-  }
-
   get active() {
     const name = this.order[this.tabIndex];
 
@@ -69,7 +59,7 @@ export default class BottomTabNavigator extends Navigator {
     }
   }
 
-  goBack() {
+  goBack(fromId) {
     // TODO
   }
 }

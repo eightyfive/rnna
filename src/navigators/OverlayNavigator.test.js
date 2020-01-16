@@ -7,7 +7,7 @@ let navigator;
 function A() {}
 
 beforeEach(() => {
-  navigator = createOverlayNavigator(A);
+  navigator = createOverlayNavigator({ A });
 });
 
 test('mount', () => {
