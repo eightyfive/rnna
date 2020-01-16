@@ -54,20 +54,20 @@ export function createBottomTabNavigator(routes, config = {}, Provider, store) {
   return new BottomTabNavigator(navigators, navigatorConfig);
 }
 
-export function createDrawerNavigator(
-  DrawerComponent,
-  routes,
-  config = {},
-  Provider,
-  store,
-) {
+export function createDrawerNavigator(routes, config = {}, Provider, store) {
   const routeConfigs = createRouteConfigs(routes);
   const navigatorConfig = getDrawerNavigatorConfig(config);
 
-  const drawer = createComponent(
-    DrawerComponent.name,
-    DrawerComponent,
-    getComponentOptions(DrawerComponent),
+  const { contentComponent } = navigatorConfig;
+
+  if (!contentComponent) {
+    throw new Error('config.contentComponent is required');
+  }
+
+  navigatorConfig.drawer = createComponent(
+    contentComponent.name,
+    contentComponent,
+    getComponentOptions(contentComponent),
     Provider,
     store,
   );
@@ -79,7 +79,7 @@ export function createDrawerNavigator(
     store,
   );
 
-  return new DrawerNavigator(navigators, drawer, navigatorConfig);
+  return new DrawerNavigator(navigators, navigatorConfig);
 }
 
 // TODO: https://reactnavigation.org/docs/en/switch-navigator.html

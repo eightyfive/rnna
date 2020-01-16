@@ -10,7 +10,7 @@ function B() {}
 function Drawer() {}
 
 beforeEach(() => {
-  navigator = createDrawerNavigator(Drawer, { A, B });
+  navigator = createDrawerNavigator({ A, B }, { contentComponent: Drawer });
   navigator.mount();
 });
 

@@ -52,9 +52,8 @@ test('create Overlay Navigator', () => {
 
 test('create Drawer Navigator', () => {
   const navigator = createDrawerNavigator(
-    Drawer,
     { A, B },
-    // { drawerId: 'customDrawerId' },
+    { contentComponent: Drawer },
   );
 
   // expect(Navigation.registerComponent).toHaveBeenCalledWith(

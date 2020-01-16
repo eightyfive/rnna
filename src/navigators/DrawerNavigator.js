@@ -1,15 +1,24 @@
 import { Navigation } from 'react-native-navigation';
 
+import Component from './Component';
 import StackNavigator from './StackNavigator';
 
 const events = Navigation.events();
 
 export default class DrawerNavigator extends StackNavigator {
-  constructor(routes, drawer, config = {}) {
+  constructor(routes, config = {}) {
+    if (!config.drawer) {
+      throw new Error('config.drawer is required');
+    }
+
+    if (!(config.drawer instanceof Component)) {
+      throw new Error('config.drawer must be of type `Component`');
+    }
+
     super(routes, config);
 
-    this.drawer = drawer;
-    this.side = config.side || 'left';
+    this.drawer = config.drawer;
+    this.drawerPosition = config.drawerPosition || 'left';
     this.visible = false;
     this.options = config.options;
 
@@ -43,7 +52,7 @@ export default class DrawerNavigator extends StackNavigator {
   getLayout(componentId) {
     const layout = {
       center: super.getLayout(componentId),
-      [this.side]: this.drawer.getLayout(),
+      [this.drawerPosition]: this.drawer.getLayout(),
     };
 
     if (this.options) {
@@ -92,7 +101,7 @@ export default class DrawerNavigator extends StackNavigator {
 
   getVisibleLayout(visible) {
     const layout = {
-      [this.side]: { visible },
+      [this.drawerPosition]: { visible },
     };
 
     return { sideMenu: layout };
