@@ -17,7 +17,7 @@ export default class StackNavigator extends Navigator {
 
   getLayout(componentId) {
     const routeName = componentId || this.initialRouteName;
-    const index = this.order.findIndex(name => name === rounteName);
+    const index = this.order.findIndex(name => name === routeName);
     const children = this.order.slice(0, index + 1);
 
     const layout = {
