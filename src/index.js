@@ -34,13 +34,10 @@ export function createStackNavigator(
   return new StackNavigator(navigators, navigatorConfig);
 }
 
-export function createModalNavigator(
-  routes,
-  { store, Provider, ...config } = {},
-) {
+export function createModalNavigator(routes, config = {}) {
   config.mode = 'modal';
 
-  return createStackNavigator(routes, config, Provider, store);
+  return createStackNavigator(routes, config);
 }
 
 export function createOverlayNavigator(
