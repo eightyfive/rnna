@@ -7,18 +7,16 @@ import _pick from 'lodash/pick';
 import _isPlainObject from 'lodash/isPlainObject';
 import _isEmpty from 'lodash/isEmpty';
 
-import {
-  BottomTabNavigator,
-  Component,
-  DrawerNavigator,
-  ModalNavigator,
-  Navigator,
-  OverlayNavigator,
-  AppNavigator,
-  StackNavigator,
-  SwitchNavigator,
-  WidgetComponent,
-} from './navigators';
+import BottomTabNavigator from './BottomTabNavigator';
+import Component from './Component';
+import DrawerNavigator from './DrawerNavigator';
+import ModalNavigator from './ModalNavigator';
+import Navigator from './Navigator';
+import OverlayNavigator from './OverlayNavigator';
+import AppNavigator from './AppNavigator';
+import StackNavigator from './StackNavigator';
+import SwitchNavigator from './SwitchNavigator';
+import WidgetComponent from './WidgetComponent';
 
 const events = Navigation.events();
 

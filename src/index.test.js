@@ -8,13 +8,11 @@ import {
   createWidget,
 } from './index';
 
-import {
-  Component,
-  DrawerNavigator,
-  OverlayNavigator,
-  StackNavigator,
-  WidgetComponent,
-} from './navigators';
+import Component from './Component';
+import DrawerNavigator from './DrawerNavigator';
+import OverlayNavigator from './OverlayNavigator';
+import StackNavigator from './StackNavigator';
+import WidgetComponent from './WidgetComponent';
 
 function A() {}
 function B() {}
