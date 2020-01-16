@@ -4,11 +4,8 @@ import Navigator from './Navigator';
 
 export default class BottomTabNavigator extends Navigator {
   constructor(routes, config = {}) {
-    super();
+    super(routes, config);
 
-    this.routes = routes;
-    this.order = config.order || Object.keys(routes);
-    this.initialRouteName = config.initialRouteName || this.order[0];
     this.layoutId = config.layoutId || this.order.join('-');
     this.tabIndex = 0;
 

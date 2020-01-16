@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createOverlayNavigator } from './index';
+import { createOverlayNavigator } from '../index';
 
 let navigator;
 

@@ -7,3 +7,4 @@ export { default as OverlayNavigator } from './OverlayNavigator';
 export { default as RootNavigator } from './RootNavigator';
 export { default as StackNavigator } from './StackNavigator';
 export { default as SwitchNavigator } from './SwitchNavigator';
+export { default as WidgetComponent } from './WidgetComponent';

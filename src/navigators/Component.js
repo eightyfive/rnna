@@ -1,3 +1,5 @@
+import { Navigation } from 'react-native-navigation';
+
 import Mountable from './Mountable';
 
 export default class Component extends Mountable {
@@ -11,6 +13,8 @@ export default class Component extends Mountable {
   mount() {
     Navigation.setRoot({ root: this.getLayout() });
   }
+
+  unmount(fromId) {}
 
   getLayout(passProps) {
     const layout = {

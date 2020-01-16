@@ -6,11 +6,8 @@ const events = Navigation.events();
 
 export default class StackNavigator extends Navigator {
   constructor(routes, config = {}) {
-    super();
+    super(routes, config);
 
-    this.routes = routes;
-    this.order = config.order || Object.keys(routes);
-    this.initialRouteName = config.initialRouteName || this.order[0];
     this.history = [];
     this.options = config.options;
 

@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createStackNavigator, createRootNavigator } from './index';
+import { createStackNavigator, createRootNavigator } from '../index';
 
 let root;
 

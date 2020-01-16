@@ -1,6 +1,14 @@
 import Mountable from './Mountable';
 
 export default /** abstract */ class Navigator extends Mountable {
+  constructor(routes, config) {
+    super();
+
+    this.routes = routes;
+    this.order = config.order || Object.keys(routes);
+    this.initialRouteName = config.initialRouteName || this.order[0];
+  }
+
   unmount(fromId) {}
 
   getRouteNavigator(route) {

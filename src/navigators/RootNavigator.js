@@ -7,12 +7,9 @@ import OverlayNavigator from './OverlayNavigator';
 const events = Navigation.events();
 
 export default class RootNavigator extends Navigator {
-  constructor(routes, options = {}) {
-    super();
+  constructor(routes, config = {}) {
+    super(routes, config);
 
-    this.routes = routes;
-    this.order = options.order || Object.keys(routes);
-    this.initialRouteName = options.initialRouteName || this.order[0];
     this.route = null;
     this.mounted = false;
 

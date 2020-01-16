@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createBottomTabNavigator } from './index';
+import { createBottomTabNavigator } from '../index';
 
 let navigator;
 

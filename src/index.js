@@ -9,7 +9,7 @@ import _isEmpty from 'lodash/isEmpty';
 
 import {
   BottomTabNavigator,
-  Component as ComponentNavigator,
+  Component,
   DrawerNavigator,
   ModalNavigator,
   Navigator,
@@ -40,15 +40,10 @@ export function createModalNavigator(routes, config = {}, Provider, store) {
   return createStackNavigator(routes, config, Provider, store);
 }
 
-export function createOverlayNavigator(
-  Component,
-  config = {},
-  Provider,
-  store,
-) {
-  registerComponent(Component.name, Component, Provider, store);
+export function createOverlayNavigator(Comp, config = {}, Provider, store) {
+  registerComponent(Comp.name, Comp, Provider, store);
 
-  return new OverlayNavigator(Component.name, config);
+  return new OverlayNavigator(Comp.name, config);
 }
 
 export function createBottomTabNavigator(routes, config = {}, Provider, store) {
@@ -68,17 +63,18 @@ export function createDrawerNavigator(
 ) {
   const routeConfigs = createRouteConfigs(routes);
   const navigatorConfig = getDrawerNavigatorConfig(config);
-  const navigators = createNavigators(
-    routeConfigs,
-    navigatorConfig,
-    Provider,
-    store,
-  );
 
   const drawer = createComponent(
     DrawerComponent.name,
     DrawerComponent,
     getComponentOptions(DrawerComponent),
+    Provider,
+    store,
+  );
+
+  const navigators = createNavigators(
+    routeConfigs,
+    navigatorConfig,
     Provider,
     store,
   );
@@ -116,17 +112,17 @@ function createRouteConfigs(routes) {
 
 function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
   return _mapValues(routeConfigs, (routeConfig, routeName) => {
-    const { screen, options, navigationOptions } = routeConfig;
+    const { screen, options: routeOptions, navigationOptions } = routeConfig;
 
     if (screen instanceof Navigator) {
-      return routeConfig;
+      return screen;
     }
 
     const { defaultOptions, defaultNavigationOptions } = navigatorConfig;
 
     const options = getComponentOptions(
       screen,
-      options,
+      routeOptions,
       navigationOptions,
       defaultOptions,
       defaultNavigationOptions,
@@ -142,16 +138,16 @@ function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
   });
 }
 
-function createComponent(name, Component, options, Provider, store) {
-  registerComponent(name, Component, Provider, store);
+function createComponent(name, Comp, options, Provider, store) {
+  registerComponent(name, Comp, Provider, store);
 
-  return new ComponentNavigator(name, { options });
+  return new Component(name, { options });
 }
 
-export function createWidget(Component, config = {}, Provider, store) {
-  const component = new WidgetComponent(Component.name);
+export function createWidget(Comp, config = {}, Provider, store) {
+  const component = new WidgetComponent(Comp.name);
 
-  registerComponent(component.id, Component, Provider, store);
+  registerComponent(component.id, Comp, Provider, store);
 
   return component;
 }
@@ -168,7 +164,7 @@ export function setDefaultOptions({ navigationOptions, ...options }) {
 }
 
 function getComponentOptions(
-  Component,
+  Comp,
   routeOptions = {},
   routeNavigationOptions = {},
   defaultOptions = {},
@@ -179,9 +175,9 @@ function getComponentOptions(
     getNavigationOptions(defaultNavigationOptions),
     defaultOptions,
     getNavigationOptions(routeNavigationOptions),
-    getNavigationOptions(Component.navigationOptions || {}),
+    getNavigationOptions(Comp.navigationOptions || {}),
     routeOptions,
-    typeof Component.options !== 'function' ? Component.options : {},
+    typeof Comp.options !== 'function' ? Comp.options : {},
   );
 
   if (!_isEmpty(options)) {
@@ -289,22 +285,22 @@ function getNavigatorConfig(config, keys) {
   return _pick(config, navigatorConfigKeys.concat(keys));
 }
 
-function registerComponent(id, Component, Provider, store) {
+function registerComponent(id, Comp, Provider, store) {
   if (Provider) {
     Navigation.registerComponent(
       id,
-      () => provideComponent(Component, Provider, store),
-      () => Component,
+      () => provideComponent(Comp, Provider, store),
+      () => Comp,
     );
   } else {
-    Navigation.registerComponent(id, () => Component);
+    Navigation.registerComponent(id, () => Comp);
   }
 }
 
-function provideComponent(Component, Provider, store) {
+function provideComponent(Comp, Provider, store) {
   return props => (
     <Provider {...{ store }}>
-      <Component {...props} />
+      <Comp {...props} />
     </Provider>
   );
 }

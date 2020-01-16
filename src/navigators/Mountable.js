@@ -3,6 +3,10 @@ export default /* abstract */ class Mountable {
     throwAbstract('mount');
   }
 
+  unmount(fromId) {
+    throwAbstract('mount');
+  }
+
   getLayout() {
     throwAbstract('getLayout');
   }

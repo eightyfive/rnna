@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createStackNavigator } from './index';
+import { createStackNavigator } from '../index';
 
 let navigator;
 

@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createDrawerNavigator } from './index';
+import { createDrawerNavigator } from '../index';
 
 let navigator;
 

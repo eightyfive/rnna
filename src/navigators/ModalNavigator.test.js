@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import StackNavigator from './StackNavigator';
-import { createModalNavigator } from './index';
+import { createModalNavigator } from '../index';
 
 let navigator;
 

@@ -11,10 +11,10 @@ export default class ModalNavigator extends StackNavigator {
   }
 
   unmount(fromId) {
-    this.dismiss(fromId);
+    Navigation.dismissModal(fromId);
   }
 
   dismiss(fromId) {
-    Navigation.dismissModal(fromId);
+    this.unmount(fromId);
   }
 }
