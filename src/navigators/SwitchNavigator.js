@@ -1,63 +1,43 @@
 import Navigator from './Navigator';
 
 export default class SwitchNavigator extends Navigator {
-  constructor(navigators) {
-    super();
+  constructor(routes, config = {}) {
+    super(routes, config);
 
-    this.navigators = navigators;
-    this.history = [];
-  }
-
-  get navigator() {
-    return this.getNavigator(this.history[this.history.length - 1]);
-  }
-
-  getNavigator(name) {
-    const navigator = this.navigators.find(nav => nav.name === name);
-
-    if (!navigator) {
-      throw new Error(`Unknown navigator: ${name}`);
-    }
-
-    return navigator;
+    this.backBehavior = config.backBehavior || 'none';
   }
 
   mount() {
-    const navigator = this.navigator || this.navigators[0];
-
     this.history = [];
-    this.navigate(navigator.name);
+    this.navigate(this.initialRouteName);
   }
 
   navigate(route, params, fromId) {
     const name = this.getRouteNavigator(route);
-    const navigator = this.getNavigator(name);
 
-    if (!navigator) {
-      throw new Error(`Unknown navigator: ${name} (${route})`);
-    }
-
-    if (this.navigator.name !== name) {
+    if (name !== this.routeName) {
       this.history.push(name);
+
+      const navigator = this.getNavigator(name);
       navigator.mount();
     }
 
     const next = this.getRouteNext(route);
 
     if (next) {
-      navigator.navigate(next, params, fromId);
+      this.active.navigate(next, params, fromId);
     }
   }
 
   goBack(fromId) {
     try {
-      this.navigator.goBack(fromId);
+      this.active.goBack(fromId);
     } catch (err) {
       if (this.history.length > 1) {
-        this.navigator.unmount(fromId);
-        this.history.pop();
+        this.active.unmount(fromId);
 
-        this.navigate(this.history[this.history.length - 1]);
+        this.history.pop();
+        this.navigate(this.routeName);
       } else {
         throw err;
       }
@@ -65,42 +45,22 @@ export default class SwitchNavigator extends Navigator {
   }
 
   push(name, params, fromId) {
-    if (!this.navigator.push) {
-      throwNotSupported(this.navigator, 'push');
-    }
-
-    this.navigator.push(name, params, fromId);
+    this.active.push(name, params, fromId);
   }
 
   pop(n = 1) {
-    if (!this.navigator.pop) {
-      throwNotSupported(this.navigator, 'pop');
-    }
-
-    this.navigator.pop(n);
+    this.active.pop(n);
   }
 
   popToTop(fromId) {
-    if (!this.navigator.popToTop) {
-      throwNotSupported(this.navigator, 'popToTop');
-    }
+    this.active.popToTop(fromId);
+  }
 
-    this.navigator.popToTop(fromId);
+  popToIndex(index) {
+    this.active.popToIndex(index);
   }
 
   dismiss(fromId) {
-    if (!this.navigator.dismiss) {
-      throwNotSupported(this.navigator, 'dismiss');
-    }
-
-    this.navigator.dismiss(fromId);
-  }
-}
-
-function throwNotSupported(navigator, method) {
-  if (__DEV__) {
-    throw new Error(
-      `${navigator.constructor.name} does not support \`${method}\``,
-    );
+    this.active.dismiss(fromId);
   }
 }

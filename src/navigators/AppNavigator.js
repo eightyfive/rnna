@@ -13,7 +13,6 @@ export default class AppNavigator extends Navigator {
     this.route = null;
     this.mounted = false;
 
-    this.stack = [];
     this.overlays = [];
 
     this.fromId = this.initialRouteName;
@@ -60,8 +59,8 @@ export default class AppNavigator extends Navigator {
   }
 
   remount() {
-    this.stack.forEach(key => this.getNavigator(key).mount());
-    this.overlays.forEach(key => this.getNavigator(key).mount());
+    this.history.forEach(name => this.getNavigator(name).mount());
+    this.overlays.forEach(name => this.getNavigator(name).mount());
   }
 
   handleDidAppear = ({ componentId }) => {
@@ -91,9 +90,9 @@ export default class AppNavigator extends Navigator {
 
     // Happens when Native back button is pressed.
     // We need to remove/"pop" the top-most modal
-    this.stack = this.stack.filter(
+    this.history = this.history.filter(
       // navigator instanceof ModalNavigator
-      key => key !== componentId,
+      name => name !== componentId,
     );
   };
 
@@ -105,33 +104,27 @@ export default class AppNavigator extends Navigator {
   }
 
   get main() {
-    const name = this.stack[0];
+    const name = this.history[0];
 
     return this.routes[name];
   }
 
   get modal() {
-    if (this.stack.length > 1) {
-      const name = this.stack[1];
+    if (this.history.length > 1) {
+      const name = this.history[1];
 
       return this.routes[name];
     }
 
-    // return undefined;
+    return null;
   }
 
   get active() {
     return this.modal || this.main;
   }
 
-  isActive(name) {
-    const active = this.stack[this.stack.length - 1];
-
-    return active === name;
-  }
-
   isVisible(name) {
-    return this.isActive(name) || this.overlays.some(key => key === name);
+    return name === this.routeName || this.overlays.some(ov => ov === name);
   }
 
   navigate(route, params) {
@@ -143,11 +136,11 @@ export default class AppNavigator extends Navigator {
 
     const name = this.getRouteNavigator(route);
 
-    if (!this.isActive(name)) {
+    if (name !== this.routeName) {
       // Unmount modal
       if (this.modal) {
         this.modal.unmount(this.fromId);
-        this.stack.pop(); // [main]
+        this.history.pop(); // [main]
       }
 
       const navigator = this.getNavigator(name);
@@ -155,12 +148,12 @@ export default class AppNavigator extends Navigator {
       // Unmount main ?
       if (this.main && !this.modal && !(navigator instanceof ModalNavigator)) {
         this.main.unmount(this.fromId);
-        this.stack.pop(); // []
+        this.history.pop(); // []
       }
 
       // Mount
       navigator.mount();
-      this.stack.push(name);
+      this.history.push(name);
     }
 
     const next = this.getRouteNext(route);
@@ -176,83 +169,59 @@ export default class AppNavigator extends Navigator {
     } catch (err) {
       if (this.active instanceof ModalNavigator) {
         this.active.unmount(this.fromId);
-        this.stack.pop();
+        this.history.pop();
       }
     }
   }
 
   push(name, params) {
-    if (!this.active.push) {
-      throwNotSupported(this.active, 'push');
-    }
-
     this.active.push(name, params, this.fromId);
   }
 
   pop(n = 1) {
-    if (!this.active.pop) {
-      throwNotSupported(this.active, 'pop');
-    }
-
     this.active.pop(n);
   }
 
   popToTop() {
-    if (!this.active.popToTop) {
-      throwNotSupported(this.active, 'popToTop');
-    }
-
     this.active.popToTop(this.fromId);
   }
 
-  openDrawer() {
-    if (!this.active.openDrawer) {
-      throwNotSupported(this.active, 'openDrawer');
-    }
+  popToIndex(index) {
+    this.active.popToIndex(index);
+  }
 
+  openDrawer() {
     this.active.openDrawer();
   }
 
   closeDrawer() {
-    if (!this.active.closeDrawer) {
-      throwNotSupported(this.active, 'closeDrawer');
-    }
-
     this.active.closeDrawer();
   }
 
   toggleDrawer() {
-    if (!this.active.toggleDrawer) {
-      throwNotSupported(this.active, 'toggleDrawer');
-    }
-
     this.active.toggleDrawer();
   }
 
   dismiss() {
-    if (!this.active.dismiss) {
-      throwNotSupported(this.active, 'dismiss');
-    }
-
     this.active.dismiss(this.fromId);
   }
 
   dismissAllModals() {
-    const total = this.stack.length;
+    const total = this.history.length;
 
-    this.stack = this.stack.filter(key => {
-      const navigator = this.getNavigator(key);
+    this.history = this.history.filter(name => {
+      const navigator = this.getNavigator(name);
 
       return !(navigator instanceof ModalNavigator);
     });
 
-    if (this.stack.length < total) {
+    if (this.history.length < total) {
       Navigation.dismissAllModals();
     }
   }
 
   dismissAllOverlays() {
-    this.overlays.forEach(key => this.getNavigator(key).unmount());
+    this.overlays.forEach(name => this.getNavigator(name).unmount());
     this.overlays = [];
   }
 
@@ -273,20 +242,16 @@ export default class AppNavigator extends Navigator {
   }
 
   hideOverlay(name) {
-    const index = this.overlays.findIndex(key => key === name);
+    const index = this.overlays.findIndex(ov => ov === name);
     const visible = index !== -1;
 
     if (visible) {
-      const [key] = this.overlays.splice(index, 1);
+      const [ov] = this.overlays.splice(index, 1);
 
-      this.getNavigator(key).unmount();
-    } else if (__DEV__) {
-      console.error(`Cannot hide overlay. Overlay "${name}" is not visible`);
+      this.getNavigator(ov).unmount();
+    } else {
+      throw new Error(`Overlay "${name}" is not visible`);
     }
-  }
-
-  isRoute(route) {
-    return this.route === route;
   }
 }
 
@@ -295,12 +260,4 @@ function isScene(componentId) {
   const isOverlay = componentId.indexOf('overlay-') === 0;
 
   return !isWidget && !isOverlay;
-}
-
-function throwNotSupported(navigator, method) {
-  if (__DEV__) {
-    throw new Error(
-      `${navigator.constructor.name} does not support \`${method}\``,
-    );
-  }
 }

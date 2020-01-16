@@ -26,10 +26,8 @@ export default class BottomTabNavigator extends Navigator {
     return { bottomTabs: layout };
   }
 
-  get active() {
-    const name = this.order[this.tabIndex];
-
-    return this.getNavigator(name);
+  get routeName() {
+    return this.order[this.tabIndex];
   }
 
   mount() {

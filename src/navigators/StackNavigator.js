@@ -8,7 +8,6 @@ export default class StackNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
 
-    this.history = [];
     this.options = config.options;
 
     this.didDisappearListener = events.registerComponentDidDisappearListener(
@@ -32,12 +31,8 @@ export default class StackNavigator extends Navigator {
     return { stack: layout };
   }
 
-  get active() {
-    return this.history[this.history.length - 1];
-  }
-
   handleDidDisappear = ({ componentId }) => {
-    if (componentId === this.active) {
+    if (componentId === this.routeName) {
       // Native back button has been pressed
       this.history.pop();
     }
@@ -60,8 +55,8 @@ export default class StackNavigator extends Navigator {
   }
 
   goBack(fromId) {
-    if (fromId !== this.active) {
-      throw new Error(`goBack from mismatch: ${fromId} != ${this.active}`);
+    if (fromId !== this.routeName) {
+      throw new Error(`goBack from mismatch: ${fromId} != ${this.routeName}`);
     }
 
     if (this.history.length === 1) {
