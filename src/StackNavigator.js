@@ -16,11 +16,12 @@ export default class StackNavigator extends Navigator {
   }
 
   getLayout(componentId) {
-    const index = this.order.findIndex(id => id === componentId);
+    const routeName = componentId || this.initialRouteName;
+    const index = this.order.findIndex(name => name === rounteName);
     const children = this.order.slice(0, index + 1);
 
     const layout = {
-      children: children.map(id => this.getNavigator(id).getLayout()),
+      children: children.map(name => this.getNavigator(name).getLayout()),
     };
 
     // TODO
