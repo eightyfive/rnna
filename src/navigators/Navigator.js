@@ -18,11 +18,11 @@ export default /** abstract */ class Navigator extends Mountable {
     return this.getNavigator(this.routeName);
   }
 
-  getNavigator(key) {
-    const navigator = this.routes[key];
+  getNavigator(name) {
+    const navigator = this.routes[name];
 
     if (!navigator) {
-      throw new Error(`Unknown navigator: ${key}`);
+      throw new Error(`Unknown navigator: ${name}`);
     }
 
     return navigator;

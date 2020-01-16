@@ -1,20 +1,21 @@
 import { Navigation } from 'react-native-navigation';
 
-import Navigator from './Navigator';
+import SwitchNavigator from './SwitchNavigator';
 import ModalNavigator from './ModalNavigator';
 import OverlayNavigator from './OverlayNavigator';
 
 const events = Navigation.events();
 
-export default class AppNavigator extends Navigator {
+export default class AppNavigator extends SwitchNavigator {
   constructor(routes, config = {}) {
     super(routes, config);
 
+    this.backBehavior = 'none'; // Force
+    this.mainName = null;
+    this.modalName = null;
     this.route = null;
     this.mounted = false;
-
     this.overlays = [];
-
     this.fromId = this.initialRouteName;
     this.onLaunched = [];
     this.onTabSelected = [];
@@ -40,10 +41,6 @@ export default class AppNavigator extends Navigator {
     );
   }
 
-  onAppLaunched(cb) {
-    this.onLaunched.push(cb);
-  }
-
   handleAppLaunched = () => {
     if (this.mounted) {
       this.remount();
@@ -51,17 +48,6 @@ export default class AppNavigator extends Navigator {
       this.mount();
     }
   };
-
-  mount() {
-    this.mounted = true;
-    this.navigate(this.initialRouteName);
-    this.onLaunched.forEach(cb => cb());
-  }
-
-  remount() {
-    this.history.forEach(name => this.getNavigator(name).mount());
-    this.overlays.forEach(name => this.getNavigator(name).mount());
-  }
 
   handleDidAppear = ({ componentId }) => {
     if (isScene(componentId)) {
@@ -90,44 +76,59 @@ export default class AppNavigator extends Navigator {
 
     // Happens when Native back button is pressed.
     // We need to remove/"pop" the top-most modal
-    this.history = this.history.filter(
-      // navigator instanceof ModalNavigator
-      name => name !== componentId,
-    );
+    if (this.modalName === componentId) {
+      this.modalName = null;
+    }
   };
 
   handleBottomTabSelected = ev =>
-    Promise.all(this.onTabSelected.map(handler => handler(ev)));
+    Promise.all(this.onTabSelected.map(cb => cb(ev)));
+
+  onAppLaunched(cb) {
+    this.onLaunched.push(cb);
+  }
 
   onBottomTabSelected(cb) {
     this.onTabSelected.push(cb);
   }
 
-  get main() {
-    const name = this.history[0];
+  mount() {
+    this.mounted = true;
 
-    return this.routes[name];
+    super.mount();
+
+    this.onLaunched.forEach(cb => cb());
+  }
+
+  remount() {
+    if (this.main) {
+      this.main.mount();
+    }
+
+    if (this.modal) {
+      this.modal.mount();
+    }
+
+    this.overlays.forEach(name => this.getNavigator(name).mount());
+  }
+
+  get routeName() {
+    return this.modalName || this.mainName;
+  }
+
+  get main() {
+    return this.routes[this.mainName];
   }
 
   get modal() {
-    if (this.history.length > 1) {
-      const name = this.history[1];
-
-      return this.routes[name];
-    }
-
-    return null;
-  }
-
-  get active() {
-    return this.modal || this.main;
+    return this.routes[this.modalName];
   }
 
   isVisible(name) {
     return name === this.routeName || this.overlays.some(ov => ov === name);
   }
 
-  navigate(route, params) {
+  navigate(route, params, fromId) {
     if (!this.mounted) {
       throw new Error('RNN not mounted yet');
     }
@@ -136,24 +137,27 @@ export default class AppNavigator extends Navigator {
 
     const name = this.getRouteNavigator(route);
 
-    if (name !== this.routeName) {
-      // Unmount modal
+    if (this.routeName !== name) {
+      // Force dissmiss Modal
       if (this.modal) {
-        this.modal.unmount(this.fromId);
-        this.history.pop(); // [main]
+        this.dismissModal();
       }
 
-      const navigator = this.getNavigator(name);
+      const active = this.getNavigator(name);
+      const isModal = active instanceof ModalNavigator;
 
-      // Unmount main ?
-      if (this.main && !this.modal && !(navigator instanceof ModalNavigator)) {
-        this.main.unmount(this.fromId);
-        this.history.pop(); // []
+      if (isModal) {
+        this.modalName = name;
+      } else {
+        if (this.main) {
+          this.main.unmount(this.fromId);
+        }
+
+        this.mainName = name;
       }
 
       // Mount
-      navigator.mount();
-      this.history.push(name);
+      active.mount();
     }
 
     const next = this.getRouteNext(route);
@@ -167,27 +171,10 @@ export default class AppNavigator extends Navigator {
     try {
       this.active.goBack(this.fromId);
     } catch (err) {
-      if (this.active instanceof ModalNavigator) {
-        this.active.unmount(this.fromId);
-        this.history.pop();
+      if (this.modal) {
+        this.dismissModal();
       }
     }
-  }
-
-  push(name, params) {
-    this.active.push(name, params, this.fromId);
-  }
-
-  pop(n = 1) {
-    this.active.pop(n);
-  }
-
-  popToTop() {
-    this.active.popToTop(this.fromId);
-  }
-
-  popToIndex(index) {
-    this.active.popToIndex(index);
   }
 
   openDrawer() {
@@ -202,20 +189,13 @@ export default class AppNavigator extends Navigator {
     this.active.toggleDrawer();
   }
 
-  dismiss() {
-    this.active.dismiss(this.fromId);
+  dismissModal() {
+    this.modal.unmount(this.fromId);
+    this.modalName = null;
   }
 
   dismissAllModals() {
-    const total = this.history.length;
-
-    this.history = this.history.filter(name => {
-      const navigator = this.getNavigator(name);
-
-      return !(navigator instanceof ModalNavigator);
-    });
-
-    if (this.history.length < total) {
+    if (this.modal) {
       Navigation.dismissAllModals();
     }
   }
@@ -241,7 +221,7 @@ export default class AppNavigator extends Navigator {
     this.overlays.push(name);
   }
 
-  hideOverlay(name) {
+  dismissOverlay(name) {
     const index = this.overlays.findIndex(ov => ov === name);
     const visible = index !== -1;
 
