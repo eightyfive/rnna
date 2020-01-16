@@ -6,7 +6,7 @@ import OverlayNavigator from './OverlayNavigator';
 
 const events = Navigation.events();
 
-export default class RootNavigator extends Navigator {
+export default class AppNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
 

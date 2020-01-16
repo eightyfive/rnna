@@ -1,8 +1,8 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createStackNavigator, createRootNavigator } from '../index';
+import { createStackNavigator, createAppNavigator } from '../index';
 
-let root;
+let app;
 
 let ab;
 let cd;
@@ -18,8 +18,8 @@ beforeEach(() => {
   ab = createStackNavigator({ A, B });
   cd = createStackNavigator({ C, D });
 
-  root = createRootNavigator({ Splash, ab, cd });
-  root.mount();
+  app = createAppNavigator({ Splash, ab, cd });
+  app.mount();
 });
 
 test('mount', () => {
@@ -31,7 +31,7 @@ test('mount', () => {
 test('navigate', () => {
   cd.mount = jest.fn();
 
-  root.navigate('cd');
+  app.navigate('cd');
 
   expect(cd.mount).toHaveBeenCalled();
 });
@@ -40,7 +40,7 @@ test('navigate deep', () => {
   cd.mount = jest.fn();
   cd.push = jest.fn();
 
-  root.navigate('cd/D');
+  app.navigate('cd/D');
 
   expect(cd.mount).toHaveBeenCalled();
   expect(cd.push).toHaveBeenCalledWith('D', undefined, 'Splash');

@@ -14,7 +14,7 @@ import {
   ModalNavigator,
   Navigator,
   OverlayNavigator,
-  RootNavigator,
+  AppNavigator,
   StackNavigator,
   SwitchNavigator,
   WidgetComponent,
@@ -92,11 +92,11 @@ export function createSwitchNavigator(routes, config = {}, Provider, store) {
   return new SwitchNavigator(navigators, navigatorConfig);
 }
 
-export function createRootNavigator(routes, config = {}, Provider, store) {
+export function createAppNavigator(routes, config = {}, Provider, store) {
   const routeConfigs = createRouteConfigs(routes);
   const navigators = createNavigators(routeConfigs, config, Provider, store);
 
-  return new RootNavigator(navigators, config);
+  return new AppNavigator(navigators, config);
 }
 
 function createRouteConfigs(routes) {

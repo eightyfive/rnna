@@ -1,10 +1,10 @@
+export { default as AppNavigator } from './AppNavigator';
 export { default as BottomTabNavigator } from './BottomTabNavigator';
 export { default as Component } from './Component';
 export { default as DrawerNavigator } from './DrawerNavigator';
 export { default as ModalNavigator } from './ModalNavigator';
 export { default as Navigator } from './Navigator';
 export { default as OverlayNavigator } from './OverlayNavigator';
-export { default as RootNavigator } from './RootNavigator';
 export { default as StackNavigator } from './StackNavigator';
 export { default as SwitchNavigator } from './SwitchNavigator';
 export { default as WidgetComponent } from './WidgetComponent';
