@@ -20,7 +20,10 @@ import WidgetComponent from './WidgetComponent';
 
 const events = Navigation.events();
 
-export function createStackNavigator(routes, config = {}, Provider, store) {
+export function createStackNavigator(
+  routes,
+  { store, Provider, ...config } = {},
+) {
   const routeConfigs = createRouteConfigs(routes);
   const navigatorConfig = getStackNavigatorConfig(config);
   const navigators = createNavigators(routeConfigs, config, Provider, store);
@@ -32,20 +35,29 @@ export function createStackNavigator(routes, config = {}, Provider, store) {
   return new StackNavigator(navigators, navigatorConfig);
 }
 
-export function createModalNavigator(routes, config = {}, Provider, store) {
+export function createModalNavigator(
+  routes,
+  { store, Provider, ...config } = {},
+) {
   config.mode = 'modal';
 
   return createStackNavigator(routes, config, Provider, store);
 }
 
-export function createOverlayNavigator(routes, config = {}, Provider, store) {
+export function createOverlayNavigator(
+  routes,
+  { store, Provider, ...config } = {},
+) {
   const routeConfigs = createRouteConfigs(routes);
   const navigators = createNavigators(routeConfigs, config, Provider, store);
 
   return new OverlayNavigator(navigators, config);
 }
 
-export function createBottomTabNavigator(routes, config = {}, Provider, store) {
+export function createBottomTabNavigator(
+  routes,
+  { store, Provider, ...config } = {},
+) {
   const routeConfigs = createRouteConfigs(routes);
   const navigators = createNavigators(routeConfigs, config, Provider, store);
   const navigatorConfig = getBottomTabNavigatorConfig(config);
@@ -53,7 +65,10 @@ export function createBottomTabNavigator(routes, config = {}, Provider, store) {
   return new BottomTabNavigator(navigators, navigatorConfig);
 }
 
-export function createDrawerNavigator(routes, config = {}, Provider, store) {
+export function createDrawerNavigator(
+  routes,
+  { store, Provider, ...config } = {},
+) {
   const routeConfigs = createRouteConfigs(routes);
   const navigatorConfig = getDrawerNavigatorConfig(config);
 
@@ -82,7 +97,10 @@ export function createDrawerNavigator(routes, config = {}, Provider, store) {
 }
 
 // TODO: https://reactnavigation.org/docs/en/switch-navigator.html
-export function createSwitchNavigator(routes, config = {}, Provider, store) {
+export function createSwitchNavigator(
+  routes,
+  { store, Provider, ...config } = {},
+) {
   const routeConfigs = createRouteConfigs(routes);
   const navigators = createNavigators(routeConfigs, config, Provider, store);
   const navigatorConfig = getSwitchNavigatorConfig(config);
@@ -90,7 +108,10 @@ export function createSwitchNavigator(routes, config = {}, Provider, store) {
   return new SwitchNavigator(navigators, navigatorConfig);
 }
 
-export function createAppNavigator(routes, config = {}, Provider, store) {
+export function createAppNavigator(
+  routes,
+  { store, Provider, ...config } = {},
+) {
   const routeConfigs = createRouteConfigs(routes);
   const navigators = createNavigators(routeConfigs, config, Provider, store);
 
@@ -143,7 +164,7 @@ function createComponent(name, Comp, options, Provider, store) {
   return new Component(name, { options });
 }
 
-export function createWidget(Comp, config = {}, Provider, store) {
+export function createWidget(Comp, { store, Provider, ...config } = {}) {
   const component = new WidgetComponent(Comp.name);
 
   registerComponent(component.id, Comp, Provider, store);
