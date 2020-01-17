@@ -13,7 +13,6 @@ export default class AppNavigator extends SwitchNavigator {
     this.backBehavior = 'none'; // Force
     this.mainName = null;
     this.modalName = null;
-    this.route = null;
     this.mounted = false;
     this.overlays = [];
     this.fromId = this.initialRouteName;
@@ -22,10 +21,6 @@ export default class AppNavigator extends SwitchNavigator {
 
     this.didAppearListener = events.registerComponentDidAppearListener(
       this.handleDidAppear,
-    );
-
-    this.didDisappearListener = events.registerComponentDidDisappearListener(
-      this.handleDidDisappear,
     );
 
     this.modalDismissedListener = events.registerModalDismissedListener(
@@ -54,20 +49,6 @@ export default class AppNavigator extends SwitchNavigator {
       this.fromId = componentId;
 
       // console.log('did APPEAR:', componentId);
-    }
-  };
-
-  handleDidDisappear = ({ componentId }) => {
-    if (isScene(componentId)) {
-      const routeId = this.getRouteComponentId(this.route);
-      const isBack = routeId === componentId;
-
-      if (isBack) {
-        // "Back" handled by RNNN or by hardware press back
-        this.route = null;
-      }
-
-      // console.log('did DISAPPEAR:', componentId, routeId, this.route);
     }
   };
 
@@ -132,8 +113,6 @@ export default class AppNavigator extends SwitchNavigator {
     if (!this.mounted) {
       throw new Error('RNN not mounted yet');
     }
-
-    this.route = route;
 
     const name = this.getRouteNavigator(route);
 
