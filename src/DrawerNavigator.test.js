@@ -10,7 +10,10 @@ function B() {}
 function Drawer() {}
 
 beforeEach(() => {
-  navigator = createDrawerNavigator({ A, B }, { contentComponent: Drawer });
+  navigator = createDrawerNavigator(
+    { A, B },
+    { contentComponent: Drawer, defaultOptions: { topBar: { title: 'foo' } } },
+  );
   navigator.mount();
 });
 
@@ -36,7 +39,15 @@ test('mount', () => {
         },
         center: {
           stack: {
-            children: [{ component: { id: 'A', name: 'A' } }],
+            children: [
+              {
+                component: {
+                  id: 'A',
+                  name: 'A',
+                  options: { topBar: { title: 'foo' } },
+                },
+              },
+            ],
           },
         },
       },

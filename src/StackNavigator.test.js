@@ -11,7 +11,10 @@ function C() {}
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  navigator = createStackNavigator({ A, B, C });
+  navigator = createStackNavigator(
+    { A, B, C },
+    { defaultOptions: { topBar: { title: 'foo' } } },
+  );
   navigator.mount();
 });
 
@@ -20,7 +23,15 @@ test('mount', () => {
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
       stack: {
-        children: [{ component: { id: 'A', name: 'A' } }],
+        children: [
+          {
+            component: {
+              id: 'A',
+              name: 'A',
+              options: { topBar: { title: 'foo' } },
+            },
+          },
+        ],
       },
     },
   });
@@ -31,7 +42,12 @@ test('push', () => {
 
   expect(navigator.history).toEqual(['A', 'B']);
   expect(Navigation.push).toHaveBeenCalledWith('A', {
-    component: { id: 'B', name: 'B', passProps: params },
+    component: {
+      id: 'B',
+      name: 'B',
+      passProps: params,
+      options: { topBar: { title: 'foo' } },
+    },
   });
 });
 

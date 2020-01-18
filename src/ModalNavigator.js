@@ -7,7 +7,7 @@ export default class ModalNavigator extends StackNavigator {
     // TOFIX: Duplicate with StackNavigator.mount
     this.history = [this.initialRouteName];
 
-    Navigation.showModal(this.getLayout(this.initialRouteName));
+    Navigation.showModal(this.getInitialLayout());
   }
 
   unmount(fromId) {

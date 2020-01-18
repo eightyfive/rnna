@@ -128,14 +128,10 @@ function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
       return screen;
     }
 
-    const { defaultOptions, defaultNavigationOptions } = navigatorConfig;
-
     const options = getComponentOptions(
       screen,
       routeOptions,
       navigationOptions,
-      defaultOptions,
-      defaultNavigationOptions,
     );
 
     return createComponent(
@@ -177,13 +173,9 @@ function getComponentOptions(
   Comp,
   routeOptions = {},
   routeNavigationOptions = {},
-  defaultOptions = {},
-  defaultNavigationOptions = {},
 ) {
   const options = merge(
     {},
-    getNavigationOptions(defaultNavigationOptions),
-    defaultOptions,
     getNavigationOptions(routeNavigationOptions),
     getNavigationOptions(Comp.navigationOptions || {}),
     routeOptions,
@@ -283,16 +275,23 @@ function getSwitchNavigatorConfig(config) {
   return getNavigatorConfig(config, ['resetOnBlur', 'backBehavior']);
 }
 
-const navigatorConfigKeys = [
-  'initialRouteName',
-  'navigationOptions',
-  'defaultOptions', // N/S
-  'defaultNavigationOptions',
-  'paths',
-];
+const navigatorConfigKeys = ['initialRouteName', 'navigationOptions', 'paths'];
 
-function getNavigatorConfig(config, keys) {
-  return _pick(config, navigatorConfigKeys.concat(keys));
+function getNavigatorConfig(
+  { defaultOptions, defaultNavigationOptions, ...config },
+  keys,
+) {
+  const navigatorConfig = _pick(config, navigatorConfigKeys.concat(keys));
+
+  if (defaultOptions || defaultNavigationOptions) {
+    navigatorConfig.defaultOptions = Object.assign(
+      {},
+      getNavigationOptions(defaultNavigationOptions || {}),
+      defaultOptions,
+    );
+  }
+
+  return navigatorConfig;
 }
 
 function registerComponent(id, Comp, Provider, store) {

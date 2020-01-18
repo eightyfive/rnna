@@ -9,22 +9,27 @@ export default class StackNavigator extends Navigator {
     super(routes, config);
 
     this.options = config.options;
+    this.defaultOptions = config.defaultOptions;
 
     this.didDisappearListener = events.registerComponentDidDisappearListener(
       this.handleDidDisappear,
     );
   }
 
-  getLayout(componentId) {
-    const routeName = componentId || this.initialRouteName;
+  getInitialLayout() {
+    return this.getLayout(this.initialRouteName);
+  }
+
+  getLayout(routeName) {
     const index = this.order.findIndex(name => name === routeName);
     const children = this.order.slice(0, index + 1);
 
     const layout = {
-      children: children.map(name => this.getNavigator(name).getLayout()),
+      children: children
+        .map(name => this.getNavigator(name))
+        .map(component => component.getLayout(null, this.defaultOptions)),
     };
 
-    // TODO
     if (this.options) {
       layout.options = { ...this.options };
     }
@@ -42,7 +47,7 @@ export default class StackNavigator extends Navigator {
   mount() {
     this.history = [this.initialRouteName];
 
-    Navigation.setRoot({ root: this.getLayout(this.initialRouteName) });
+    Navigation.setRoot({ root: this.getInitialLayout() });
   }
 
   navigate(toId, params, fromId) {
@@ -69,9 +74,9 @@ export default class StackNavigator extends Navigator {
   }
 
   push(toId, params, fromId) {
-    const navigator = this.getNavigator(toId);
+    const component = this.getNavigator(toId);
 
-    Navigation.push(fromId, navigator.getLayout(params));
+    Navigation.push(fromId, component.getLayout(params, this.defaultOptions));
     this.history.push(toId);
   }
 

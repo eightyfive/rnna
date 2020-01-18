@@ -46,12 +46,12 @@ export default class DrawerNavigator extends StackNavigator {
   mount() {
     this.history = [this.initialRouteName];
 
-    Navigation.setRoot({ root: this.getLayout(this.initialRouteName) });
+    Navigation.setRoot({ root: this.getInitialLayout() });
   }
 
-  getLayout(componentId) {
+  getLayout(routeName) {
     const layout = {
-      center: super.getLayout(componentId),
+      center: super.getLayout(routeName),
       [this.drawerPosition]: this.drawer.getLayout(),
     };
 

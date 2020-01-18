@@ -16,14 +16,14 @@ export default class Component extends Mountable {
 
   unmount(fromId) {}
 
-  getLayout(passProps) {
+  getLayout(passProps, defaultOptions) {
     const layout = {
       id: this.id,
       name: this.id,
     };
 
-    if (this.options) {
-      layout.options = { ...this.options };
+    if (this.options || defaultOptions) {
+      layout.options = Object.assign({}, defaultOptions, this.options);
     }
 
     if (passProps) {
