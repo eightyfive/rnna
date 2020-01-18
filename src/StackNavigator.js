@@ -16,6 +16,10 @@ export default class StackNavigator extends Navigator {
     );
   }
 
+  getComponent(name) {
+    return this.getNavigator(name);
+  }
+
   getInitialLayout() {
     return this.getLayout(this.initialRouteName);
   }
@@ -25,9 +29,9 @@ export default class StackNavigator extends Navigator {
     const children = this.order.slice(0, index + 1);
 
     const layout = {
-      children: children
-        .map(name => this.getNavigator(name))
-        .map(component => component.getLayout(null, this.defaultOptions)),
+      children: children.map(name =>
+        this.getComponent(name).getLayout(null, this.defaultOptions),
+      ),
     };
 
     if (this.options) {
