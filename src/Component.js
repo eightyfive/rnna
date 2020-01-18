@@ -16,6 +16,10 @@ export default class Component extends Mountable {
 
   unmount(fromId) {}
 
+  getInitialLayout(defaultOptions) {
+    return this.getLayout(null, defaultOptions);
+  }
+
   getLayout(passProps, defaultOptions) {
     const layout = {
       id: this.id,

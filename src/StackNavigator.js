@@ -30,7 +30,7 @@ export default class StackNavigator extends Navigator {
 
     const layout = {
       children: children.map(name =>
-        this.getComponent(name).getLayout(null, this.defaultOptions),
+        this.getComponent(name).getInitialLayout(this.defaultOptions),
       ),
     };
 
