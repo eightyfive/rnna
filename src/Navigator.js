@@ -1,3 +1,5 @@
+import Component from './Component';
+import Navigator from './Navigator';
 import Route from './Route';
 
 export default /** abstract */ class Navigator extends Route {
@@ -22,10 +24,30 @@ export default /** abstract */ class Navigator extends Route {
     const navigator = this.routes[name];
 
     if (!navigator) {
-      throw new Error(`Unknown navigator: ${name}`);
+      throw new Error(`Unknown route: ${name}`);
     }
 
     return navigator;
+  }
+
+  getNavigator(name) {
+    const navigator = this.getRoute(name);
+
+    if (!(navigator instanceof Navigator)) {
+      throw new Error(`${name} is not a Navigator`);
+    }
+
+    return navigator;
+  }
+
+  getComponent(name) {
+    const component = this.getRoute(name);
+
+    if (!(component instanceof Component)) {
+      throw new Error(`${name} is not a Component`);
+    }
+
+    return component;
   }
 
   unmount(fromId) {}
