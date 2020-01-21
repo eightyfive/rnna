@@ -1,4 +1,4 @@
-export default /* abstract */ class Mountable {
+export default /* abstract */ class Route {
   mount() {
     throwAbstract('mount');
   }
@@ -13,5 +13,5 @@ export default /* abstract */ class Mountable {
 }
 
 function throwAbstract(method) {
-  throw new Error(`Abstract: Implement Mountable.${method}`);
+  throw new Error(`Abstract: Implement Route.${method}`);
 }

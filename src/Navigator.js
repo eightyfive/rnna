@@ -1,6 +1,6 @@
-import Mountable from './Mountable';
+import Route from './Route';
 
-export default /** abstract */ class Navigator extends Mountable {
+export default /** abstract */ class Navigator extends Route {
   constructor(routes, config) {
     super();
 

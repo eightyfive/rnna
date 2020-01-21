@@ -1,8 +1,8 @@
 import { Navigation } from 'react-native-navigation';
 
-import Mountable from './Mountable';
+import Route from './Route';
 
-export default class Component extends Mountable {
+export default class Component extends Route {
   constructor(id, config = {}) {
     super();
 
