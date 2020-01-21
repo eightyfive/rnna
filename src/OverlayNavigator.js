@@ -7,16 +7,7 @@ export default class OverlayNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
 
-    if (this.order.length > 1) {
-      throw new Error('`OverlayNavigator` only accepts 1 route');
-    }
-
     this.component = this.getRoute(this.initialRouteName);
-
-    if (!(this.component instanceof Component)) {
-      throw new Error('`OverlayNavigator` only accepts `Component` route');
-    }
-
     this.component.id = `overlay-${this.component.id}`;
   }
 

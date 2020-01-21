@@ -1,16 +1,21 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createBottomTabNavigator } from './index';
+import { createBottomTabNavigator, createStackNavigator } from './index';
 
 let navigator;
 
 function A() {}
 function B() {}
+function C() {}
 
-function Drawer() {}
+let ab;
+let c;
 
 beforeEach(() => {
-  navigator = createBottomTabNavigator({ A, B });
+  ab = createStackNavigator({ A, B });
+  c = createStackNavigator({ C });
+
+  navigator = createBottomTabNavigator({ ab, c });
   navigator.mount();
 });
 
@@ -18,11 +23,19 @@ test('mount', () => {
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
       bottomTabs: {
-        id: 'A-B',
-        name: 'A-B',
+        id: 'ab-c',
+        name: 'ab-c',
         children: [
-          { component: { id: 'A', name: 'A' } },
-          { component: { id: 'B', name: 'B' } },
+          {
+            stack: {
+              children: [{ component: { id: 'A', name: 'A' } }],
+            },
+          },
+          {
+            stack: {
+              children: [{ component: { id: 'C', name: 'C' } }],
+            },
+          },
         ],
       },
     },
@@ -30,9 +43,9 @@ test('mount', () => {
 });
 
 test('navigate', () => {
-  navigator.navigate('B');
+  navigator.navigate('c');
 
-  expect(Navigation.mergeOptions).toHaveBeenCalledWith('A-B', {
+  expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-c', {
     bottomTabs: { currentTabIndex: 1 },
   });
 });

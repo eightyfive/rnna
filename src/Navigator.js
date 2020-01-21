@@ -1,5 +1,4 @@
 import Component from './Component';
-import Navigator from './Navigator';
 import Route from './Route';
 
 export default /** abstract */ class Navigator extends Route {
@@ -34,7 +33,7 @@ export default /** abstract */ class Navigator extends Route {
     const navigator = this.getRoute(name);
 
     if (!(navigator instanceof Navigator)) {
-      throw new Error(`${name} is not a Navigator`);
+      throw new Error(`Unknown \`Navigator\`: ${name}`);
     }
 
     return navigator;
@@ -44,7 +43,7 @@ export default /** abstract */ class Navigator extends Route {
     const component = this.getRoute(name);
 
     if (!(component instanceof Component)) {
-      throw new Error(`${name} is not a Component`);
+      throw new Error(`Unknown \`Component\`: ${name}`);
     }
 
     return component;

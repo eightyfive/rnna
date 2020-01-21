@@ -11,6 +11,7 @@ import Component from './Component';
 import DrawerNavigator from './DrawerNavigator';
 import ModalNavigator from './ModalNavigator';
 import Navigator from './Navigator';
+import Route from './Route';
 import OverlayNavigator from './OverlayNavigator';
 import AppNavigator from './AppNavigator';
 import StackNavigator from './StackNavigator';
@@ -19,19 +20,25 @@ import WidgetComponent from './WidgetComponent';
 
 const events = Navigation.events();
 
-export function createStackNavigator(
-  routes,
-  { store, Provider, ...config } = {},
-) {
-  const routeConfigs = createRouteConfigs(routes);
-  const navigatorConfig = getStackNavigatorConfig(config);
-  const navigators = createNavigators(routeConfigs, config, Provider, store);
+export function createStackNavigator(def, { store, Provider, ...config } = {}) {
+  const routeConfigs = createRouteConfigs(def);
+  const routes = createRoutes(routeConfigs, config, Provider, store);
 
-  if (navigatorConfig.mode === 'modal') {
-    return new ModalNavigator(navigators, navigatorConfig);
+  const invalid = Object.values(routes).some(
+    route => route instanceof Navigator,
+  );
+
+  if (invalid) {
+    throw new Error('`StackNavigator` only accepts `Component` children');
   }
 
-  return new StackNavigator(navigators, navigatorConfig);
+  const navigatorConfig = getStackNavigatorConfig(config);
+
+  if (navigatorConfig.mode === 'modal') {
+    return new ModalNavigator(routes, navigatorConfig);
+  }
+
+  return new StackNavigator(routes, navigatorConfig);
 }
 
 export function createModalNavigator(routes, config = {}) {
@@ -41,31 +48,46 @@ export function createModalNavigator(routes, config = {}) {
 }
 
 export function createOverlayNavigator(
-  routes,
+  def,
   { store, Provider, ...config } = {},
 ) {
-  const routeConfigs = createRouteConfigs(routes);
-  const navigators = createNavigators(routeConfigs, config, Provider, store);
+  const routeConfigs = createRouteConfigs(def);
+  const routes = createRoutes(routeConfigs, config, Provider, store);
 
-  return new OverlayNavigator(navigators, config);
+  if (Object.values(routes).length > 1) {
+    throw new Error('`OverlayNavigator` only accepts one `Component` child');
+  }
+
+  return new OverlayNavigator(routes, config);
 }
 
 export function createBottomTabNavigator(
-  routes,
+  def,
   { store, Provider, ...config } = {},
 ) {
-  const routeConfigs = createRouteConfigs(routes);
-  const navigators = createNavigators(routeConfigs, config, Provider, store);
+  const routeConfigs = createRouteConfigs(def);
+  const routes = createRoutes(routeConfigs, config, Provider, store);
+
+  const invalid = Object.values(routes).some(
+    route => !(route instanceof StackNavigator),
+  );
+
+  if (invalid) {
+    throw new Error(
+      '`BottomTabNavigator` only accepts `StackNavigator` children',
+    );
+  }
+
   const navigatorConfig = getBottomTabNavigatorConfig(config);
 
-  return new BottomTabNavigator(navigators, navigatorConfig);
+  return new BottomTabNavigator(routes, navigatorConfig);
 }
 
 export function createDrawerNavigator(
-  routes,
+  def,
   { store, Provider, ...config } = {},
 ) {
-  const routeConfigs = createRouteConfigs(routes);
+  const routeConfigs = createRouteConfigs(def);
   const navigatorConfig = getDrawerNavigatorConfig(config);
 
   const { contentComponent } = navigatorConfig;
@@ -82,36 +104,28 @@ export function createDrawerNavigator(
     store,
   );
 
-  const navigators = createNavigators(
-    routeConfigs,
-    navigatorConfig,
-    Provider,
-    store,
-  );
+  const routes = createRoutes(routeConfigs, navigatorConfig, Provider, store);
 
-  return new DrawerNavigator(navigators, navigatorConfig);
+  return new DrawerNavigator(routes, navigatorConfig);
 }
 
 // TODO: https://reactnavigation.org/docs/en/switch-navigator.html
 export function createSwitchNavigator(
-  routes,
+  def,
   { store, Provider, ...config } = {},
 ) {
-  const routeConfigs = createRouteConfigs(routes);
-  const navigators = createNavigators(routeConfigs, config, Provider, store);
+  const routeConfigs = createRouteConfigs(def);
+  const routes = createRoutes(routeConfigs, config, Provider, store);
   const navigatorConfig = getSwitchNavigatorConfig(config);
 
-  return new SwitchNavigator(navigators, navigatorConfig);
+  return new SwitchNavigator(routes, navigatorConfig);
 }
 
-export function createAppNavigator(
-  routes,
-  { store, Provider, ...config } = {},
-) {
-  const routeConfigs = createRouteConfigs(routes);
-  const navigators = createNavigators(routeConfigs, config, Provider, store);
+export function createAppNavigator(def, { store, Provider, ...config } = {}) {
+  const routeConfigs = createRouteConfigs(def);
+  const routes = createRoutes(routeConfigs, config, Provider, store);
 
-  return new AppNavigator(navigators, config);
+  return new AppNavigator(routes, config);
 }
 
 function createRouteConfigs(routes) {
@@ -120,11 +134,11 @@ function createRouteConfigs(routes) {
   );
 }
 
-function createNavigators(routeConfigs, navigatorConfig, Provider, store) {
+function createRoutes(routeConfigs, navigatorConfig, Provider, store) {
   return _mapValues(routeConfigs, (routeConfig, routeName) => {
     const { screen, options: routeOptions, navigationOptions } = routeConfig;
 
-    if (screen instanceof Navigator) {
+    if (screen instanceof Route) {
       return screen;
     }
 
