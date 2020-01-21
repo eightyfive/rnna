@@ -16,7 +16,7 @@ export default class BottomTabNavigator extends Navigator {
     const layout = {
       id: this.layoutId,
       name: this.layoutId,
-      children: this.order.map(key => this.getNavigator(key).getLayout()),
+      children: this.order.map(key => this.getRoute(key).getLayout()),
     };
 
     if (this.options) {

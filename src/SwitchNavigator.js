@@ -18,7 +18,7 @@ export default class SwitchNavigator extends Navigator {
     if (name !== this.routeName) {
       this.history.push(name);
 
-      const navigator = this.getNavigator(name);
+      const navigator = this.getRoute(name);
       navigator.mount();
     }
 

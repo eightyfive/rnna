@@ -11,7 +11,7 @@ export default class OverlayNavigator extends Navigator {
       throw new Error('`OverlayNavigator` only accepts 1 route');
     }
 
-    this.component = this.getNavigator(this.initialRouteName);
+    this.component = this.getRoute(this.initialRouteName);
 
     if (!(this.component instanceof Component)) {
       throw new Error('`OverlayNavigator` only accepts `Component` route');

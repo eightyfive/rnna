@@ -90,7 +90,7 @@ export default class AppNavigator extends SwitchNavigator {
       this.modal.mount();
     }
 
-    this.overlays.forEach(name => this.getNavigator(name).mount());
+    this.overlays.forEach(name => this.getRoute(name).mount());
   }
 
   get routeName() {
@@ -122,7 +122,7 @@ export default class AppNavigator extends SwitchNavigator {
         this.dismissModal();
       }
 
-      const active = this.getNavigator(name);
+      const active = this.getRoute(name);
       const isModal = active instanceof ModalNavigator;
 
       if (isModal) {
@@ -180,7 +180,7 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   dismissAllOverlays() {
-    this.overlays.forEach(name => this.getNavigator(name).unmount());
+    this.overlays.forEach(name => this.getRoute(name).unmount());
     this.overlays = [];
   }
 
@@ -189,7 +189,7 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   showOverlay(name) {
-    const overlay = this.getNavigator(name);
+    const overlay = this.getRoute(name);
 
     if (!(overlay instanceof OverlayNavigator)) {
       throw new Error(`Unknown Overlay: ${name}`);
@@ -207,7 +207,7 @@ export default class AppNavigator extends SwitchNavigator {
     if (visible) {
       const [ov] = this.overlays.splice(index, 1);
 
-      this.getNavigator(ov).unmount();
+      this.getRoute(ov).unmount();
     } else {
       throw new Error(`Overlay "${name}" is not visible`);
     }

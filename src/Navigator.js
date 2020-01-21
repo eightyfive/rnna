@@ -15,10 +15,10 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   get active() {
-    return this.getNavigator(this.routeName);
+    return this.getRoute(this.routeName);
   }
 
-  getNavigator(name) {
+  getRoute(name) {
     const navigator = this.routes[name];
 
     if (!navigator) {

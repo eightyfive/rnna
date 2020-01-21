@@ -17,7 +17,7 @@ export default class StackNavigator extends Navigator {
   }
 
   getComponent(name) {
-    return this.getNavigator(name);
+    return this.getRoute(name);
   }
 
   getInitialLayout() {
@@ -78,7 +78,7 @@ export default class StackNavigator extends Navigator {
   }
 
   push(toId, params, fromId) {
-    const component = this.getNavigator(toId);
+    const component = this.getRoute(toId);
 
     Navigation.push(fromId, component.getLayout(params, this.defaultOptions));
     this.history.push(toId);
