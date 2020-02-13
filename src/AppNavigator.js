@@ -18,6 +18,7 @@ export default class AppNavigator extends SwitchNavigator {
     this.fromId = this.initialRouteName;
     this.onLaunched = [];
     this.onTabSelected = [];
+    this.onTabPressed = [];
 
     this.didAppearListener = events.registerComponentDidAppearListener(
       this.handleDidAppear,
@@ -29,6 +30,10 @@ export default class AppNavigator extends SwitchNavigator {
 
     this.tabSelectedListener = events.registerBottomTabSelectedListener(
       this.handleBottomTabSelected,
+    );
+
+    this.tabPressedListener = events.registerBottomTabPressedListener(
+      this.handleBottomTabPressed,
     );
 
     this.appLaunchedListener = events.registerAppLaunchedListener(
@@ -65,12 +70,19 @@ export default class AppNavigator extends SwitchNavigator {
   handleBottomTabSelected = ev =>
     Promise.all(this.onTabSelected.map(cb => cb(ev)));
 
+  handleBottomTabPressed = ev =>
+    Promise.all(this.onTabPressed.map(cb => cb(ev)));
+
   onAppLaunched(cb) {
     this.onLaunched.push(cb);
   }
 
   onBottomTabSelected(cb) {
     this.onTabSelected.push(cb);
+  }
+
+  onBottomTabPressed(cb) {
+    this.onTabPressed.push(cb);
   }
 
   mount() {
