@@ -3,6 +3,7 @@ const events = jest.fn().mockReturnValue({
   registerComponentDidAppearListener: jest.fn(),
   registerModalDismissedListener: jest.fn(),
   registerBottomTabSelectedListener: jest.fn(),
+  registerBottomTabPressedListener: jest.fn(),
   registerAppLaunchedListener: jest.fn(),
 });
 
