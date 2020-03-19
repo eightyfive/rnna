@@ -1,6 +1,5 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Component';
 import Navigator from './Navigator';
 
 export default class OverlayNavigator extends Navigator {
@@ -8,7 +7,6 @@ export default class OverlayNavigator extends Navigator {
     super(routes, config);
 
     this.component = this.getRoute(this.initialRouteName);
-    this.component.id = `overlay-${this.component.id}`;
   }
 
   mount() {
@@ -19,9 +17,8 @@ export default class OverlayNavigator extends Navigator {
     Navigation.dismissOverlay(this.component.id);
   }
 
-  // Aliases
   navigate(route, params, fromId) {
-    this.mount();
+    //
   }
 
   goBack(fromId) {

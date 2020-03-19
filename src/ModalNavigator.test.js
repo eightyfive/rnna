@@ -5,8 +5,8 @@ import { createModalNavigator } from './index';
 
 let navigator;
 
-function B() {}
-function C() {}
+const B = { componentId: 'B' };
+const C = { componentId: 'C' };
 
 beforeEach(() => {
   navigator = createModalNavigator({ C, B });

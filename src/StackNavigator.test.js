@@ -4,9 +4,9 @@ import { createStackNavigator } from './index';
 
 let navigator;
 
-function A() {}
-function B() {}
-function C() {}
+const A = { componentId: 'A' };
+const B = { componentId: 'B' };
+const C = { componentId: 'C' };
 
 const params = { foo: 'bar' };
 

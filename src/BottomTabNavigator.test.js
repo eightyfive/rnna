@@ -4,9 +4,9 @@ import { createBottomTabNavigator, createStackNavigator } from './index';
 
 let navigator;
 
-function A() {}
-function B() {}
-function C() {}
+const A = { componentId: 'A' };
+const B = { componentId: 'B' };
+const C = { componentId: 'C' };
 
 let ab;
 let c;

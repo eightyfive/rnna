@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { Navigation } from 'react-native-navigation';
 import _mapValues from 'lodash.mapvalues';
 import _mergeWith from 'lodash.mergewith';
@@ -20,9 +20,8 @@ import WidgetComponent from './WidgetComponent';
 
 const events = Navigation.events();
 
-export function createStackNavigator(def, { store, Provider, ...config } = {}) {
-  const routeConfigs = createRouteConfigs(def);
-  const routes = createRoutes(routeConfigs, config, Provider, store);
+export function createStackNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(routeConfigs);
 
   const invalid = Object.values(routes).some(
     route => route instanceof Navigator,
@@ -47,12 +46,8 @@ export function createModalNavigator(routes, config = {}) {
   return createStackNavigator(routes, config);
 }
 
-export function createOverlayNavigator(
-  def,
-  { store, Provider, ...config } = {},
-) {
-  const routeConfigs = createRouteConfigs(def);
-  const routes = createRoutes(routeConfigs, config, Provider, store);
+export function createOverlayNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(routeConfigs);
 
   if (Object.values(routes).length > 1) {
     throw new Error('`OverlayNavigator` only accepts one `Component` child');
@@ -61,12 +56,8 @@ export function createOverlayNavigator(
   return new OverlayNavigator(routes, config);
 }
 
-export function createBottomTabNavigator(
-  def,
-  { store, Provider, ...config } = {},
-) {
-  const routeConfigs = createRouteConfigs(def);
-  const routes = createRoutes(routeConfigs, config, Provider, store);
+export function createBottomTabNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(routeConfigs);
 
   const invalid = Object.values(routes).some(
     route => !(route instanceof StackNavigator),
@@ -83,93 +74,64 @@ export function createBottomTabNavigator(
   return new BottomTabNavigator(routes, navigatorConfig);
 }
 
-export function createDrawerNavigator(
-  def,
-  { store, Provider, ...config } = {},
-) {
-  const routeConfigs = createRouteConfigs(def);
+export function createDrawerNavigator(routeConfigs, config = {}) {
   const navigatorConfig = getDrawerNavigatorConfig(config);
 
-  const { contentComponent } = navigatorConfig;
+  const { contentComponent, contentOptions = {} } = navigatorConfig;
 
   if (!contentComponent) {
     throw new Error('config.contentComponent is required');
   }
 
+  // TODO
   navigatorConfig.drawer = createComponent(
-    contentComponent.name,
     contentComponent,
-    getComponentOptions(contentComponent),
-    Provider,
-    store,
+    getComponentOptions(contentOptions),
   );
 
-  const routes = createRoutes(routeConfigs, navigatorConfig, Provider, store);
+  const routes = createRoutes(routeConfigs);
 
   return new DrawerNavigator(routes, navigatorConfig);
 }
 
 // TODO: https://reactnavigation.org/docs/en/switch-navigator.html
-export function createSwitchNavigator(
-  def,
-  { store, Provider, ...config } = {},
-) {
-  const routeConfigs = createRouteConfigs(def);
-  const routes = createRoutes(routeConfigs, config, Provider, store);
+export function createSwitchNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(routeConfigs);
   const navigatorConfig = getSwitchNavigatorConfig(config);
 
   return new SwitchNavigator(routes, navigatorConfig);
 }
 
-export function createAppNavigator(def, { store, Provider, ...config } = {}) {
-  const routeConfigs = createRouteConfigs(def);
-  const routes = createRoutes(routeConfigs, config, Provider, store);
+export function createAppNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(routeConfigs);
 
   return new AppNavigator(routes, config);
 }
 
-function createRouteConfigs(routes) {
-  return _mapValues(routes, route =>
-    route.screen ? route : { screen: route },
-  );
-}
-
-function createRoutes(routeConfigs, navigatorConfig, Provider, store) {
-  return _mapValues(routeConfigs, (routeConfig, routeName) => {
-    const { screen, options: routeOptions, navigationOptions } = routeConfig;
-
-    if (screen instanceof Route) {
-      return screen;
+function createRoutes(routeConfigs) {
+  return _mapValues(routeConfigs, routeConfig => {
+    if (routeConfig instanceof Route) {
+      return routeConfig;
     }
 
-    const options = getComponentOptions(
-      screen,
-      routeOptions,
+    const {
+      componentId,
+      options: routeOptions,
       navigationOptions,
-    );
+    } = routeConfig;
 
-    return createComponent(
-      routeName,
-      routeConfig.screen,
-      options,
-      Provider,
-      store,
-    );
+    const options = getComponentOptions(routeOptions, navigationOptions);
+
+    return createComponent(componentId, options);
   });
 }
 
-function createComponent(name, Comp, options, Provider, store) {
-  registerComponent(name, Comp, Provider, store);
-
-  return new Component(name, { options });
+function createComponent(componentId, options) {
+  return new Component(componentId, { options });
 }
 
-export function createWidget(Comp, { store, Provider, ...config } = {}) {
-  const component = new WidgetComponent(Comp.name);
-
-  registerComponent(component.id, Comp, Provider, store);
-
-  return component;
+export function createWidget(componentId, config = {}) {
+  return new WidgetComponent(componentId);
 }
 
 export function setDefaultOptions({ navigationOptions, ...options }) {
@@ -183,17 +145,11 @@ export function setDefaultOptions({ navigationOptions, ...options }) {
   );
 }
 
-function getComponentOptions(
-  Comp,
-  routeOptions = {},
-  routeNavigationOptions = {},
-) {
+function getComponentOptions(routeOptions = {}, routeNavigationOptions = {}) {
   const options = merge(
     {},
     getNavigationOptions(routeNavigationOptions),
-    getNavigationOptions(Comp.navigationOptions || {}),
     routeOptions,
-    typeof Comp.options !== 'function' ? Comp.options : {},
   );
 
   if (!_isEmpty(options)) {
@@ -306,26 +262,6 @@ function getNavigatorConfig(
   }
 
   return navigatorConfig;
-}
-
-function registerComponent(id, Comp, Provider, store) {
-  if (Provider) {
-    Navigation.registerComponent(
-      id,
-      () => provideComponent(Comp, Provider, store),
-      () => Comp,
-    );
-  } else {
-    Navigation.registerComponent(id, () => Comp);
-  }
-}
-
-function provideComponent(Comp, Provider, store) {
-  return props => (
-    <Provider {...{ store }}>
-      <Comp {...props} />
-    </Provider>
-  );
 }
 
 // function customizer(objValue, srcValue, key, object, source, stack)

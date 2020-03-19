@@ -7,12 +7,12 @@ let app;
 let ab;
 let cd;
 
-function Splash() {}
+const Splash = { componentId: 'Splash' };
 
-function A() {}
-function B() {}
-function C() {}
-function D() {}
+const A = { componentId: 'A' };
+const B = { componentId: 'B' };
+const C = { componentId: 'C' };
+const D = { componentId: 'D' };
 
 beforeEach(() => {
   ab = createStackNavigator({ A, B });

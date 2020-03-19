@@ -20,6 +20,10 @@ export default class AppNavigator extends SwitchNavigator {
     this.onTabSelected = [];
     this.onTabPressed = [];
 
+    this.overlayIds = Object.keys(routes)
+      .filter(name => routes[name] instanceof OverlayNavigator)
+      .map(name => name);
+
     this.didAppearListener = events.registerComponentDidAppearListener(
       this.handleDidAppear,
     );
@@ -50,7 +54,7 @@ export default class AppNavigator extends SwitchNavigator {
   };
 
   handleDidAppear = ({ componentId }) => {
-    if (isScene(componentId)) {
+    if (this.isScene(componentId)) {
       this.fromId = componentId;
 
       // console.log('did APPEAR:', componentId);
@@ -224,11 +228,10 @@ export default class AppNavigator extends SwitchNavigator {
       throw new Error(`Overlay "${name}" is not visible`);
     }
   }
-}
 
-function isScene(componentId) {
-  const isWidget = componentId.indexOf('widget-') === 0;
-  const isOverlay = componentId.indexOf('overlay-') === 0;
+  isScene(componentId) {
+    const isWidget = componentId.indexOf('widget-') === 0;
 
-  return !isWidget && !isOverlay;
+    return !isWidget && !this.overlayIds.includes(componentId);
+  }
 }
