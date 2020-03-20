@@ -1,3 +1,4 @@
+import React from 'react';
 import { Navigation } from 'react-native-navigation';
 
 import SwitchNavigator from './SwitchNavigator';
@@ -13,7 +14,6 @@ export default class AppNavigator extends SwitchNavigator {
     this.backBehavior = 'none'; // Force
     this.mainName = null;
     this.modalName = null;
-    this.mounted = false;
     this.overlays = [];
     this.fromId = this.initialRouteName;
     this.onLaunched = [];
@@ -40,18 +40,17 @@ export default class AppNavigator extends SwitchNavigator {
       this.handleBottomTabPressed,
     );
 
-    this.appLaunchedListener = events.registerAppLaunchedListener(
-      this.handleAppLaunched,
-    );
+    this.launch();
   }
 
-  handleAppLaunched = () => {
-    if (this.mounted) {
-      this.remount();
-    } else {
-      this.mount();
-    }
-  };
+  launch() {
+    this.launched = new Promise(resolve => {
+      const launchedListener = events.registerAppLaunchedListener(() => {
+        launchedListener.remove();
+        resolve();
+      });
+    });
+  }
 
   handleDidAppear = ({ componentId }) => {
     if (this.isScene(componentId)) {
@@ -90,8 +89,6 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   mount() {
-    this.mounted = true;
-
     super.mount();
 
     this.onLaunched.forEach(cb => cb());
@@ -126,10 +123,6 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   navigate(route, params, fromId) {
-    if (!this.mounted) {
-      throw new Error('RNN not mounted yet');
-    }
-
     const name = this.getRouteNavigator(route);
 
     if (this.routeName !== name) {
@@ -233,5 +226,34 @@ export default class AppNavigator extends SwitchNavigator {
     const isWidget = componentId.indexOf('widget-') === 0;
 
     return !isWidget && !this.overlayIds.includes(componentId);
+  }
+
+  registerScreens(screens, Provider = null, store = null) {
+    Object.keys(screens).forEach(componentId => {
+      const Screen = screens[componentId];
+
+      if (Provider) {
+        Navigation.registerComponent(
+          componentId,
+          () => props => (
+            <Provider {...{ store }}>
+              <Screen {...props} />
+            </Provider>
+          ),
+          () => Screen,
+        );
+      } else {
+        Navigation.registerComponent(componentId, () => Screen);
+      }
+    });
+
+    this.launched.then(() => this.init());
+  }
+
+  init() {
+    this.mount();
+    this.remountListener = events.registerAppLaunchedListener(() =>
+      this.remount(),
+    );
   }
 }
