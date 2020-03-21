@@ -16,7 +16,7 @@ export default class AppNavigator extends SwitchNavigator {
     this.modalName = null;
     this.overlays = [];
     this.fromId = this.initialRouteName;
-    this.onLaunched = [];
+    this.onMounted = [];
     this.onTabSelected = [];
     this.onTabPressed = [];
 
@@ -76,8 +76,8 @@ export default class AppNavigator extends SwitchNavigator {
   handleBottomTabPressed = ev =>
     Promise.all(this.onTabPressed.map(cb => cb(ev)));
 
-  onAppLaunched(cb) {
-    this.onLaunched.push(cb);
+  onAppMounted(cb) {
+    this.onMounted.push(cb);
   }
 
   onBottomTabSelected(cb) {
@@ -91,7 +91,7 @@ export default class AppNavigator extends SwitchNavigator {
   mount() {
     super.mount();
 
-    this.onLaunched.forEach(cb => cb());
+    this.onMounted.forEach(cb => cb());
   }
 
   remount() {
