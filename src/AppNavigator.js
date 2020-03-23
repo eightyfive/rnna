@@ -228,7 +228,7 @@ export default class AppNavigator extends SwitchNavigator {
     return !isWidget && !this.overlayIds.includes(componentId);
   }
 
-  registerScreens(screens, Provider = null, store = null) {
+  run(screens, Provider = null, store = null) {
     Object.keys(screens).forEach(componentId => {
       const Screen = screens[componentId];
 
