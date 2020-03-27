@@ -8,36 +8,49 @@ export default class SwitchNavigator extends Navigator {
   }
 
   mount() {
-    this.history = [];
-    this.navigate(this.initialRouteName);
+    this.route.mount();
   }
 
-  navigate(route, params, fromId) {
-    const name = this.getRouteNavigator(route);
+  get(path) {
+    const names = path.split('/');
 
-    if (name !== this.routeName) {
-      this.history.push(name);
-
-      const navigator = this.getRoute(name);
-      navigator.mount();
+    if (names.length === 1) {
+      return super.get(names[0]);
     }
 
-    const next = this.getRouteNext(route);
+    let route = this;
+
+    names.forEach(name => {
+      route = route.get(name);
+    });
+
+    return route;
+  }
+
+  go(path, params, fromId) {
+    const name = this.getPathNavigator(path);
+
+    if (name !== this.route.name) {
+      this.history.push(name);
+      this.route.mount();
+    }
+
+    const next = this.getNextPath(path);
 
     if (next) {
-      this.active.navigate(next, params, fromId);
+      this.route.go(next, params, fromId);
     }
   }
 
   goBack(fromId) {
     try {
-      this.active.goBack(fromId);
+      this.route.goBack(fromId);
     } catch (err) {
       if (this.history.length > 1) {
-        this.active.unmount(fromId);
+        this.route.unmount(fromId);
 
         this.history.pop();
-        this.navigate(this.routeName);
+        this.go(this.route.name);
       } else {
         throw err;
       }
@@ -45,22 +58,22 @@ export default class SwitchNavigator extends Navigator {
   }
 
   push(name, params, fromId) {
-    this.active.push(name, params, fromId);
+    this.route.push(name, params, fromId);
   }
 
   pop(n = 1) {
-    this.active.pop(n);
+    this.route.pop(n);
   }
 
   popToTop(fromId) {
-    this.active.popToTop(fromId);
+    this.route.popToTop(fromId);
   }
 
   popToIndex(index) {
-    this.active.popToIndex(index);
+    this.route.popToIndex(index);
   }
 
   dismiss(fromId) {
-    this.active.dismiss(fromId);
+    this.route.dismiss(fromId);
   }
 }

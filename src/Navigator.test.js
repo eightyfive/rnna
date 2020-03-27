@@ -2,24 +2,24 @@ import Navigator from './Navigator';
 
 let navigator;
 
-const route = 'main/users/User';
+const path = 'main/users/User';
 
 beforeEach(() => {
   navigator = new Navigator({}, {});
 });
 
-test('getRouteSegments', () => {
-  expect(navigator.getRouteSegments(route)).toEqual(['main', 'users', 'User']);
+test('getPathSegments', () => {
+  expect(navigator.getPathSegments(path)).toEqual(['main', 'users', 'User']);
 });
 
-test('getRouteNavigator', () => {
-  expect(navigator.getRouteNavigator(route)).toBe('main');
+test('getPathNavigator', () => {
+  expect(navigator.getPathNavigator(path)).toBe('main');
 });
 
-test('getRouteNext', () => {
-  expect(navigator.getRouteNext(route)).toBe('users/User');
+test('getNextPath', () => {
+  expect(navigator.getNextPath(path)).toBe('users/User');
 });
 
-test('getRouteComponentId', () => {
-  expect(navigator.getRouteComponentId(route)).toBe('User');
+test('getPathComponentId', () => {
+  expect(navigator.getPathComponentId(path)).toBe('User');
 });

@@ -28,19 +28,19 @@ test('mount', () => {
   expect(ab.mount).not.toHaveBeenCalled();
 });
 
-test('navigate', () => {
+test('go', () => {
   cd.mount = jest.fn();
 
-  app.navigate('cd');
+  app.go('cd');
 
   expect(cd.mount).toHaveBeenCalled();
 });
 
-test('navigate deep', () => {
+test('go deep', () => {
   cd.mount = jest.fn();
   cd.push = jest.fn();
 
-  app.navigate('cd/D');
+  app.go('cd/D');
 
   expect(cd.mount).toHaveBeenCalled();
   expect(cd.push).toHaveBeenCalledWith('D', undefined, 'Splash');

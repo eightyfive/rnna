@@ -6,7 +6,7 @@ export default class OverlayNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
 
-    this.component = this.getRoute(this.initialRouteName);
+    this.component = this.get(this.initialRouteName);
   }
 
   mount() {
@@ -17,7 +17,7 @@ export default class OverlayNavigator extends Navigator {
     Navigation.dismissOverlay(this.component.id);
   }
 
-  navigate(route, params, fromId) {
+  go(path, params, fromId) {
     //
   }
 

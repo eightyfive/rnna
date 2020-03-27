@@ -2,6 +2,8 @@ import { Navigation } from 'react-native-navigation';
 
 import Navigator from './Navigator';
 
+const events = Navigation.events();
+
 export default class BottomTabNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
@@ -10,13 +12,23 @@ export default class BottomTabNavigator extends Navigator {
     this.tabIndex = 0;
 
     this.options = config.options;
+
+    this.tabSelectedListener = events.registerBottomTabSelectedListener(
+      this.handleBottomTabSelected,
+    );
   }
+
+  handleBottomTabSelected = ({ selectedTabIndex: index }) => {
+    if (this.tabIndex !== index) {
+      this.tabIndex = index;
+    }
+  };
 
   getLayout() {
     const layout = {
       id: this.layoutId,
       name: this.layoutId,
-      children: this.order.map(key => this.getRoute(key).getInitialLayout()),
+      children: this.order.map(key => this.get(key).getInitialLayout()),
     };
 
     if (this.options) {
@@ -26,16 +38,28 @@ export default class BottomTabNavigator extends Navigator {
     return { bottomTabs: layout };
   }
 
-  get routeName() {
-    return this.order[this.tabIndex];
+  get(index) {
+    if (typeof index === 'number') {
+      const name = this.order[index];
+
+      return this.routes[name];
+    }
+
+    return super.get(index);
+  }
+
+  get route() {
+    const name = this.order[this.tabIndex];
+
+    return this.get(name);
   }
 
   mount() {
     Navigation.setRoot({ root: this.getLayout() });
   }
 
-  navigate(route, params, fromId) {
-    const name = this.getRouteNavigator(route);
+  go(path, params, fromId) {
+    const name = this.getPathNavigator(path);
     const index = this.order.findIndex(key => key === name);
 
     if (index === -1) {
@@ -50,10 +74,10 @@ export default class BottomTabNavigator extends Navigator {
       });
     }
 
-    const rest = this.getRouteNext(route);
+    const rest = this.getNextPath(path);
 
     if (rest) {
-      this.active.navigate(rest, params, fromId);
+      this.route.go(rest, params, fromId);
     }
   }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
+import _pullAt from 'lodash.pullat';
 
 import SwitchNavigator from './SwitchNavigator';
 import ModalNavigator from './ModalNavigator';
@@ -12,8 +13,6 @@ export default class AppNavigator extends SwitchNavigator {
     super(routes, config);
 
     this.backBehavior = 'none'; // Force
-    this.mainName = null;
-    this.modalName = null;
     this.overlays = [];
     this.fromId = this.initialRouteName;
     this.onMounted = [];
@@ -60,13 +59,13 @@ export default class AppNavigator extends SwitchNavigator {
     }
   };
 
-  handleModalDismissed = ({ componentId, modalsDismissed }) => {
-    // console.log('modal Dismissed:', componentId, modalsDismissed);
+  handleModalDismissed = ({ componentId: id, modalsDismissed }) => {
+    // console.log('modal Dismissed:', id, modalsDismissed);
 
     // Happens when Native back button is pressed.
-    // We need to remove/"pop" the top-most modal
-    if (this.modalName === componentId) {
-      this.modalName = null;
+
+    if (this.route instanceof ModalNavigator && this.route.name === id) {
+      this.history.pop();
     }
   };
 
@@ -95,101 +94,83 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   remount() {
-    if (this.main) {
-      this.main.mount();
-    }
+    this.history.forEach(name => this.get(name).mount());
 
-    if (this.modal) {
-      this.modal.mount();
-    }
-
-    this.overlays.forEach(name => this.getRoute(name).mount());
+    this.overlays.forEach(name => this.get(name).mount());
   }
 
-  get routeName() {
-    return this.modalName || this.mainName;
-  }
+  go(path, params) {
+    const name = this.getPathNavigator(path);
 
-  get main() {
-    return this.routes[this.mainName];
-  }
-
-  get modal() {
-    return this.routes[this.modalName];
-  }
-
-  isVisible(name) {
-    return name === this.routeName || this.overlays.some(ov => ov === name);
-  }
-
-  navigate(route, params, fromId) {
-    const name = this.getRouteNavigator(route);
-
-    if (this.routeName !== name) {
-      // Force dissmiss modal (1 modal maximum at a time)
-      if (this.modal) {
+    if (this.route.name !== name) {
+      // Only one modal at a time
+      if (this.route instanceof ModalNavigator) {
         this.dismissModal();
       }
 
-      const active = this.getRoute(name);
-      const isModal = active instanceof ModalNavigator;
+      const route = this.get(name);
 
-      if (isModal) {
-        this.modalName = name;
+      if (route instanceof ModalNavigator) {
+        this.history.push(name);
       } else {
-        if (this.main) {
-          this.main.unmount(this.fromId);
+        if (this.route) {
+          // Unmount old route
+          this.route.unmount(this.fromId);
         }
 
-        this.mainName = name;
+        this.history = [name];
       }
 
-      // Mount
-      active.mount();
+      // Mount new route
+      route.mount();
     }
 
-    const next = this.getRouteNext(route);
+    const next = this.getNextPath(path);
 
     if (next) {
-      this.active.navigate(next, params, this.fromId);
+      this.route.go(next, params, this.fromId);
     }
   }
 
   goBack() {
     try {
-      this.active.goBack(this.fromId);
+      this.route.goBack(this.fromId);
     } catch (err) {
-      if (this.modal) {
+      if (this.route instanceof ModalNavigator) {
         this.dismissModal();
       }
     }
   }
 
   openDrawer() {
-    this.active.openDrawer();
+    this.route.openDrawer();
   }
 
   closeDrawer() {
-    this.active.closeDrawer();
+    this.route.closeDrawer();
   }
 
   toggleDrawer() {
-    this.active.toggleDrawer();
+    this.route.toggleDrawer();
   }
 
   dismissModal() {
-    this.modal.unmount(this.fromId);
-    this.modalName = null;
+    if (!(this.route instanceof ModalNavigator)) {
+      throw new Error('No modal to dismiss');
+    }
+
+    this.route.unmount(this.fromId);
+    this.history.pop();
   }
 
   dismissAllModals() {
-    if (this.modal) {
+    if (this.route instanceof ModalNavigator) {
       Navigation.dismissAllModals();
     }
   }
 
   dismissAllOverlays() {
-    this.overlays.forEach(name => this.getRoute(name).unmount());
+    this.overlays.forEach(name => this.get(name).unmount());
     this.overlays = [];
   }
 
@@ -198,7 +179,7 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   showOverlay(name) {
-    const overlay = this.getRoute(name);
+    const overlay = this.get(name);
 
     if (!(overlay instanceof OverlayNavigator)) {
       throw new Error(`Unknown Overlay: ${name}`);
@@ -210,13 +191,13 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   dismissOverlay(name) {
-    const index = this.overlays.findIndex(ov => ov === name);
+    const index = this.overlays.findIndex(id => id === name);
     const visible = index !== -1;
 
     if (visible) {
-      const [ov] = this.overlays.splice(index, 1);
+      const [id] = _pullAt(this.overlays, index);
 
-      this.getRoute(ov).unmount();
+      this.get(id).unmount();
     } else {
       throw new Error(`Overlay "${name}" is not visible`);
     }
@@ -229,12 +210,12 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   run(screens, Provider = null, store = null) {
-    Object.keys(screens).forEach(componentId => {
-      const Screen = screens[componentId];
+    Object.keys(screens).forEach(name => {
+      const Screen = screens[name];
 
       if (Provider) {
         Navigation.registerComponent(
-          componentId,
+          name,
           () => props => (
             <Provider {...{ store }}>
               <Screen {...props} />
@@ -243,7 +224,7 @@ export default class AppNavigator extends SwitchNavigator {
           () => Screen,
         );
       } else {
-        Navigation.registerComponent(componentId, () => Screen);
+        Navigation.registerComponent(name, () => Screen);
       }
     });
 

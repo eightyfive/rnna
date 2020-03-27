@@ -44,8 +44,6 @@ export default class DrawerNavigator extends StackNavigator {
   };
 
   mount() {
-    this.history = [this.initialRouteName];
-
     Navigation.setRoot({ root: this.getInitialLayout() });
   }
 
@@ -62,7 +60,7 @@ export default class DrawerNavigator extends StackNavigator {
     return { sideMenu: layout };
   }
 
-  navigate(toId, params) {
+  go(toId, params) {
     if (toId === this.drawer.id) {
       this.openDrawer();
     } else {
@@ -71,7 +69,7 @@ export default class DrawerNavigator extends StackNavigator {
       }
 
       // StackNavigator.push
-      super.navigate(toId, params, this.initialRouteName);
+      super.go(toId, params, this.initialRouteName);
     }
   }
 

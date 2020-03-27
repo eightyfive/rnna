@@ -22,14 +22,14 @@ test('dumb', () => {
   expect(true).toBe(true);
 });
 
-// test('navigate', () => {
-//   navigator.navigate('A');
+// test('go', () => {
+//   navigator.go('A');
 
 //   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
 // });
 
 // test('go back', () => {
-//   navigator.navigate('B');
+//   navigator.go('B');
 //   navigator.goBack('B');
 
 //   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
@@ -61,7 +61,7 @@ test('dumb', () => {
 // });
 
 // test('open drawer', () => {
-//   navigator.navigate('Drawer');
+//   navigator.go('Drawer');
 
 //   expect(Navigation.mergeOptions).toHaveBeenCalledWith(
 //     'Drawer',
@@ -70,7 +70,7 @@ test('dumb', () => {
 // });
 
 // test('close drawer', () => {
-//   navigator.navigate('Drawer');
+//   navigator.go('Drawer');
 //   navigator.handleDidAppear({ componentId: 'Drawer' });
 //   navigator.goBack();
 

@@ -1,4 +1,4 @@
-import Component from './Component';
+import _last from 'lodash.last';
 import Route from './Route';
 
 export default /** abstract */ class Navigator extends Route {
@@ -8,73 +8,61 @@ export default /** abstract */ class Navigator extends Route {
     this.routes = routes;
     this.order = config.order || Object.keys(routes);
     this.initialRouteName = config.initialRouteName || this.order[0];
-    this.history = [];
+    this.history = [this.initialRouteName];
+
+    this.parent = null;
+    this.name = null;
+
+    Object.keys(this.routes).forEach(name => {
+      const route = this.routes[name];
+
+      route.parent = this;
+      route.name = name;
+    });
   }
 
-  get routeName() {
-    return this.history[this.history.length - 1];
+  get route() {
+    const name = _last(this.history);
+
+    return this.get(name);
   }
 
-  get active() {
-    return this.getRoute(this.routeName);
-  }
+  get(name) {
+    const route = this.routes[name];
 
-  getRoute(name) {
-    const navigator = this.routes[name];
-
-    if (!navigator) {
+    if (!route) {
       throw new Error(`Unknown route: ${name}`);
     }
 
-    return navigator;
-  }
-
-  getNavigator(name) {
-    const navigator = this.getRoute(name);
-
-    if (!(navigator instanceof Navigator)) {
-      throw new Error(`Unknown \`Navigator\`: ${name}`);
-    }
-
-    return navigator;
-  }
-
-  getComponent(name) {
-    const component = this.getRoute(name);
-
-    if (!(component instanceof Component)) {
-      throw new Error(`Unknown \`Component\`: ${name}`);
-    }
-
-    return component;
+    return route;
   }
 
   unmount(fromId) {}
 
-  navigate(route, params, fromId) {
-    throwAbstract('navigate(route, params, fromId)');
+  go(path, params, fromId) {
+    throwAbstract('go(path, params, fromId)');
   }
 
   goBack(fromId) {
     throwAbstract('goBack(fromId)');
   }
 
-  getRouteNavigator(route) {
-    return this.getRouteSegments(route).shift();
+  getPathNavigator(path) {
+    return this.getPathSegments(path).shift();
   }
 
-  getRouteNext(route) {
-    const [, ...rest] = this.getRouteSegments(route);
+  getNextPath(path) {
+    const [, ...rest] = this.getPathSegments(path);
 
     return rest.length ? rest.join('/') : null;
   }
 
-  getRouteComponentId(route) {
-    return this.getRouteSegments(route).pop();
+  getPathComponentId(path) {
+    return this.getPathSegments(path).pop();
   }
 
-  getRouteSegments(route) {
-    return route.split('/');
+  getPathSegments(path) {
+    return path.split('/');
   }
 }
 
