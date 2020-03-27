@@ -56,24 +56,4 @@ export default class SwitchNavigator extends Navigator {
       }
     }
   }
-
-  push(name, params, fromId) {
-    this.route.push(name, params, fromId);
-  }
-
-  pop(n = 1) {
-    this.route.pop(n);
-  }
-
-  popToTop(fromId) {
-    this.route.popToTop(fromId);
-  }
-
-  popToIndex(index) {
-    this.route.popToIndex(index);
-  }
-
-  dismiss(fromId) {
-    this.route.dismiss(fromId);
-  }
 }
