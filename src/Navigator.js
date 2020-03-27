@@ -47,22 +47,10 @@ export default /** abstract */ class Navigator extends Route {
     throwAbstract('goBack(fromId)');
   }
 
-  getPathNavigator(path) {
-    return this.getPathSegments(path).shift();
-  }
+  parsePath(path) {
+    const [name, ...rest] = path.split('/');
 
-  getNextPath(path) {
-    const [, ...rest] = this.getPathSegments(path);
-
-    return rest.length ? rest.join('/') : null;
-  }
-
-  getPathComponentId(path) {
-    return this.getPathSegments(path).pop();
-  }
-
-  getPathSegments(path) {
-    return path.split('/');
+    return [name, rest.length ? rest.join('/') : null];
   }
 }
 

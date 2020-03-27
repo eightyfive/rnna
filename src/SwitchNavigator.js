@@ -28,17 +28,15 @@ export default class SwitchNavigator extends Navigator {
   }
 
   go(path, params, fromId) {
-    const name = this.getPathNavigator(path);
+    const [name, rest] = this.parsePath(path);
 
     if (name !== this.route.name) {
       this.history.push(name);
       this.route.mount();
     }
 
-    const next = this.getNextPath(path);
-
-    if (next) {
-      this.route.go(next, params, fromId);
+    if (rest) {
+      this.route.go(rest, params, fromId);
     }
   }
 

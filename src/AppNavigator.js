@@ -100,7 +100,7 @@ export default class AppNavigator extends SwitchNavigator {
   }
 
   go(path, params) {
-    const name = this.getPathNavigator(path);
+    const [name, rest] = this.parsePath(path);
 
     if (this.route.name !== name) {
       // Only one modal at a time
@@ -125,10 +125,8 @@ export default class AppNavigator extends SwitchNavigator {
       route.mount();
     }
 
-    const next = this.getNextPath(path);
-
-    if (next) {
-      this.route.go(next, params, this.fromId);
+    if (rest) {
+      this.route.go(rest, params, this.fromId);
     }
   }
 
