@@ -6,7 +6,7 @@ import _set from 'lodash.set';
 import _pick from 'lodash.pick';
 import _isEmpty from 'lodash.isempty';
 
-import BottomTabNavigator from './BottomTabNavigator';
+import BottomTabsNavigator from './BottomTabsNavigator';
 import Component from './Component';
 import DrawerNavigator from './DrawerNavigator';
 import ModalNavigator from './ModalNavigator';
@@ -65,13 +65,13 @@ export function createBottomTabNavigator(routeConfigs, config = {}) {
 
   if (invalid) {
     throw new Error(
-      '`BottomTabNavigator` only accepts `StackNavigator` children',
+      '`BottomTabsNavigator` only accepts `StackNavigator` children',
     );
   }
 
   const navigatorConfig = getBottomTabNavigatorConfig(config);
 
-  return new BottomTabNavigator(routes, navigatorConfig);
+  return new BottomTabsNavigator(routes, navigatorConfig);
 }
 
 export function createDrawerNavigator(routeConfigs, config = {}) {
