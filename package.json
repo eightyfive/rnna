@@ -32,12 +32,13 @@
     "lodash.pick": "^4.4.0",
     "lodash.pullat": "^4.6.0",
     "lodash.set": "^4.3.2",
-    "lodash.take": "^4.1.1"
+    "lodash.take": "^4.1.1",
+    "fetch-run": "^1.0.0"
   },
   "peerDependencies": {
-    "react-native": "*",
-    "react-native-navigation": "*",
-    "rxjs": "*"
+    "react-native": "^0.60.0",
+    "react-native-navigation": "^6.0.0",
+    "rxjs": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
