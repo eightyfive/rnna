@@ -1,4 +1,3 @@
-// import React from 'react';
 import { Navigation } from 'react-native-navigation';
 import _mapValues from 'lodash.mapvalues';
 import _mergeWith from 'lodash.mergewith';
