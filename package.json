@@ -1,7 +1,7 @@
 {
   "name": "rnna",
   "version": "0.1.6",
-  "description": "react-native-navigation Standalone Application",
+  "description": "React Native Navigation App",
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
