@@ -1,6 +1,6 @@
-import { of } from 'rxjs/observable/of';
+import { of } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
-import { switchMap } from 'rxjs/operators/switchMap';
+import { switchMap } from 'rxjs/operators';
 
 import HttpStack from 'fetch-run/http-stack';
 

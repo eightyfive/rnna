@@ -1,8 +1,5 @@
-import { from } from 'rxjs/observable/from';
-import { mapTo } from 'rxjs/operators/mapTo';
-import { switchMap } from 'rxjs/operators/switchMap';
-import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
-import { tap } from 'rxjs/operators/tap';
+import { from } from 'rxjs';
+import { mapTo, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 
 const logger = next => req$ =>
   next(req$).pipe(

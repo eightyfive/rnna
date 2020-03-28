@@ -1,5 +1,5 @@
-import { throwError } from 'rxjs/observable/throwError';
-import { catchError } from 'rxjs/operators/catchError';
+import { throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 import Http from '../index';
 import error from './error';
@@ -25,7 +25,7 @@ describe('error', () => {
         () => {},
         err =>
           err.response.json().then(data => {
-            expect(err.name).toBe('HttpError');
+            expect(err.name).toBe('HTTPError');
             expect(err.code).toBe(422);
             expect(err.message).toBe('Unprocessable Entity');
             expect(data).toEqual({ foo: 'bar' });

@@ -1,7 +1,5 @@
-import { from } from 'rxjs/observable/from';
-import { map } from 'rxjs/operators/map';
-import { switchMap } from 'rxjs/operators/switchMap';
-import { tap } from 'rxjs/operators/tap';
+import { from } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import Http from './index';
 
@@ -18,7 +16,7 @@ beforeEach(() => {
   });
 });
 
-describe('HttpRx', () => {
+describe('Http', () => {
   it('calls fetch', done => {
     api.get('api/resource').subscribe(() => {
       const req = fetch.mock.calls[0][0];

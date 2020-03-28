@@ -1,5 +1,4 @@
-import { tap } from 'rxjs/operators/tap';
-import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
+import { tap, withLatestFrom } from 'rxjs/operators';
 
 import HttpError from 'fetch-run/http-error';
 
