@@ -4,7 +4,7 @@
   "description": "React Native Navigation App",
   "scripts": {
     "test": "jest",
-    "format": "prettier --write 'src/*.js'"
+    "format": "prettier --write 'navigator/*.js' 'operators.js'"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,8 @@
   },
   "peerDependencies": {
     "react-native": "*",
-    "react-native-navigation": "*"
+    "react-native-navigation": "*",
+    "rxjs": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
