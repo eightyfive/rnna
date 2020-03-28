@@ -37,9 +37,9 @@
     "lodash.take": "^4.1.1"
   },
   "peerDependencies": {
-    "react-native": "^0.60.0",
-    "react-native-navigation": "^6.0.0",
-    "rxjs": "^6.0.0"
+    "react-native": "0.x",
+    "react-native-navigation": "6.x",
+    "rxjs": "6.x"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
