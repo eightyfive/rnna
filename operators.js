@@ -8,6 +8,7 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
+import HTTPError from 'fetch-run/http-error';
 
 export const exec = cb => source =>
   source.pipe(
@@ -27,6 +28,16 @@ export const ofReType = (...expressions) => source =>
 
 // Alias
 export const ofType = ofReType;
+
+export const ofHTTPErrorType = status => source =>
+  source.pipe(
+    filter(
+      ({ error, payload: err }) =>
+        error === true &&
+        err instanceof HTTPError &&
+        err.response.status === status,
+    ),
+  );
 
 export const takeUntilType = (action$, type) => source =>
   source.pipe(takeUntil(action$.pipe(ofType(type))));
