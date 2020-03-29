@@ -1,5 +1,6 @@
 import { from, of } from 'rxjs';
 import {
+  catchError,
   filter,
   ignoreElements,
   map,
