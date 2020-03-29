@@ -1,4 +1,4 @@
-import { tap, withLatestFrom } from 'rxjs/operators';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 
 import HTTPError from 'fetch-run/http-error';
 
@@ -15,6 +15,7 @@ const error = next => req$ =>
         );
       }
     }),
+    map(([res, req]) => res),
   );
 
 export default error;
