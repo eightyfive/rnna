@@ -1,3 +1,5 @@
 module.exports = {
-  postInitScript: './template.setup.js',
+  placeholderName: 'HelloWorld',
+  templateDir: './template',
+  // postInitScript: './template.setup.js',
 };
