@@ -12,13 +12,13 @@ export function getSlice(name) {
 }
 
 export function createSelector(...names) {
+  const selector = names.pop();
   const original = names.some(name => typeof name !== 'string');
 
   if (original) {
-    return create(...names);
+    return create(...names, selector);
   }
 
-  const selector = names.pop();
   const slices = names.map(name => getSlice(name));
 
   return create(...slices, selector);
