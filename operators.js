@@ -87,61 +87,37 @@ export const startWithAction = (type, payload) => source =>
   );
 
 // Api
-export const mapApi = (api, method, urlCreator, dataCreator) => source =>
+export const createMapApi = createType => makeRequest => source =>
   source.pipe(
     switchMap(action => {
-      let payload = action.payload || action;
-
-      let url;
-
-      if (typeof urlCreator === 'function') {
-        url = urlCreator(payload);
-      } else {
-        url = urlCreator;
-      }
-
-      let data;
-
-      if (dataCreator) {
-        if (typeof dataCreator === 'function') {
-          data = dataCreator(payload);
-        } else {
-          data = dataCreator;
-        }
-      }
-
-      let res$;
-
-      if (data) {
-        res$ = api[method.toLowerCase()](url, data);
-      } else {
-        res$ = api[method.toLowerCase()](url);
-      }
-
-      const type = `[API] ${method.toUpperCase()} /${url}`;
+      const payload = action.payload || action;
+      const res$ = makeRequest(payload);
 
       return res$.pipe(
-        filter(res => res.headers.get('Content-Type') === 'application/json'),
-        mapApiResponse(type),
-        startWithAction(`${type} 202`),
-        catchApiError(type),
+        filter(
+          ([res, req]) =>
+            res.headers.get('Content-Type') === 'application/json',
+        ),
+        mapApiResponse(createType),
+        startWithAction(createType(req.method, req.url, 202)),
+        catchApiError(createType),
       );
     }),
   );
 
-const mapApiResponse = type => source =>
+const mapApiResponse = createType => source =>
   source.pipe(
-    switchMap(res =>
+    switchMap(([res, req]) =>
       from(
         res.json().then(json => ({
-          type: `${type} ${res.status}`,
+          type: createType(req.method, req.url, res.status),
           payload: json.data || json,
         })),
       ),
     ),
   );
 
-const catchApiError = type => source =>
+const catchApiError = createType => source =>
   source.pipe(
     catchError(err =>
       of(err).pipe(
@@ -149,10 +125,13 @@ const catchApiError = type => source =>
         switchMap(err =>
           from(
             err.response.json().then(data => {
+              const req = err.request;
+              const res = err.response;
+
               err.data = data;
 
               return {
-                type: `${type} ${err.response.status}`,
+                type: createType(req.method, req.url, res.status),
                 error: true,
                 payload: err,
               };

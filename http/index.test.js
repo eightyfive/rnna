@@ -18,8 +18,8 @@ beforeEach(() => {
 
 describe('Http', () => {
   it('calls fetch', done => {
-    api.get('api/resource').subscribe(() => {
-      const req = fetch.mock.calls[0][0];
+    api.get('api/resource').subscribe(([res, req]) => {
+      expect(fetch).toHaveBeenCalled();
 
       expect(req.method).toBe('GET');
       expect(req.headers.get('Content-Type')).toBe('application/json');
@@ -29,17 +29,28 @@ describe('Http', () => {
     });
   });
 
-  it('logs req & res', done => {
+  it('logs req (before) & res (after)', done => {
     const log = jest.fn();
 
-    api.use(next => req$ => next(req$.pipe(tap(log))).pipe(tap(log)));
+    api.use(next => req$ =>
+      next(
+        req$.pipe(
+          tap(req => {
+            log(req);
+          }),
+        ),
+      ).pipe(
+        tap(([res, req]) => {
+          log(res);
+        }),
+      ),
+    );
 
-    api.get('api/resource').subscribe(res => {
-      const req = fetch.mock.calls[0][0];
-
+    api.get('api/resource').subscribe(([res, req]) => {
       expect(log).toHaveBeenCalledTimes(2);
       expect(log).toHaveBeenNthCalledWith(1, req);
       expect(log).toHaveBeenNthCalledWith(2, res);
+
       done();
     });
   });
@@ -48,7 +59,7 @@ describe('Http', () => {
     fetch.mockResponse('{"foo": "bar"}');
 
     api.use(next => req$ =>
-      next(req$).pipe(switchMap(res => from(res.json()))),
+      next(req$).pipe(switchMap(([res, req]) => from(res.json()))),
     );
 
     api.get('api/resource').subscribe(data => {
@@ -66,20 +77,17 @@ describe('Http', () => {
         map(oldReq => new Request(oldReq, { method: 'POST' })),
       );
 
-      let _req;
-
-      newReq$.subscribe(req => {
-        _req = req;
-      });
-
-      return next(newReq$).pipe(tap(res => log(_req)));
+      return next(newReq$).pipe(
+        tap(([res, req]) => {
+          log(req);
+        }),
+      );
     });
 
-    api.get('api/resource').subscribe(res => {
-      const req = fetch.mock.calls[0][0];
-
+    api.get('api/resource').subscribe(([res, req]) => {
       expect(req.method).toBe('POST');
       expect(log).toHaveBeenLastCalledWith(req);
+
       done();
     });
   });

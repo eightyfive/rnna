@@ -1,9 +1,8 @@
 import { from } from 'rxjs';
-import { mapTo, switchMap, withLatestFrom, tap } from 'rxjs/operators';
+import { mapTo, switchMap, tap } from 'rxjs/operators';
 
 const logger = next => req$ =>
   next(req$).pipe(
-    withLatestFrom(req$),
     switchMap(([res, req]) =>
       from(res.clone().json()).pipe(
         tap(data => {
@@ -31,7 +30,7 @@ const logger = next => req$ =>
             console.groupEnd();
           }
         }),
-        mapTo(res),
+        mapTo([res, req]),
       ),
     ),
   );

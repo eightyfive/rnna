@@ -1,19 +1,20 @@
 import { Alert } from 'react-native';
-import { exec, mapApi, ofHTTPErrorType, ofType } from 'rnna/operators';
+import { exec, ofHTTPErrorType, ofType } from 'rnna/operators';
 
 import { api } from '../services';
+import { mapApi } from '../helpers';
 
 // Session
 export const login = ev =>
   ev.pipe(
     ofType('[Login] Submit'),
-    mapApi(api, 'POST', 'login', data => data),
+    mapApi(data => api.post('login', data)),
   );
 
 export const register = ev =>
   ev.pipe(
     ofType('[Register] Submit'),
-    mapApi(api, 'POST', 'register', data => data),
+    mapApi(data => api.post('register', data)),
   );
 
 // User
@@ -24,7 +25,7 @@ export const getUser = ev =>
       '[API] POST /login 200',
       '[API] POST /register 200',
     ),
-    mapApi(api, 'GET', 'user'),
+    mapApi(() => api.get('user')),
   );
 
 // Error
