@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import SpaceSheet from 'react-native-spacesheet';
 import color from 'color';
 
@@ -9,16 +8,6 @@ const space = new SpaceSheet(spacing);
 export const s = space.styles;
 export const ss = space.sheets;
 
-export const sheet = StyleSheet.create({
-  content: {
-    ...s.p3,
-    flex: 1,
-  },
-  contentContainer: {
-    ...s.p3,
-  },
-});
-
 // Credits:
 // https://github.com/callstack/react-native-paper/blob/master/src/styles/DefaultTheme.tsx
 // https://github.com/callstack/react-native-paper/blob/master/src/styles/colors.tsx
@@ -27,6 +16,8 @@ const white = '#ffffff';
 const pinkA400 = '#f50057';
 
 export const colors = {
+  white,
+  black,
   primary: '#6200ee',
   accent: '#03dac4',
   background: '#f6f6f6',
