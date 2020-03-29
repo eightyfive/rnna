@@ -1,5 +1,5 @@
 {
-  "name": "RnnaTemplate",
+  "name": "HelloWorld",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.8.1",
     "color": "^3.1.2",
+    "date-fns": "^2.11.1",
     "immer": "^6.0.2",
     "react": "16.11.0",
     "react-native": "0.62.0",

@@ -1,7 +1,9 @@
 import produce from 'immer';
 
 const initialState = {
-  users: {},
+  users: {
+    '1': { name: 'John' },
+  },
 };
 
 export default produce((draft, { payload = {} }) => {

@@ -1,28 +1,17 @@
 import produce from 'immer';
 
 const initialState = {
-  userId: null,
+  userId: 1,
   token: null,
 };
 
-const is401 = /\s401$/;
-
 export default produce((draft, { type, payload }) => {
   switch (type) {
-    case '[API] POST /login 200':
+    case 'Your login successful action type here...':
       draft.token = payload;
-      break;
-
-    case '[API] GET /user 200':
-      draft.userId = payload.result;
       break;
 
     default:
       break;
-  }
-
-  // Logout
-  if (is401.test(type)) {
-    return initialState;
   }
 }, initialState);

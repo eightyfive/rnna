@@ -10,7 +10,7 @@ export function formatPrice(amount, currency) {
 }
 
 // RNN
-export function setNavigationTitle(title) {
+export function setTitle(title) {
   return {
     topBar: {
       title: {

@@ -1,8 +1,4 @@
-import {
-  createAppNavigator,
-  createStackNavigator,
-  setDefaultOptions,
-} from 'rnna';
+import { createAppNavigator, setDefaultOptions } from 'rnna';
 
 import { defaultOptions } from '../config/navigation';
 
@@ -11,24 +7,16 @@ setDefaultOptions(defaultOptions);
 export default createAppNavigator({
   Loading: {
     componentId: 'Loading',
+    options: {
+      topBar: {
+        visible: false,
+      },
+    },
   },
-  main: createStackNavigator({
-    Hello: {
-      componentId: 'Hello',
+  Hello: {
+    componentId: 'Hello',
+    navigationOptions: {
+      title: 'Hello',
     },
-  }),
-  auth: createStackNavigator({
-    Register: {
-      componentId: 'Register',
-      navigationOptions: {
-        title: 'Sign up',
-      },
-    },
-    Login: {
-      componentId: 'Login',
-      navigationOptions: {
-        title: 'Sign in',
-      },
-    },
-  }),
+  },
 });

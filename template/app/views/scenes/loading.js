@@ -1,14 +1,11 @@
 import React from 'react';
-import Col from 'react-native-col';
 
-import { ActivityIndicator } from '../atoms';
-import { sheet } from '../theme';
+import { Col, ActivityIndicator } from '../atoms';
 
 export default function Loading() {
   return (
-    <Col.C style={sheet.content}>
+    <Col.C style={{ flex: 1 }}>
       <ActivityIndicator large />
     </Col.C>
   );
 }
-
