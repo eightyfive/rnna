@@ -37,7 +37,7 @@ export const ofHTTPErrorType = status => source =>
       ({ error, payload: err }) =>
         error === true &&
         err instanceof HTTPError &&
-        err.response.status === status,
+        (status ? err.response.status === status : true),
     ),
   );
 
