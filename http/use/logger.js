@@ -3,6 +3,9 @@ import { mapTo, switchMap, tap } from 'rxjs/operators';
 
 const { group, groupCollapsed, groupEnd, log } = console;
 
+const logRed = (err, logger = log) => logger(`%c${err}`, 'color: red');
+const groupRed = err => logRed(err, group);
+
 const logger = next => req$ =>
   next(req$).pipe(
     switchMap(([res, req]) =>
@@ -12,7 +15,7 @@ const logger = next => req$ =>
           const isException = isError && data && data.trace;
 
           if (isError) {
-            group(`%c${req.method} ${req.url} ${res.status}`, 'color: red');
+            groupRed(`${req.method} ${req.url} ${res.status}`);
           } else {
             groupCollapsed(req.method, req.url, res.status);
           }
@@ -67,9 +70,9 @@ function logRes(res, data) {
 }
 
 function logException(data) {
-  group('Exception');
+  groupRed('Exception');
 
-  log(data.message);
+  logRed(data.message);
 
   if (data.exception) {
     log(data.exception);
