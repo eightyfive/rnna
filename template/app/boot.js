@@ -13,4 +13,8 @@ navigator.onAppMounted(() =>
   persisted.then(() => store.dispatch('[App] Storage synched')),
 );
 
-navigator.run(screens, Provider, store);
+export default {
+  run() {
+    navigator.run(screens, Provider, store);
+  },
+};
