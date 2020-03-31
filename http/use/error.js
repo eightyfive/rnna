@@ -6,12 +6,7 @@ const error = next => req$ =>
   next(req$).pipe(
     tap(([res, req]) => {
       if (!res.ok) {
-        throw new HTTPError(
-          res.status,
-          res.statusText,
-          req.clone(),
-          res.clone(),
-        );
+        throw new HTTPError(res.status, res.statusText, req, res.clone());
       }
     }),
   );
