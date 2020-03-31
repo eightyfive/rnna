@@ -6,6 +6,7 @@ import {
   map,
   mapTo,
   startWith,
+  switchMap,
   takeUntil,
   tap,
 } from 'rxjs/operators';
@@ -44,26 +45,26 @@ export const takeUntilType = (action$, type) => source =>
   source.pipe(takeUntil(action$.pipe(ofType(type))));
 
 // Actions
-export const mapAction = (typeCreator, payloadCreator) => source =>
+export const mapAction = (mapType, mapPayload) => source =>
   source.pipe(
     map(data => {
       let type;
       let payload = data.payload || data;
 
-      if (typeof typeCreator === 'function') {
-        type = typeCreator(payload);
+      if (typeof mapType === 'function') {
+        type = mapType(payload);
       } else {
-        type = typeCreator;
+        type = mapType;
       }
 
-      if (typeof payloadCreator === 'undefined') {
+      if (typeof mapPayload === 'undefined') {
         return { type };
       }
 
-      if (typeof payloadCreator === 'function') {
-        payload = payloadCreator(payload);
+      if (typeof mapPayload === 'function') {
+        payload = mapPayload(payload);
       } else {
-        payload = payloadCreator;
+        payload = mapPayload;
       }
 
       return { type, payload };
@@ -87,7 +88,7 @@ export const startWithAction = (type, payload) => source =>
   );
 
 // Api
-export const createMapApi = createType => makeRequest => source =>
+export const createMapApi = mapType => makeRequest => source =>
   source.pipe(
     switchMap(action => {
       const payload = action.payload || action;
@@ -98,26 +99,25 @@ export const createMapApi = createType => makeRequest => source =>
           ([res, req]) =>
             res.headers.get('Content-Type') === 'application/json',
         ),
-        mapApiResponse(createType),
-        startWithAction(createType(req.method, req.url, 202)),
-        catchApiError(createType),
+        mapApiResponse(mapType),
+        catchApiError(mapType),
       );
     }),
   );
 
-const mapApiResponse = createType => source =>
+const mapApiResponse = mapType => source =>
   source.pipe(
     switchMap(([res, req]) =>
       from(
         res.json().then(json => ({
-          type: createType(req.method, req.url, res.status),
+          type: mapType(req.method, req.url, res.status),
           payload: json.data || json,
         })),
-      ),
+      ).pipe(startWithAction(createType(req.method, req.url, 202))),
     ),
   );
 
-const catchApiError = createType => source =>
+const catchApiError = mapType => source =>
   source.pipe(
     catchError(err =>
       of(err).pipe(
@@ -131,7 +131,7 @@ const catchApiError = createType => source =>
               err.data = data;
 
               return {
-                type: createType(req.method, req.url, res.status),
+                type: mapType(req.method, req.url, res.status),
                 error: true,
                 payload: err,
               };
