@@ -55,8 +55,6 @@ export default class StackNavigator extends Navigator {
 
       // Then manual pop() of history (which is out of sync)
       if (visible && !initial) {
-        console.log('Manual pop()', id, name, this.history);
-
         this.history.pop();
       }
     }
