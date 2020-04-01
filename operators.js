@@ -169,7 +169,7 @@ const mapApiResponse = mapType => source =>
           type: mapType(req.method, req.url, res.status),
           payload: json.data || json,
         })),
-      ).pipe(startWithAction(createType(req.method, req.url, 202))),
+      ).pipe(startWithAction(mapType(req.method, req.url, 202))),
     ),
   );
 
