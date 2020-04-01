@@ -88,7 +88,7 @@ export function createLog({ dark = true, color, prefix = '[DEBUG]' }) {
           title = `%c${prefix}`;
         }
 
-        console.group(title, `color: ${color};`);
+        console.group(title, `color: ${col};`);
 
         if (type) {
           console.log(`%c${type}`, `color: ${colors.red};`);
