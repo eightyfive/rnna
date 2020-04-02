@@ -155,10 +155,20 @@ export const createMapApi = mapType => makeRequest => source =>
           ([res, req]) =>
             res.headers.get('Content-Type') === 'application/json',
         ),
-        mapApiResponse(mapType),
+        mapApiActions(mapType),
         catchApiError(mapType),
       );
     }),
+  );
+
+const mapApiActions = mapType => source =>
+  source.pipe(
+    switchMap(([res, req]) =>
+      of([res, req]).pipe(
+        mapApiResponse(mapType),
+        startWithAction(mapType(req.method, req.url, 202)),
+      ),
+    ),
   );
 
 const mapApiResponse = mapType => source =>
@@ -169,7 +179,7 @@ const mapApiResponse = mapType => source =>
           type: mapType(req.method, req.url, res.status),
           payload: json.data || json,
         })),
-      ).pipe(startWithAction(mapType(req.method, req.url, 202))),
+      ),
     ),
   );
 
