@@ -30,6 +30,7 @@
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
     "lodash.last": "^3.0.0",
+    "lodash.mapkeys": "^4.6.0",
     "lodash.mapvalues": "^4.6.0",
     "lodash.mergewith": "^4.6.2",
     "lodash.pick": "^4.4.0",
@@ -38,21 +39,21 @@
     "lodash.take": "^4.1.1"
   },
   "peerDependencies": {
-    "react-native": "0.x",
     "react-native-navigation": "6.x",
     "rxjs": "6.x"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/preset-react": "^7.8.0",
-    "@babel/preset-stage-2": "^7.0.0",
+    "@babel/core": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
     "babel-jest": "^24.9.0",
-    "jest": "^24.9.0",
+    "jest": "^25.2.7",
     "jest-fetch-mock": "^3.0.3",
+    "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "1.19.1",
     "react": "^16.12.0",
     "rxjs": "^6.5.4"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }
