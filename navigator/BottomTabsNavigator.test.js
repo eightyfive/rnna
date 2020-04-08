@@ -1,22 +1,21 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createBottomTabNavigator, createStackNavigator } from './index';
+import createBottomTabsNavigator from './createBottomTabsNavigator';
+import createStackNavigator from './createStackNavigator';
 
-let navigator;
+let app;
 
-const A = { componentId: 'A' };
-const B = { componentId: 'B' };
-const C = { componentId: 'C' };
-
-let ab;
-let c;
+const A = {};
+const B = {};
+const C = {};
 
 beforeEach(() => {
-  ab = createStackNavigator({ A, B });
-  c = createStackNavigator({ C });
+  app = createBottomTabsNavigator({
+    ab: createStackNavigator({ A, B }),
+    c: createStackNavigator({ C }),
+  });
 
-  navigator = createBottomTabNavigator({ ab, c });
-  navigator.mount();
+  app.mount();
 });
 
 test('mount', () => {
@@ -43,7 +42,7 @@ test('mount', () => {
 });
 
 test('go', () => {
-  navigator.go('c');
+  app.go('c');
 
   expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-c', {
     bottomTabs: { currentTabIndex: 1 },

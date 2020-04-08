@@ -4,8 +4,8 @@ import { createDrawerNavigator } from './index';
 
 let navigator;
 
-const A = { componentId: 'A' };
-const B = { componentId: 'B' };
+const A = {};
+const B = {};
 
 beforeEach(() => {
   navigator = createDrawerNavigator(

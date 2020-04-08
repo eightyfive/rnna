@@ -8,7 +8,7 @@ import OverlayNavigator from './OverlayNavigator';
 
 const events = Navigation.events();
 
-export default class AppNavigator extends SwitchNavigator {
+export default class RootNavigator extends SwitchNavigator {
   constructor(routes, config = {}) {
     super(routes, config);
 
@@ -51,11 +51,11 @@ export default class AppNavigator extends SwitchNavigator {
     });
   }
 
-  handleDidAppear = ({ componentId }) => {
-    if (this.isScene(componentId)) {
-      this.fromId = componentId;
+  handleDidAppear = ({ componentId: id }) => {
+    if (this.isScene(id)) {
+      this.fromId = id;
 
-      // console.log('did APPEAR:', componentId);
+      // console.log('did APPEAR:', id);
     }
   };
 
@@ -201,10 +201,10 @@ export default class AppNavigator extends SwitchNavigator {
     }
   }
 
-  isScene(componentId) {
-    const isWidget = componentId.indexOf('widget-') === 0;
+  isScene(id) {
+    const isWidget = id.indexOf('widget-') === 0;
 
-    return !isWidget && !this.overlayIds.includes(componentId);
+    return !isWidget && !this.overlayIds.includes(id);
   }
 
   run(screens, Provider = null, store = null) {

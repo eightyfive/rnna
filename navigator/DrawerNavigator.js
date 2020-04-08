@@ -31,14 +31,14 @@ export default class DrawerNavigator extends StackNavigator {
     );
   }
 
-  handleDidAppear = ({ componentId }) => {
-    if (componentId === this.drawer.id) {
+  handleDidAppear = ({ componentId: id }) => {
+    if (id === this.drawer.id) {
       this.visible = true;
     }
   };
 
-  handleDidDisappear = ({ componentId }) => {
-    if (componentId === this.drawer.id) {
+  handleDidDisappear = ({ componentId: id }) => {
+    if (id === this.drawer.id) {
       this.visible = false;
     }
   };

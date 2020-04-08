@@ -4,7 +4,7 @@ import { createOverlayNavigator } from './index';
 
 let navigator;
 
-const A = { componentId: 'A' };
+const A = {};
 
 beforeEach(() => {
   navigator = createOverlayNavigator({ A });
