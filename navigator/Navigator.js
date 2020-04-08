@@ -6,7 +6,7 @@ export default /** abstract */ class Navigator extends Route {
     super();
 
     this.routes = routes;
-    this.order = config.order || Object.keys(routes);
+    this.order = Object.keys(routes);
     this.initialRouteName = config.initialRouteName || this.order[0];
     this.history = [this.initialRouteName];
 

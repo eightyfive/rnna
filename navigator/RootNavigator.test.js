@@ -1,4 +1,4 @@
-import createRootNavigator from './createRootNavigator';
+import { createRootNavigator } from './index';
 
 let app;
 

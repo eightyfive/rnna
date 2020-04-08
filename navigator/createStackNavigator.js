@@ -1,7 +1,6 @@
-import ModalNavigator from './ModalNavigator';
 import Navigator from './Navigator';
 import StackNavigator from './StackNavigator';
-import { createRoutes, getStackNavigatorConfig } from './utils';
+import { createRoutes } from './utils';
 
 export default function createStackNavigator(routeConfigs, config = {}) {
   const routes = createRoutes(routeConfigs);
@@ -14,11 +13,5 @@ export default function createStackNavigator(routeConfigs, config = {}) {
     throw new Error('`StackNavigator` only accepts `Component` children');
   }
 
-  const navigatorConfig = getStackNavigatorConfig(config);
-
-  if (navigatorConfig.mode === 'modal') {
-    return new ModalNavigator(routes, navigatorConfig);
-  }
-
-  return new StackNavigator(routes, navigatorConfig);
+  return new StackNavigator(routes, config);
 }

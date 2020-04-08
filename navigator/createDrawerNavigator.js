@@ -1,27 +1,17 @@
 import DrawerNavigator from './DrawerNavigator';
-import {
-  createRoutes,
-  createComponent,
-  getComponentOptions,
-  getDrawerNavigatorConfig,
-} from './utils';
+import { createRoutes, createComponent } from './utils';
 
 export default function createDrawerNavigator(routeConfigs, config = {}) {
-  const navigatorConfig = getDrawerNavigatorConfig(config);
-
-  const { contentComponent, contentOptions = {} } = navigatorConfig;
+  const { contentComponent, contentOptions = {} } = config;
 
   if (!contentComponent) {
     throw new Error('config.contentComponent is required');
   }
 
   // TODO
-  navigatorConfig.drawer = createComponent(
-    contentComponent,
-    getComponentOptions(contentOptions),
-  );
+  config.drawer = createComponent(contentComponent, contentOptions);
 
   const routes = createRoutes(routeConfigs);
 
-  return new DrawerNavigator(routes, navigatorConfig);
+  return new DrawerNavigator(routes, config);
 }

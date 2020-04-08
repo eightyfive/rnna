@@ -1,6 +1,6 @@
 import BottomTabsNavigator from './BottomTabsNavigator';
 import StackNavigator from './StackNavigator';
-import { createRoutes, getBottomTabNavigatorConfig } from './utils';
+import { createRoutes } from './utils';
 
 export default function createBottomTabsNavigator(routeConfigs, config = {}) {
   const routes = createRoutes(routeConfigs);
@@ -15,7 +15,5 @@ export default function createBottomTabsNavigator(routeConfigs, config = {}) {
     );
   }
 
-  const navigatorConfig = getBottomTabNavigatorConfig(config);
-
-  return new BottomTabsNavigator(routes, navigatorConfig);
+  return new BottomTabsNavigator(routes, config);
 }
