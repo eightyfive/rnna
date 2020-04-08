@@ -62,6 +62,7 @@ export default class StackNavigator extends Navigator {
 
   mount(params) {
     this.history = [this.initialRouteName];
+
     Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 

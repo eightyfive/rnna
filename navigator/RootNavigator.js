@@ -87,12 +87,6 @@ export default class RootNavigator extends SwitchNavigator {
     this.onTabPressed.push(cb);
   }
 
-  mount(params) {
-    super.mount(params);
-
-    this.onMounted.forEach(cb => cb());
-  }
-
   remount() {
     this.history.forEach(name => this.get(name).mount());
 
@@ -101,27 +95,26 @@ export default class RootNavigator extends SwitchNavigator {
 
   go(path, params) {
     const [name, rest] = this.parsePath(path);
+    const route = this.get(name);
 
-    if (this.route.name !== name) {
-      // Only one modal at a time
+    const mounted = this.route !== null;
+    const active = this.route.name === name;
+
+    if (!mounted) {
+      this.history = [name];
+
+      route.mount(params);
+    } else if (!active) {
       if (this.route instanceof ModalNavigator) {
+        // Only one modal at a time
         this.dismissModal();
-      }
-
-      const route = this.get(name);
-
-      if (route instanceof ModalNavigator) {
         this.history.push(name);
       } else {
-        if (this.route) {
-          // Unmount old route
-          this.route.unmount(this.fromId);
-        }
-
+        // Unmount old route
+        this.route.unmount(this.fromId);
         this.history = [name];
       }
 
-      // Mount new route
       route.mount(params);
     }
 

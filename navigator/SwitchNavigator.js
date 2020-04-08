@@ -8,6 +8,8 @@ export default class SwitchNavigator extends Navigator {
   }
 
   mount(params) {
+    this.history = [this.initialRouteName];
+
     this.route.mount(params);
   }
 
@@ -30,9 +32,13 @@ export default class SwitchNavigator extends Navigator {
   go(path, params, fromId) {
     const [name, rest] = this.parsePath(path);
 
-    if (name !== this.route.name) {
+    if (this.route.name !== name) {
+      const route = this.get(name);
+
       this.history.push(name);
-      this.route.mount(params);
+
+      // Mount new route
+      route.mount(params);
     }
 
     if (rest) {

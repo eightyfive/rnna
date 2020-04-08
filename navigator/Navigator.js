@@ -8,7 +8,7 @@ export default /** abstract */ class Navigator extends Route {
     this.routes = routes;
     this.order = Object.keys(routes);
     this.initialRouteName = config.initialRouteName || this.order[0];
-    this.history = [this.initialRouteName];
+    this.history = [];
 
     this.parent = null;
     this.name = null;
@@ -24,7 +24,11 @@ export default /** abstract */ class Navigator extends Route {
   get route() {
     const name = _last(this.history);
 
-    return this.get(name);
+    if (name) {
+      return this.get(name);
+    }
+
+    return null;
   }
 
   get(name) {
