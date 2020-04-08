@@ -4,6 +4,7 @@ import _mergeWith from 'lodash.mergewith';
 import _set from 'lodash.set';
 import _pick from 'lodash.pick';
 import _isEmpty from 'lodash.isempty';
+import _isPlainObject from 'lodash.isplainobject';
 
 import BottomTabsNavigator from './BottomTabsNavigator';
 import Component from './Component';
@@ -105,6 +106,33 @@ export function createAppNavigator(routeConfigs, config = {}) {
   const routes = createRoutes(routeConfigs);
 
   return new AppNavigator(routes, config);
+}
+
+export function createRootNavigator(routes) {
+  const app = {};
+
+  for (const [k1, v1] of Object.entries(routes)) {
+    const depth = getRouteDepth(v1);
+    const { options, ...routeConfigs } = v1;
+
+    if (depth === 2) {
+      const stacks = {};
+
+      for (const [k2, v2] of Object.entries(routeConfigs)) {
+        stacks[k2] = createStackNavigator(v2);
+      }
+
+      app[k1] = createBottomTabNavigator(stacks, options);
+    } else if (depth === 1) {
+      app[k1] = createStackNavigator(routeConfigs, options);
+    } else if (depth === 0) {
+      app[k1] = createOverlayNavigator(routeConfigs, options);
+    } else {
+      throw new Error('Invalid routes obj');
+    }
+  }
+
+  return createAppNavigator(app);
 }
 
 function createRoutes(routeConfigs) {
@@ -275,3 +303,26 @@ function mergeCustomizer(objValue, srcValue, key) {
 function merge(dest, ...sources) {
   return _mergeWith(dest, ...sources, mergeCustomizer);
 }
+
+// Traverse obj for depth
+function getRouteDepth(route, currentDepth = 0, depth = 0) {
+  for (const [key, val] of Object.entries(route)) {
+    const isObject = _isPlainObject(val);
+
+    if (isObject && !_options[key]) {
+      currentDepth++;
+      depth = getRouteDepth(val, currentDepth, depth);
+    } else {
+      depth = Math.max(currentDepth, depth);
+    }
+
+    currentDepth = 0;
+  }
+
+  return depth;
+}
+
+const _options = {
+  topBar: true,
+  layout: true,
+};
