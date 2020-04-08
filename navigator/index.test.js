@@ -39,15 +39,12 @@ const routes = {
   stack: {
     Login: {
       title: 'Sign In',
-      topBar: {
-        visible: false,
-      },
     },
   },
 
   modal: {
     Screen: {},
-    options: {
+    config: {
       mode: 'modal',
     },
   },

@@ -35,14 +35,14 @@ export function createRootNavigator(routes) {
 
   for (const [name, route] of Object.entries(routes)) {
     const depth = getRouteDepth(route);
-    const { options, ...routeConfigs } = route;
+    const { config, ...routeConfigs } = route;
 
     if (depth === 2) {
-      app[name] = createBottomTabNavigator(createStacks(routeConfigs), options);
+      app[name] = createBottomTabNavigator(createStacks(routeConfigs), config);
     } else if (depth === 1) {
-      app[name] = createStackNavigator(routeConfigs, options);
+      app[name] = createStackNavigator(routeConfigs, config);
     } else if (depth === 0) {
-      app[name] = createOverlayNavigator(routeConfigs, options);
+      app[name] = createOverlayNavigator({ [name]: routeConfigs }, config);
     } else {
       throw new Error('Invalid routes obj');
     }
