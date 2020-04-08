@@ -14,9 +14,7 @@ export function createRoutes(routeConfigs) {
     if (routeConfig instanceof Route) {
       routes[id] = routeConfig;
     } else {
-      const { options: routeOptions, navigationOptions } = routeConfig;
-
-      const options = getComponentOptions(routeOptions, navigationOptions);
+      const options = getNavigationOptions(routeConfig);
 
       routes[id] = createComponent(id, options);
     }
@@ -160,7 +158,7 @@ function mergeCustomizer(objValue, srcValue, key) {
   return undefined;
 }
 
-function merge(dest, ...sources) {
+export function merge(dest, ...sources) {
   return _mergeWith(dest, ...sources, mergeCustomizer);
 }
 
