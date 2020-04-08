@@ -24,11 +24,11 @@ export default class BottomTabsNavigator extends Navigator {
     }
   };
 
-  getLayout() {
+  getLayout(params) {
     const layout = {
       id: this.layoutId,
       name: this.layoutId,
-      children: this.order.map(key => this.get(key).getInitialLayout()),
+      children: this.order.map(key => this.get(key).getInitialLayout(params)),
     };
 
     if (this.options) {
@@ -54,8 +54,8 @@ export default class BottomTabsNavigator extends Navigator {
     return this.get(name);
   }
 
-  mount() {
-    Navigation.setRoot({ root: this.getLayout() });
+  mount(params) {
+    Navigation.setRoot({ root: this.getLayout(params) });
   }
 
   go(path, params, fromId) {

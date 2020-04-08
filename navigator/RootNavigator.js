@@ -87,8 +87,8 @@ export default class RootNavigator extends SwitchNavigator {
     this.onTabPressed.push(cb);
   }
 
-  mount() {
-    super.mount();
+  mount(params) {
+    super.mount(params);
 
     this.onMounted.forEach(cb => cb());
   }
@@ -122,7 +122,7 @@ export default class RootNavigator extends SwitchNavigator {
       }
 
       // Mount new route
-      route.mount();
+      route.mount(params);
     }
 
     if (rest) {
@@ -176,14 +176,14 @@ export default class RootNavigator extends SwitchNavigator {
     return this.fromId === id;
   }
 
-  showOverlay(name) {
+  showOverlay(name, params) {
     const overlay = this.get(name);
 
     if (!(overlay instanceof OverlayNavigator)) {
       throw new Error(`Unknown Overlay: ${name}`);
     }
 
-    overlay.mount();
+    overlay.mount(params);
 
     this.overlays.push(name);
   }
@@ -226,13 +226,13 @@ export default class RootNavigator extends SwitchNavigator {
       }
     });
 
-    this.launched.then(() => this.init());
+    // this.launched.then(() => this.init());
   }
 
-  init() {
-    this.mount();
-    this.remountListener = events.registerAppLaunchedListener(() =>
-      this.remount(),
-    );
-  }
+  // init() {
+  //   this.mount();
+  //   this.remountListener = events.registerAppLaunchedListener(() =>
+  //     this.remount(),
+  //   );
+  // }
 }

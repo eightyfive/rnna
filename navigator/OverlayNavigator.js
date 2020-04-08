@@ -9,8 +9,8 @@ export default class OverlayNavigator extends Navigator {
     this.component = this.get(this.initialRouteName);
   }
 
-  mount() {
-    Navigation.showOverlay(this.component.getLayout());
+  mount(params) {
+    Navigation.showOverlay(this.component.getLayout(params));
   }
 
   unmount() {

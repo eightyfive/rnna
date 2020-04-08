@@ -10,17 +10,17 @@ export default class Component extends Route {
     this.options = config.options;
   }
 
-  mount() {
-    Navigation.setRoot({ root: this.getLayout() });
+  mount(params) {
+    Navigation.setRoot({ root: this.getLayout(params) });
   }
 
   unmount(fromId) {}
 
-  getInitialLayout(defaultOptions) {
-    return this.getLayout(null, defaultOptions);
+  getInitialLayout(params, defaultOptions) {
+    return this.getLayout(params, defaultOptions);
   }
 
-  getLayout(passProps, defaultOptions) {
+  getLayout(params, defaultOptions) {
     const layout = {
       id: this.id,
       name: this.id,
@@ -30,8 +30,8 @@ export default class Component extends Route {
       layout.options = Object.assign({}, defaultOptions, this.options);
     }
 
-    if (passProps) {
-      layout.passProps = passProps;
+    if (params) {
+      layout.passProps = params;
     }
 
     return { component: layout };

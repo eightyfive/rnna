@@ -43,14 +43,14 @@ export default class DrawerNavigator extends StackNavigator {
     }
   };
 
-  mount() {
-    Navigation.setRoot({ root: this.getInitialLayout() });
+  mount(params) {
+    Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 
-  getLayout(routeName) {
+  getLayout(params, routeName) {
     const layout = {
-      center: super.getLayout(routeName),
-      [this.drawerPosition]: this.drawer.getLayout(),
+      center: super.getLayout(params, routeName),
+      [this.drawerPosition]: this.drawer.getLayout(params),
     };
 
     if (this.options) {

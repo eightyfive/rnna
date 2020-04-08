@@ -18,17 +18,17 @@ export default class StackNavigator extends Navigator {
     );
   }
 
-  getInitialLayout() {
-    return this.getLayout(this.initialRouteName);
+  getInitialLayout(params) {
+    return this.getLayout(params, this.initialRouteName);
   }
 
-  getLayout(routeName) {
+  getLayout(params, routeName) {
     const index = this.order.findIndex(name => name === routeName);
     const children = this.order.slice(0, index + 1);
 
     const layout = {
       children: children.map(name =>
-        this.get(name).getInitialLayout(this.defaultOptions),
+        this.get(name).getInitialLayout(params, this.defaultOptions),
       ),
     };
 
@@ -60,16 +60,17 @@ export default class StackNavigator extends Navigator {
     }
   };
 
-  mount() {
-    Navigation.setRoot({ root: this.getInitialLayout() });
+  mount(params) {
+    this.history = [this.initialRouteName];
+    Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 
   go(toId, params, fromId) {
     const index = this.history.findIndex(id => id === toId);
 
-    if (index !== -1) {
+    if (index > 0) {
       this.popToIndex(index);
-    } else {
+    } else if (index !== 0) {
       this.push(toId, params, fromId);
     }
   }

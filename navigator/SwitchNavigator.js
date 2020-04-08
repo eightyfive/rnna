@@ -7,8 +7,8 @@ export default class SwitchNavigator extends Navigator {
     this.backBehavior = config.backBehavior || 'none';
   }
 
-  mount() {
-    this.route.mount();
+  mount(params) {
+    this.route.mount(params);
   }
 
   get(path) {
@@ -32,7 +32,7 @@ export default class SwitchNavigator extends Navigator {
 
     if (name !== this.route.name) {
       this.history.push(name);
-      this.route.mount();
+      this.route.mount(params);
     }
 
     if (rest) {

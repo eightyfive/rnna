@@ -1,13 +1,13 @@
 export default /* abstract */ class Route {
-  mount() {
+  mount(params) {
     throwAbstract('mount');
   }
 
   unmount(fromId) {
-    throwAbstract('mount');
+    throwAbstract('unmount');
   }
 
-  getLayout() {
+  getLayout(params) {
     throwAbstract('getLayout');
   }
 }
