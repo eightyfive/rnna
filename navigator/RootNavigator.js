@@ -18,6 +18,7 @@ export default class RootNavigator extends SwitchNavigator {
     this.onMounted = [];
     this.onTabSelected = [];
     this.onTabPressed = [];
+    this.path = null;
 
     this.overlayIds = Object.keys(routes)
       .filter(name => routes[name] instanceof OverlayNavigator)
@@ -94,17 +95,16 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   go(path, params) {
+    this.path = path;
+
     const [name, rest] = this.parsePath(path);
     const route = this.get(name);
 
-    const mounted = this.route !== null;
-    const active = this.route.name === name;
-
-    if (!mounted) {
+    if (!this.route) {
       this.history = [name];
 
       route.mount(params);
-    } else if (!active) {
+    } else if (this.route.name !== name) {
       if (this.route instanceof ModalNavigator) {
         // Only one modal at a time
         this.dismissModal();
@@ -220,6 +220,10 @@ export default class RootNavigator extends SwitchNavigator {
     });
 
     // this.launched.then(() => this.init());
+  }
+
+  update(params) {
+    this.get(this.path).update(params);
   }
 
   // init() {
