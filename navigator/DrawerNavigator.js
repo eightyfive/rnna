@@ -5,6 +5,9 @@ import StackNavigator from './StackNavigator';
 
 const events = Navigation.events();
 
+const onDidAppear = events.registerComponentDidAppearListener;
+const onDidDisappear = events.registerComponentDidDisappearListener;
+
 export default class DrawerNavigator extends StackNavigator {
   constructor(routes, config = {}) {
     if (!config.drawer) {
@@ -22,12 +25,15 @@ export default class DrawerNavigator extends StackNavigator {
     this.visible = false;
     this.options = config.options;
 
-    this.didAppearListener = events.registerComponentDidAppearListener(
-      this.handleDidAppear,
+    this.addListener('_didAppear', this.handleDidAppear);
+    this.addListener('_didDisappear', this.handleDidDisappear);
+
+    this.subscriptions['_didAppear'] = onDidAppear(ev =>
+      this.trigger('_didAppear', ev),
     );
 
-    this.didDisappearListener = events.registerComponentDidDisappearListener(
-      this.handleDidDisappear,
+    this.subscriptions['_didDisappear'] = onDidDisappear(ev =>
+      this.trigger('_didDisappear', ev),
     );
   }
 

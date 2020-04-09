@@ -8,6 +8,9 @@ import OverlayNavigator from './OverlayNavigator';
 
 const events = Navigation.events();
 
+const onDidAppear = events.registerComponentDidAppearListener;
+const onModalDismiss = events.registerModalDismissedListener;
+
 export default class RootNavigator extends SwitchNavigator {
   constructor(routes, config = {}) {
     super(routes, config);
@@ -15,28 +18,22 @@ export default class RootNavigator extends SwitchNavigator {
     this.backBehavior = 'none'; // Force
     this.overlays = [];
     this.fromId = this.initialRouteName;
-    this.onMounted = [];
-    this.onTabSelected = [];
-    this.onTabPressed = [];
 
     this.overlayIds = Object.keys(routes)
       .filter(name => routes[name] instanceof OverlayNavigator)
       .map(name => name);
 
-    this.didAppearListener = events.registerComponentDidAppearListener(
-      this.handleDidAppear,
+    const events = Navigation.events();
+
+    this.addListener('_didAppear', this.handleDidAppear);
+    this.addListener('_modalDismiss', this.handleModalDismiss);
+
+    this.subscriptions['_didAppear'] = onDidAppear(ev =>
+      this.trigger('_didAppear', ev),
     );
 
-    this.modalDismissedListener = events.registerModalDismissedListener(
-      this.handleModalDismissed,
-    );
-
-    this.tabSelectedListener = events.registerBottomTabSelectedListener(
-      this.handleBottomTabSelected,
-    );
-
-    this.tabPressedListener = events.registerBottomTabPressedListener(
-      this.handleBottomTabPressed,
+    this.subscriptions['_modalDismiss'] = onModalDismiss(ev =>
+      this.trigger('_modalDismiss', ev),
     );
 
     this.launched = new Promise(resolve => {
@@ -47,21 +44,13 @@ export default class RootNavigator extends SwitchNavigator {
     });
   }
 
-  run() {
-    return this.launched;
-  }
-
   handleDidAppear = ({ componentId: id }) => {
     if (this.isScene(id)) {
       this.fromId = id;
-
-      // console.log('did APPEAR:', id);
     }
   };
 
-  handleModalDismissed = ({ componentId: id, modalsDismissed }) => {
-    // console.log('modal Dismissed:', id, modalsDismissed);
-
+  handleModalDismiss = ({ componentId: id, modalsDismissed }) => {
     // Happens when Native back button is pressed.
 
     if (this.route instanceof ModalNavigator && this.route.name === id) {
@@ -69,22 +58,8 @@ export default class RootNavigator extends SwitchNavigator {
     }
   };
 
-  handleBottomTabSelected = ev =>
-    Promise.all(this.onTabSelected.map(cb => cb(ev)));
-
-  handleBottomTabPressed = ev =>
-    Promise.all(this.onTabPressed.map(cb => cb(ev)));
-
-  onAppMounted(cb) {
-    this.onMounted.push(cb);
-  }
-
-  onBottomTabSelected(cb) {
-    this.onTabSelected.push(cb);
-  }
-
-  onBottomTabPressed(cb) {
-    this.onTabPressed.push(cb);
+  launch() {
+    return this.launched;
   }
 
   remount() {
@@ -215,8 +190,6 @@ export default class RootNavigator extends SwitchNavigator {
         Navigation.registerComponent(name, () => Screen);
       }
     });
-
-    // this.launched.then(() => this.init());
   }
 
   getComponent() {
@@ -226,11 +199,4 @@ export default class RootNavigator extends SwitchNavigator {
 
     return this.route.getComponent();
   }
-
-  // init() {
-  //   this.mount();
-  //   this.remountListener = events.registerAppLaunchedListener(() =>
-  //     this.remount(),
-  //   );
-  // }
 }

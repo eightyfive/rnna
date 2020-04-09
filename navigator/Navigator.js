@@ -9,6 +9,8 @@ export default /** abstract */ class Navigator extends Route {
     this.order = Object.keys(routes);
     this.initialRouteName = config.initialRouteName || this.order[0];
     this.history = [];
+    this.listeners = {};
+    this.subscriptions = {};
 
     this.parent = null;
     this.name = null;
@@ -19,6 +21,18 @@ export default /** abstract */ class Navigator extends Route {
       route.parent = this;
       route.name = name;
     });
+  }
+
+  addListener(name, listener) {
+    if (!this.listeners[name]) {
+      this.listeners[name] = [];
+    }
+
+    this.listeners[name].push(listener);
+  }
+
+  trigger(name, ev) {
+    this.listeners[name].map(listener => listener(ev));
   }
 
   get route() {

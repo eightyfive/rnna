@@ -4,21 +4,34 @@ import Navigator from './Navigator';
 
 const events = Navigation.events();
 
+const onTabSelect = events.registerBottomTabSelectedListener;
+const onTabPress = events.registerBottomTabPressedListener;
+const onTabLongPress = events.registerBottomTabLongPressedListener;
+
 export default class BottomTabsNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
 
     this.layoutId = config.layoutId || this.order.join('-');
+    this.options = config.options;
     this.tabIndex = 0;
 
-    this.options = config.options;
+    this.addListener('tabSelect', this.handleTabSelect);
 
-    this.tabSelectedListener = events.registerBottomTabSelectedListener(
-      this.handleBottomTabSelected,
+    this.subscriptions['tabSelect'] = onTabSelect(ev =>
+      this.trigger('tabSelect', ev),
+    );
+
+    this.subscriptions['tabPress'] = onTabPress(ev =>
+      this.trigger('tabPress', ev),
+    );
+
+    this.subscriptions['tabLongPress'] = onTabLongPress(ev =>
+      this.trigger('tabLongPress', ev),
     );
   }
 
-  handleBottomTabSelected = ({ selectedTabIndex: index }) => {
+  handleTabSelect = ({ selectedTabIndex: index }) => {
     if (this.tabIndex !== index) {
       this.tabIndex = index;
     }
