@@ -20,26 +20,12 @@ export default class RootNavigator extends SwitchNavigator {
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
 
-    this.subscriptions[
-      '_didAppear'
-    ] = Navigation.events().registerComponentDidAppearListener(ev =>
-      this.trigger('_didAppear', ev),
-    );
+    this.listen('ComponentDidAppear', '_didAppear');
+    this.listen('ModalDismissed', '_modalDismiss');
 
-    this.subscriptions[
-      '_modalDismiss'
-    ] = Navigation.events().registerModalDismissedListener(ev =>
-      this.trigger('_modalDismiss', ev),
+    this.launched = new Promise(resolve =>
+      this.listenOnce('AppLaunched', resolve),
     );
-
-    this.launched = new Promise(resolve => {
-      const launchedListener = Navigation.events().registerAppLaunchedListener(
-        () => {
-          launchedListener.remove();
-          resolve();
-        },
-      );
-    });
   }
 
   handleDidAppear = ({ componentId: id }) => {

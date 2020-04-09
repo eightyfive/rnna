@@ -23,17 +23,8 @@ export default class DrawerNavigator extends StackNavigator {
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_didDisappear', this.handleDidDisappear);
 
-    this.subscriptions[
-      '_didAppear'
-    ] = Navigation.events().registerComponentDidAppearListener(ev =>
-      this.trigger('_didAppear', ev),
-    );
-
-    this.subscriptions[
-      '_didDisappear'
-    ] = Navigation.events().registerComponentDidDisappearListener(ev =>
-      this.trigger('_didDisappear', ev),
-    );
+    this.listen('ComponentDidAppear', '_didAppear');
+    this.listen('ComponentDidDisappear', '_didDisappear');
   }
 
   handleDidAppear = ({ componentId: id }) => {

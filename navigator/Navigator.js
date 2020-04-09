@@ -1,5 +1,7 @@
 import _forEach from 'lodash.foreach';
 import _last from 'lodash.last';
+import { Navigation } from 'react-native-navigation';
+
 import Component from './Component';
 import Route from './Route';
 
@@ -33,6 +35,23 @@ export default /** abstract */ class Navigator extends Route {
     }
 
     this.listeners[name].push(listener);
+  }
+
+  listen(event, alias) {
+    const events = Navigation.events();
+
+    this.subscriptions[alias] = events[`register${event}Listener`](ev =>
+      this.trigger(alias, ev),
+    );
+  }
+
+  listenOnce(event, listener) {
+    const events = Navigation.events();
+
+    const subscription = events[`register${event}Listener`](ev => {
+      subscription.remove();
+      listener(ev);
+    });
   }
 
   trigger(name, ev) {

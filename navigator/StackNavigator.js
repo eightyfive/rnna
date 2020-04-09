@@ -13,11 +13,7 @@ export default class StackNavigator extends Navigator {
 
     this.addListener('_didDisappear', this.handleDidDisappear);
 
-    this.subscriptions[
-      '_didDisappear'
-    ] = Navigation.events().registerComponentDidDisappearListener(ev =>
-      this.trigger('_didDisappear', ev),
-    );
+    this.listen('ComponentDidDisappear', '_didDisappear');
   }
 
   handleDidDisappear = ({ componentId: id }) => {

@@ -1,5 +1,3 @@
-import { Navigation } from 'react-native-navigation';
-
 import { getRouteDepth } from './utils';
 
 const A = {};

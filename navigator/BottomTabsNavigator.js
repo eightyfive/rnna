@@ -12,23 +12,9 @@ export default class BottomTabsNavigator extends Navigator {
 
     this.addListener('tabSelect', this.handleTabSelect);
 
-    this.subscriptions[
-      'tabSelect'
-    ] = Navigation.events().registerBottomTabSelectedListener(ev =>
-      this.trigger('tabSelect', ev),
-    );
-
-    this.subscriptions[
-      'tabPress'
-    ] = Navigation.events().registerBottomTabPressedListener(ev =>
-      this.trigger('tabPress', ev),
-    );
-
-    this.subscriptions[
-      'tabLongPress'
-    ] = Navigation.events().registerBottomTabLongPressedListener(ev =>
-      this.trigger('tabLongPress', ev),
-    );
+    this.listen('BottomTabSelected', 'tabSelect');
+    this.listen('BottomTabPressed', 'tabPress');
+    this.listen('BottomTabLongPressed', 'tabLongPress');
   }
 
   handleTabSelect = ({ selectedTabIndex: index }) => {
