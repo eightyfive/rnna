@@ -1,3 +1,4 @@
+import React from 'react';
 import { Navigation } from 'react-native-navigation';
 
 export default function registerComponents(
@@ -5,9 +6,7 @@ export default function registerComponents(
   Provider = null,
   store = null,
 ) {
-  for (const [name, Screen] of screens) {
-    const Screen = screens[name];
-
+  for (const [name, Screen] of Object.entries(screens)) {
     if (Provider) {
       Navigation.registerComponent(
         name,
