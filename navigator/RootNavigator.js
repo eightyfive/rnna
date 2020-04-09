@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
-import _pullAt from 'lodash.pullat';
 
 import SwitchNavigator from './SwitchNavigator';
 import ModalNavigator from './ModalNavigator';
@@ -72,6 +71,15 @@ export default class RootNavigator extends SwitchNavigator {
     const [name, rest] = this.parsePath(path);
     const route = this.get(name);
 
+    const isOverlay = route instanceof OverlayNavigator;
+
+    if (isOverlay) {
+      this.overlays.push(route.name);
+
+      route.mount(params);
+      return;
+    }
+
     if (!this.route) {
       this.history = [name];
 
@@ -105,18 +113,6 @@ export default class RootNavigator extends SwitchNavigator {
     }
   }
 
-  openDrawer() {
-    this.route.openDrawer();
-  }
-
-  closeDrawer() {
-    this.route.closeDrawer();
-  }
-
-  toggleDrawer() {
-    this.route.toggleDrawer();
-  }
-
   dismissModal() {
     if (!(this.route instanceof ModalNavigator)) {
       throw new Error('No modal to dismiss');
@@ -132,38 +128,8 @@ export default class RootNavigator extends SwitchNavigator {
     }
   }
 
-  dismissAllOverlays() {
-    this.overlays.forEach(name => this.get(name).unmount());
-    this.overlays = [];
-  }
-
-  isComponentId(id) {
-    return this.fromId === id;
-  }
-
-  showOverlay(name, params) {
-    const overlay = this.get(name);
-
-    if (!(overlay instanceof OverlayNavigator)) {
-      throw new Error(`Unknown Overlay: ${name}`);
-    }
-
-    overlay.mount(params);
-
-    this.overlays.push(name);
-  }
-
-  dismissOverlay(name) {
-    const index = this.overlays.findIndex(id => id === name);
-    const visible = index !== -1;
-
-    if (visible) {
-      const [id] = _pullAt(this.overlays, index);
-
-      this.get(id).unmount();
-    } else {
-      throw new Error(`Overlay "${name}" is not visible`);
-    }
+  onDismissOverlay(name) {
+    this.overlays = this.overlays.filter(id => id === name);
   }
 
   isScene(id) {
