@@ -1,15 +1,16 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
+import _forEach from 'lodash.foreach';
 
 export default function registerComponents(
   screens,
   Provider = null,
   store = null,
 ) {
-  for (const [name, Screen] of Object.entries(screens)) {
+  _forEach(screens, (Screen, componentName) => {
     if (Provider) {
       Navigation.registerComponent(
-        name,
+        componentName,
         () => props => (
           <Provider {...{ store }}>
             <Screen {...props} />
@@ -18,7 +19,7 @@ export default function registerComponents(
         () => Screen,
       );
     } else {
-      Navigation.registerComponent(name, () => Screen);
+      Navigation.registerComponent(componentName, () => Screen);
     }
-  }
+  });
 }

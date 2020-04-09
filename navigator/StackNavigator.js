@@ -24,12 +24,12 @@ export default class StackNavigator extends Navigator {
     // Native back button has been pressed
 
     const active =
-      !this.parent || (this.parent && this.parent.route.name === this.name);
+      !this.parent || (this.parent && this.parent.route.id === this.id);
 
     // If this navigator/route is active
     if (active) {
       // If popped was the last visible
-      const visible = this.route && this.route.name === id;
+      const visible = this.route && this.route.id === id;
 
       // If popped is not the first screen of Stack
       const initial = id === this.initialRouteName;
@@ -48,13 +48,13 @@ export default class StackNavigator extends Navigator {
     return this.getLayout(params, this.initialRouteName);
   }
 
-  getLayout(params, routeName) {
-    const index = this.order.findIndex(name => name === routeName);
+  getLayout(params, componentId) {
+    const index = this.order.findIndex(id => id === componentId);
     const children = this.order.slice(0, index + 1);
 
     const layout = {
-      children: children.map(name =>
-        this.get(name).getInitialLayout(params, this.defaultOptions),
+      children: children.map(id =>
+        this.get(id).getInitialLayout(params, this.defaultOptions),
       ),
     };
 
@@ -80,8 +80,8 @@ export default class StackNavigator extends Navigator {
   }
 
   goBack(fromId) {
-    if (fromId !== this.route.name) {
-      throw new Error(`goBack from mismatch: ${fromId} != ${this.route.name}`);
+    if (fromId !== this.route.id) {
+      throw new Error(`goBack from mismatch: ${fromId} != ${this.route.id}`);
     }
 
     if (this.history.length === 1) {
@@ -120,7 +120,7 @@ export default class StackNavigator extends Navigator {
   }
 
   popToTop() {
-    const fromId = this.route.name;
+    const fromId = this.route.id;
 
     // Reset history
     this.history = [this.initialRouteName];

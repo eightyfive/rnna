@@ -52,18 +52,18 @@ export default class BottomTabsNavigator extends Navigator {
 
   get(index) {
     if (typeof index === 'number') {
-      const name = this.order[index];
+      const id = this.order[index];
 
-      return this.routes[name];
+      return this.routes[id];
     }
 
     return super.get(index);
   }
 
   get route() {
-    const name = this.order[this.tabIndex];
+    const id = this.order[this.tabIndex];
 
-    return this.get(name);
+    return this.get(id);
   }
 
   mount(params) {
@@ -71,11 +71,11 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   navigate(path, params, fromId) {
-    const [name, rest] = this.parsePath(path);
-    const index = this.order.findIndex(key => key === name);
+    const [id, rest] = this.parsePath(path);
+    const index = this.order.findIndex(key => key === id);
 
     if (index === -1) {
-      throw new Error(`Unknown tab: ${name}`);
+      throw new Error(`Unknown tab: ${id}`);
     }
 
     if (this.tabIndex !== index) {
@@ -101,17 +101,5 @@ export default class BottomTabsNavigator extends Navigator {
     }
 
     return this.route.getComponent();
-  }
-
-  buildRoutes() {
-    const routes = {};
-
-    for (const [name, route] of Object.entries(this.routes)) {
-      for (const [id, path] of Object.entries(route.buildRoutes())) {
-        routes[id] = `${name}/${path}`;
-      }
-    }
-
-    return routes;
   }
 }

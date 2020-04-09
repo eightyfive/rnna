@@ -14,8 +14,8 @@ export default class RootNavigator extends SwitchNavigator {
     this.fromId = this.initialRouteName;
 
     this.overlayIds = Object.keys(routes)
-      .filter(name => routes[name] instanceof OverlayNavigator)
-      .map(name => name);
+      .filter(id => routes[id] instanceof OverlayNavigator)
+      .map(id => id);
 
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
@@ -51,7 +51,7 @@ export default class RootNavigator extends SwitchNavigator {
   handleModalDismiss = ({ componentId: id, modalsDismissed }) => {
     // Happens when Native back button is pressed.
 
-    if (this.route instanceof ModalNavigator && this.route.name === id) {
+    if (this.route instanceof ModalNavigator && this.route.id === id) {
       this.history.pop();
     }
   };
@@ -61,37 +61,37 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   remount() {
-    this.history.forEach(name => this.get(name).mount());
+    this.history.forEach(id => this.get(id).mount());
 
-    this.overlays.forEach(name => this.get(name).mount());
+    this.overlays.forEach(id => this.get(id).mount());
   }
 
   navigate(path, params) {
-    const [name, rest] = this.parsePath(path);
-    const route = this.get(name);
+    const [id, rest] = this.parsePath(path);
+    const route = this.get(id);
 
     const isOverlay = route instanceof OverlayNavigator;
 
     if (isOverlay) {
-      this.overlays.push(route.name);
+      this.overlays.push(route.id);
 
       route.mount(params);
       return;
     }
 
     if (!this.route) {
-      this.history = [name];
+      this.history = [id];
 
       route.mount(params);
-    } else if (this.route.name !== name) {
+    } else if (this.route.id !== id) {
       if (this.route instanceof ModalNavigator) {
         // Only one modal at a time
         this.dismissModal();
-        this.history.push(name);
+        this.history.push(id);
       } else {
         // Unmount old route
         this.route.unmount(this.fromId);
-        this.history = [name];
+        this.history = [id];
       }
 
       route.mount(params);
@@ -127,25 +127,13 @@ export default class RootNavigator extends SwitchNavigator {
     }
   }
 
-  onDismissOverlay(name) {
-    this.overlays = this.overlays.filter(id => id === name);
+  onDismissOverlay(componentId) {
+    this.overlays = this.overlays.filter(id => id === componentId);
   }
 
   isScene(id) {
     const isWidget = id.indexOf('widget-') === 0;
 
     return !isWidget && !this.overlayIds.includes(id);
-  }
-
-  buildRoutes() {
-    const routes = {};
-
-    for (const [name, route] of Object.entries(this.routes)) {
-      for (const [id, path] of Object.entries(route.buildRoutes())) {
-        routes[id] = `${name}/${path}`;
-      }
-    }
-
-    return routes;
   }
 }

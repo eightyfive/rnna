@@ -1,5 +1,6 @@
 import _forEach from 'lodash.foreach';
 import _last from 'lodash.last';
+import Component from './Component';
 import Route from './Route';
 
 export default /** abstract */ class Navigator extends Route {
@@ -14,11 +15,16 @@ export default /** abstract */ class Navigator extends Route {
     this.subscriptions = {};
 
     this.parent = null;
-    this.name = null;
+    this.id = null;
 
     _forEach(this.routes, (route, id) => {
       route.parent = this;
-      route.name = id;
+
+      const isComponent = route instanceof Component;
+
+      if (!isComponent) {
+        route.id = id;
+      }
     });
   }
 
@@ -37,20 +43,20 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   get route() {
-    const name = _last(this.history);
+    const id = _last(this.history);
 
-    if (name) {
-      return this.get(name);
+    if (id) {
+      return this.get(id);
     }
 
     return null;
   }
 
-  get(name) {
-    const route = this.routes[name];
+  get(id) {
+    const route = this.routes[id];
 
     if (!route) {
-      throw new Error(`Unknown route: ${name}`);
+      throw new Error(`Unknown route: ${id}`);
     }
 
     return route;
@@ -75,9 +81,9 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   parsePath(path) {
-    const [name, ...rest] = path.split('/');
+    const [id, ...rest] = path.split('/');
 
-    return [name, rest.length ? rest.join('/') : null];
+    return [id, rest.length ? rest.join('/') : null];
   }
 }
 

@@ -29,7 +29,7 @@ export default class OverlayNavigator extends Navigator {
     this.unmount();
 
     if (this.parent) {
-      this.parent.onDismissOverlay(this.name);
+      this.parent.onDismissOverlay(this.id);
     }
   }
 

@@ -18,7 +18,7 @@ export { default as registerComponents } from './registerComponents';
 
 export function createBottomTabNavigator(routes, config = {}) {
   return createBottomTabs(
-    createRoutes(toWixRoutes(routes)),
+    createRoutes(toWixRoutes(routes), config.prefix),
     getBottomTabNavigatorConfig(config),
   );
 }
@@ -29,7 +29,7 @@ export function createDrawerNavigator(routes, config = {}) {
   }
 
   return createDrawer(
-    createRoutes(toWixRoutes(routes)),
+    createRoutes(toWixRoutes(routes), config.prefix),
     getDrawerNavigatorConfig(config),
   );
 }
@@ -73,7 +73,7 @@ function createStacks(routes, prefix) {
 export function createStackNavigator(routes, config = {}) {
   if (config.mode === 'modal') {
     return createModal(
-      createRoutes(toWixRoutes(routes)),
+      createRoutes(toWixRoutes(routes), config.prefix),
       getStackNavigatorConfig(config),
     );
   }

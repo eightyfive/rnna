@@ -14,28 +14,28 @@ export default class SwitchNavigator extends Navigator {
   }
 
   get(path) {
-    const names = path.split('/');
+    const ids = path.split('/');
 
-    if (names.length === 1) {
-      return super.get(names[0]);
+    if (ids.length === 1) {
+      return super.get(ids[0]);
     }
 
     let route = this;
 
-    names.forEach(name => {
-      route = route.get(name);
+    ids.forEach(id => {
+      route = route.get(id);
     });
 
     return route;
   }
 
   navigate(path, params, fromId) {
-    const [name, rest] = this.parsePath(path);
+    const [id, rest] = this.parsePath(path);
 
-    if (this.route.name !== name) {
-      const route = this.get(name);
+    if (this.route.id !== id) {
+      const route = this.get(id);
 
-      this.history.push(name);
+      this.history.push(id);
 
       // Mount new route
       route.mount(params);
@@ -54,7 +54,7 @@ export default class SwitchNavigator extends Navigator {
         this.route.unmount(fromId);
 
         this.history.pop();
-        this.navigate(this.route.name);
+        this.navigate(this.route.id);
       } else {
         throw err;
       }
