@@ -1,3 +1,4 @@
+import _forEach from 'lodash.foreach';
 import _last from 'lodash.last';
 import Route from './Route';
 
@@ -15,11 +16,9 @@ export default /** abstract */ class Navigator extends Route {
     this.parent = null;
     this.name = null;
 
-    Object.keys(this.routes).forEach(name => {
-      const route = this.routes[name];
-
+    _forEach(this.routes, (route, id) => {
       route.parent = this;
-      route.name = name;
+      route.name = id;
     });
   }
 
