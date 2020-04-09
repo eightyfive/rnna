@@ -3,11 +3,11 @@ import { Navigation } from 'react-native-navigation';
 import Route from './Route';
 
 export default class Component extends Route {
-  constructor(id, config = {}) {
+  constructor(id, options = {}) {
     super();
 
     this.id = id;
-    this.options = config.options;
+    this.options = options;
     this.params = null;
   }
 
@@ -26,9 +26,7 @@ export default class Component extends Route {
       id: this.id,
     };
 
-    if (this.options || defaultOptions) {
-      layout.options = Object.assign({}, defaultOptions, this.options);
-    }
+    layout.options = Object.assign({}, defaultOptions, this.options);
 
     if (params) {
       this.params = params;

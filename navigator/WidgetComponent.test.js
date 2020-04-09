@@ -4,6 +4,6 @@ test('getLayout', () => {
   const component = new WidgetComponent('ID');
 
   expect(component.getLayout()).toEqual({
-    component: { id: 'widget-ID' },
+    component: { id: 'widget-ID', options: {} },
   });
 });

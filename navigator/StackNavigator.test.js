@@ -27,6 +27,7 @@ test('mount', () => {
           {
             component: {
               id: 'A',
+              options: {},
               options: { topBar: { title: 'foo' } },
             },
           },

@@ -14,7 +14,7 @@ test('mount', () => {
   navigator.mount();
 
   expect(Navigation.showOverlay).toHaveBeenCalledWith({
-    component: { id: 'A' },
+    component: { id: 'A', options: {} },
   });
 });
 

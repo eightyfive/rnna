@@ -1,5 +1,7 @@
 import _set from 'lodash.set';
 import _pick from 'lodash.pick';
+import _isPlainObject from 'lodash.isplainobject';
+import _mapValues from 'lodash.mapvalues';
 import { Navigation } from 'react-native-navigation';
 
 import createBottomTabs from './createBottomTabsNavigator';
@@ -16,7 +18,7 @@ export { default as registerComponents } from './registerComponents';
 
 export function createBottomTabNavigator(routeConfigs, config = {}) {
   return createBottomTabs(
-    createRoutes(routeConfigs, getNavigationOptions),
+    createNavigationRoutes(routeConfigs),
     getBottomTabNavigatorConfig(config),
   );
 }
@@ -27,7 +29,7 @@ export function createDrawerNavigator(routeConfigs, config = {}) {
   }
 
   return createDrawer(
-    createRoutes(routeConfigs, getNavigationOptions),
+    createNavigationRoutes(routeConfigs),
     getDrawerNavigatorConfig(config),
   );
 }
@@ -37,10 +39,15 @@ export function createRootNavigator(routes) {
 
   for (const [name, route] of Object.entries(routes)) {
     const depth = getRouteDepth(route);
-    const { config, ...routeConfigs } = route;
+    const { config = {}, ...routeConfigs } = route;
+
+    config.prefix = name;
 
     if (depth === 2) {
-      app[name] = createBottomTabNavigator(createStacks(routeConfigs), config);
+      app[name] = createBottomTabNavigator(
+        createStacks(routeConfigs, name),
+        config,
+      );
     } else if (depth === 1) {
       app[name] = createStackNavigator(routeConfigs, config);
     } else if (depth === 0) {
@@ -53,36 +60,34 @@ export function createRootNavigator(routes) {
   return new RootNavigator(app);
 }
 
-function createStacks(routes) {
-  const stacks = {};
-
-  for (const [name, route] of Object.entries(routes)) {
+function createStacks(routes, prefix) {
+  return _mapValues(routes, (route, id) => {
     const { defaultOptions, ...routeConfigs } = route;
-    stacks[name] = createStackNavigator(routeConfigs, {
+
+    return createStackNavigator(routeConfigs, {
+      prefix: `${prefix}/${id}`,
       defaultOptions,
     });
-  }
-
-  return stacks;
+  });
 }
 
 export function createStackNavigator(routeConfigs, config = {}) {
   if (config.mode === 'modal') {
     return createModal(
-      createRoutes(routeConfigs, getNavigationOptions),
+      createNavigationRoutes(routeConfigs),
       getStackNavigatorConfig(config),
     );
   }
 
   return createStack(
-    createRoutes(routeConfigs, getNavigationOptions),
+    createNavigationRoutes(routeConfigs, config.prefix),
     getStackNavigatorConfig(config),
   );
 }
 
 export function createSwitchNavigator(routeConfigs, config = {}) {
   return createSwitch(
-    createRoutes(routeConfigs, getNavigationOptions),
+    createNavigationRoutes(routeConfigs),
     getSwitchNavigatorConfig(config),
   );
 }
@@ -337,4 +342,14 @@ function getNavigatorConfig({ defaultOptions, ...config }, keys) {
   }
 
   return navigatorConfig;
+}
+
+function createNavigationRoutes(routeConfigs, prefix = null) {
+  for (const id in routeConfigs) {
+    if (_isPlainObject(routeConfigs[id])) {
+      routeConfigs[id] = getNavigationOptions(routeConfigs[id]);
+    }
+  }
+
+  return createRoutes(routeConfigs, prefix);
 }

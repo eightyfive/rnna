@@ -26,12 +26,12 @@ test('mount', () => {
         children: [
           {
             stack: {
-              children: [{ component: { id: 'A' } }],
+              children: [{ component: { id: 'A', options: {} } }],
             },
           },
           {
             stack: {
-              children: [{ component: { id: 'C' } }],
+              children: [{ component: { id: 'C', options: {} } }],
             },
           },
         ],

@@ -1,32 +1,26 @@
 import _isEmpty from 'lodash.isempty';
-import _isPlainObject from 'lodash.isplainobject';
+import _isObject from 'lodash.isplainobject';
+import _mapValues from 'lodash.mapvalues';
 
 import Component from './Component';
 import Route from './Route';
 
-export function createRoutes(routeConfigs, optionsSelector) {
-  const routes = {};
-
-  for (const [id, routeConfig] of Object.entries(routeConfigs)) {
-    if (routeConfig instanceof Route) {
-      routes[id] = routeConfig;
-    } else {
-      if (_isEmpty(routeConfig)) {
-        routes[id] = createComponent(id);
-      } else {
-        routes[id] = createComponent(
-          id,
-          optionsSelector ? optionsSelector(routeConfig) : routeConfig,
-        );
-      }
+export function createRoutes(routes, prefix) {
+  return _mapValues(routes, (route, id) => {
+    if (_isObject(route)) {
+      return createComponent(createId(prefix, id), route);
     }
-  }
 
-  return routes;
+    return route;
+  });
+}
+
+function createId(prefix, id) {
+  return prefix ? `${prefix}/${id}` : id;
 }
 
 export function createComponent(id, options) {
-  return new Component(id, { options });
+  return new Component(id, options);
 }
 
 // https://wix.github.io/react-native-navigation/#/docs/styling?id=options-object-format
@@ -53,7 +47,7 @@ const rnNames = {
 // Traverse obj for depth
 export function getRouteDepth(route, currentDepth = 0, depth = 0) {
   for (const [key, val] of Object.entries(route)) {
-    const isObject = _isPlainObject(val) && !rnnNames[key] && !rnNames[key];
+    const isObject = _isObject(val) && !rnnNames[key] && !rnNames[key];
     const isEmpty = _isEmpty(val);
 
     if (isObject) {
