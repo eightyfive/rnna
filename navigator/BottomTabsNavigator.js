@@ -103,4 +103,16 @@ export default class BottomTabsNavigator extends Navigator {
 
     return this.route.getComponent();
   }
+
+  getRoutes() {
+    const routes = {};
+
+    for (const [name, route] of Object.entries(this.routes)) {
+      for (const [id, path] of Object.entries(route.getRoutes())) {
+        routes[id] = `${name}/${path}`;
+      }
+    }
+
+    return routes;
+  }
 }
