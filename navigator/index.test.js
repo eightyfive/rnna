@@ -36,18 +36,15 @@ const routes = {
     },
   },
 
-  stack: {
-    Login: {
-      title: 'Sign In',
-      topBar: {
-        visible: false,
-      },
-    },
+  auth: {
+    Login: {},
+    Register: {},
   },
 
   modal: {
-    Screen: {},
-    options: {
+    Screen1: {},
+    Screen2: {},
+    config: {
       mode: 'modal',
     },
   },
@@ -58,13 +55,26 @@ const routes = {
     },
   },
 };
+const navigator = createRootNavigator(routes);
 
 test('create Root Navigator', () => {
-  const navigator = createRootNavigator(routes);
-
   expect(navigator.get('tabs')).toBeInstanceOf(BottomTabsNavigator);
-  expect(navigator.get('stack')).toBeInstanceOf(StackNavigator);
+  expect(navigator.get('auth')).toBeInstanceOf(StackNavigator);
   expect(navigator.get('modal')).toBeInstanceOf(StackNavigator);
   expect(navigator.get('modal')).toBeInstanceOf(ModalNavigator);
   expect(navigator.get('Overlay')).toBeInstanceOf(OverlayNavigator);
+});
+
+test('build Routes', () => {
+  expect(navigator.buildRoutes()).toEqual({
+    Login: 'auth/Login',
+    Register: 'auth/Register',
+    Overlay: 'Overlay/Overlay',
+    Profile: 'tabs/tab2/Profile',
+    Screen1: 'modal/Screen1',
+    Screen2: 'modal/Screen2',
+    Settings: 'tabs/tab2/Settings',
+    User: 'tabs/tab1/User',
+    Users: 'tabs/tab1/Users',
+  });
 });

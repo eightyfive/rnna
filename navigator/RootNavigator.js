@@ -138,11 +138,11 @@ export default class RootNavigator extends SwitchNavigator {
     return !isWidget && !this.overlayIds.includes(id);
   }
 
-  getRoutes() {
+  buildRoutes() {
     const routes = {};
 
     for (const [name, route] of Object.entries(this.routes)) {
-      for (const [id, path] of Object.entries(route.getRoutes())) {
+      for (const [id, path] of Object.entries(route.buildRoutes())) {
         routes[id] = `${name}/${path}`;
       }
     }
