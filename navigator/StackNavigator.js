@@ -11,6 +11,10 @@ export default class StackNavigator extends Navigator {
     this.options = config.options;
     this.defaultOptions = config.defaultOptions;
 
+    this.listeners = {
+      _didDisappear: [],
+    };
+
     this.addListener('_didDisappear', this.handleDidDisappear);
 
     this.listen('ComponentDidDisappear', '_didDisappear');

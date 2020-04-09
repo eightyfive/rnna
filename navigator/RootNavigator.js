@@ -17,6 +17,11 @@ export default class RootNavigator extends SwitchNavigator {
       .filter(id => routes[id] instanceof OverlayNavigator)
       .map(id => id);
 
+    this.listeners = {
+      _didAppear: [],
+      _modalDismiss: [],
+    };
+
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
 

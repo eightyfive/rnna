@@ -30,10 +30,6 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   addListener(name, listener) {
-    if (!this.listeners[name]) {
-      this.listeners[name] = [];
-    }
-
     this.listeners[name].push(listener);
   }
 

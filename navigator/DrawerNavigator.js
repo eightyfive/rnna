@@ -20,6 +20,11 @@ export default class DrawerNavigator extends StackNavigator {
     this.visible = false;
     this.options = config.options;
 
+    this.listeners = {
+      _didAppear: [],
+      _didDisappear: [],
+    };
+
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_didDisappear', this.handleDidDisappear);
 

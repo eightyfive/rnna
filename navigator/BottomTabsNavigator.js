@@ -10,6 +10,12 @@ export default class BottomTabsNavigator extends Navigator {
     this.options = config.options;
     this.tabIndex = 0;
 
+    this.listeners = {
+      tabSelect: [],
+      tabPress: [],
+      tabLongPress: [],
+    };
+
     this.addListener('tabSelect', this.handleTabSelect);
 
     this.listen('BottomTabSelected', 'tabSelect');
