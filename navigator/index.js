@@ -12,6 +12,8 @@ import RootNavigator from './RootNavigator';
 import WidgetComponent from './WidgetComponent';
 import { createRoutes, getRouteDepth } from './utils';
 
+export { default as registerComponents } from './registerComponents';
+
 export function createBottomTabNavigator(routeConfigs, config = {}) {
   return createBottomTabs(
     createRoutes(routeConfigs, getNavigationOptions),

@@ -149,24 +149,4 @@ export default class RootNavigator extends SwitchNavigator {
 
     return routes;
   }
-
-  register(screens, Provider = null, store = null) {
-    Object.keys(screens).forEach(name => {
-      const Screen = screens[name];
-
-      if (Provider) {
-        Navigation.registerComponent(
-          name,
-          () => props => (
-            <Provider {...{ store }}>
-              <Screen {...props} />
-            </Provider>
-          ),
-          () => Screen,
-        );
-      } else {
-        Navigation.registerComponent(name, () => Screen);
-      }
-    });
-  }
 }
