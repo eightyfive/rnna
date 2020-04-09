@@ -36,10 +36,4 @@ export default class OverlayNavigator extends Navigator {
   getComponent() {
     return this.component;
   }
-
-  buildRoutes() {
-    return {
-      [this.component.id]: this.component.id,
-    };
-  }
 }

@@ -135,14 +135,4 @@ export default class StackNavigator extends Navigator {
 
     return this.route;
   }
-
-  buildRoutes() {
-    const routes = {};
-
-    for (const id of Object.keys(this.routes)) {
-      routes[id] = id;
-    }
-
-    return routes;
-  }
 }
