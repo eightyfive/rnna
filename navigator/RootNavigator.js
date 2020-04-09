@@ -157,12 +157,4 @@ export default class RootNavigator extends SwitchNavigator {
       }
     });
   }
-
-  getComponent() {
-    if (!this.route) {
-      return null;
-    }
-
-    return this.route.getComponent();
-  }
 }

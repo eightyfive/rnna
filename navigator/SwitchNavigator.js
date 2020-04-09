@@ -60,4 +60,12 @@ export default class SwitchNavigator extends Navigator {
       }
     }
   }
+
+  getComponent() {
+    if (!this.route) {
+      return null;
+    }
+
+    return this.route.getComponent();
+  }
 }

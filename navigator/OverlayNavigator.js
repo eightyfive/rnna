@@ -32,4 +32,8 @@ export default class OverlayNavigator extends Navigator {
       this.parent.onDismissOverlay(this.name);
     }
   }
+
+  getComponent() {
+    return this.component;
+  }
 }
