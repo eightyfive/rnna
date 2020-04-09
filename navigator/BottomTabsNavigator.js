@@ -71,7 +71,7 @@ export default class BottomTabsNavigator extends Navigator {
     Navigation.setRoot({ root: this.getLayout(params) });
   }
 
-  go(path, params, fromId) {
+  navigate(path, params, fromId) {
     const [name, rest] = this.parsePath(path);
     const index = this.order.findIndex(key => key === name);
 
@@ -88,7 +88,7 @@ export default class BottomTabsNavigator extends Navigator {
     }
 
     if (rest) {
-      this.route.go(rest, params, fromId);
+      this.route.navigate(rest, params, fromId);
     }
   }
 

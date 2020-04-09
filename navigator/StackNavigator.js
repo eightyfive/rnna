@@ -67,7 +67,7 @@ export default class StackNavigator extends Navigator {
     Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 
-  go(toId, params, fromId) {
+  navigate(toId, params, fromId) {
     const index = this.history.findIndex(id => id === toId);
 
     if (index > 0) {
@@ -83,7 +83,7 @@ export default class StackNavigator extends Navigator {
     }
 
     if (this.history.length === 1) {
-      throw new Error('No route to go back to');
+      throw new Error('No route to navigate back to');
     }
 
     this.history.pop();

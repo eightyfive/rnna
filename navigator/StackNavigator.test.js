@@ -87,26 +87,26 @@ test('popToTop', () => {
   expect(Navigation.popToRoot).toHaveBeenCalledWith('C');
 });
 
-test('go (push)', () => {
+test('navigate (push)', () => {
   app.push = jest.fn();
-  app.go('B', params, 'A');
+  app.navigate('B', params, 'A');
 
   expect(app.push).toHaveBeenCalledWith('B', params, 'A');
 });
 
-test('go (popToIndex)', () => {
+test('navigate (popToIndex)', () => {
   app.popToIndex = jest.fn();
 
-  app.go('B', params, 'A');
-  app.go('C', params, 'B');
-  app.go('B', params, 'C');
+  app.navigate('B', params, 'A');
+  app.navigate('C', params, 'B');
+  app.navigate('B', params, 'C');
 
   expect(app.popToIndex).toHaveBeenCalledWith(1);
 });
 
 test('goBack', () => {
-  app.go('B', params, 'A');
-  app.go('C', params, 'B');
+  app.navigate('B', params, 'A');
+  app.navigate('C', params, 'B');
   app.goBack('C');
 
   expect(app.history).toEqual(['A', 'B']);

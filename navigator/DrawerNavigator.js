@@ -66,7 +66,7 @@ export default class DrawerNavigator extends StackNavigator {
     return { sideMenu: layout };
   }
 
-  go(toId, params) {
+  navigate(toId, params) {
     if (toId === this.drawer.id) {
       this.openDrawer();
     } else {
@@ -75,7 +75,7 @@ export default class DrawerNavigator extends StackNavigator {
       }
 
       // StackNavigator.push
-      super.go(toId, params, this.initialRouteName);
+      super.navigate(toId, params, this.initialRouteName);
     }
   }
 

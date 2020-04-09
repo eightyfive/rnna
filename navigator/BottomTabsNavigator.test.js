@@ -41,8 +41,8 @@ test('mount', () => {
   });
 });
 
-test('go', () => {
-  app.go('c');
+test('navigate', () => {
+  app.navigate('c');
 
   expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-c', {
     bottomTabs: { currentTabIndex: 1 },

@@ -22,19 +22,19 @@ test('mount', () => {
   expect(app.get('ab').mount).not.toHaveBeenCalled();
 });
 
-test('go', () => {
+test('navigate', () => {
   app.get('cd').mount = jest.fn();
 
-  app.go('cd');
+  app.navigate('cd');
 
   expect(app.get('cd').mount).toHaveBeenCalled();
 });
 
-test('go deep', () => {
+test('navigate deep', () => {
   app.get('cd').mount = jest.fn();
   app.get('cd').push = jest.fn();
 
-  app.go('cd/D');
+  app.navigate('cd/D');
 
   expect(app.get('cd').mount).toHaveBeenCalled();
   expect(app.get('cd').push).toHaveBeenCalledWith('D', undefined, 'ab');

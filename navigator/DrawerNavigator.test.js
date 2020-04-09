@@ -22,14 +22,14 @@ test('dumb', () => {
   expect(true).toBe(true);
 });
 
-// test('go', () => {
-//   navigator.go('A');
+// test('navigate', () => {
+//   navigator.navigate('A');
 
 //   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
 // });
 
-// test('go back', () => {
-//   navigator.go('B');
+// test('navigate back', () => {
+//   navigator.navigate('B');
 //   navigator.goBack('B');
 
 //   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
@@ -61,7 +61,7 @@ test('dumb', () => {
 // });
 
 // test('open drawer', () => {
-//   navigator.go('Drawer');
+//   navigator.navigate('Drawer');
 
 //   expect(Navigation.mergeOptions).toHaveBeenCalledWith(
 //     'Drawer',
@@ -70,7 +70,7 @@ test('dumb', () => {
 // });
 
 // test('close drawer', () => {
-//   navigator.go('Drawer');
+//   navigator.navigate('Drawer');
 //   navigator.handleDidAppear({ componentId: 'Drawer' });
 //   navigator.goBack();
 

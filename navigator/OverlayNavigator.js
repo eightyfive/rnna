@@ -17,7 +17,7 @@ export default class OverlayNavigator extends Navigator {
     Navigation.dismissOverlay(this.component.id);
   }
 
-  go(path, params, fromId) {
+  navigate(path, params, fromId) {
     this.mount(params);
   }
 
