@@ -23,16 +23,15 @@ test('mount', () => {
     root: {
       bottomTabs: {
         id: 'ab-c',
-        name: 'ab-c',
         children: [
           {
             stack: {
-              children: [{ component: { id: 'A', name: 'A' } }],
+              children: [{ component: { id: 'A' } }],
             },
           },
           {
             stack: {
-              children: [{ component: { id: 'C', name: 'C' } }],
+              children: [{ component: { id: 'C' } }],
             },
           },
         ],

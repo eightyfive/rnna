@@ -40,7 +40,6 @@ export default class BottomTabsNavigator extends Navigator {
   getLayout(params) {
     const layout = {
       id: this.layoutId,
-      name: this.layoutId,
       children: this.order.map(key => this.get(key).getInitialLayout(params)),
     };
 

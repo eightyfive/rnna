@@ -24,7 +24,6 @@ export default class Component extends Route {
   getLayout(params, defaultOptions) {
     const layout = {
       id: this.id,
-      name: this.id,
     };
 
     if (this.options || defaultOptions) {

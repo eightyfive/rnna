@@ -40,7 +40,7 @@ test('dumb', () => {
 //     root: {
 //       sideMenu: {
 //         left: {
-//           component: { id: 'Drawer', name: 'Drawer' },
+//           component: { id: 'Drawer' },
 //         },
 //         center: {
 //           stack: {
@@ -48,7 +48,6 @@ test('dumb', () => {
 //               {
 //                 component: {
 //                   id: 'A',
-//                   name: 'A',
 //                   options: { topBar: { title: 'foo' } },
 //                 },
 //               },

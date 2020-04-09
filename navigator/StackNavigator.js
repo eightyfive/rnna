@@ -20,7 +20,7 @@ export default class StackNavigator extends Navigator {
     );
   }
 
-  handleDidDisappear = ({ componentId: id, componentName: name }) => {
+  handleDidDisappear = ({ componentId: id }) => {
     // Native back button has been pressed
 
     const active =
