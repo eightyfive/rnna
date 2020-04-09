@@ -18,8 +18,8 @@ export { default as registerComponents } from './registerComponents';
 
 export function createBottomTabNavigator(routes, config = {}) {
   return createBottomTabs(
-    createRoutes(toWixRoutes(routes), config.parentId),
-    getBottomTabNavigatorConfig(config),
+    createRoutes(toWixRoutes(routes)),
+    toBottomTabConfig(config),
   );
 }
 
@@ -29,8 +29,8 @@ export function createDrawerNavigator(routes, config = {}) {
   }
 
   return createDrawer(
-    createRoutes(toWixRoutes(routes), config.parentId),
-    getDrawerNavigatorConfig(config),
+    createRoutes(toWixRoutes(routes)),
+    toDrawerConfig(config),
   );
 }
 
@@ -73,21 +73,18 @@ function createStacks(routes, parentId) {
 export function createStackNavigator(routes, config = {}) {
   if (config.mode === 'modal') {
     return createModal(
-      createRoutes(toWixRoutes(routes), config.parentId),
-      getStackNavigatorConfig(config),
+      createRoutes(toWixRoutes(routes)),
+      toStackConfig(config),
     );
   }
 
-  return createStack(
-    createRoutes(toWixRoutes(routes), config.parentId),
-    getStackNavigatorConfig(config),
-  );
+  return createStack(createRoutes(toWixRoutes(routes)), toStackConfig(config));
 }
 
 export function createSwitchNavigator(routes, config = {}) {
   return createSwitch(
     createRoutes(toWixRoutes(routes)),
-    getSwitchNavigatorConfig(config),
+    toSwitchConfig(config),
   );
 }
 
@@ -278,8 +275,8 @@ function toWixOptions(navigationOptions, options = {}) {
 }
 
 // https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
-function getStackNavigatorConfig(config) {
-  return getNavigatorConfig(config, [
+function toStackConfig(config) {
+  return toConfig(config, [
     'initialRouteParams',
     'screenOptions',
     'keyboardHandlingEnabled',
@@ -289,9 +286,8 @@ function getStackNavigatorConfig(config) {
 }
 
 // https://reactnavigation.org/docs/en/bottom-tab-navigator.html#bottomtabnavigatorconfig
-function getBottomTabNavigatorConfig(config) {
-  return getNavigatorConfig(config, [
-    'initialRouteName',
+function toBottomTabConfig(config) {
+  return toConfig(config, [
     'screenOptions',
     'backBehavior',
     'lazy',
@@ -301,9 +297,8 @@ function getBottomTabNavigatorConfig(config) {
 }
 
 // https://reactnavigation.org/docs/en/drawer-navigator.html#drawernavigatorconfig
-function getDrawerNavigatorConfig(config) {
-  return getNavigatorConfig(config, [
-    'initialRouteName',
+function toDrawerConfig(config) {
+  return toConfig(config, [
     'screenOptions',
     'backBehavior',
     'drawerPosition',
@@ -324,14 +319,14 @@ function getDrawerNavigatorConfig(config) {
 }
 
 // https://reactnavigation.org/docs/en/switch-navigator.html#switchnavigatorconfig
-function getSwitchNavigatorConfig(config) {
-  return getNavigatorConfig(config, ['resetOnBlur', 'backBehavior']);
+function toSwitchConfig(config) {
+  return toConfig(config, ['resetOnBlur', 'backBehavior']);
 }
 
-const navigatorConfigKeys = ['initialRouteName', 'paths'];
+const configKeys = ['initialRouteName', 'parentId'];
 
-function getNavigatorConfig({ defaultOptions, ...config }, keys) {
-  const navigatorConfig = _pick(config, navigatorConfigKeys.concat(keys));
+function toConfig({ defaultOptions, ...config }, keys) {
+  const navigatorConfig = _pick(config, configKeys.concat(keys));
 
   if (defaultOptions) {
     Object.assign(

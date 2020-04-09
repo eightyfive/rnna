@@ -3,6 +3,10 @@ import _last from 'lodash.last';
 import Component from './Component';
 import Route from './Route';
 
+function createId(parentId, id) {
+  return parentId ? `${parentId}/${id}` : id;
+}
+
 export default /** abstract */ class Navigator extends Route {
   constructor(routes, config) {
     super();
@@ -19,12 +23,7 @@ export default /** abstract */ class Navigator extends Route {
 
     _forEach(this.routes, (route, id) => {
       route.parent = this;
-
-      const isComponent = route instanceof Component;
-
-      if (!isComponent) {
-        route.id = id;
-      }
+      route.id = createId(config.parentId, id);
     });
   }
 

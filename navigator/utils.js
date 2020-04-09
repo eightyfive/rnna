@@ -5,18 +5,14 @@ import _mapValues from 'lodash.mapvalues';
 import Component from './Component';
 import Route from './Route';
 
-export function createRoutes(routes, parentId) {
+export function createRoutes(routes) {
   return _mapValues(routes, (route, id) => {
     if (_isObject(route)) {
-      return createComponent(createId(parentId, id), route);
+      return createComponent(id, route);
     }
 
     return route;
   });
-}
-
-function createId(parentId, id) {
-  return parentId ? `${parentId}/${id}` : id;
 }
 
 export function createComponent(id, options) {
