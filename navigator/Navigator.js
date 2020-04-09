@@ -29,31 +29,29 @@ export default /** abstract */ class Navigator extends Route {
     });
   }
 
-  addListener(name, listener) {
-    this.listeners[name].push(listener);
+  addListener(alias, listener) {
+    this.listeners[alias].push(listener);
   }
 
   listen(event, alias) {
     const events = Navigation.events();
 
-    this.subscriptions[alias] = events[`register${event}Listener`](ev =>
-      this.trigger(alias, ev),
+    this.subscriptions[alias] = events[`register${event}Listener`]((...args) =>
+      this.trigger(alias, args),
     );
   }
 
   listenOnce(event, listener) {
     const events = Navigation.events();
 
-    const subscription = events[`register${event}Listener`](ev => {
+    const subscription = events[`register${event}Listener`]((...args) => {
       subscription.remove();
-      listener(ev);
+      listener(...args);
     });
   }
 
-  trigger(name, ev) {
-    if (this.listeners[name]) {
-      this.listeners[name].map(listener => listener(ev));
-    }
+  trigger(alias, args) {
+    this.listeners[alias].map(listener => listener(...args));
   }
 
   get route() {
