@@ -82,4 +82,12 @@ export default class BottomTabsNavigator extends Navigator {
   goBack(fromId) {
     // TODO
   }
+
+  getComponent() {
+    if (!this.route) {
+      return null;
+    }
+
+    return this.route.getComponent();
+  }
 }

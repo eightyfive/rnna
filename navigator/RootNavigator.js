@@ -18,7 +18,6 @@ export default class RootNavigator extends SwitchNavigator {
     this.onMounted = [];
     this.onTabSelected = [];
     this.onTabPressed = [];
-    this.path = null;
 
     this.overlayIds = Object.keys(routes)
       .filter(name => routes[name] instanceof OverlayNavigator)
@@ -40,16 +39,16 @@ export default class RootNavigator extends SwitchNavigator {
       this.handleBottomTabPressed,
     );
 
-    this.launch();
-  }
-
-  launch() {
     this.launched = new Promise(resolve => {
       const launchedListener = events.registerAppLaunchedListener(() => {
         launchedListener.remove();
         resolve();
       });
     });
+  }
+
+  run() {
+    return this.launched;
   }
 
   handleDidAppear = ({ componentId: id }) => {
@@ -95,8 +94,6 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   go(path, params) {
-    this.path = path;
-
     const [name, rest] = this.parsePath(path);
     const route = this.get(name);
 
@@ -200,7 +197,7 @@ export default class RootNavigator extends SwitchNavigator {
     return !isWidget && !this.overlayIds.includes(id);
   }
 
-  run(screens, Provider = null, store = null) {
+  register(screens, Provider = null, store = null) {
     Object.keys(screens).forEach(name => {
       const Screen = screens[name];
 
@@ -222,8 +219,12 @@ export default class RootNavigator extends SwitchNavigator {
     // this.launched.then(() => this.init());
   }
 
-  update(params) {
-    this.get(this.path).update(params);
+  getComponent() {
+    if (!this.route) {
+      return null;
+    }
+
+    return this.route.getComponent();
   }
 
   // init() {

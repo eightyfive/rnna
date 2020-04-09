@@ -8,7 +8,7 @@ export default class Component extends Route {
 
     this.id = id;
     this.options = config.options;
-    this.passProps = null;
+    this.params = null;
   }
 
   mount(params) {
@@ -32,7 +32,7 @@ export default class Component extends Route {
     }
 
     if (params) {
-      this.passProps = params;
+      this.params = { ...params };
 
       layout.passProps = params;
     }
@@ -41,8 +41,6 @@ export default class Component extends Route {
   }
 
   update(params) {
-    this.passProps = params;
-
     Navigation.updateProps(this.id, params);
   }
 }

@@ -18,7 +18,7 @@ export default class OverlayNavigator extends Navigator {
   }
 
   go(path, params, fromId) {
-    //
+    this.mount(params);
   }
 
   goBack(fromId) {

@@ -19,6 +19,9 @@ export default class StackNavigator extends Navigator {
   }
 
   getInitialLayout(params) {
+    // TOFIX: Here because of BottomTabs.children.getInitialLayout()
+    this.history = [this.initialRouteName];
+
     return this.getLayout(params, this.initialRouteName);
   }
 
@@ -48,7 +51,7 @@ export default class StackNavigator extends Navigator {
     // If this navigator/route is active
     if (active) {
       // If popped was the last visible
-      const visible = id === this.route.name;
+      const visible = this.route && this.route.name === id;
 
       // If popped is not the first screen of Stack
       const initial = id === this.initialRouteName;
@@ -61,8 +64,6 @@ export default class StackNavigator extends Navigator {
   };
 
   mount(params) {
-    this.history = [this.initialRouteName];
-
     Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 
@@ -123,5 +124,13 @@ export default class StackNavigator extends Navigator {
     this.history = [this.initialRouteName];
 
     Navigation.popToRoot(fromId);
+  }
+
+  getComponent() {
+    if (!this.route) {
+      return null;
+    }
+
+    return this.route;
   }
 }
