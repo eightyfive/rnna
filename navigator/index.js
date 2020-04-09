@@ -18,7 +18,7 @@ export { default as registerComponents } from './registerComponents';
 
 export function createBottomTabNavigator(routes, config = {}) {
   return createBottomTabs(
-    createRoutes(toWixRoutes(routes), config.prefix),
+    createRoutes(toWixRoutes(routes), config.parentId),
     getBottomTabNavigatorConfig(config),
   );
 }
@@ -29,7 +29,7 @@ export function createDrawerNavigator(routes, config = {}) {
   }
 
   return createDrawer(
-    createRoutes(toWixRoutes(routes), config.prefix),
+    createRoutes(toWixRoutes(routes), config.parentId),
     getDrawerNavigatorConfig(config),
   );
 }
@@ -39,7 +39,7 @@ export function createRootNavigator(routes) {
     const depth = getRouteDepth(route);
     const { config = {}, ...routeConfigs } = route;
 
-    config.prefix = id;
+    config.parentId = id;
 
     if (depth === 2) {
       return createBottomTabNavigator(createStacks(routeConfigs, id), config);
@@ -59,12 +59,12 @@ export function createRootNavigator(routes) {
   return new RootNavigator(app);
 }
 
-function createStacks(routes, prefix) {
+function createStacks(routes, parentId) {
   return _mapValues(routes, (route, id) => {
     const { defaultOptions, ...routeConfigs } = route;
 
     return createStackNavigator(routeConfigs, {
-      prefix: `${prefix}/${id}`,
+      parentId: `${parentId}/${id}`,
       defaultOptions,
     });
   });
@@ -73,13 +73,13 @@ function createStacks(routes, prefix) {
 export function createStackNavigator(routes, config = {}) {
   if (config.mode === 'modal') {
     return createModal(
-      createRoutes(toWixRoutes(routes), config.prefix),
+      createRoutes(toWixRoutes(routes), config.parentId),
       getStackNavigatorConfig(config),
     );
   }
 
   return createStack(
-    createRoutes(toWixRoutes(routes), config.prefix),
+    createRoutes(toWixRoutes(routes), config.parentId),
     getStackNavigatorConfig(config),
   );
 }
