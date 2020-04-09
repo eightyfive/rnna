@@ -1,6 +1,6 @@
 import _set from 'lodash.set';
 import _pick from 'lodash.pick';
-import _isPlainObject from 'lodash.isplainobject';
+import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 import { Navigation } from 'react-native-navigation';
 
@@ -16,46 +16,45 @@ import { createRoutes, getRouteDepth } from './utils';
 
 export { default as registerComponents } from './registerComponents';
 
-export function createBottomTabNavigator(routeConfigs, config = {}) {
+export function createBottomTabNavigator(routes, config = {}) {
   return createBottomTabs(
-    createNavigationRoutes(routeConfigs),
+    createRoutes(toWixRoutes(routes)),
     getBottomTabNavigatorConfig(config),
   );
 }
 
-export function createDrawerNavigator(routeConfigs, config = {}) {
+export function createDrawerNavigator(routes, config = {}) {
   if (config.contentOptions) {
-    config.contentOptions = getNavigationOptions(config.contentOptions);
+    config.contentOptions = toWixOptions(config.contentOptions);
   }
 
   return createDrawer(
-    createNavigationRoutes(routeConfigs),
+    createRoutes(toWixRoutes(routes)),
     getDrawerNavigatorConfig(config),
   );
 }
 
 export function createRootNavigator(routes) {
-  const app = {};
-
-  for (const [name, route] of Object.entries(routes)) {
+  const app = _mapValues(routes, (route, id) => {
     const depth = getRouteDepth(route);
     const { config = {}, ...routeConfigs } = route;
 
-    config.prefix = name;
+    config.prefix = id;
 
     if (depth === 2) {
-      app[name] = createBottomTabNavigator(
-        createStacks(routeConfigs, name),
-        config,
-      );
-    } else if (depth === 1) {
-      app[name] = createStackNavigator(routeConfigs, config);
-    } else if (depth === 0) {
-      app[name] = createOverlayNavigator({ [name]: routeConfigs }, config);
-    } else {
-      throw new Error('Invalid routes obj');
+      return createBottomTabNavigator(createStacks(routeConfigs, id), config);
     }
-  }
+
+    if (depth === 1) {
+      return createStackNavigator(routeConfigs, config);
+    }
+
+    if (depth === 0) {
+      return createOverlayNavigator({ [id]: routeConfigs }, config);
+    }
+
+    throw new Error('Invalid routes obj');
+  });
 
   return new RootNavigator(app);
 }
@@ -71,23 +70,23 @@ function createStacks(routes, prefix) {
   });
 }
 
-export function createStackNavigator(routeConfigs, config = {}) {
+export function createStackNavigator(routes, config = {}) {
   if (config.mode === 'modal') {
     return createModal(
-      createNavigationRoutes(routeConfigs),
+      createRoutes(toWixRoutes(routes)),
       getStackNavigatorConfig(config),
     );
   }
 
   return createStack(
-    createNavigationRoutes(routeConfigs, config.prefix),
+    createRoutes(toWixRoutes(routes), config.prefix),
     getStackNavigatorConfig(config),
   );
 }
 
-export function createSwitchNavigator(routeConfigs, config = {}) {
+export function createSwitchNavigator(routes, config = {}) {
   return createSwitch(
-    createNavigationRoutes(routeConfigs),
+    createRoutes(toWixRoutes(routes)),
     getSwitchNavigatorConfig(config),
   );
 }
@@ -97,14 +96,14 @@ export function createWidget(id) {
 }
 
 export function setDefaultOptions({ options, ...rest }) {
-  const defaultOptions = getNavigationOptions(rest, options);
+  const defaultOptions = toWixOptions(rest, options);
 
   Navigation.events().registerAppLaunchedListener(() =>
     Navigation.setDefaultOptions(defaultOptions),
   );
 }
 
-function getNavigationOptions(navigationOptions, options = {}) {
+function toWixOptions(navigationOptions, options = {}) {
   const {
     // headerMode,
 
@@ -337,19 +336,19 @@ function getNavigatorConfig({ defaultOptions, ...config }, keys) {
   if (defaultOptions) {
     Object.assign(
       navigatorConfig,
-      Object.assign({ defaultOptions: getNavigationOptions(defaultOptions) }),
+      Object.assign({ defaultOptions: toWixOptions(defaultOptions) }),
     );
   }
 
   return navigatorConfig;
 }
 
-function createNavigationRoutes(routeConfigs, prefix = null) {
-  for (const id in routeConfigs) {
-    if (_isPlainObject(routeConfigs[id])) {
-      routeConfigs[id] = getNavigationOptions(routeConfigs[id]);
+function toWixRoutes(routes) {
+  return _mapValues(routes, route => {
+    if (_isObject(route)) {
+      return toWixOptions(route);
     }
-  }
 
-  return createRoutes(routeConfigs, prefix);
+    return route;
+  });
 }
