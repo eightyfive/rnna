@@ -3,11 +3,6 @@ import { Navigation } from 'react-native-navigation';
 import Component from './Component';
 import StackNavigator from './StackNavigator';
 
-const events = Navigation.events();
-
-const onDidAppear = events.registerComponentDidAppearListener;
-const onDidDisappear = events.registerComponentDidDisappearListener;
-
 export default class DrawerNavigator extends StackNavigator {
   constructor(routes, config = {}) {
     if (!config.drawer) {
@@ -28,11 +23,15 @@ export default class DrawerNavigator extends StackNavigator {
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_didDisappear', this.handleDidDisappear);
 
-    this.subscriptions['_didAppear'] = onDidAppear(ev =>
+    this.subscriptions[
+      '_didAppear'
+    ] = Navigation.events().registerComponentDidAppearListener(ev =>
       this.trigger('_didAppear', ev),
     );
 
-    this.subscriptions['_didDisappear'] = onDidDisappear(ev =>
+    this.subscriptions[
+      '_didDisappear'
+    ] = Navigation.events().registerComponentDidDisappearListener(ev =>
       this.trigger('_didDisappear', ev),
     );
   }

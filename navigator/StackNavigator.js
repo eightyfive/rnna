@@ -4,8 +4,6 @@ import { Navigation } from 'react-native-navigation';
 
 import Navigator from './Navigator';
 
-const events = Navigation.events();
-
 export default class StackNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
@@ -13,10 +11,35 @@ export default class StackNavigator extends Navigator {
     this.options = config.options;
     this.defaultOptions = config.defaultOptions;
 
-    this.screenPoppedListener = events.registerComponentDidDisappearListener(
-      this.handleScreenPopped,
+    this.addListener('_didDisappear', this.handleDidDisappear);
+
+    this.subscriptions[
+      '_didDisappear'
+    ] = Navigation.events().registerComponentDidDisappearListener(ev =>
+      this.trigger('_didDisappear', ev),
     );
   }
+
+  handleDidDisappear = ({ componentId: id, componentName: name }) => {
+    // Native back button has been pressed
+
+    const active =
+      !this.parent || (this.parent && this.parent.route.name === this.name);
+
+    // If this navigator/route is active
+    if (active) {
+      // If popped was the last visible
+      const visible = this.route && this.route.name === id;
+
+      // If popped is not the first screen of Stack
+      const initial = id === this.initialRouteName;
+
+      // Then manual pop() of history (which is out of sync)
+      if (visible && !initial) {
+        this.history.pop();
+      }
+    }
+  };
 
   getInitialLayout(params) {
     // TOFIX: Here because of BottomTabs.children.getInitialLayout()
@@ -41,27 +64,6 @@ export default class StackNavigator extends Navigator {
 
     return { stack: layout };
   }
-
-  handleScreenPopped = ({ componentId: id, componentName: name }) => {
-    // Native back button has been pressed
-
-    const active =
-      !this.parent || (this.parent && this.parent.route.name === this.name);
-
-    // If this navigator/route is active
-    if (active) {
-      // If popped was the last visible
-      const visible = this.route && this.route.name === id;
-
-      // If popped is not the first screen of Stack
-      const initial = id === this.initialRouteName;
-
-      // Then manual pop() of history (which is out of sync)
-      if (visible && !initial) {
-        this.history.pop();
-      }
-    }
-  };
 
   mount(params) {
     Navigation.setRoot({ root: this.getInitialLayout(params) });

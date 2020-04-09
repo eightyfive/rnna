@@ -5,11 +5,6 @@ import SwitchNavigator from './SwitchNavigator';
 import ModalNavigator from './ModalNavigator';
 import OverlayNavigator from './OverlayNavigator';
 
-const events = Navigation.events();
-
-const onDidAppear = events.registerComponentDidAppearListener;
-const onModalDismiss = events.registerModalDismissedListener;
-
 export default class RootNavigator extends SwitchNavigator {
   constructor(routes, config = {}) {
     super(routes, config);
@@ -22,24 +17,28 @@ export default class RootNavigator extends SwitchNavigator {
       .filter(name => routes[name] instanceof OverlayNavigator)
       .map(name => name);
 
-    const events = Navigation.events();
-
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
 
-    this.subscriptions['_didAppear'] = onDidAppear(ev =>
+    this.subscriptions[
+      '_didAppear'
+    ] = Navigation.events().registerComponentDidAppearListener(ev =>
       this.trigger('_didAppear', ev),
     );
 
-    this.subscriptions['_modalDismiss'] = onModalDismiss(ev =>
+    this.subscriptions[
+      '_modalDismiss'
+    ] = Navigation.events().registerModalDismissedListener(ev =>
       this.trigger('_modalDismiss', ev),
     );
 
     this.launched = new Promise(resolve => {
-      const launchedListener = events.registerAppLaunchedListener(() => {
-        launchedListener.remove();
-        resolve();
-      });
+      const launchedListener = Navigation.events().registerAppLaunchedListener(
+        () => {
+          launchedListener.remove();
+          resolve();
+        },
+      );
     });
   }
 

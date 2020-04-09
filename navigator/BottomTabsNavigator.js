@@ -2,12 +2,6 @@ import { Navigation } from 'react-native-navigation';
 
 import Navigator from './Navigator';
 
-const events = Navigation.events();
-
-const onTabSelect = events.registerBottomTabSelectedListener;
-const onTabPress = events.registerBottomTabPressedListener;
-const onTabLongPress = events.registerBottomTabLongPressedListener;
-
 export default class BottomTabsNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
@@ -18,15 +12,21 @@ export default class BottomTabsNavigator extends Navigator {
 
     this.addListener('tabSelect', this.handleTabSelect);
 
-    this.subscriptions['tabSelect'] = onTabSelect(ev =>
+    this.subscriptions[
+      'tabSelect'
+    ] = Navigation.events().registerBottomTabSelectedListener(ev =>
       this.trigger('tabSelect', ev),
     );
 
-    this.subscriptions['tabPress'] = onTabPress(ev =>
+    this.subscriptions[
+      'tabPress'
+    ] = Navigation.events().registerBottomTabPressedListener(ev =>
       this.trigger('tabPress', ev),
     );
 
-    this.subscriptions['tabLongPress'] = onTabLongPress(ev =>
+    this.subscriptions[
+      'tabLongPress'
+    ] = Navigation.events().registerBottomTabLongPressedListener(ev =>
       this.trigger('tabLongPress', ev),
     );
   }
