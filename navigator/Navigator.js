@@ -32,7 +32,9 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   trigger(name, ev) {
-    this.listeners[name].map(listener => listener(ev));
+    if (this.listeners[name]) {
+      this.listeners[name].map(listener => listener(ev));
+    }
   }
 
   get route() {
