@@ -32,7 +32,7 @@ export default class Component extends Route {
     }
 
     if (params) {
-      this.params = { ...params };
+      this.params = params;
 
       layout.passProps = params;
     }
@@ -41,6 +41,8 @@ export default class Component extends Route {
   }
 
   update(params) {
+    this.params = params;
+
     Navigation.updateProps(this.id, params);
   }
 }
