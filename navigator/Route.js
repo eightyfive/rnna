@@ -10,10 +10,6 @@ export default /* abstract */ class Route {
   getLayout(params) {
     throwAbstract('getLayout');
   }
-
-  getComponent() {
-    throwAbstract('getComponent');
-  }
 }
 
 function throwAbstract(method) {

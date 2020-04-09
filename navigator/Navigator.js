@@ -57,16 +57,20 @@ export default /** abstract */ class Navigator extends Route {
 
   unmount(fromId) {}
 
-  navigate(path, params, fromId) {
-    throwAbstract('navigate(path, params, fromId)');
-  }
-
   go(path, params, fromId) {
     return this.navigate(path, params, fromId);
   }
 
+  navigate(path, params, fromId) {
+    throwAbstract('navigate(path, params, fromId)');
+  }
+
   goBack(fromId) {
     throwAbstract('goBack(fromId)');
+  }
+
+  getComponent() {
+    throwAbstract('getComponent');
   }
 
   parsePath(path) {
