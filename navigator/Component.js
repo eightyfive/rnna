@@ -9,7 +9,7 @@ export default class Component extends Route {
     this.id = id;
     this.name = id;
     this.options = options;
-    this.params = null;
+    this.params = {};
   }
 
   mount(params) {

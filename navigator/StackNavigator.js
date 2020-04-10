@@ -71,12 +71,12 @@ export default class StackNavigator extends Navigator {
     Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 
-  navigate(toId, params, fromId) {
-    if (this.route && this.route.id === toId) {
+  navigate(toName, params, fromId) {
+    if (this.route && this.route.name === toName) {
       // Refresh component
       this.route.update(params);
     } else {
-      const index = this.history.findIndex(id => id === toId);
+      const index = this.history.findIndex(name => name === toName);
 
       const above = index > 0;
       const root = index === 0;
@@ -84,7 +84,7 @@ export default class StackNavigator extends Navigator {
       if (above) {
         this.popToIndex(index);
       } else if (!root) {
-        this.push(toId, params, fromId);
+        this.push(toName, params, fromId);
       }
     }
   }
@@ -103,10 +103,10 @@ export default class StackNavigator extends Navigator {
     Navigation.pop(fromId);
   }
 
-  push(toId, params, fromId) {
-    const component = this.get(toId);
+  push(toName, params, fromId) {
+    const component = this.get(toName);
 
-    this.history.push(toId);
+    this.history.push(toName);
 
     Navigation.push(fromId, component.getLayout(params, this.defaultOptions));
   }
