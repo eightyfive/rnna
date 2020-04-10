@@ -27,6 +27,7 @@ test('mount', () => {
           {
             component: {
               id: 'A',
+              name: 'A',
               options: {},
               options: { topBar: { title: 'foo' } },
             },
@@ -44,6 +45,7 @@ test('push', () => {
   expect(Navigation.push).toHaveBeenCalledWith('A', {
     component: {
       id: 'B',
+      name: 'B',
       passProps: params,
       options: { topBar: { title: 'foo' } },
     },

@@ -7,6 +7,7 @@ export default class Component extends Route {
     super();
 
     this.id = id;
+    this.name = id;
     this.options = options;
     this.params = null;
   }
@@ -17,13 +18,10 @@ export default class Component extends Route {
 
   unmount(fromId) {}
 
-  getInitialLayout(params, defaultOptions) {
-    return this.getLayout(params, defaultOptions);
-  }
-
   getLayout(params, defaultOptions) {
     const layout = {
       id: this.id,
+      name: this.name,
     };
 
     layout.options = Object.assign({}, defaultOptions, this.options);

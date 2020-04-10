@@ -47,7 +47,7 @@ test('dumb', () => {
 //             children: [
 //               {
 //                 component: {
-//                   id: 'A', options: {},
+//                   id: 'A', name: 'A', options: {},
 //                   options: { topBar: { title: 'foo' } },
 //                 },
 //               },

@@ -42,7 +42,9 @@ export default class StackNavigator extends Navigator {
   };
 
   getInitialLayout(params) {
-    // TOFIX: Here because of BottomTabs.children.getInitialLayout()
+    // TOFIX:
+    // Here because of BottomTabs.children.getInitialLayout()
+    // Should be in Stack.mount
     this.history = [this.initialRouteName];
 
     return this.getLayout(params, this.initialRouteName);
@@ -54,7 +56,7 @@ export default class StackNavigator extends Navigator {
 
     const layout = {
       children: children.map(id =>
-        this.get(id).getInitialLayout(params, this.defaultOptions),
+        this.get(id).getLayout(params, this.defaultOptions),
       ),
     };
 
@@ -70,12 +72,20 @@ export default class StackNavigator extends Navigator {
   }
 
   navigate(toId, params, fromId) {
-    const index = this.history.findIndex(id => id === toId);
+    if (this.route && this.route.id === toId) {
+      // Refresh component
+      this.route.update(params);
+    } else {
+      const index = this.history.findIndex(id => id === toId);
 
-    if (index > 0) {
-      this.popToIndex(index);
-    } else if (index !== 0) {
-      this.push(toId, params, fromId);
+      const above = index > 0;
+      const root = index === 0;
+
+      if (above) {
+        this.popToIndex(index);
+      } else if (!root) {
+        this.push(toId, params, fromId);
+      }
     }
   }
 

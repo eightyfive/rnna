@@ -18,7 +18,7 @@ test('mount', () => {
 
   expect(Navigation.showModal).toHaveBeenCalledWith({
     stack: {
-      children: [{ component: { id: 'C', options: {} } }],
+      children: [{ component: { id: 'C', name: 'C', options: {} } }],
     },
   });
 });

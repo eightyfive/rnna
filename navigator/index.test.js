@@ -52,14 +52,26 @@ test('create Root Navigator (tabs)', () => {
           {
             stack: {
               children: [
-                { component: { id: 'tabs/tab1/Screen1', options: {} } },
+                {
+                  component: {
+                    id: 'tabs/tab1/Screen1',
+                    name: 'Screen1',
+                    options: {},
+                  },
+                },
               ],
             },
           },
           {
             stack: {
               children: [
-                { component: { id: 'tabs/tab2/Screen2', options: {} } },
+                {
+                  component: {
+                    id: 'tabs/tab2/Screen2',
+                    name: 'Screen2',
+                    options: {},
+                  },
+                },
               ],
             },
           },
@@ -83,7 +95,9 @@ test('create Root Navigator (stack)', () => {
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
       stack: {
-        children: [{ component: { id: 'auth/Login', options: {} } }],
+        children: [
+          { component: { id: 'auth/Login', name: 'Login', options: {} } },
+        ],
       },
     },
   });
