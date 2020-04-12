@@ -2,7 +2,6 @@ import _forEach from 'lodash.foreach';
 import _last from 'lodash.last';
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Component';
 import Route from './Route';
 
 function createId(parentId, id) {
