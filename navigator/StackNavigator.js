@@ -4,6 +4,10 @@ import { Navigation } from 'react-native-navigation';
 
 import Navigator from './Navigator';
 
+const o = {
+  entries: Object.entries,
+};
+
 export default class StackNavigator extends Navigator {
   constructor(routes, config = {}) {
     super(routes, config);
@@ -11,6 +15,14 @@ export default class StackNavigator extends Navigator {
     this.options = config.options;
     this.defaultOptions = config.defaultOptions;
 
+    // Component IDs
+    this.ids = new Map();
+
+    for (const [name, component] of o.entries(routes)) {
+      this.ids.set(name, component.id);
+    }
+
+    // Event listeners
     this.listeners = {
       _didDisappear: [],
     };
@@ -124,7 +136,8 @@ export default class StackNavigator extends Navigator {
   popToIndex(index) {
     this.history = _take(this.history, index + 1);
 
-    const toId = _last(this.history);
+    const toName = _last(this.history);
+    const toId = this.ids.get(toName);
 
     Navigation.popTo(toId);
   }
