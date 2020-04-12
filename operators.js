@@ -44,6 +44,30 @@ export const ofHTTPErrorType = status => source =>
 export const takeUntilType = (action$, type) => source =>
   source.pipe(takeUntil(action$.pipe(ofType(type))));
 
+export const pluck = (...paths) => source =>
+  source.pipe(
+    map(data => {
+      const payload = data.payload || data;
+      const result = {};
+
+      for (const key of paths) {
+        let [path, name] = key.split(':').map(str => str.trim());
+
+        if (!name) {
+          name = path.split('.').pop();
+        }
+
+        result[name] = _get(payload, path);
+      }
+
+      if (paths.length === 1) {
+        return o.values(result).pop();
+      }
+
+      return result;
+    }),
+  );
+
 // Log
 const colors = {
   white: '#ffffff',
