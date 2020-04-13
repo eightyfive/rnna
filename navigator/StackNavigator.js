@@ -27,31 +27,36 @@ export default class StackNavigator extends Navigator {
       _didDisappear: [],
     };
 
-    this.addListener('_didDisappear', this.handleDidDisappear);
+    this.addListener('_didDisappear', this.handleDidDisappear.bind(this));
 
     this.listen('ComponentDidDisappear', '_didDisappear');
   }
 
-  handleDidDisappear = ({ componentId: id }) => {
-    // Native back button has been pressed
+  handleDidDisappear({ componentId: id }) {
+    // A pop() happened outside of the StackNavigator
+    // We need to sync history
 
-    const active =
-      !this.parent || (this.parent && this.parent.route.id === this.id);
-
-    // If this navigator/route is active
-    if (active) {
-      // If popped was the last visible
-      const visible = this.route && this.route.id === id;
-
-      // If popped is not the first screen of Stack
-      const initial = id === this.initialRouteName;
-
-      // Then manual pop() of history (which is out of sync)
-      if (visible && !initial) {
-        this.history.pop();
-      }
+    // Nothing to pop
+    if (!this.route || this.history.length === 1) {
+      return;
     }
-  };
+
+    if (id !== this.route.id) {
+      return;
+    }
+
+    // If navigator is active
+    let active = true;
+
+    if (this.parent) {
+      active = this.id === this.parent.route.id;
+    }
+
+    if (active) {
+      // console.log('didDisappear', id, name, this.history);
+      this.history.pop();
+    }
+  }
 
   getInitialLayout(params) {
     // TOFIX:
@@ -84,20 +89,15 @@ export default class StackNavigator extends Navigator {
   }
 
   navigate(toName, params, fromId) {
-    if (this.route && this.route.name === toName) {
-      // Refresh component
-      this.route.update(params);
-    } else {
-      const index = this.history.findIndex(name => name === toName);
+    const index = this.history.findIndex(name => name === toName);
 
-      const above = index > 0;
-      const root = index === 0;
+    const above = index > 0;
+    const root = index === 0;
 
-      if (above) {
-        this.popToIndex(index);
-      } else if (!root) {
-        this.push(toName, params, fromId);
-      }
+    if (above) {
+      this.popToIndex(index);
+    } else if (!root) {
+      this.push(toName, params, fromId);
     }
   }
 
