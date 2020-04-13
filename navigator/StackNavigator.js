@@ -91,13 +91,10 @@ export default class StackNavigator extends Navigator {
   navigate(toName, params, fromId) {
     const index = this.history.findIndex(name => name === toName);
 
-    const above = index > 0;
-    const root = index === 0;
-
-    if (above) {
-      this.popToIndex(index);
-    } else if (!root) {
+    if (index === -1) {
       this.push(toName, params, fromId);
+    } else if (index >= 1) {
+      this.popToIndex(index);
     }
   }
 
