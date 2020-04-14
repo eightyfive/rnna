@@ -6,7 +6,7 @@ const o = {
   values: Object.values,
 };
 
-export default function createBottomTabsNavigator(routeConfigs, config = {}) {
+export default function createBottomTabsNavigator(routeConfigs, options = {}) {
   const routes = createRoutes(routeConfigs);
 
   const invalid = o
@@ -19,5 +19,5 @@ export default function createBottomTabsNavigator(routeConfigs, config = {}) {
     );
   }
 
-  return new BottomTabsNavigator(routes, config);
+  return new BottomTabsNavigator(routes, options);
 }

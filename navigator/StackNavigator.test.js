@@ -11,10 +11,7 @@ const C = {};
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  app = createStackNavigator(
-    { A, B, C },
-    { defaultOptions: { topBar: { title: 'foo' } } },
-  );
+  app = createStackNavigator({ A, B, C });
   app.mount();
 });
 

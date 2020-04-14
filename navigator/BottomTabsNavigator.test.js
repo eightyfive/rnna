@@ -11,8 +11,14 @@ const C = {};
 
 beforeEach(() => {
   app = createBottomTabsNavigator({
-    ab: createStackNavigator({ A, B }),
-    c: createStackNavigator({ C }),
+    ab: createStackNavigator(
+      { A, B },
+      { options: { bottomTab: { icon: 'icon-1', text: 'Tab 1' } } },
+    ),
+    c: createStackNavigator(
+      { C },
+      { options: { bottomTab: { icon: 'icon-2', text: 'Tab 2' } } },
+    ),
   });
 
   app.mount();
@@ -27,11 +33,13 @@ test('mount', () => {
           {
             stack: {
               children: [{ component: { id: 'A', name: 'A', options: {} } }],
+              options: { bottomTab: { icon: 'icon-1', text: 'Tab 1' } },
             },
           },
           {
             stack: {
               children: [{ component: { id: 'C', name: 'C', options: {} } }],
+              options: { bottomTab: { icon: 'icon-2', text: 'Tab 2' } },
             },
           },
         ],

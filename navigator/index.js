@@ -329,13 +329,13 @@ function toSwitchConfig(config) {
 
 const configKeys = ['initialRouteName', 'parentId'];
 
-function toConfig({ defaultOptions, ...config }, keys) {
+function toConfig({ screenOptions, ...config }, keys) {
   const navigatorConfig = _pick(config, configKeys.concat(keys));
 
-  if (defaultOptions) {
+  if (screenOptions) {
     o.assign(
       navigatorConfig,
-      o.assign({ defaultOptions: toWixOptions(defaultOptions) }),
+      o.assign({ screenOptions: toWixOptions(screenOptions) }),
     );
   }
 
