@@ -50,7 +50,7 @@ function logHeaders(headers) {
 }
 
 function logReq(req) {
-  group('Request');
+  groupCollapsed('Request');
   log(req.method);
   log(req.url);
   logHeaders(req.headers);

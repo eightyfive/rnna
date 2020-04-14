@@ -19,10 +19,12 @@ export default class RootNavigator extends SwitchNavigator {
     this.listeners = {
       _didAppear: [],
       _modalDismiss: [],
+      _appLaunch: [],
     };
 
     this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
+    this.addListener('_appLaunch', this.handleAppLaunch);
 
     this.listen('ComponentDidAppear', '_didAppear');
     this.listen('ModalDismissed', '_modalDismiss');
@@ -46,8 +48,10 @@ export default class RootNavigator extends SwitchNavigator {
     }
   };
 
+  handleAppLaunch = () => this.remount();
+
   launch() {
-    return this.launched;
+    return this.launched.then(() => this.listen('AppLaunched', '_appLaunch'));
   }
 
   remount() {
