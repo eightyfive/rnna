@@ -2,12 +2,16 @@ import BottomTabsNavigator from './BottomTabsNavigator';
 import StackNavigator from './StackNavigator';
 import { createRoutes } from './utils';
 
+const o = {
+  values: Object.values,
+};
+
 export default function createBottomTabsNavigator(routeConfigs, config = {}) {
   const routes = createRoutes(routeConfigs);
 
-  const invalid = Object.values(routes).some(
-    route => !(route instanceof StackNavigator),
-  );
+  const invalid = o
+    .values(routes)
+    .some(route => !(route instanceof StackNavigator));
 
   if (invalid) {
     throw new Error(

@@ -16,6 +16,10 @@ import { createRoutes, getRouteDepth } from './utils';
 
 export { default as registerComponents } from './registerComponents';
 
+const o = {
+  assign: Object.assign,
+};
+
 export function createBottomTabNavigator(routes, config = {}) {
   return createBottomTabs(
     createRoutes(toWixRoutes(routes)),
@@ -329,9 +333,9 @@ function toConfig({ defaultOptions, ...config }, keys) {
   const navigatorConfig = _pick(config, configKeys.concat(keys));
 
   if (defaultOptions) {
-    Object.assign(
+    o.assign(
       navigatorConfig,
-      Object.assign({ defaultOptions: toWixOptions(defaultOptions) }),
+      o.assign({ defaultOptions: toWixOptions(defaultOptions) }),
     );
   }
 

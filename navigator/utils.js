@@ -5,6 +5,10 @@ import _mapValues from 'lodash.mapvalues';
 import Component from './Component';
 import Route from './Route';
 
+const o = {
+  entries: Object.entries,
+};
+
 export function createRoutes(routes) {
   return _mapValues(routes, (route, id) => {
     if (_isObject(route)) {
@@ -42,7 +46,7 @@ const rnNames = {
 
 // Traverse obj for depth
 export function getRouteDepth(route, currentDepth = 0, depth = 0) {
-  for (const [key, val] of Object.entries(route)) {
+  for (const [key, val] of o.entries(route)) {
     const isObject = _isObject(val) && !rnnNames[key] && !rnNames[key];
     const isEmpty = _isEmpty(val);
 

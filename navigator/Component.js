@@ -2,6 +2,10 @@ import { Navigation } from 'react-native-navigation';
 
 import Route from './Route';
 
+const o = {
+  assign: Object.assign,
+};
+
 export default class Component extends Route {
   constructor(id, options = {}) {
     super();
@@ -24,7 +28,7 @@ export default class Component extends Route {
       name: this.name,
     };
 
-    layout.options = Object.assign({}, defaultOptions, this.options);
+    layout.options = o.assign({}, defaultOptions, this.options);
 
     if (params) {
       this.passProps = params;
