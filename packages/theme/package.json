@@ -18,5 +18,8 @@
   },
   "author": "Benoit Sagols",
   "license": "MIT",
-  "gitHead": "75a42ae998a40869d8f965a92e8bfd14fc7e1ff4"
+  "gitHead": "75a42ae998a40869d8f965a92e8bfd14fc7e1ff4",
+  "publishConfig": {
+    "access": "public"
+  }
 }
