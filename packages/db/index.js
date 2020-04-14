@@ -111,24 +111,18 @@ function createFind(table) {
  * @param {Number} id: Row ID
  * @param {Boolean} strict: "To throw or not to throw"...
  */
-function findRow(name, id, strict = false) {
+function findRow(name, id) {
   const table = _get(state, `${ns.db}.${name}`);
 
   if (!table) {
     throw new Error(`Table "${name}" does not exist`);
   }
 
-  const row = table[id];
-
-  if (strict && !row) {
-    throw new Error(`Table row "${name}.${id}" does not exist`);
-  }
-
-  return row || null;
+  return table[id] || null;
 }
 
 /**
- * Creates "Get result" db method (Ex: db.getUsers( ... ))
+ * Creates "Get result" db method (Ex: db.getUsers("order_name"))
  *
  * @param {String} table: Table name
  */
@@ -140,14 +134,13 @@ function createResult(table) {
 }
 
 /**
- * Creates a selector for a given "order" result
+ * Creates a selector for a given "order" result name
  *
  * @param {String} table: Table name
- * @param {String} order: Order name (Ex: "default" = [1, 2, 3] or "byName" = [2, 3, 1])
+ * @param {String} order: Order name (Ex: "default" = [1, 2, 3] or "by_name" = [2, 3, 1])
  */
 function getResult(table, order = 'default') {
-  // state.db.orders.<table>.<order>
-  const selector = getResultSelector(table, `${ns.orders}.${table}.${order}`);
+  const selector = getResultSelector(table, order);
 
   return selector(state);
 }
@@ -156,7 +149,13 @@ function getResultSelector(table, order) {
   const { selectors } = cache;
 
   if (!selectors.has(order)) {
-    selectors.set(order, createResultSelector(`${ns.db}.${table}`, order));
+    selectors.set(
+      order,
+      createResultSelector(
+        `${ns.db}.${table}`,
+        `${ns.orders}.${table}.${order}`,
+      ),
+    );
   }
 
   return selectors.get(order);
@@ -195,12 +194,11 @@ function createRelation(table) {
  */
 
 function findRelation(table, id, foreign, relations = null) {
-  const row = findRow(table, id, true);
+  const row = findRow(table, id);
 
   const relationId = row[foreign];
 
   if (!relations) {
-    // TOFIX: Don't allow *_id suffix (stick to Normalizr format / standard)
     relations = pluralize.plural(foreign.replace(...options.reRelation));
   }
 
@@ -256,12 +254,8 @@ function getRelationsSelector(table, id, foreign, relations) {
 
 export function createRelationsSelector(table, id, foreign, relations) {
   const selector = createSelector(
-    () => {
-      const row = findRow(table, id, true);
-
-      return row[id][foreign];
-    },
-    `db.${relations}`,
+    `${ns.db}.${table}.${id}.${foreign}`,
+    `${ns.db}.${relations}`,
     (relation, byId) => relation.map(rId => byId[rId]),
   );
 
@@ -279,7 +273,7 @@ function getSlice(path) {
   const { slices } = cache;
 
   if (!slices.has(path)) {
-    slices.set(path, s => _get(s, path));
+    slices.set(path, st => _get(st, path));
   }
 
   return slices.get(path);
