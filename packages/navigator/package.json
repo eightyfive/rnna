@@ -1,6 +1,6 @@
 {
   "name": "@rnna/navigator",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Navigator (React Native Navigation App)",
   "keywords": [
     "rnna",
@@ -18,8 +18,8 @@
     "lodash.take": "^4.1.1"
   },
   "peerDependencies": {
-    "react-native-navigation": "6.x",
-    "react-native": "0.x"
+    "react-native": "0.x",
+    "react-native-navigation": "6.x"
   },
   "repository": {
     "type": "git",
