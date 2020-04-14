@@ -23,10 +23,24 @@ function ucfirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+/**
+ * Namespaces
+ */
+const ns = {
+  db: 'db.tables',
+  orders: 'db.orders',
+};
+
+/**
+ * Options
+ */
+const options = {
+  namespaces: ns,
+  reRelation: [/_id$/, ''],
+};
+
 const db = {
-  options: {
-    reRelation: [/_id$/, ''],
-  },
+  options,
 };
 
 /**
@@ -35,14 +49,6 @@ const db = {
 const cache = {
   slices: new Map(),
   selectors: new Map(),
-};
-
-/**
- * Namespaces
- */
-const ns = {
-  db: 'db.tables',
-  orders: 'db.orders',
 };
 
 /**
@@ -202,7 +208,7 @@ function findRelation(table, id, foreign, relations = null) {
 
   if (!relations) {
     // TOFIX: Don't allow *_id suffix (stick to Normalizr format / standard)
-    relations = pluralize.plural(foreign.replace(...db.options.reRelation));
+    relations = pluralize.plural(foreign.replace(...options.reRelation));
   }
 
   return findRow(relations, relationId);
@@ -329,7 +335,6 @@ export function produceTables(tables, entities, strict = false) {
   }
 }
 
-db.namespaces = ns;
 db.sync = sync;
 db.addTables = addTables;
 
