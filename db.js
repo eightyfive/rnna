@@ -216,7 +216,7 @@ function findRelation(table, id, foreign, relations = null) {
 function createRelations(table) {
   const singular = pluralize.singular(table);
 
-  const methodName = `get${ucfirst(singular)}Relation`;
+  const methodName = `get${ucfirst(singular)}Relations`;
   const method = (id, foreign, relations) =>
     getRelations(table, id, foreign, relations);
 
