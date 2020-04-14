@@ -18,15 +18,18 @@ export default class RootNavigator extends SwitchNavigator {
 
     this.listeners = {
       _didAppear: [],
+      _didDisappear: [],
       _modalDismiss: [],
       _appLaunch: [],
     };
 
     this.addListener('_didAppear', this.handleDidAppear);
+    this.addListener('_didDisappear', this.handleDidDisappear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
     this.addListener('_appLaunch', this.handleAppLaunch);
 
     this.listen('ComponentDidAppear', '_didAppear');
+    this.listen('ComponentDidDisappear', '_didDisappear');
     this.listen('ModalDismissed', '_modalDismiss');
 
     this.launched = new Promise(resolve =>
@@ -40,6 +43,10 @@ export default class RootNavigator extends SwitchNavigator {
     if (this.isScene(id)) {
       this.fromId = id;
     }
+  };
+
+  handleDidDisappear = ({ componentId }) => {
+    this.overlays = this.overlays.filter(id => id === componentId);
   };
 
   handleModalDismiss = ({ componentId: id, modalsDismissed }) => {
@@ -121,10 +128,6 @@ export default class RootNavigator extends SwitchNavigator {
     if (this.route instanceof ModalNavigator) {
       Navigation.dismissAllModals();
     }
-  }
-
-  onDismissOverlay(componentId) {
-    this.overlays = this.overlays.filter(id => id === componentId);
   }
 
   isScene(id) {

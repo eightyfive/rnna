@@ -27,10 +27,6 @@ export default class OverlayNavigator extends Navigator {
 
   dismiss() {
     this.unmount();
-
-    if (this.parent) {
-      this.parent.onDismissOverlay(this.id);
-    }
   }
 
   getComponent() {
