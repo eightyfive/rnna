@@ -32,6 +32,8 @@ export default class RootNavigator extends SwitchNavigator {
     this.launched = new Promise(resolve =>
       this.listenOnce('AppLaunched', resolve),
     );
+
+    this.launched.then(() => this.listen('AppLaunched', '_appLaunch'));
   }
 
   handleDidAppear = ({ componentId: id }) => {
@@ -51,7 +53,7 @@ export default class RootNavigator extends SwitchNavigator {
   handleAppLaunch = () => this.remount();
 
   launch() {
-    return this.launched.then(() => this.listen('AppLaunched', '_appLaunch'));
+    return this.launched;
   }
 
   remount() {

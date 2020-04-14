@@ -31,22 +31,36 @@ export default /** abstract */ class Navigator extends Route {
     }
   }
 
-  addListener(alias, listener) {
-    this.listeners[alias].push(listener);
+  addListener(event, listener) {
+    if (!this.listeners[event]) {
+      throw new Error(`Event "${event}" does not exist`);
+    }
+
+    this.listeners[event].push(listener);
   }
 
-  listen(event, alias) {
-    const events = Navigation.events();
+  removeListener(event, listener) {
+    if (!this.listeners[event]) {
+      throw new Error(`Event "${event}" does not exist`);
+    }
 
-    this.subscriptions[alias] = events[`register${event}Listener`]((...args) =>
-      this.trigger(alias, args),
+    this.listeners[event] = this.listeners[event].filter(
+      callback => callback !== listener,
     );
   }
 
-  listenOnce(event, listener) {
+  listen(wix, event) {
     const events = Navigation.events();
 
-    const subscription = events[`register${event}Listener`]((...args) => {
+    this.subscriptions[event] = events[`register${wix}Listener`]((...args) =>
+      this.trigger(event, args),
+    );
+  }
+
+  listenOnce(wix, listener) {
+    const events = Navigation.events();
+
+    const subscription = events[`register${wix}Listener`]((...args) => {
       subscription.remove();
       listener(...args);
     });
