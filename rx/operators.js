@@ -1,4 +1,3 @@
-import { from, of } from 'rxjs';
 import {
   catchError,
   filter,
@@ -165,69 +164,4 @@ export const startWithAction = (type, payload) => source =>
       type,
       payload,
     }),
-  );
-
-// Api
-export const createMapApi = mapType => makeRequest => source =>
-  source.pipe(
-    switchMap(action => {
-      const payload = action.payload || action;
-      const res$ = makeRequest(payload);
-
-      return res$.pipe(
-        filter(
-          ([res, req]) =>
-            res.headers.get('Content-Type') === 'application/json',
-        ),
-        mapApiActions(mapType),
-        catchApiError(mapType),
-      );
-    }),
-  );
-
-const mapApiActions = mapType => source =>
-  source.pipe(
-    switchMap(([res, req]) =>
-      of([res, req]).pipe(
-        mapApiResponse(mapType),
-        startWithAction(mapType(req.method, req.url, 202)),
-      ),
-    ),
-  );
-
-const mapApiResponse = mapType => source =>
-  source.pipe(
-    switchMap(([res, req]) =>
-      from(
-        res.json().then(json => ({
-          type: mapType(req.method, req.url, res.status),
-          payload: json.data || json,
-        })),
-      ),
-    ),
-  );
-
-const catchApiError = mapType => source =>
-  source.pipe(
-    catchError(err =>
-      of(err).pipe(
-        filter(err => err.response),
-        switchMap(err =>
-          from(
-            err.response.json().then(data => {
-              const req = err.request;
-              const res = err.response;
-
-              err.data = data;
-
-              return {
-                type: mapType(req.method, req.url, res.status),
-                error: true,
-                payload: err,
-              };
-            }),
-          ),
-        ),
-      ),
-    ),
   );
