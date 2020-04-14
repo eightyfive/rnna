@@ -1,8 +1,11 @@
-import _forEach from 'lodash.foreach';
 import _last from 'lodash.last';
 import { Navigation } from 'react-native-navigation';
 
 import Route from './Route';
+
+const o = {
+  entries: Object.entries,
+};
 
 function createId(parentId, id) {
   return parentId ? `${parentId}/${id}` : id;
@@ -22,10 +25,10 @@ export default /** abstract */ class Navigator extends Route {
     this.parent = null;
     this.id = null;
 
-    _forEach(this.routes, (route, id) => {
+    for (const [id, route] of o.entries(this.routes)) {
       route.parent = this;
       route.id = createId(config.parentId, id);
-    });
+    }
   }
 
   addListener(alias, listener) {
