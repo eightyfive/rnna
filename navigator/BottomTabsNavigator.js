@@ -50,7 +50,7 @@ export default class BottomTabsNavigator extends Navigator {
     if (typeof index === 'number') {
       const id = this.order[index];
 
-      return this.routes[id];
+      return this.routes.get(id);
     }
 
     return super.get(index);

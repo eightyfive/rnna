@@ -5,6 +5,7 @@ import Route from './Route';
 
 const o = {
   entries: Object.entries,
+  keys: Object.keys,
 };
 
 function createId(parentId, id) {
@@ -15,8 +16,8 @@ export default /** abstract */ class Navigator extends Route {
   constructor(routes, config) {
     super();
 
-    this.routes = routes;
-    this.order = Object.keys(routes);
+    this.routes = new Map(o.entries(routes));
+    this.order = o.keys(routes);
     this.initialRouteName = config.initialRouteName || this.order[0];
     this.history = [];
     this.listeners = {};
@@ -25,7 +26,7 @@ export default /** abstract */ class Navigator extends Route {
     this.parent = null;
     this.id = null;
 
-    for (const [id, route] of o.entries(this.routes)) {
+    for (const [id, route] of this.routes) {
       route.parent = this;
       route.id = createId(config.parentId, id);
     }
@@ -81,13 +82,11 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   get(id) {
-    const route = this.routes[id];
-
-    if (!route) {
+    if (!this.routes.has(id)) {
       throw new Error(`Unknown route: ${id}`);
     }
 
-    return route;
+    return this.routes.get(id);
   }
 
   unmount(fromId) {}

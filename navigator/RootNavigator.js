@@ -12,9 +12,13 @@ export default class RootNavigator extends SwitchNavigator {
     this.overlays = [];
     this.fromId = this.initialRouteName;
 
-    this.overlayIds = Object.keys(routes)
-      .filter(id => routes[id] instanceof OverlayNavigator)
-      .map(id => id);
+    this.overlayIds = [];
+
+    for (const [id, route] of this.routes) {
+      if (routes instanceof OverlayNavigator) {
+        this.overlayIds.push(id);
+      }
+    }
 
     this.listeners = {
       _didAppear: [],

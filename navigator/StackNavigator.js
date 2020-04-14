@@ -16,10 +16,10 @@ export default class StackNavigator extends Navigator {
     this.defaultOptions = config.defaultOptions;
 
     // Component IDs
-    this.ids = new Map();
+    this.componentIds = new Map();
 
-    for (const [name, component] of o.entries(routes)) {
-      this.ids.set(name, component.id);
+    for (const [name, component] of this.routes) {
+      this.componentIds.set(name, component.id);
     }
 
     // Event listeners
@@ -134,7 +134,7 @@ export default class StackNavigator extends Navigator {
     this.history = _take(this.history, index + 1);
 
     const toName = _last(this.history);
-    const toId = this.ids.get(toName);
+    const toId = this.componentIds.get(toName);
 
     Navigation.popTo(toId);
   }
