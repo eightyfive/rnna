@@ -65,12 +65,11 @@ export function createRootNavigator(routes) {
 
 function createStacks(routes, parentId) {
   return _mapValues(routes, (route, id) => {
-    const { defaultOptions, ...routeConfigs } = route;
+    const { config = {}, ...routeConfigs } = route;
 
-    return createStackNavigator(routeConfigs, {
-      parentId: `${parentId}/${id}`,
-      defaultOptions,
-    });
+    config.parentId = `${parentId}/${id}`;
+
+    return createStackNavigator(routeConfigs, config);
   });
 }
 
@@ -329,8 +328,13 @@ function toSwitchConfig(config) {
 
 const configKeys = ['initialRouteName', 'parentId'];
 
-function toConfig({ screenOptions, ...config }, keys) {
+function toConfig({ options, screenOptions, ...config }, keys) {
+  // console.log(options, config);
   const navigatorConfig = _pick(config, configKeys.concat(keys));
+
+  if (options) {
+    navigatorConfig.options = options;
+  }
 
   if (screenOptions) {
     o.assign(

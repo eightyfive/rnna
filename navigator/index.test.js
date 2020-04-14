@@ -17,8 +17,14 @@ test('create Widget', () => {
 test('create Root Navigator (tabs)', () => {
   const app = createRootNavigator({
     tabs: {
-      tab1: { Screen1: {} },
-      tab2: { Screen2: {} },
+      tab1: {
+        Screen1: {},
+        config: { options: { bottomTab: { text: 'Title 1' } } },
+      },
+      tab2: {
+        Screen2: {},
+        config: { options: { bottomTab: { text: 'Title 2' } } },
+      },
     },
 
     stack: {
@@ -60,6 +66,7 @@ test('create Root Navigator (tabs)', () => {
                   },
                 },
               ],
+              options: { bottomTab: { text: 'Title 1' } },
             },
           },
           {
@@ -73,6 +80,7 @@ test('create Root Navigator (tabs)', () => {
                   },
                 },
               ],
+              options: { bottomTab: { text: 'Title 2' } },
             },
           },
         ],

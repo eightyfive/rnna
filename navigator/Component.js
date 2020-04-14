@@ -22,13 +22,13 @@ export default class Component extends Route {
 
   unmount(fromId) {}
 
-  getLayout(params, defaultOptions) {
+  getLayout(params, screenOptions) {
     const layout = {
       id: this.id,
       name: this.name,
     };
 
-    layout.options = o.assign({}, defaultOptions, this.options);
+    layout.options = o.assign({}, screenOptions, this.options);
 
     if (params) {
       this.passProps = params;

@@ -11,7 +11,13 @@ const C = {};
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  app = createStackNavigator({ A, B, C });
+  app = createStackNavigator(
+    { A, B, C },
+    {
+      options: { topBar: { title: 'foo' } },
+      screenOptions: { topBar: { backButton: { visible: false } } },
+    },
+  );
   app.mount();
 });
 
@@ -25,11 +31,11 @@ test('mount', () => {
             component: {
               id: 'A',
               name: 'A',
-              options: {},
-              options: { topBar: { title: 'foo' } },
+              options: { topBar: { backButton: { visible: false } } },
             },
           },
         ],
+        options: { topBar: { title: 'foo' } },
       },
     },
   });
@@ -44,7 +50,7 @@ test('push', () => {
       id: 'B',
       name: 'B',
       passProps: params,
-      options: { topBar: { title: 'foo' } },
+      options: { topBar: { backButton: { visible: false } } },
     },
   });
 });

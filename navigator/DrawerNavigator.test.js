@@ -12,7 +12,7 @@ beforeEach(() => {
     { A, B },
     {
       contentComponent: 'Drawer',
-      defaultOptions: { topBar: { title: 'foo' } },
+      // screenOptions: { topBar: { title: 'foo' } },
     },
   );
   navigator.mount();
