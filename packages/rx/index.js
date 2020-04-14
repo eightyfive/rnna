@@ -1,12 +1,6 @@
 import { from, fromEvent, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { AppState } from 'react-native';
-
-export const fromAppState = source =>
-  source.pipe(switchMap(() => fromEvent(AppState, 'change')));
-
-// Api
 export const createFromApi = createType => request => source =>
   source.pipe(
     switchMap(action => {

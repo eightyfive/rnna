@@ -1,0 +1,30 @@
+{
+  "name": "@rnna/navigator",
+  "version": "0.0.1",
+  "description": "Navigator (React Native Navigation App)",
+  "keywords": [
+    "rnna",
+    "react-native-navigation",
+    "wix",
+    "Navigation"
+  ],
+  "dependencies": {
+    "lodash.isempty": "^4.4.0",
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.last": "^3.0.0",
+    "lodash.mapvalues": "^4.6.0",
+    "lodash.pick": "^4.4.0",
+    "lodash.set": "^4.3.2",
+    "lodash.take": "^4.1.1"
+  },
+  "peerDependencies": {
+    "react-native-navigation": "6.x",
+    "react-native": "0.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/navigator"
+  },
+  "author": "Benoit Sagols",
+  "license": "MIT"
+}

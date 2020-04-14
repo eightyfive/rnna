@@ -1,0 +1,21 @@
+{
+  "name": "@rnna/theme",
+  "version": "0.0.1",
+  "description": "Theme (React Native Navigation App)",
+  "keywords": [
+    "rnna",
+    "theme"
+  ],
+  "dependencies": {
+    "lodash.mapkeys": "^4.6.0"
+  },
+  "peerDependencies": {
+    "react-native": "0.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/theme"
+  },
+  "author": "Benoit Sagols",
+  "license": "MIT"
+}

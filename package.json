@@ -1,7 +1,5 @@
 {
   "name": "rnna",
-  "version": "0.2.19",
-  "description": "React Native Navigation App",
   "scripts": {
     "test": "jest",
     "format": "prettier --write 'navigator/*.js' 'operators.js'",
@@ -11,36 +9,12 @@
     "type": "git",
     "url": "git+https://github.com/eightyfive/rnna.git"
   },
-  "keywords": [
-    "React",
-    "Native",
-    "React",
-    "Native",
-    "Navigation",
-    "Wix"
-  ],
-  "author": "benoit.sagols@gmail.com",
+  "author": "Benoit Sagols",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/eightyfive/rnna/issues"
   },
   "homepage": "https://github.com/eightyfive/rnna#readme",
-  "dependencies": {
-    "fetch-run": "^1.1.1",
-    "lodash.get": "^4.4.2",
-    "lodash.isempty": "^4.4.0",
-    "lodash.isplainobject": "^4.0.6",
-    "lodash.last": "^3.0.0",
-    "lodash.mapkeys": "^4.6.0",
-    "lodash.mapvalues": "^4.6.0",
-    "lodash.pick": "^4.4.0",
-    "lodash.set": "^4.3.2",
-    "lodash.take": "^4.1.1"
-  },
-  "peerDependencies": {
-    "react-native-navigation": "6.x",
-    "rxjs": "6.x"
-  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/runtime": "^7.9.2",

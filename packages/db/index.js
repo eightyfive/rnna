@@ -1,6 +1,6 @@
 import _get from 'lodash.get';
 import pluralize from 'pluralize';
-import shallowEqual from 'fbjs/lib/shallowEqual';
+import shallowEqual from 'shallowequal';
 import {
   defaultMemoize,
   createSelector as reselect,
@@ -23,17 +23,12 @@ function ucfirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-/**
- * Namespaces
- */
+// Options
 const ns = {
   db: 'db.tables',
   orders: 'db.orders',
 };
 
-/**
- * Options
- */
 const options = {
   namespaces: ns,
   reRelation: [/_id$/, ''],
@@ -43,9 +38,7 @@ const db = {
   options,
 };
 
-/**
- * Cache
- */
+// Cache
 const cache = {
   slices: new Map(),
   selectors: new Map(),
