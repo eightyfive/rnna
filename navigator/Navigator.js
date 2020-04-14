@@ -67,8 +67,8 @@ export default /** abstract */ class Navigator extends Route {
     });
   }
 
-  trigger(alias, args) {
-    this.listeners[alias].map(listener => listener(...args));
+  trigger(event, args) {
+    this.listeners[event].map(listener => listener(...args));
   }
 
   get route() {

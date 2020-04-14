@@ -25,6 +25,9 @@ export default class RootNavigator extends SwitchNavigator {
       _didDisappear: [],
       _modalDismiss: [],
       _appLaunch: [],
+
+      navigate: [],
+      goBack: [],
     };
 
     this.addListener('_didAppear', this.handleDidAppear);
@@ -107,6 +110,8 @@ export default class RootNavigator extends SwitchNavigator {
     if (rest) {
       this.route.navigate(rest, params, this.fromId);
     }
+
+    this.trigger('navigate', [this.fromId, path, params]);
   }
 
   goBack() {
@@ -117,6 +122,8 @@ export default class RootNavigator extends SwitchNavigator {
         this.dismissModal();
       }
     }
+
+    this.trigger('goBack', [this.fromId]);
   }
 
   dismissModal() {
