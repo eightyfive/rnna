@@ -25,7 +25,7 @@ function ucfirst(str) {
 
 // Options
 const ns = {
-  db: 'db.tables',
+  tables: 'db.tables',
   orders: 'db.orders',
 };
 
@@ -112,7 +112,7 @@ function createFind(table) {
  * @param {Boolean} strict: "To throw or not to throw"...
  */
 function findRow(name, id) {
-  const table = _get(state, `${ns.db}.${name}`);
+  const table = _get(state, `${ns.tables}.${name}`);
 
   if (!table) {
     throw new Error(`Table "${name}" does not exist`);
@@ -152,7 +152,7 @@ function getResultSelector(table, order) {
     selectors.set(
       order,
       createResultSelector(
-        `${ns.db}.${table}`,
+        `${ns.tables}.${table}`,
         `${ns.orders}.${table}.${order}`,
       ),
     );
@@ -245,7 +245,7 @@ function getRelationsSelector(table, id, foreign, relations) {
   if (!selectors.has(cacheKey)) {
     selectors.set(
       cacheKey,
-      createRelationsSelector(`${ns.db}.${table}`, id, foreign, relations),
+      createRelationsSelector(`${ns.tables}.${table}`, id, foreign, relations),
     );
   }
 
@@ -254,8 +254,8 @@ function getRelationsSelector(table, id, foreign, relations) {
 
 export function createRelationsSelector(table, id, foreign, relations) {
   const selector = createSelector(
-    `${ns.db}.${table}.${id}.${foreign}`,
-    `${ns.db}.${relations}`,
+    `${ns.tables}.${table}.${id}.${foreign}`,
+    `${ns.tables}.${relations}`,
     (relation, byId) => relation.map(rId => byId[rId]),
   );
 
