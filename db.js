@@ -23,7 +23,11 @@ function ucfirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const db = {};
+const db = {
+  options: {
+    reRelation: [/_id$/, ''],
+  },
+};
 
 /**
  * Cache
@@ -190,6 +194,7 @@ function createRelation(table) {
  * @param {String} foreign: Foreign key in Row[ID] (Ex: "image")
  * @param {String} relations: Relation table name (Ex: "images")
  */
+
 function findRelation(table, id, foreign, relations = null) {
   const row = findRow(table, id, true);
 
@@ -197,7 +202,7 @@ function findRelation(table, id, foreign, relations = null) {
 
   if (!relations) {
     // TOFIX: Don't allow *_id suffix (stick to Normalizr format / standard)
-    relations = pluralize.plural(foreign.replace('_id', ''));
+    relations = pluralize.plural(foreign.replace(...db.options.reRelation));
   }
 
   return findRow(relations, relationId);
