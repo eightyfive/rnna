@@ -1,6 +1,8 @@
 import { from, of } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 
+import { startWithAction } from './operators';
+
 export const createMapApi = createType => request => source =>
   source.pipe(
     switchMap(action => {
