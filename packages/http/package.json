@@ -8,7 +8,7 @@
     "rx"
   ],
   "dependencies": {
-    "fetch-run": "^1.1.2"
+    "fetch-run": "^1.1.3"
   },
   "peerDependencies": {
     "rxjs": "6.x"
