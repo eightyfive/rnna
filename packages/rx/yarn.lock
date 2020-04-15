@@ -2,14 +2,12 @@
 # yarn lockfile v1
 
 
-fetch-run@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/fetch-run/-/fetch-run-1.1.1.tgz#644a3be58a06c1b7d5c54f88737a08133f0044ad"
-  integrity sha512-aAV3wsDp2nMIb3LodHiTr4QlCtIZvaFrb4EoHZPfQnDUc0LUPcCJV7XM+YbSjK/p4HAjmWYUQgLkdq/ot0BK5Q==
-  dependencies:
-    lodash.flow "^3.5.0"
+fetch-run@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/fetch-run/-/fetch-run-1.1.2.tgz#518cb09119f83432a83836d274e2f3f2f8a08694"
+  integrity sha512-5AaihM0d75ZhnXYvxEn8B/FQxAGIKdQ64W1je15rpzQ2iAnufGbgwytmdXmki6HOwhR0QWRAAOHudqgEsXPKXg==
 
-lodash.flow@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.flow/-/lodash.flow-3.5.0.tgz#87bf40292b8cf83e4e8ce1a3ae4209e20071675a"
-  integrity sha1-h79AKSuM+D5OjOGjrkIJ4gBxZ1o=
+lodash.get@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
+  integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
