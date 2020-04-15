@@ -11,6 +11,7 @@
   ],
   "dependencies": {
     "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2",
     "pluralize": "^8.0.0",
     "reselect": "^4.0.0",
     "shallowequal": "^1.1.0"

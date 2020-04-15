@@ -1,3 +1,4 @@
+import _get from 'lodash.get';
 import {
   filter,
   ignoreElements,
