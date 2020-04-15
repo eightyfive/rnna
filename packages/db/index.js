@@ -320,6 +320,17 @@ export function produceTables(tables, entities, strict = false) {
   }
 }
 
+export function produceTableOrder(orders, table, name, result) {
+  let order = _get(orders, [table, name], []);
+
+  const changed =
+    result.length !== order.length || result.some(id => !order.includes(id));
+
+  if (changed) {
+    _set(orders, [table, name], result);
+  }
+}
+
 db.sync = sync;
 db.addTables = addTables;
 
