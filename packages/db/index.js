@@ -1,4 +1,5 @@
 import _get from 'lodash.get';
+import _set from 'lodash.set';
 import pluralize from 'pluralize';
 import shallowEqual from 'shallowequal';
 import {
@@ -25,8 +26,8 @@ function ucfirst(str) {
 
 // Options
 const ns = {
-  tables: 'db.tables',
-  orders: 'db.orders',
+  tables: ['db', 'tables'],
+  orders: ['db', 'orders'],
 };
 
 const options = {
@@ -112,7 +113,7 @@ function createFind(table) {
  * @param {Boolean} strict: "To throw or not to throw"...
  */
 function findRow(name, id) {
-  const table = _get(state, `${ns.tables}.${name}`);
+  const table = _get(state, [...ns.tables, name]);
 
   if (!table) {
     throw new Error(`Table "${name}" does not exist`);
@@ -151,10 +152,7 @@ function getResultSelector(table, order) {
   if (!selectors.has(order)) {
     selectors.set(
       order,
-      createResultSelector(
-        `${ns.tables}.${table}`,
-        `${ns.orders}.${table}.${order}`,
-      ),
+      createResultSelector([...ns.tables, table], [...ns.orders, table, order]),
     );
   }
 
@@ -245,7 +243,7 @@ function getRelationsSelector(table, id, foreign, relations) {
   if (!selectors.has(cacheKey)) {
     selectors.set(
       cacheKey,
-      createRelationsSelector(`${ns.tables}.${table}`, id, foreign, relations),
+      createRelationsSelector([...ns.tables, table], id, foreign, relations),
     );
   }
 
@@ -254,8 +252,8 @@ function getRelationsSelector(table, id, foreign, relations) {
 
 export function createRelationsSelector(table, id, foreign, relations) {
   const selector = createSelector(
-    `${ns.tables}.${table}.${id}.${foreign}`,
-    `${ns.tables}.${relations}`,
+    [...ns.tables, table, id, foreign],
+    [...ns.tables, relations],
     (relation, byId) => relation.map(rId => byId[rId]),
   );
 
@@ -288,7 +286,7 @@ export function createSelector(...names) {
   const selector = names.pop();
 
   const slices = names.map(name =>
-    typeof name === 'string' ? getSlice(name) : name,
+    typeof name === 'string' || Array.isArray(name) ? getSlice(name) : name,
   );
 
   if (!slices.length) {
