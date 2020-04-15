@@ -13,6 +13,7 @@ beforeEach(() => {
 
 describe('error', () => {
   it('maps error', done => {
+    const values = [];
     fetch.mockResponse('{"foo": "bar"}', {
       status: 422,
       statusText: 'Unprocessable Entity',
