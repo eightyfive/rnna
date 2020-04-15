@@ -1,11 +1,9 @@
 import {
-  catchError,
   filter,
   ignoreElements,
   map,
   mapTo,
   startWith,
-  switchMap,
   takeUntil,
   tap,
 } from 'rxjs/operators';

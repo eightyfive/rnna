@@ -1,7 +1,7 @@
-import { from, fromEvent, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { catchError, filter, switchMap } from 'rxjs/operators';
 
-export const createFromApi = createType => request => source =>
+export const createMapApi = createType => request => source =>
   source.pipe(
     switchMap(action => {
       const payload = action.payload || action;
