@@ -4,6 +4,7 @@ import logger from './logger';
 const spyGroup = jest
   .spyOn(global.console, 'groupCollapsed')
   .mockImplementation();
+
 const spyLog = jest.spyOn(global.console, 'log').mockImplementation();
 
 let api;
@@ -25,11 +26,8 @@ describe('logger', () => {
     fetch.mockResponse('{"foo": "bar"}');
 
     api.get('api/resource').subscribe(() => {
-      // expect(spyGroup).toHaveBeenCalled();
-      // expect(spyLog).toHaveBeenCalled();
-
-      // TODO; Spy can't spy on console.log when destructured for some reason...
-      expect(true).toBe(true);
+      expect(spyGroup).toHaveBeenCalled();
+      expect(spyLog).toHaveBeenCalled();
 
       done();
     });

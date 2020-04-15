@@ -1,90 +1,61 @@
-import { from } from 'rxjs';
-import { mapTo, switchMap, tap } from 'rxjs/operators';
-
-const { group, groupCollapsed, groupEnd, log } = console;
+import { from, merge } from 'rxjs';
+import { skip, take, mapTo, switchMap, tap } from 'rxjs/operators';
 
 const logRed = (err, logger = log) => logger(`%c${err}`, 'color: red');
-const groupRed = err => logRed(err, group);
+const groupRed = err => logRed(err, console.group);
 
-const logger = next => req$ =>
-  next(req$).pipe(
-    switchMap(([res, req]) =>
-      from(res.clone().json()).pipe(
+const logger = next => req => {
+  const rr$ = next(req);
+
+  // Req
+  const req$ = rr$.pipe(
+    take(1),
+    tap(req => {
+      console.groupCollapsed(req.method, req.url, 202);
+
+      console.log(req.method);
+      console.log(req.url);
+      logHeaders(req.headers);
+      console.log('credentials', req.credentials);
+      console.log('mode', req.mode);
+
+      console.groupEnd();
+    }),
+  );
+
+  // Res
+  const res$ = rr$.pipe(
+    skip(1),
+    switchMap(res => {
+      return from(res.clone().json()).pipe(
         tap(data => {
-          const isError = res.status >= 300;
-          const isException = isError && data && data.trace;
-
-          if (isError) {
+          if (res.status >= 300) {
             groupRed(`${req.method} ${req.url} ${res.status}`);
           } else {
-            groupCollapsed(req.method, req.url, res.status);
+            console.groupCollapsed(req.method, req.url, res.status);
           }
 
-          logReq(req);
+          console.log(res.statusText, res.status);
+          console.log(data);
+          logHeaders(res.headers);
 
-          if (isException) {
-            logRes(res);
-          } else {
-            logRes(res, data);
-          }
-
-          if (isException) {
-            logException(data);
-          }
-
-          groupEnd();
+          console.groupEnd();
         }),
-        mapTo([res, req]),
-      ),
-    ),
+      );
+    }),
+    mapTo(res$),
   );
+
+  return merge(req$, res$);
+};
 
 export default logger;
 
 function logHeaders(headers) {
-  groupCollapsed('Headers');
+  console.groupCollapsed('Headers');
+
   for (let [name, value] of headers.entries()) {
-    log(`${name}: ${value}`);
+    console.log(`${name}: ${value}`);
   }
-  groupEnd();
-}
-
-function logReq(req) {
-  groupCollapsed('Request');
-  log(req.method);
-  log(req.url);
-  logHeaders(req.headers);
-  log('credentials', req.credentials);
-  log('mode', req.mode);
-  groupEnd();
-}
-
-function logRes(res, data) {
-  group('Response');
-  log(res.statusText, res.status);
-  if (data) {
-    log(data);
-  }
-  logHeaders(res.headers);
-  groupEnd();
-}
-
-function logException(data) {
-  groupRed('Exception');
-
-  logRed(data.message);
-
-  if (data.exception) {
-    log(data.exception);
-  }
-
-  if (data.file) {
-    log(`${data.file} (${data.line})`);
-  }
-
-  if (data.trace) {
-    log(data.trace);
-  }
-
-  groupEnd();
+  console.groupEnd();
 }
