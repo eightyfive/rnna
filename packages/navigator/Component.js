@@ -32,9 +32,9 @@ export default class Component extends Route {
 
     if (params) {
       this.passProps = params;
-
-      layout.passProps = params;
     }
+
+    layout.passProps = this.passProps;
 
     return { component: layout };
   }
