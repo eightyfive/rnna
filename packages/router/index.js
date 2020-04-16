@@ -8,9 +8,7 @@ export default class Router {
   constructor(navigator) {
     this.navigator = navigator;
 
-    this.dispatched = false;
     this.prevState = {};
-
     this.controllers = new Map();
     this.cache = new Map();
     this.cache.set('params', new Map());
@@ -42,34 +40,33 @@ export default class Router {
 
     const props = this.getProps(component, state, params);
 
-    this.dispatched = true;
     this.navigator.navigate(component.id, props);
 
     // Save params for render
     this.getCache('params').set(component.id, params);
   }
 
-  reRender(state) {
+  onState(state) {
     const changed = this.prevState !== state;
 
-    if (changed && !this.dispatched) {
+    if (changed) {
       const component = this.navigator.getComponent();
 
       if (component) {
-        const params = this.getCache('params').get(component.id) || [];
-        const props = this.getProps(component, state, params);
-
-        if (!shallowEqual(props, component.passProps)) {
-          component.update(props);
-        }
+        this.render(component, state);
       }
-    }
 
-    if (changed) {
       this.prevState = state;
     }
+  }
 
-    this.dispatched = false;
+  render(component, state) {
+    const params = this.getCache('params').get(component.id) || [];
+    const props = this.getProps(component, state, params);
+
+    if (!shallowEqual(props, component.passProps)) {
+      component.update(props);
+    }
   }
 
   getProps(component, state, params) {
@@ -82,4 +79,3 @@ export default class Router {
     return this.cache.get(name);
   }
 }
-
