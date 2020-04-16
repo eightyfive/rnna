@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-fetch-run@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/fetch-run/-/fetch-run-1.1.3.tgz#79c8586d7603b5edd85e3e010b262f06a2b0db08"
-  integrity sha512-zN7WlHg6IrCy/iHg81MYPdBCMZmfmk+0W8ytkddQN0A8sl728s+RDvmScMx/hGSs8rIgk4oxyw8ea031Tf67yg==
+fetch-run@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/fetch-run/-/fetch-run-1.1.4.tgz#419d5db3bde818e72be66e9196f37b58df7425db"
+  integrity sha512-Vcgdzu78Pq6jmpUFZLU9Oc/l/4+7dAbVT/lllFnm5DhEMotFcltxHJ13VCZQzOhQ2ZwWpiq9M66l0PDLF3fWEQ==

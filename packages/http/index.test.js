@@ -1,5 +1,5 @@
 import { from, merge } from 'rxjs';
-import { switchMap, skip, take, tap } from 'rxjs/operators';
+import { map, switchMap, skip, tap } from 'rxjs/operators';
 
 import Http from './index';
 
@@ -24,8 +24,75 @@ describe('Http', () => {
     });
   });
 
+  it('emits `res`', done => {
+    api.get('api/resource').subscribe(res => {
+      expect(res.ok).toBe(true);
+      expect(res.status).toBe(200);
+
+      done();
+    });
+  });
+
+  it('logs `req` & `res`', done => {
+    const log = jest.fn();
+
+    api.use(next => req$ => {
+      const res$ = next(req$);
+
+      return merge(req$.pipe(tap(log)), res$.pipe(tap(log))).pipe(skip(1));
+    });
+
+    api.get('api/resource').subscribe(res => {
+      expect(log).toHaveBeenCalledTimes(2);
+      expect(log).toHaveBeenNthCalledWith(2, res);
+
+      done();
+    });
+  });
+
+  it('maps `res` to json and keeps `req` in stream', done => {
+    fetch.mockResponse('{"foo": "bar"}');
+
+    api.use(next => req$ =>
+      next(req$).pipe(switchMap(res => from(res.json()))),
+    );
+
+    api.get('api/resource').subscribe(res => {
+      expect(res).toEqual({ foo: 'bar' });
+      done();
+    });
+  });
+
+  it('changes `req`', done => {
+    const log = jest.fn();
+
+    api.use(next => req$ => {
+      return next(
+        req$.pipe(
+          tap(req => log(req.method)),
+          map(req => new Request(req, { method: 'POST' })),
+          tap(req => log(req.method)),
+        ),
+      );
+    });
+
+    api.get('api/resource').subscribe(res => {
+      expect(log).toHaveBeenCalledTimes(2);
+      expect(log).toHaveBeenNthCalledWith(1, 'GET');
+      expect(log).toHaveBeenNthCalledWith(2, 'POST');
+
+      done();
+    });
+  });
+
   it('emits `req` & `res`', done => {
     const values = [];
+
+    api.use(next => req$ => {
+      const res$ = next(req$);
+
+      return merge(req$, res$);
+    });
 
     api.get('api/resource').subscribe(
       val => values.push(val),
@@ -40,109 +107,6 @@ describe('Http', () => {
 
         expect(res.ok).toBe(true);
         expect(res.status).toBe(200);
-
-        done();
-      },
-    );
-  });
-
-  it('logs `req` & `res`', done => {
-    const values = [];
-    const log = jest.fn();
-
-    api.use(next => req => {
-      const rr$ = next(req);
-
-      // Log req
-      const req$ = rr$.pipe(take(1), tap(log));
-
-      // Log res
-      const res$ = rr$.pipe(skip(1), tap(log));
-
-      return merge(req$, res$);
-    });
-
-    api.get('api/resource').subscribe(
-      val => values.push(val),
-      undefined,
-      () => {
-        expect(values.length).toBe(2);
-        const [req, res] = values;
-
-        expect(log).toHaveBeenCalledTimes(2);
-        expect(log).toHaveBeenNthCalledWith(1, req);
-        expect(log).toHaveBeenNthCalledWith(2, res);
-
-        done();
-      },
-    );
-  });
-
-  it('maps `res` to json and keeps `req` in stream', done => {
-    const values = [];
-
-    fetch.mockResponse('{"foo": "bar"}');
-
-    api.use(next => req => {
-      const rr$ = next(req);
-
-      // Req
-      const req$ = rr$.pipe(take(1));
-
-      // Res
-      const res$ = rr$.pipe(
-        skip(1),
-        switchMap(res => from(res.json())),
-      );
-
-      return merge(req$, res$);
-    });
-
-    api.get('api/resource').subscribe(
-      val => values.push(val),
-      undefined,
-      () => {
-        expect(values.length).toBe(2);
-        const [req, res] = values;
-
-        expect(req.url).toBe('http://example.org/api/resource');
-        expect(res).toEqual({ foo: 'bar' });
-
-        done();
-      },
-    );
-  });
-
-  it('logs req in after middleware (res)', done => {
-    const values = [];
-    const log = jest.fn();
-
-    api.use(next => oldReq => {
-      const req = new Request(oldReq, { method: 'POST' });
-
-      const rr$ = next(req);
-
-      // Req
-      const req$ = rr$.pipe(
-        take(1),
-        tap(req => log(req)),
-      );
-
-      // Res
-      const res$ = rr$.pipe(skip(1));
-
-      return merge(req$, res$);
-    });
-
-    api.get('api/resource').subscribe(
-      val => values.push(val),
-      undefined,
-      () => {
-        expect(values.length).toBe(2);
-        const [req, res] = values;
-
-        expect(req.method).toBe('POST');
-        expect(log).toHaveBeenLastCalledWith(req);
 
         done();
       },
