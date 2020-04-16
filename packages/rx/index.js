@@ -1,68 +1,71 @@
-import { from, of } from 'rxjs';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { from, of, merge } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  skip,
+  switchMap,
+  take,
+  withLatestFrom,
+} from 'rxjs/operators';
 
-import { startWithAction } from './operators';
+import HTTPError from 'fetch-run/http-error';
 
-export const createMapApi = createType => request => source =>
-  source.pipe(
-    switchMap(action => {
-      const payload = action.payload || action;
-      const res$ = request(payload);
+export const fromApi = rr$ => {
+  const req$ = rr$.pipe(
+    take(1),
+    // Emit request
+    map(req => ({ method: req.method, url: req.url, status: 202 })),
+  );
 
-      return res$.pipe(
-        filter(
-          ([res, req]) =>
-            res.headers.get('Content-Type') === 'application/json',
-        ),
-        mapApiActions(createType),
-        catchApiError(createType),
+  const res$ = rr$.pipe(
+    skip(1),
+    isContentType('application/json'),
+    withLatestFrom(req$),
+
+    // Emit response
+    switchMap(([res, { method, url }]) => {
+      return from(
+        res.json().then(json => ({
+          method,
+          url,
+          status: res.status,
+          json,
+        })),
       );
     }),
+
+    // Catch HTTP Error
+    catchError(err => of(err).pipe(isHTTPError(), mapError())),
   );
 
-const mapApiActions = createType => source =>
-  source.pipe(
-    switchMap(([res, req]) =>
-      of([res, req]).pipe(
-        mapApiResponse(createType),
-        startWithAction(createType(req.method, req.url, 202)),
-      ),
-    ),
-  );
+  return merge(req$, res$);
+};
 
-const mapApiResponse = createType => source =>
+const isContentType = contentType => source =>
+  source.pipe(filter(re => re.headers.get('Content-Type') === contentType));
+
+const isHTTPError = () => source =>
+  source.pipe(filter(err => err instanceof HTTPError));
+
+const mapError = () => source =>
   source.pipe(
-    switchMap(([res, req]) =>
+    switchMap(err =>
       from(
-        res.json().then(json => ({
-          type: createType(req.method, req.url, res.status),
-          payload: json.data || json,
-        })),
-      ),
-    ),
-  );
+        err.response.json().then(data => {
+          const req = err.request;
+          const res = err.response;
 
-const catchApiError = createType => source =>
-  source.pipe(
-    catchError(err =>
-      of(err).pipe(
-        filter(err => err.response),
-        switchMap(err =>
-          from(
-            err.response.json().then(data => {
-              const req = err.request;
-              const res = err.response;
+          err.data = data;
 
-              err.data = data;
-
-              return {
-                type: createType(req.method, req.url, res.status),
-                error: true,
-                payload: err,
-              };
-            }),
-          ),
-        ),
+          // Emit error
+          return {
+            method: req.method,
+            url: req.url,
+            status: res.status,
+            err,
+          };
+        }),
       ),
     ),
   );
