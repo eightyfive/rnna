@@ -1,3 +1,4 @@
+import _last from 'lodash.last';
 import { Navigation } from 'react-native-navigation';
 
 import SwitchNavigator from './SwitchNavigator';
@@ -22,7 +23,6 @@ export default class RootNavigator extends SwitchNavigator {
 
     this.listeners = {
       _didAppear: [],
-      _didDisappear: [],
       _modalDismiss: [],
       _appLaunch: [],
 
@@ -31,12 +31,10 @@ export default class RootNavigator extends SwitchNavigator {
     };
 
     this.addListener('_didAppear', this.handleDidAppear);
-    this.addListener('_didDisappear', this.handleDidDisappear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
     this.addListener('_appLaunch', this.handleAppLaunch);
 
     this.listen('ComponentDidAppear', '_didAppear');
-    this.listen('ComponentDidDisappear', '_didDisappear');
     this.listen('ModalDismissed', '_modalDismiss');
 
     this.launched = new Promise(resolve =>
@@ -50,10 +48,6 @@ export default class RootNavigator extends SwitchNavigator {
     if (this.isScene(id)) {
       this.fromId = id;
     }
-  };
-
-  handleDidDisappear = ({ componentId }) => {
-    this.overlays = this.overlays.filter(id => id === componentId);
   };
 
   handleModalDismiss = ({ componentId: id, modalsDismissed }) => {
@@ -145,5 +139,23 @@ export default class RootNavigator extends SwitchNavigator {
     const isWidget = id.indexOf('widget-') === 0;
 
     return !isWidget && !this.overlayIds.includes(id);
+  }
+
+  get overlay() {
+    const id = _last(this.overlays);
+
+    if (id) {
+      return this.get(id);
+    }
+
+    return null;
+  }
+
+  getComponent() {
+    return this.overlay ? this.overlay.getComponent() : super.getComponent();
+  }
+
+  onDismissOverlay(componentId) {
+    this.overlays = this.overlays.filter(id => id !== componentId);
   }
 }

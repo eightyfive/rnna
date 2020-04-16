@@ -14,7 +14,7 @@ export default class OverlayNavigator extends Navigator {
   }
 
   unmount() {
-    Navigation.dismissOverlay(this.component.id);
+    this.dismiss();
   }
 
   navigate(path, params, fromId) {
@@ -26,7 +26,11 @@ export default class OverlayNavigator extends Navigator {
   }
 
   dismiss() {
-    this.unmount();
+    Navigation.dismissOverlay(this.component.id);
+
+    if (this.parent) {
+      this.parent.onDismissOverlay(this.id);
+    }
   }
 
   getComponent() {
