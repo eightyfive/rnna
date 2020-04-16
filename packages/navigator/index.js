@@ -53,10 +53,6 @@ export function createRootNavigator(routes) {
       return createStackNavigator(routeConfigs, config);
     }
 
-    if (depth === 0) {
-      return createOverlayNavigator({ [id]: routeConfigs }, config);
-    }
-
     throw new Error('Invalid routes obj');
   });
 
@@ -79,6 +75,10 @@ export function createStackNavigator(routes, config = {}) {
       createRoutes(toWixRoutes(routes)),
       toStackConfig(config),
     );
+  }
+
+  if (config.mode === 'overlay') {
+    return createOverlayNavigator(toWixRoutes(routes), toStackConfig(config));
   }
 
   return createStack(createRoutes(toWixRoutes(routes)), toStackConfig(config));
