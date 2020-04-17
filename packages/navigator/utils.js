@@ -2,8 +2,7 @@ import _isEmpty from 'lodash.isempty';
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 
-import Component from './Component';
-import Route from './Route';
+import { Component } from './wix';
 
 const o = {
   entries: Object.entries,

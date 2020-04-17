@@ -1,11 +1,18 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createWidget, createRootNavigator } from './index';
-import BottomTabsNavigator from './BottomTabsNavigator';
-import ModalNavigator from './ModalNavigator';
-import StackNavigator from './StackNavigator';
-import OverlayNavigator from './OverlayNavigator';
-import WidgetComponent from './WidgetComponent';
+import {
+  BottomTabsNavigator,
+  ModalNavigator,
+  OverlayNavigator,
+  StackNavigator,
+  WidgetComponent,
+} from './wix';
+
+import {
+  createStackNavigator,
+  createRootNavigator,
+  createWidget,
+} from './index';
 
 test('create Widget', () => {
   const widget = createWidget('A');
@@ -109,4 +116,33 @@ test('create Root Navigator (stack)', () => {
       },
     },
   });
+});
+
+const A = {};
+const B = {};
+
+// Bottom tabs
+// TODO
+
+// Modal
+test('createModalNavigator', () => {
+  const navigator = createStackNavigator({ A, B }, { mode: 'modal' });
+
+  expect(navigator).toBeInstanceOf(StackNavigator);
+  expect(navigator).toBeInstanceOf(ModalNavigator);
+});
+
+// Overlay
+test('createOverlayNavigator', () => {
+  const navigator = createOverlayNavigator({ A }, { mode: 'overlay' });
+
+  expect(navigator).toBeInstanceOf(OverlayNavigator);
+});
+
+// Stack
+test('createStackNavigator', () => {
+  const navigator = createStackNavigator({ A, B });
+
+  expect(navigator).toBeInstanceOf(StackNavigator);
+  expect(navigator).not.toBeInstanceOf(ModalNavigator);
 });

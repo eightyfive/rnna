@@ -1,7 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Component';
-import StackNavigator from './StackNavigator';
+import { Component, StackNavigator } from './wix';
 
 export default class DrawerNavigator extends StackNavigator {
   constructor(routes, config = {}) {

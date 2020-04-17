@@ -1,18 +1,24 @@
+import { Navigation } from 'react-native-navigation';
+
 import _set from 'lodash.set';
 import _pick from 'lodash.pick';
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
-import { Navigation } from 'react-native-navigation';
 
-import createBottomTabs from './createBottomTabsNavigator';
-import createDrawer from './createDrawerNavigator';
-import createModal from './createModalNavigator';
-import createOverlayNavigator from './createOverlayNavigator';
-import createStack from './createStackNavigator';
-import createSwitch from './createSwitchNavigator';
+import {
+  BottomTabsNavigator,
+  ModalNavigator,
+  Navigator,
+  OverlayNavigator,
+  StackNavigator,
+  WidgetComponent,
+} from 'wix';
+
+import DrawerNavigator from './DrawerNavigator';
 import RootNavigator from './RootNavigator';
-import WidgetComponent from './WidgetComponent';
-import { createRoutes, getRouteDepth } from './utils';
+import SwitchNavigator from './SwitchNavigator';
+
+import { createComponent, createRoutes, getRouteDepth } from './utils';
 
 export { default as registerComponents } from './registerComponents';
 
@@ -20,22 +26,43 @@ const o = {
   assign: Object.assign,
 };
 
-export function createBottomTabNavigator(routes, config = {}) {
-  return createBottomTabs(
-    createRoutes(toWixRoutes(routes)),
-    toBottomTabConfig(config),
-  );
+export function createBottomTabNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(toWixRoutes(routeConfigs));
+
+  const invalid = o
+    .values(routes)
+    .some(route => !(route instanceof StackNavigator));
+
+  if (invalid) {
+    throw new Error(
+      '`BottomTabsNavigator` only accepts `StackNavigator` children',
+    );
+  }
+
+  const options = toBottomTabConfig(config);
+
+  return new BottomTabsNavigator(routes, options);
 }
 
-export function createDrawerNavigator(routes, config = {}) {
+export function createDrawerNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(toWixRoutes(routeConfigs));
+
   if (config.contentOptions) {
     config.contentOptions = toWixOptions(config.contentOptions);
   }
 
-  return createDrawer(
-    createRoutes(toWixRoutes(routes)),
-    toDrawerConfig(config),
-  );
+  const { contentComponent, contentOptions = {} } = config;
+
+  if (!contentComponent) {
+    throw new Error('config.contentComponent is required');
+  }
+
+  // TODO
+  config.drawer = createComponent(contentComponent, contentOptions);
+
+  const options = toDrawerConfig(config);
+
+  return new DrawerNavigator(routes, options);
 }
 
 export function createRootNavigator(routes) {
@@ -69,26 +96,44 @@ function createStacks(routes, parentId) {
   });
 }
 
-export function createStackNavigator(routes, config = {}) {
-  if (config.mode === 'modal') {
-    return createModal(
-      createRoutes(toWixRoutes(routes)),
-      toStackConfig(config),
+export function createStackNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(toWixRoutes(routeConfigs));
+  const options = toStackConfig(config);
+
+  if (config.mode === 'overlay') {
+    if (o.values(routes).length > 1) {
+      throw new Error('`OverlayNavigator` only accepts one `Component` child');
+    }
+
+    return new OverlayNavigator(routes, options);
+  }
+
+  const invalid = o.values(routes).some(route => route instanceof Navigator);
+
+  if (invalid) {
+    throw new Error(
+      `\`${
+        config.mode === 'modal' ? 'ModalNavigator' : 'StackNavigator'
+      }\` only accepts \`Component\` children`,
     );
   }
 
-  if (config.mode === 'overlay') {
-    return createOverlayNavigator(toWixRoutes(routes), toStackConfig(config));
+  if (config.mode === 'modal') {
+    return new ModalNavigator(routes, options);
   }
 
-  return createStack(createRoutes(toWixRoutes(routes)), toStackConfig(config));
+  return new StackNavigator(routes, options);
 }
 
-export function createSwitchNavigator(routes, config = {}) {
-  return createSwitch(
-    createRoutes(toWixRoutes(routes)),
-    toSwitchConfig(config),
-  );
+// TODO
+// https://reactnavigation.org/docs/en/switch-navigator.html
+export default function createSwitchNavigator(routeConfigs, config = {}) {}
+
+export function createSwitchNavigator(routeConfigs, config = {}) {
+  const routes = createRoutes(toWixRoutes(routeConfigs));
+  const options = toSwitchConfig(config);
+
+  return new SwitchNavigator(routes, options);
 }
 
 export function createWidget(id) {

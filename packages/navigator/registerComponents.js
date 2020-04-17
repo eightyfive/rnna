@@ -1,5 +1,5 @@
-import React from 'react';
 import { Navigation } from 'react-native-navigation';
+import React from 'react';
 
 const o = {
   entries: Object.entries,
