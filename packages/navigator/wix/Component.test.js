@@ -2,10 +2,10 @@ import { Navigation } from 'react-native-navigation';
 
 import Component from './Component';
 
-export function makeComponent(id, options = {}, params = {}) {
+export function makeComponent(id, options = {}, params = {}, name = null) {
   return {
     id: id,
-    name: id,
+    name: name || id,
     options,
     passProps: params,
   };

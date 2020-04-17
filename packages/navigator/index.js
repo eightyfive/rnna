@@ -105,7 +105,7 @@ function createStackNavigators(routes, parentId) {
 
     config.parentId = `${parentId}/${id}`;
 
-    return createStackNavigator(routeConfigs, toWixOptions(options), config);
+    return createStackNavigator(routeConfigs, options, config);
   });
 }
 
@@ -118,7 +118,7 @@ export function createStackNavigator(routeConfigs, options = {}, config = {}) {
     }
 
     return new OverlayNavigator(
-      routes,
+      o.values(routes).pop(),
       toWixOptions(options),
       toStackConfig(config),
     );
@@ -165,69 +165,68 @@ export function setDefaultOptions({ options, ...rest }) {
   );
 }
 
-function toWixOptions(navigationOptions, options = {}) {
-  const {
-    // headerMode,
+function toWixOptions({
+  // headerMode,
 
-    // https://reactnavigation.org/docs/stack-navigator/#options
-    title,
-    header,
-    headerShown,
-    headerTitle,
-    headerTitleAlign,
-    // headerTitleAllowFontScaling,
-    // headerBackAllowFontScaling,
-    // headerBackImage,
-    headerBackTitle,
-    headerBackTitleVisible,
-    // headerTruncatedBackTitle,
-    // headerRight,
-    // headerLeft,
-    headerStyle,
-    headerTitleStyle,
-    headerBackTitleStyle,
-    // headerLeftContainerStyle,
-    // headerRightContainerStyle,
-    // headerTitleContainerStyle,
-    headerTintColor,
-    // headerPressColorAndroid,
-    headerTransparent,
-    headerBackground,
-    // headerStatusBarHeight,
-    // cardShadowEnabled,
-    // cardOverlayEnabled,
-    // cardOverlay,
-    // cardStyle,
-    // animationEnabled,
-    // animationTypeForReplace,
-    // gestureEnabled,
-    // gestureResponseDistance,
-    // gestureVelocityImpact,
-    // gestureDirection,
-    // transitionSpec,
-    // cardStyleInterpolator,
-    // headerStyleInterpolator,
-    // safeAreaInsets,
+  // https://reactnavigation.org/docs/stack-navigator/#options
+  title,
+  header,
+  headerShown,
+  headerTitle,
+  headerTitleAlign,
+  // headerTitleAllowFontScaling,
+  // headerBackAllowFontScaling,
+  // headerBackImage,
+  headerBackTitle,
+  headerBackTitleVisible,
+  // headerTruncatedBackTitle,
+  // headerRight,
+  // headerLeft,
+  headerStyle,
+  headerTitleStyle,
+  headerBackTitleStyle,
+  // headerLeftContainerStyle,
+  // headerRightContainerStyle,
+  // headerTitleContainerStyle,
+  headerTintColor,
+  // headerPressColorAndroid,
+  headerTransparent,
+  headerBackground,
+  // headerStatusBarHeight,
+  // cardShadowEnabled,
+  // cardOverlayEnabled,
+  // cardOverlay,
+  // cardStyle,
+  // animationEnabled,
+  // animationTypeForReplace,
+  // gestureEnabled,
+  // gestureResponseDistance,
+  // gestureVelocityImpact,
+  // gestureDirection,
+  // transitionSpec,
+  // cardStyleInterpolator,
+  // headerStyleInterpolator,
+  // safeAreaInsets,
 
-    // https://reactnavigation.org/docs/drawer-navigator#options
-    drawerLabel,
-    drawerIcon,
-    swipeEnabled,
-    unmountOnBlur,
+  // https://reactnavigation.org/docs/drawer-navigator#options
+  // drawerLabel,
+  // drawerIcon,
+  // swipeEnabled,
+  // unmountOnBlur,
 
-    // https://reactnavigation.org/docs/bottom-tab-navigator#options
-    tabBarVisible,
-    tabBarIcon,
-    tabBarLabel,
-    tabBarButton,
-    tabBarAccessibilityLabel,
-    tabBarTestID,
+  // https://reactnavigation.org/docs/bottom-tab-navigator#options
+  tabBarVisible,
+  tabBarIcon,
+  tabBarLabel,
+  // tabBarButton,
+  // tabBarAccessibilityLabel,
+  // tabBarTestID,
 
-    // https://reactnavigation.org/docs/bottom-tab-navigator#props
-    tabBar,
-    tabBarOptions,
-  } = navigationOptions;
-
+  // https://reactnavigation.org/docs/bottom-tab-navigator#props
+  // tabBar,
+  tabBarOptions,
+  ...options
+}) {
   if (header === null || headerShown === false) {
     _set(options, 'topBar.visible', false);
     _set(options, 'topBar.drawBehind', true);

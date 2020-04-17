@@ -2,6 +2,9 @@ import { Navigation } from 'react-native-navigation';
 
 import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
 
+import { makeComponent } from './wix/Component.test';
+import { makeStack } from './wix/StackNavigator.test';
+
 import BottomTabNavigator from './BottomTabNavigator';
 import StackNavigator from './StackNavigator';
 
@@ -60,34 +63,16 @@ test('createRootNavigator (tabs)', () => {
         id: 'tab1-tab2',
         children: [
           {
-            stack: {
-              children: [
-                {
-                  component: {
-                    id: 'tabs/tab1/Screen1',
-                    name: 'Screen1',
-                    options: {},
-                    passProps: {},
-                  },
-                },
-              ],
-              options: { bottomTab: { text: 'Title 1' } },
-            },
+            stack: makeStack(
+              [makeComponent('tabs/tab1/Screen1', {}, {}, 'Screen1')],
+              { bottomTab: { text: 'Title 1' } },
+            ),
           },
           {
-            stack: {
-              children: [
-                {
-                  component: {
-                    id: 'tabs/tab2/Screen2',
-                    name: 'Screen2',
-                    options: {},
-                    passProps: {},
-                  },
-                },
-              ],
-              options: { bottomTab: { text: 'Title 2' } },
-            },
+            stack: makeStack(
+              [makeComponent('tabs/tab2/Screen2', {}, {}, 'Screen2')],
+              { bottomTab: { text: 'Title 2' } },
+            ),
           },
         ],
         options: {},
@@ -109,19 +94,7 @@ test('createRootNavigator (stack)', () => {
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      stack: {
-        children: [
-          {
-            component: {
-              id: 'auth/Login',
-              name: 'Login',
-              options: {},
-              passProps: {},
-            },
-          },
-        ],
-        options: {},
-      },
+      stack: makeStack([makeComponent('auth/Login', {}, {}, 'Login')]),
     },
   });
 });
@@ -134,22 +107,22 @@ const B = {};
 
 // Modal
 test('createModalNavigator', () => {
-  const navigator = createStackNavigator({ A, B }, {}, { mode: 'modal' });
+  const app = createStackNavigator({ A, B }, {}, { mode: 'modal' });
 
-  expect(navigator).toBeInstanceOf(ModalNavigator);
+  expect(app).toBeInstanceOf(ModalNavigator);
 });
 
 // Overlay
 test('createOverlayNavigator', () => {
-  const navigator = createStackNavigator({ A }, {}, { mode: 'overlay' });
+  const app = createStackNavigator({ A }, {}, { mode: 'overlay' });
 
-  expect(navigator).toBeInstanceOf(OverlayNavigator);
+  expect(app).toBeInstanceOf(OverlayNavigator);
 });
 
 // Stack
 test('createStackNavigator', () => {
-  const navigator = createStackNavigator({ A, B });
+  const app = createStackNavigator({ A, B });
 
-  expect(navigator).toBeInstanceOf(StackNavigator);
-  expect(navigator).not.toBeInstanceOf(ModalNavigator);
+  expect(app).toBeInstanceOf(StackNavigator);
+  expect(app).not.toBeInstanceOf(ModalNavigator);
 });
