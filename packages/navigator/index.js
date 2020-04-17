@@ -9,13 +9,13 @@ import {
   ModalNavigator,
   Navigator,
   OverlayNavigator,
-  StackNavigator,
   WidgetComponent,
 } from 'wix';
 
 import BottomTabNavigator from './BottomTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import RootNavigator from './RootNavigator';
+import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
 
 import { createComponent, createRoutes, getRouteDepth } from './utils';
