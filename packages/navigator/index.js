@@ -8,13 +8,13 @@ import _mapValues from 'lodash.mapvalues';
 import {
   BottomTabsNavigator,
   ModalNavigator,
+  Navigator,
   OverlayNavigator,
   StackNavigator,
   WidgetComponent,
 } from 'wix';
 
 import DrawerNavigator from './DrawerNavigator';
-import Navigator from './Navigator';
 import RootNavigator from './RootNavigator';
 import SwitchNavigator from './SwitchNavigator';
 

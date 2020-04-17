@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import Route from '../Route';
+import Route from './Route';
 
 const o = {
   assign: Object.assign,

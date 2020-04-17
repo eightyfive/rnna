@@ -2,7 +2,7 @@ import _last from 'lodash.last';
 import _take from 'lodash.take';
 import { Navigation } from 'react-native-navigation';
 
-import Navigator from '../Navigator';
+import Navigator from './Navigator';
 
 const o = {
   entries: Object.entries,

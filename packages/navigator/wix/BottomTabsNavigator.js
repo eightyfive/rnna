@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import Navigator from '../Navigator';
+import Navigator from './Navigator';
 
 export default class BottomTabsNavigator extends Navigator {
   constructor(routes, config = {}) {

@@ -1,4 +1,4 @@
-import Navigator from './Navigator';
+import { Navigator } from './wix';
 
 export default class SwitchNavigator extends Navigator {
   constructor(routes, config = {}) {
