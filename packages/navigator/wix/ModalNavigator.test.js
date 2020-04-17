@@ -1,34 +1,32 @@
 import { Navigation } from 'react-native-navigation';
 
+import { makeComponent } from './Component.test';
+import { makeStack } from './StackNavigator.test';
+
 import Component from './Component';
 import StackNavigator from './StackNavigator';
 import ModalNavigator from './ModalNavigator';
 
-let navigator;
+let app;
 
 const A = new Component('A');
 const B = new Component('B');
 
 beforeEach(() => {
-  navigator = new ModalNavigator({ A, B });
-  navigator.mount();
+  app = new ModalNavigator({ A, B });
+  app.mount({ foo: 'bar' });
 });
 
 test('mount', () => {
-  expect(navigator instanceof StackNavigator).toBe(true);
+  expect(app instanceof StackNavigator).toBe(true);
 
   expect(Navigation.showModal).toHaveBeenCalledWith({
-    stack: {
-      children: [
-        { component: { id: 'A', name: 'A', options: {}, passProps: {} } },
-      ],
-      options: {},
-    },
+    stack: makeStack([makeComponent('A', {}, { foo: 'bar' })]),
   });
 });
 
 test('unmount', () => {
-  navigator.unmount('A');
+  app.unmount('A');
 
   expect(Navigation.dismissModal).toHaveBeenCalledWith('A');
 });

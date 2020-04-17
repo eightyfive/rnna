@@ -4,7 +4,7 @@ import Component from './Component';
 import { makeComponent } from './Component.test';
 import StackNavigator from './StackNavigator';
 
-function makeStack(components, options = {}) {
+export function makeStack(components, options = {}) {
   return {
     children: components.map(component => ({ component })),
     options,
