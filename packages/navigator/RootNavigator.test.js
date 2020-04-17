@@ -20,6 +20,8 @@ let ef;
 let tabs;
 
 beforeEach(() => {
+  jest.clearAllMocks();
+
   ab = new StackNavigator({ A, B });
   cd = new StackNavigator({ C, D });
   ef = new StackNavigator({ E, F });
@@ -31,27 +33,24 @@ beforeEach(() => {
     ef,
   });
 
+  app.get('abcd').mount = jest.fn();
+  app.get('ef').mount = jest.fn();
+  app.get('ef').push = jest.fn();
+
   app.mount();
 });
 
 test('mount', () => {
-  app.get('abcd').mount = jest.fn();
-
-  expect(app.get('abcd').mount).not.toHaveBeenCalled();
+  expect(app.get('ef').mount).not.toHaveBeenCalled();
 });
 
 test('navigate', () => {
-  app.get('ef').mount = jest.fn();
-
   app.navigate('ef');
 
   expect(app.get('ef').mount).toHaveBeenCalled();
 });
 
 test('navigate deep', () => {
-  app.get('ef').mount = jest.fn();
-  app.get('ef').push = jest.fn();
-
   app.navigate('ef/F');
 
   expect(app.get('ef').mount).toHaveBeenCalled();
