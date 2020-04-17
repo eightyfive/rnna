@@ -1,62 +1,30 @@
 import { Navigation } from 'react-native-navigation';
 
-import { Component, StackNavigator } from './wix';
+import { Component, SideMenuNavigator } from './wix';
 
-export default class DrawerNavigator extends StackNavigator {
+export default class DrawerNavigator extends SideMenuNavigator {
   constructor(routes, options = {}, config = {}) {
-    if (!config.drawer) {
-      throw new Error('config.drawer is required');
-    }
-
-    if (!(config.drawer instanceof Component)) {
-      throw new Error('config.drawer must be of type `Component`');
-    }
-
     super(routes, options, config);
 
-    this.drawer = config.drawer;
-    this.drawerPosition = config.drawerPosition || 'left';
-    this.visible = false;
-
-    this.listeners = {
-      _didAppear: [],
-      _didDisappear: [],
-    };
-
-    this.addListener('_didAppear', this.handleDidAppear);
-    this.addListener('_didDisappear', this.handleDidDisappear);
-
-    this.listen('ComponentDidAppear', '_didAppear');
-    this.listen('ComponentDidDisappear', '_didDisappear');
-  }
-
-  handleDidAppear = ({ componentId: id }) => {
-    if (id === this.drawer.id) {
-      this.visible = true;
-    }
-  };
-
-  handleDidDisappear = ({ componentId: id }) => {
-    if (id === this.drawer.id) {
-      this.visible = false;
-    }
-  };
-
-  mount(params) {
-    Navigation.setRoot({ root: this.getInitialLayout(params) });
-  }
-
-  getLayout(params, routeName) {
-    const layout = {
-      center: super.getLayout(params, routeName),
-      [this.drawerPosition]: this.drawer.getLayout(params),
-    };
-
-    if (this.options) {
-      layout.options = { ...this.options };
-    }
-
-    return { sideMenu: layout };
+    // TODO
+    // https://reactnavigation.org/docs/drawer-navigator#props
+    // this.initialRouteName =
+    // this.screenOptions =
+    // this.backBehavior =
+    // this.drawerPosition =
+    // this.drawerType =
+    // this.edgeWidth =
+    // this.hideStatusBar =
+    // this.statusBarAnimation =
+    // this.keyboardDismissMode =
+    // this.minSwipeDistance =
+    // this.overlayColor =
+    // this.gestureHandlerProps =
+    // this.lazy =
+    // this.sceneContainerStyle =
+    // this.drawerStyle =
+    // this.drawerContent =
+    // this.drawerContentOptions =
   }
 
   navigate(toId, params) {
@@ -67,25 +35,45 @@ export default class DrawerNavigator extends StackNavigator {
         this.closeDrawer();
       }
 
-      // StackNavigator.push
-      super.navigate(toId, params, this.initialRouteName);
+      // TODO
+      // Exactly the same as StackNavigator.navigate...
+      const index = this.history.findIndex(name => name === toName);
+
+      if (index === -1) {
+        this.push(toName, params, fromId);
+      } else if (index >= 1) {
+        this.popToIndex(index);
+      }
     }
   }
 
-  goBack(fromId) {
+  goBack() {
     if (this.visible) {
       this.closeDrawer();
     } else {
-      super.goBack(fromId);
+      // TODO
+      // Exactly the same as StackNavigator.goBack...
+      if (this.history.length === 1) {
+        throw new Error('No route to navigate back to');
+      }
+
+      this.history.pop();
+      this.pop();
     }
   }
 
   openDrawer() {
-    Navigation.mergeOptions(this.drawer.id, this.getVisibleLayout(true));
+    Navigation.mergeOptions(
+      this.drawer.id,
+      getVisibleLayout(this.drawerPosition, true),
+    );
   }
 
   closeDrawer() {
-    Navigation.mergeOptions(this.drawer.id, this.getVisibleLayout(false));
+    Navigation.mergeOptions(
+      this.drawer.id,
+      getVisibleLayout(this.drawerPosition, false),
+    );
   }
 
   toggleDrawer() {
@@ -95,12 +83,12 @@ export default class DrawerNavigator extends StackNavigator {
       this.openDrawer();
     }
   }
+}
 
-  getVisibleLayout(visible) {
-    const layout = {
-      [this.drawerPosition]: { visible },
-    };
+function getVisibleLayout(position, visible) {
+  const layout = {
+    [position]: { visible },
+  };
 
-    return { sideMenu: layout };
-  }
+  return { sideMenu: layout };
 }

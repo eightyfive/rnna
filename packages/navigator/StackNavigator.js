@@ -26,17 +26,12 @@ export default class StackNavigator extends Stack {
     }
   }
 
-  goBack(fromId) {
-    if (fromId !== this.route.id) {
-      throw new Error(`goBack from mismatch: ${fromId} != ${this.route.id}`);
-    }
-
+  goBack() {
     if (this.history.length === 1) {
       throw new Error('No route to navigate back to');
     }
 
     this.history.pop();
-
     this.pop();
   }
 
