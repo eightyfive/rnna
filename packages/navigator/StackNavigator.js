@@ -10,7 +10,7 @@ export default class StackNavigator extends Wix {
     // TODO
     // https://reactnavigation.org/docs/stack-navigator#props
     // this.initialRouteName =
-    // this.screenOptions =
+    this.defaultOptions = config.screenOptions || {};
     // this.keyboardHandlingEnabled =
     // this.mode =
     // this.headerMode =

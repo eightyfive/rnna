@@ -8,9 +8,7 @@ export default class StackNavigator extends Navigator {
   constructor(routes, options = {}, config = {}) {
     super(routes, options, config);
 
-    this.screenOptions = config.screenOptions || {};
-
-    // Component IDs
+    this.defaultOptions = config.defaultOptions || {};
     this.componentIds = new Map();
 
     for (const [name, component] of this.routes) {
@@ -68,7 +66,7 @@ export default class StackNavigator extends Navigator {
 
     const layout = {
       children: children.map(id =>
-        this.get(id).getLayout(params, this.screenOptions),
+        this.get(id).getLayout(params, this.defaultOptions),
       ),
     };
 
@@ -88,7 +86,7 @@ export default class StackNavigator extends Navigator {
 
     this.history.push(toName);
 
-    Navigation.push(fromId, component.getLayout(params, this.screenOptions));
+    Navigation.push(fromId, component.getLayout(params, this.defaultOptions));
   }
 
   pop(fromId) {

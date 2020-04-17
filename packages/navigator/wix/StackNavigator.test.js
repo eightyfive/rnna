@@ -24,7 +24,7 @@ beforeEach(() => {
     { A, B, C },
     {},
     {
-      screenOptions: { topBar: { backButton: { visible: false } } },
+      defaultOptions: { topBar: { backButton: { visible: false } } },
     },
   );
 

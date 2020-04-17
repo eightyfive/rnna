@@ -10,13 +10,7 @@ const C = new Component('C');
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  app = new StackNavigator(
-    { A, B, C },
-    {},
-    {
-      screenOptions: { topBar: { backButton: { visible: false } } },
-    },
-  );
+  app = new StackNavigator({ A, B, C });
 
   app.mount();
 });
