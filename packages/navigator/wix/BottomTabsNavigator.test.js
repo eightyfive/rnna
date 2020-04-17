@@ -65,3 +65,11 @@ test('mount', () => {
     },
   });
 });
+
+test('navigate', () => {
+  app.navigate('cd');
+
+  expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-cd', {
+    bottomTabs: { currentTabIndex: 1 },
+  });
+});
