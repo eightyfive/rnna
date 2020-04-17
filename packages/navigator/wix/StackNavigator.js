@@ -4,10 +4,6 @@ import { Navigation } from 'react-native-navigation';
 
 import Navigator from './Navigator';
 
-const o = {
-  entries: Object.entries,
-};
-
 export default class StackNavigator extends Navigator {
   constructor(routes, options = {}, config = {}) {
     super(routes, options, config);
@@ -87,30 +83,6 @@ export default class StackNavigator extends Navigator {
     Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 
-  navigate(toName, params, fromId) {
-    const index = this.history.findIndex(name => name === toName);
-
-    if (index === -1) {
-      this.push(toName, params, fromId);
-    } else if (index >= 1) {
-      this.popToIndex(index);
-    }
-  }
-
-  goBack(fromId) {
-    if (fromId !== this.route.id) {
-      throw new Error(`goBack from mismatch: ${fromId} != ${this.route.id}`);
-    }
-
-    if (this.history.length === 1) {
-      throw new Error('No route to navigate back to');
-    }
-
-    this.history.pop();
-
-    Navigation.pop(fromId);
-  }
-
   push(toName, params, fromId) {
     const component = this.get(toName);
 
@@ -119,26 +91,15 @@ export default class StackNavigator extends Navigator {
     Navigation.push(fromId, component.getLayout(params, this.screenOptions));
   }
 
-  pop(n = 1) {
-    const index = this.history.length - 1 - n;
-
-    if (index < 0) {
-      throw new Error(`Out of range popTo: ${n}`);
-    }
-
-    this.popToIndex(index);
+  pop(fromId) {
+    Navigation.pop(fromId);
   }
 
-  popToIndex(index) {
-    this.history = _take(this.history, index + 1);
-
-    const toName = _last(this.history);
-    const toId = this.componentIds.get(toName);
-
+  popTo(toId) {
     Navigation.popTo(toId);
   }
 
-  popToTop() {
+  popToRoot() {
     const fromId = this.route.id;
 
     // Reset history
