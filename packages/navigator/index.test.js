@@ -25,11 +25,11 @@ test('createRootNavigator (tabs)', () => {
   const app = createRootNavigator({
     tabs: {
       tab1: {
-        Screen1: {},
+        Screen1: { title: 'Title 1' },
         options: { bottomTab: { text: 'Title 1' } },
       },
       tab2: {
-        Screen2: {},
+        Screen2: { title: 'Title 2' },
         options: { bottomTab: { text: 'Title 2' } },
       },
     },
@@ -64,13 +64,27 @@ test('createRootNavigator (tabs)', () => {
         children: [
           {
             stack: makeStack(
-              [makeComponent('tabs/tab1/Screen1', {}, {}, 'Screen1')],
+              [
+                makeComponent(
+                  'tabs/tab1/Screen1',
+                  { topBar: { title: { text: 'Title 1' } } },
+                  {},
+                  'Screen1',
+                ),
+              ],
               { bottomTab: { text: 'Title 1' } },
             ),
           },
           {
             stack: makeStack(
-              [makeComponent('tabs/tab2/Screen2', {}, {}, 'Screen2')],
+              [
+                makeComponent(
+                  'tabs/tab2/Screen2',
+                  { topBar: { title: { text: 'Title 2' } } },
+                  {},
+                  'Screen2',
+                ),
+              ],
               { bottomTab: { text: 'Title 2' } },
             ),
           },
