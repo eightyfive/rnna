@@ -5,13 +5,13 @@ import StackNavigator from './StackNavigator';
 
 export default class SideMenuNavigator extends StackNavigator {
   constructor(routes, options = {}, config = {}) {
-    if (!config.drawer) {
-      throw new Error('config.drawer is required');
-    }
+    // if (!config.drawer) {
+    //   throw new Error('config.drawer is required');
+    // }
 
-    if (!(config.drawer instanceof Component)) {
-      throw new Error('config.drawer must be of type `Component`');
-    }
+    // if (!(config.drawer instanceof Component)) {
+    //   throw new Error('config.drawer must be of type `Component`');
+    // }
 
     super(routes, options, config);
 

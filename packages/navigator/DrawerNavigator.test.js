@@ -1,37 +1,38 @@
 // import { Navigation } from 'react-native-navigation';
 
-import { createDrawerNavigator } from './index';
+import { Component } from './wix';
+import DrawerNavigator from './DrawerNavigator';
 
-let navigator;
+let app;
 
-const A = {};
-const B = {};
+const A = new Component('A');
+const B = new Component('B');
 
-beforeEach(() => {
-  navigator = createDrawerNavigator(
-    { A, B },
-    {},
-    {
-      contentComponent: 'Drawer',
-      // screenOptions: { topBar: { title: 'foo' } },
-    },
-  );
-  navigator.mount();
-});
+// beforeEach(() => {
+//   app = new DrawerNavigator(
+//     { A, B },
+//     {},
+//     {
+//       contentComponent: 'Drawer',
+//       // screenOptions: { topBar: { title: 'foo' } },
+//     },
+//   );
+//   app.mount();
+// });
 
 test('dumb', () => {
   expect(true).toBe(true);
 });
 
 // test('navigate', () => {
-//   navigator.navigate('A');
+//   app.navigate('A');
 
 //   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
 // });
 
 // test('navigate back', () => {
-//   navigator.navigate('B');
-//   navigator.goBack('B');
+//   app.navigate('B');
+//   app.goBack('B');
 
 //   expect(Navigation.mergeOptions).not.toHaveBeenCalled();
 // });
@@ -61,21 +62,21 @@ test('dumb', () => {
 // });
 
 // test('open drawer', () => {
-//   navigator.navigate('Drawer');
+//   app.navigate('Drawer');
 
 //   expect(Navigation.mergeOptions).toHaveBeenCalledWith(
 //     'Drawer',
-//     navigator.getVisibleLayout(true),
+//     app.getVisibleLayout(true),
 //   );
 // });
 
 // test('close drawer', () => {
-//   navigator.navigate('Drawer');
-//   navigator.handleDidAppear({ componentId: 'Drawer' });
-//   navigator.goBack();
+//   app.navigate('Drawer');
+//   app.handleDidAppear({ componentId: 'Drawer' });
+//   app.goBack();
 
 //   expect(Navigation.mergeOptions).toHaveBeenCalledWith(
 //     'Drawer',
-//     navigator.getVisibleLayout(false),
+//     app.getVisibleLayout(false),
 //   );
 // });

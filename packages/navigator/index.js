@@ -10,7 +10,7 @@ import {
   Navigator,
   OverlayNavigator,
   WidgetComponent,
-} from 'wix';
+} from './wix';
 
 import BottomTabNavigator from './BottomTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
@@ -24,6 +24,7 @@ export { default as registerComponents } from './registerComponents';
 
 const o = {
   assign: Object.assign,
+  values: Object.values,
 };
 
 export function createBottomTabNavigator(

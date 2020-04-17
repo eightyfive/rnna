@@ -11,14 +11,14 @@ import {
   createWidget,
 } from './index';
 
-test('create Widget', () => {
+test('createWidget', () => {
   const widget = createWidget('A');
 
   expect(widget instanceof WidgetComponent).toBe(true);
   expect(widget.id).toBe('widget-A');
 });
 
-test('create Root Navigator (tabs)', () => {
+test('createRootNavigator (tabs)', () => {
   const app = createRootNavigator({
     tabs: {
       tab1: {
@@ -40,16 +40,16 @@ test('create Root Navigator (tabs)', () => {
       config: { mode: 'modal' },
     },
 
-    Overlay: {
-      layout: { componentBackgroundColor: 'dummy' },
+    overlay: {
+      Screen5: { layout: { componentBackgroundColor: 'dummy' } },
+      config: { mode: 'overlay' },
     },
   });
 
   expect(app.get('tabs')).toBeInstanceOf(BottomTabNavigator);
   expect(app.get('stack')).toBeInstanceOf(StackNavigator);
-  expect(app.get('modal')).toBeInstanceOf(StackNavigator);
   expect(app.get('modal')).toBeInstanceOf(ModalNavigator);
-  expect(app.get('Overlay')).toBeInstanceOf(OverlayNavigator);
+  expect(app.get('overlay')).toBeInstanceOf(OverlayNavigator);
 
   Navigation.setRoot.mockReset();
   app.go('tabs/tab1/Screen1');
@@ -67,6 +67,7 @@ test('create Root Navigator (tabs)', () => {
                     id: 'tabs/tab1/Screen1',
                     name: 'Screen1',
                     options: {},
+                    passProps: {},
                   },
                 },
               ],
@@ -81,6 +82,7 @@ test('create Root Navigator (tabs)', () => {
                     id: 'tabs/tab2/Screen2',
                     name: 'Screen2',
                     options: {},
+                    passProps: {},
                   },
                 },
               ],
@@ -88,12 +90,13 @@ test('create Root Navigator (tabs)', () => {
             },
           },
         ],
+        options: {},
       },
     },
   });
 });
 
-test('create Root Navigator (stack)', () => {
+test('createRootNavigator (stack)', () => {
   const app = createRootNavigator({
     auth: {
       Login: {},
@@ -108,8 +111,16 @@ test('create Root Navigator (stack)', () => {
     root: {
       stack: {
         children: [
-          { component: { id: 'auth/Login', name: 'Login', options: {} } },
+          {
+            component: {
+              id: 'auth/Login',
+              name: 'Login',
+              options: {},
+              passProps: {},
+            },
+          },
         ],
+        options: {},
       },
     },
   });
@@ -125,13 +136,12 @@ const B = {};
 test('createModalNavigator', () => {
   const navigator = createStackNavigator({ A, B }, {}, { mode: 'modal' });
 
-  expect(navigator).toBeInstanceOf(StackNavigator);
   expect(navigator).toBeInstanceOf(ModalNavigator);
 });
 
 // Overlay
 test('createOverlayNavigator', () => {
-  const navigator = createOverlayNavigator({ A }, {}, { mode: 'overlay' });
+  const navigator = createStackNavigator({ A }, {}, { mode: 'overlay' });
 
   expect(navigator).toBeInstanceOf(OverlayNavigator);
 });

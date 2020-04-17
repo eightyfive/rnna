@@ -1,24 +1,33 @@
 import { Navigation } from 'react-native-navigation';
 
-import createBottomTabsNavigator from './createBottomTabsNavigator';
-import createStackNavigator from './createStackNavigator';
+import Component from './Component';
+import BottomTabsNavigator from './BottomTabsNavigator';
+import StackNavigator from './StackNavigator';
 
 let app;
 
-const A = {};
-const B = {};
-const C = {};
+const A = new Component('A');
+const B = new Component('B');
+const C = new Component('C');
+const D = new Component('D');
+
+let ab;
+let cd;
 
 beforeEach(() => {
-  app = createBottomTabsNavigator({
-    ab: createStackNavigator(
-      { A, B },
-      { bottomTab: { icon: 'icon-1', text: 'Tab 1' } },
-    ),
-    c: createStackNavigator(
-      { C },
-      { bottomTab: { icon: 'icon-2', text: 'Tab 2' } },
-    ),
+  ab = new StackNavigator(
+    { A, B },
+    { bottomTab: { icon: 'icon-1', text: 'Tab 1' } },
+  );
+
+  cd = new StackNavigator(
+    { C, D },
+    { bottomTab: { icon: 'icon-2', text: 'Tab 2' } },
+  );
+
+  app = new BottomTabsNavigator({
+    ab,
+    cd,
   });
 
   app.mount();
@@ -28,30 +37,31 @@ test('mount', () => {
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
       bottomTabs: {
-        id: 'ab-c',
+        id: 'ab-cd',
         children: [
           {
             stack: {
-              children: [{ component: { id: 'A', name: 'A', options: {} } }],
+              children: [
+                {
+                  component: { id: 'A', name: 'A', options: {}, passProps: {} },
+                },
+              ],
               options: { bottomTab: { icon: 'icon-1', text: 'Tab 1' } },
             },
           },
           {
             stack: {
-              children: [{ component: { id: 'C', name: 'C', options: {} } }],
+              children: [
+                {
+                  component: { id: 'C', name: 'C', options: {}, passProps: {} },
+                },
+              ],
               options: { bottomTab: { icon: 'icon-2', text: 'Tab 2' } },
             },
           },
         ],
+        options: {},
       },
     },
-  });
-});
-
-test('navigate', () => {
-  app.navigate('c');
-
-  expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-c', {
-    bottomTabs: { currentTabIndex: 1 },
   });
 });

@@ -1,9 +1,9 @@
 import _last from 'lodash.last';
 import _take from 'lodash.take';
 
-import { StackNavigator as Stack } from './wix';
+import { StackNavigator as Wix } from './wix';
 
-export default class StackNavigator extends Stack {
+export default class StackNavigator extends Wix {
   constructor(routes, options = {}, config = {}) {
     super(routes, options, config);
 

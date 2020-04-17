@@ -1,20 +1,21 @@
 import { Navigation } from 'react-native-navigation';
 
-import createOverlayNavigator from './createOverlayNavigator';
+import Component from './Component';
+import OverlayNavigator from './OverlayNavigator';
 
 let navigator;
 
-const A = {};
+const A = new Component('A');
 
 beforeEach(() => {
-  navigator = createOverlayNavigator({ A });
+  navigator = new OverlayNavigator({ A });
 });
 
 test('mount', () => {
   navigator.mount();
 
   expect(Navigation.showOverlay).toHaveBeenCalledWith({
-    component: { id: 'A', name: 'A', options: {} },
+    component: { id: 'A', name: 'A', options: {}, passProps: {} },
   });
 });
 

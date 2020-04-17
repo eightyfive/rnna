@@ -8,7 +8,7 @@ test('mount', () => {
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      component: { id: 'A', name: 'A', options: {} },
+      component: { id: 'A', name: 'A', options: {}, passProps: {} },
     },
   });
 });

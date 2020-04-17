@@ -1,41 +1,59 @@
-import { createRootNavigator } from './index';
+import { Component } from './wix';
+
+import BottomTabNavigator from './BottomTabNavigator';
+import RootNavigator from './RootNavigator';
+import StackNavigator from './StackNavigator';
 
 let app;
 
-const A = {};
-const B = {};
-const C = {};
-const D = {};
+const A = new Component('A');
+const B = new Component('B');
+const C = new Component('C');
+const D = new Component('D');
+const E = new Component('E');
+const F = new Component('F');
+
+let ab;
+let cd;
+let ef;
+
+let tabs;
 
 beforeEach(() => {
-  app = createRootNavigator({
-    ab: { A, B },
-    cd: { C, D },
+  ab = new StackNavigator({ A, B });
+  cd = new StackNavigator({ C, D });
+  ef = new StackNavigator({ E, F });
+
+  abcd = new BottomTabNavigator({ ab, cd });
+
+  app = new RootNavigator({
+    abcd,
+    ef,
   });
 
   app.mount();
 });
 
 test('mount', () => {
-  app.get('ab').mount = jest.fn();
+  app.get('abcd').mount = jest.fn();
 
-  expect(app.get('ab').mount).not.toHaveBeenCalled();
+  expect(app.get('abcd').mount).not.toHaveBeenCalled();
 });
 
 test('navigate', () => {
-  app.get('cd').mount = jest.fn();
+  app.get('ef').mount = jest.fn();
 
-  app.navigate('cd');
+  app.navigate('ef');
 
-  expect(app.get('cd').mount).toHaveBeenCalled();
+  expect(app.get('ef').mount).toHaveBeenCalled();
 });
 
 test('navigate deep', () => {
-  app.get('cd').mount = jest.fn();
-  app.get('cd').push = jest.fn();
+  app.get('ef').mount = jest.fn();
+  app.get('ef').push = jest.fn();
 
-  app.navigate('cd/D');
+  app.navigate('ef/F');
 
-  expect(app.get('cd').mount).toHaveBeenCalled();
-  expect(app.get('cd').push).toHaveBeenCalledWith('D', undefined, 'ab');
+  expect(app.get('ef').mount).toHaveBeenCalled();
+  expect(app.get('ef').push).toHaveBeenCalledWith('F', undefined, 'abcd');
 });

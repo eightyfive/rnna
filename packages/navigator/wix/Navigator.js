@@ -117,7 +117,5 @@ export default /** abstract */ class Navigator extends Route {
 }
 
 function throwAbstract(method) {
-  if (__DEV__) {
-    throw new Error(`Abstract: Implement Navigator.${method}`);
-  }
+  throw new Error(`Abstract: Implement Navigator.${method}`);
 }
