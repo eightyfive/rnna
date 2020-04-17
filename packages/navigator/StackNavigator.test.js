@@ -1,4 +1,4 @@
-import Component from './Component';
+import Component from './wix/Component';
 import StackNavigator from './StackNavigator';
 
 let app;
