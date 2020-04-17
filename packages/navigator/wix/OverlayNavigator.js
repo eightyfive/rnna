@@ -3,10 +3,10 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class OverlayNavigator extends Navigator {
-  constructor(routes, options = {}, config = {}) {
-    super(routes, options, config);
+  constructor(component, options = {}, config = {}) {
+    super({ [component.name]: component }, options, config);
 
-    this.component = this.get(this.initialRouteName);
+    this.component = component;
   }
 
   mount(params) {

@@ -1,38 +1,29 @@
 import { Navigation } from 'react-native-navigation';
 
+import { makeComponent } from './Component.test';
+
 import Component from './Component';
 import OverlayNavigator from './OverlayNavigator';
 
-let navigator;
+let app;
 
 const A = new Component('A');
 
 beforeEach(() => {
-  navigator = new OverlayNavigator({ A });
+  app = new OverlayNavigator(A);
 });
 
 test('mount', () => {
-  navigator.mount();
+  app.mount();
 
   expect(Navigation.showOverlay).toHaveBeenCalledWith({
-    component: { id: 'A', name: 'A', options: {}, passProps: {} },
+    component: makeComponent('A'),
   });
 });
 
 test('unmount', () => {
-  navigator.unmount();
-
-  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
-});
-
-test('goBack', () => {
-  navigator.goBack();
-
-  expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
-});
-
-test('dismiss', () => {
-  navigator.dismiss();
+  app.mount();
+  app.unmount();
 
   expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
 });
