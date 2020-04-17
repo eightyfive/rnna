@@ -13,8 +13,8 @@ const params = { foo: 'bar' };
 beforeEach(() => {
   app = createStackNavigator(
     { A, B, C },
+    { topBar: { title: 'foo' } },
     {
-      options: { topBar: { title: 'foo' } },
       screenOptions: { topBar: { backButton: { visible: false } } },
     },
   );

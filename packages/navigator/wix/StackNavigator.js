@@ -9,10 +9,9 @@ const o = {
 };
 
 export default class StackNavigator extends Navigator {
-  constructor(routes, config = {}) {
-    super(routes, config);
+  constructor(routes, options = {}, config = {}) {
+    super(routes, options, config);
 
-    this.options = config.options;
     this.screenOptions = config.screenOptions || {};
 
     // Component IDs

@@ -13,11 +13,11 @@ beforeEach(() => {
   app = createBottomTabsNavigator({
     ab: createStackNavigator(
       { A, B },
-      { options: { bottomTab: { icon: 'icon-1', text: 'Tab 1' } } },
+      { bottomTab: { icon: 'icon-1', text: 'Tab 1' } },
     ),
     c: createStackNavigator(
       { C },
-      { options: { bottomTab: { icon: 'icon-2', text: 'Tab 2' } } },
+      { bottomTab: { icon: 'icon-2', text: 'Tab 2' } },
     ),
   });
 

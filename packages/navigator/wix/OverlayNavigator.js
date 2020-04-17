@@ -3,8 +3,8 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class OverlayNavigator extends Navigator {
-  constructor(routes, config = {}) {
-    super(routes, config);
+  constructor(routes, options = {}, config = {}) {
+    super(routes, options, config);
 
     this.component = this.get(this.initialRouteName);
   }

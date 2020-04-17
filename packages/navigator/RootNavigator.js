@@ -5,8 +5,8 @@ import { ModalNavigator, OverlayNavigator } from './wix';
 import SwitchNavigator from './SwitchNavigator';
 
 export default class RootNavigator extends SwitchNavigator {
-  constructor(routes, config = {}) {
-    super(routes, config);
+  constructor(routes, options = {}, config = {}) {
+    super(routes, options, config);
 
     this.backBehavior = 'none'; // Force
     this.overlays = [];

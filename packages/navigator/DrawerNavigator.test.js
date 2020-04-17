@@ -10,6 +10,7 @@ const B = {};
 beforeEach(() => {
   navigator = createDrawerNavigator(
     { A, B },
+    {},
     {
       contentComponent: 'Drawer',
       // screenOptions: { topBar: { title: 'foo' } },

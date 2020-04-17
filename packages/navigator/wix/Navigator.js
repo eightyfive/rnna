@@ -13,10 +13,12 @@ function createId(parentId, id) {
 }
 
 export default /** abstract */ class Navigator extends Route {
-  constructor(routes, config) {
+  constructor(routes, options, config) {
     super();
 
     this.routes = new Map(o.entries(routes));
+    this.options = options;
+
     this.order = o.keys(routes);
     this.initialRouteName = config.initialRouteName || this.order[0];
     this.history = [];

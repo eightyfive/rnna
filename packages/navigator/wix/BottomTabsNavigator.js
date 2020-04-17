@@ -3,11 +3,10 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class BottomTabsNavigator extends Navigator {
-  constructor(routes, config = {}) {
-    super(routes, config);
+  constructor(routes, options = {}, config = {}) {
+    super(routes, options, config);
 
     this.layoutId = config.layoutId || this.order.join('-');
-    this.options = config.options;
     this.tabIndex = 0;
 
     this.listeners = {

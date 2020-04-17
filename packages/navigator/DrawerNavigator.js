@@ -3,7 +3,7 @@ import { Navigation } from 'react-native-navigation';
 import { Component, StackNavigator } from './wix';
 
 export default class DrawerNavigator extends StackNavigator {
-  constructor(routes, config = {}) {
+  constructor(routes, options = {}, config = {}) {
     if (!config.drawer) {
       throw new Error('config.drawer is required');
     }
@@ -12,12 +12,11 @@ export default class DrawerNavigator extends StackNavigator {
       throw new Error('config.drawer must be of type `Component`');
     }
 
-    super(routes, config);
+    super(routes, options, config);
 
     this.drawer = config.drawer;
     this.drawerPosition = config.drawerPosition || 'left';
     this.visible = false;
-    this.options = config.options;
 
     this.listeners = {
       _didAppear: [],

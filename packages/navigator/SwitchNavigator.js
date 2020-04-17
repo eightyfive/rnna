@@ -1,8 +1,8 @@
 import { Navigator } from './wix';
 
 export default class SwitchNavigator extends Navigator {
-  constructor(routes, config = {}) {
-    super(routes, config);
+  constructor(routes, options = {}, config = {}) {
+    super(routes, options, config);
 
     this.backBehavior = config.backBehavior || 'none';
   }

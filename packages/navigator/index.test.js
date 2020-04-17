@@ -27,11 +27,11 @@ test('create Root Navigator (tabs)', () => {
     tabs: {
       tab1: {
         Screen1: {},
-        config: { options: { bottomTab: { text: 'Title 1' } } },
+        options: { bottomTab: { text: 'Title 1' } },
       },
       tab2: {
         Screen2: {},
-        config: { options: { bottomTab: { text: 'Title 2' } } },
+        options: { bottomTab: { text: 'Title 2' } },
       },
     },
 
@@ -127,7 +127,7 @@ const B = {};
 
 // Modal
 test('createModalNavigator', () => {
-  const navigator = createStackNavigator({ A, B }, { mode: 'modal' });
+  const navigator = createStackNavigator({ A, B }, {}, { mode: 'modal' });
 
   expect(navigator).toBeInstanceOf(StackNavigator);
   expect(navigator).toBeInstanceOf(ModalNavigator);
@@ -135,7 +135,7 @@ test('createModalNavigator', () => {
 
 // Overlay
 test('createOverlayNavigator', () => {
-  const navigator = createOverlayNavigator({ A }, { mode: 'overlay' });
+  const navigator = createOverlayNavigator({ A }, {}, { mode: 'overlay' });
 
   expect(navigator).toBeInstanceOf(OverlayNavigator);
 });

@@ -26,7 +26,11 @@ const o = {
   assign: Object.assign,
 };
 
-export function createBottomTabNavigator(routeConfigs, config = {}) {
+export function createBottomTabNavigator(
+  routeConfigs,
+  options = {},
+  config = {},
+) {
   const routes = createRoutes(toWixRoutes(routeConfigs));
 
   const invalid = o
@@ -39,9 +43,11 @@ export function createBottomTabNavigator(routeConfigs, config = {}) {
     );
   }
 
-  const options = toBottomTabConfig(config);
-
-  return new BottomTabNavigator(routes, options);
+  return new BottomTabNavigator(
+    routes,
+    toWixOptions(options),
+    toBottomTabConfig(config),
+  );
 }
 
 export function createDrawerNavigator(routeConfigs, config = {}) {
@@ -60,24 +66,30 @@ export function createDrawerNavigator(routeConfigs, config = {}) {
   // TODO
   config.drawer = createComponent(contentComponent, contentOptions);
 
-  const options = toDrawerConfig(config);
-
-  return new DrawerNavigator(routes, options);
+  return new DrawerNavigator(
+    routes,
+    toWixOptions(options),
+    toDrawerConfig(config),
+  );
 }
 
 export function createRootNavigator(routes) {
   const app = _mapValues(routes, (route, id) => {
     const depth = getRouteDepth(route);
-    const { config = {}, ...routeConfigs } = route;
+    const { options = {}, config = {}, ...routeConfigs } = route;
 
     config.parentId = id;
 
     if (depth === 2) {
-      return createBottomTabNavigator(createStacks(routeConfigs, id), config);
+      return createBottomTabNavigator(
+        createStackNavigators(routeConfigs, id),
+        options,
+        config,
+      );
     }
 
     if (depth === 1) {
-      return createStackNavigator(routeConfigs, config);
+      return createStackNavigator(routeConfigs, toWixOptions(options), config);
     }
 
     throw new Error('Invalid routes obj');
@@ -86,26 +98,29 @@ export function createRootNavigator(routes) {
   return new RootNavigator(app);
 }
 
-function createStacks(routes, parentId) {
+function createStackNavigators(routes, parentId) {
   return _mapValues(routes, (route, id) => {
-    const { config = {}, ...routeConfigs } = route;
+    const { options = {}, config = {}, ...routeConfigs } = route;
 
     config.parentId = `${parentId}/${id}`;
 
-    return createStackNavigator(routeConfigs, config);
+    return createStackNavigator(routeConfigs, toWixOptions(options), config);
   });
 }
 
-export function createStackNavigator(routeConfigs, config = {}) {
+export function createStackNavigator(routeConfigs, options = {}, config = {}) {
   const routes = createRoutes(toWixRoutes(routeConfigs));
-  const options = toStackConfig(config);
 
   if (config.mode === 'overlay') {
     if (o.values(routes).length > 1) {
       throw new Error('`OverlayNavigator` only accepts one `Component` child');
     }
 
-    return new OverlayNavigator(routes, options);
+    return new OverlayNavigator(
+      routes,
+      toWixOptions(options),
+      toStackConfig(config),
+    );
   }
 
   const invalid = o.values(routes).some(route => route instanceof Navigator);
@@ -119,21 +134,22 @@ export function createStackNavigator(routeConfigs, config = {}) {
   }
 
   if (config.mode === 'modal') {
-    return new ModalNavigator(routes, options);
+    return new ModalNavigator(routes, toWixOptions(options), config);
   }
 
-  return new StackNavigator(routes, options);
+  return new StackNavigator(routes, toWixOptions(options), config);
 }
 
 // TODO
 // https://reactnavigation.org/docs/en/switch-navigator.html
-export default function createSwitchNavigator(routeConfigs, config = {}) {}
-
-export function createSwitchNavigator(routeConfigs, config = {}) {
+export function createSwitchNavigator(routeConfigs, options = {}, config = {}) {
   const routes = createRoutes(toWixRoutes(routeConfigs));
-  const options = toSwitchConfig(config);
 
-  return new SwitchNavigator(routes, options);
+  return new SwitchNavigator(
+    routes,
+    toWixOptions(options),
+    toSwitchConfig(config),
+  );
 }
 
 export function createWidget(id) {
@@ -373,22 +389,14 @@ function toSwitchConfig(config) {
 
 const configKeys = ['initialRouteName', 'parentId'];
 
-function toConfig({ options, screenOptions, ...config }, keys) {
-  // console.log(options, config);
-  const navigatorConfig = _pick(config, configKeys.concat(keys));
-
-  if (options) {
-    navigatorConfig.options = options;
-  }
+function toConfig({ screenOptions, ...rest }, keys) {
+  const config = _pick(rest, configKeys.concat(keys));
 
   if (screenOptions) {
-    o.assign(
-      navigatorConfig,
-      o.assign({ screenOptions: toWixOptions(screenOptions) }),
-    );
+    config.screenOptions = toWixOptions(screenOptions);
   }
 
-  return navigatorConfig;
+  return config;
 }
 
 function toWixRoutes(routes) {
