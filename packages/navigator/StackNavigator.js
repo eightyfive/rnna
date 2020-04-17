@@ -16,25 +16,6 @@ export default class StackNavigator extends Wix {
     // this.headerMode =
   }
 
-  navigate(toName, params, fromId) {
-    const index = this.history.findIndex(name => name === toName);
-
-    if (index === -1) {
-      this.push(toName, params, fromId);
-    } else if (index >= 1) {
-      this.popToIndex(index);
-    }
-  }
-
-  goBack() {
-    if (this.history.length === 1) {
-      throw new Error('No route to navigate back to');
-    }
-
-    this.history.pop();
-    this.pop();
-  }
-
   pop(n = 1) {
     const index = this.history.length - 1 - n;
 

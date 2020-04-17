@@ -92,6 +92,12 @@ export default class StackNavigator extends Navigator {
   }
 
   pop(fromId) {
+    if (this.history.length === 1) {
+      throw new Error('No route to navigate back to');
+    }
+
+    this.history.pop();
+
     Navigation.pop(fromId);
   }
 
@@ -114,5 +120,19 @@ export default class StackNavigator extends Navigator {
     }
 
     return this.route;
+  }
+
+  navigate(toName, params, fromId) {
+    const index = this.history.findIndex(name => name === toName);
+
+    if (index === -1) {
+      this.push(toName, params, fromId);
+    } else if (index >= 1) {
+      this.popToIndex(index);
+    }
+  }
+
+  goBack(fromId) {
+    this.pop(fromId);
   }
 }

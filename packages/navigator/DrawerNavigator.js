@@ -27,41 +27,6 @@ export default class DrawerNavigator extends SideMenuNavigator {
     // this.drawerContentOptions =
   }
 
-  navigate(toId, params) {
-    if (toId === this.drawer.id) {
-      this.openDrawer();
-    } else {
-      if (this.visible) {
-        this.closeDrawer();
-      }
-
-      // TODO
-      // Exactly the same as StackNavigator.navigate...
-      const index = this.history.findIndex(name => name === toName);
-
-      if (index === -1) {
-        this.push(toName, params, fromId);
-      } else if (index >= 1) {
-        this.popToIndex(index);
-      }
-    }
-  }
-
-  goBack() {
-    if (this.visible) {
-      this.closeDrawer();
-    } else {
-      // TODO
-      // Exactly the same as StackNavigator.goBack...
-      if (this.history.length === 1) {
-        throw new Error('No route to navigate back to');
-      }
-
-      this.history.pop();
-      this.pop();
-    }
-  }
-
   openDrawer() {
     Navigation.mergeOptions(
       this.drawer.id,

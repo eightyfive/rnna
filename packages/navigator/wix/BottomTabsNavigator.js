@@ -72,4 +72,29 @@ export default class BottomTabsNavigator extends Navigator {
 
     return this.route.getComponent();
   }
+
+  navigate(path, params, fromId) {
+    const [id, rest] = this.parsePath(path);
+    const index = this.order.findIndex(key => key === id);
+
+    if (index === -1) {
+      throw new Error(`Unknown tab: ${id}`);
+    }
+
+    if (this.tabIndex !== index) {
+      this.tabIndex = index;
+
+      Navigation.mergeOptions(this.layoutId, {
+        bottomTabs: { currentTabIndex: index },
+      });
+    }
+
+    if (rest) {
+      this.route.navigate(rest, params, fromId);
+    }
+  }
+
+  goBack(fromId) {
+    // TODO
+  }
 }
