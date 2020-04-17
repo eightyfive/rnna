@@ -2,51 +2,47 @@ import { Navigation } from 'react-native-navigation';
 
 import Component from './Component';
 
-const component = {
-  id: 'A',
-  name: 'A',
-  options: {},
-  passProps: {},
-};
+export function makeComponent(id, options = {}, params = {}) {
+  return {
+    id: id,
+    name: id,
+    options,
+    passProps: params,
+  };
+}
 
 test('mount', () => {
-  const app = new Component('A');
+  const component = new Component('A');
 
-  app.mount();
+  component.mount();
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      component,
+      component: makeComponent('A'),
     },
   });
 });
 
 test('mount (options)', () => {
-  const app = new Component('A', { topBar: { title: 'A Title' } });
+  const component = new Component('A', { topBar: { title: 'A Title' } });
 
-  app.mount();
+  component.mount();
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      component: {
-        ...component,
-        options: { topBar: { title: 'A Title' } },
-      },
+      component: makeComponent('A', { topBar: { title: 'A Title' } }),
     },
   });
 });
 
 test('mount (params)', () => {
-  const app = new Component('A');
+  const component = new Component('A');
 
-  app.mount({ foo: 'bar' });
+  component.mount({ foo: 'bar' });
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      component: {
-        ...component,
-        passProps: { foo: 'bar' },
-      },
+      component: makeComponent('A', {}, { foo: 'bar' }),
     },
   });
 });

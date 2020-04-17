@@ -1,4 +1,5 @@
 import { Navigation } from 'react-native-navigation';
+import _merge from 'lodash.merge';
 
 import Route from './Route';
 
@@ -22,13 +23,14 @@ export default class Component extends Route {
 
   unmount(fromId) {}
 
-  getLayout(params, screenOptions) {
+  getLayout(params, screenOptions = {}) {
     const layout = {
       id: this.id,
       name: this.name,
+      options: screenOptions,
     };
 
-    layout.options = o.assign({}, screenOptions, this.options);
+    _merge(layout.options, this.options);
 
     if (params) {
       this.passProps = params;
