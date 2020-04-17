@@ -1,12 +1,13 @@
 import { Navigation } from 'react-native-navigation';
 
 import {
-  BottomTabsNavigator,
   ModalNavigator,
   OverlayNavigator,
   StackNavigator,
   WidgetComponent,
 } from './wix';
+
+import BottomTabNavigator from './BottomTabNavigator';
 
 import {
   createStackNavigator,
@@ -48,7 +49,7 @@ test('create Root Navigator (tabs)', () => {
     },
   });
 
-  expect(app.get('tabs')).toBeInstanceOf(BottomTabsNavigator);
+  expect(app.get('tabs')).toBeInstanceOf(BottomTabNavigator);
   expect(app.get('stack')).toBeInstanceOf(StackNavigator);
   expect(app.get('modal')).toBeInstanceOf(StackNavigator);
   expect(app.get('modal')).toBeInstanceOf(ModalNavigator);

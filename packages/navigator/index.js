@@ -6,7 +6,6 @@ import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 
 import {
-  BottomTabsNavigator,
   ModalNavigator,
   Navigator,
   OverlayNavigator,
@@ -14,6 +13,7 @@ import {
   WidgetComponent,
 } from 'wix';
 
+import BottomTabNavigator from './BottomTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import RootNavigator from './RootNavigator';
 import SwitchNavigator from './SwitchNavigator';
@@ -35,13 +35,13 @@ export function createBottomTabNavigator(routeConfigs, config = {}) {
 
   if (invalid) {
     throw new Error(
-      '`BottomTabsNavigator` only accepts `StackNavigator` children',
+      '`BottomTabNavigator` only accepts `StackNavigator` children',
     );
   }
 
   const options = toBottomTabConfig(config);
 
-  return new BottomTabsNavigator(routes, options);
+  return new BottomTabNavigator(routes, options);
 }
 
 export function createDrawerNavigator(routeConfigs, config = {}) {
