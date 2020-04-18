@@ -1,8 +1,7 @@
 import { from } from 'rxjs';
 import { mapTo, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
-const logRed = (err, logger = log) => logger;
-const groupRed = err => logRed(err, console.group);
+import groups from 'console.groups';
 
 const logger = next => req$ => {
   return next(req$).pipe(
@@ -10,36 +9,32 @@ const logger = next => req$ => {
     switchMap(([res, req]) => {
       return from(res.clone().json()).pipe(
         tap(data => {
+          let title = [req.method, req.url, req.status].join(' ');
+
+          // if Error
           if (res.status >= 300) {
-            console.group(
-              `%c${[req.method, req.url, res.status].join(' ')}`,
-              'color: red',
-            );
-          } else {
-            console.groupCollapsed(req.method, req.url, res.status);
+            title = `{red}${title}`;
           }
 
-          // Request
-          console.groupCollapsed('Request');
-
-          console.log(req.method);
-          console.log(req.url);
-          logHeaders(req.headers);
-          console.log('credentials', req.credentials);
-          console.log('mode', req.mode);
-
-          console.groupEnd();
-
-          // Response
-          console.groupCollapsed('Response');
-
-          console.log(res.statusText, res.status);
-          console.log(data);
-          logHeaders(res.headers);
-
-          console.groupEnd();
-
-          console.groupEnd();
+          groups(
+            {
+              [title]: {
+                Request: {
+                  '0': req.method,
+                  '1': req.url,
+                  Headers: mapHeaders(req.headers),
+                  '2': `credentials: ${req.credentials}`,
+                  '3': `mode: ${req.mode}`,
+                },
+                Response: {
+                  '0': [res.statusText, res.status],
+                  '1': data,
+                  Headers: mapHeaders(res.headers),
+                },
+              },
+            },
+            [res.status < 300],
+          );
         }),
         mapTo(res),
       );
@@ -49,11 +44,12 @@ const logger = next => req$ => {
 
 export default logger;
 
-function logHeaders(headers) {
-  console.groupCollapsed('Headers');
+function mapHeaders(headers) {
+  const values = [];
 
   for (let [name, value] of headers.entries()) {
-    console.log(`${name}: ${value}`);
+    values.push(`${name}: ${value}`);
   }
-  console.groupEnd();
+
+  return values;
 }

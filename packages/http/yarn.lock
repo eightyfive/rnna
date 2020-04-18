@@ -2,6 +2,18 @@
 # yarn lockfile v1
 
 
+console.groups@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/console.groups/-/console.groups-0.1.1.tgz#08922366340d360295f3e317d87924aa0b49f44a"
+  integrity sha512-FHbSJMM2uUcHFVmp/O1i9Xd+9vL8doOm/lV+qy48HlS8NPYc4+AhzTXIjN3qax4Alk50hn+M8sweV/xZmfF3PQ==
+  dependencies:
+    console.unicorn "^0.1.1"
+
+console.unicorn@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/console.unicorn/-/console.unicorn-0.1.1.tgz#477b8178439144bc03b534008eef057dfb7bf3d4"
+  integrity sha512-frvYTGRrojgf82A7wqpxNdAgntZv66v1VHbvWZ0qHRtnpa3VJ7wGR+elyiW8z+DEOmSAFCq7Rlg2+SAeBTXNWg==
+
 fetch-run@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/fetch-run/-/fetch-run-1.1.4.tgz#419d5db3bde818e72be66e9196f37b58df7425db"
