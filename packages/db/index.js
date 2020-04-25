@@ -150,18 +150,17 @@ function getResultSelector(table, order) {
   const { selectors } = cache;
 
   if (!selectors.has(order)) {
-    selectors.set(
-      order,
-      createResultSelector([...ns.tables, table], [...ns.orders, table, order]),
-    );
+    selectors.set(order, createResultSelector(table, order));
   }
 
   return selectors.get(order);
 }
 
 export function createResultSelector(table, order) {
-  const selector = createSelector(table, order, (byId, result) =>
-    (result || []).map(id => byId[id]),
+  const selector = createSelector(
+    [...ns.tables, table],
+    [...ns.orders, table, order],
+    (byId, result) => (result || []).map(id => byId[id]),
   );
 
   return createShallowSelector(selector, objs => objs);
@@ -243,7 +242,7 @@ function getRelationsSelector(table, id, foreign, relations) {
   if (!selectors.has(cacheKey)) {
     selectors.set(
       cacheKey,
-      createRelationsSelector([...ns.tables, table], id, foreign, relations),
+      createRelationsSelector(table, id, foreign, relations),
     );
   }
 
@@ -254,7 +253,7 @@ export function createRelationsSelector(table, id, foreign, relations) {
   const selector = createSelector(
     [...ns.tables, table, id, foreign],
     [...ns.tables, relations],
-    (relation, byId) => relation.map(rId => byId[rId]),
+    (relation, byId) => (relation || []).map(rId => byId[rId]),
   );
 
   return createShallowSelector(selector, objs => objs);
