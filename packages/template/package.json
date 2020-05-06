@@ -1,0 +1,19 @@
+{
+  "name": "rnna",
+  "version": "0.2.19",
+  "description": "Rx operators (React Native Navigation App)",
+  "keywords": [
+    "rnna",
+    "react-native",
+    "template"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/template"
+  },
+  "author": "Benoit Sagols",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
