@@ -49,10 +49,8 @@ export default class RootNavigator extends SwitchNavigator {
     }
   };
 
-  handleModalDismiss = ({ componentId: id, modalsDismissed }) => {
-    // Happens when Native back button is pressed.
-
-    if (this.route instanceof ModalNavigator && this.route.id === id) {
+  handleModalDismiss = () => {
+    if (this.route instanceof ModalNavigator) {
       this.history.pop();
     }
   };
