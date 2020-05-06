@@ -8,26 +8,13 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "postinstall": "scripts/setup.js",
-    "g": "hygen rnna"
+    "postinstall": "scripts/setup.js"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.8.1",
-    "color": "^3.1.2",
-    "date-fns": "^2.11.1",
-    "immer": "^6.0.2",
     "react": "16.11.0",
     "react-native": "0.62.0",
-    "react-native-col": "^0.5.6",
     "react-native-navigation": "^6.3.2",
-    "react-native-spacesheet": "^0.2.4",
-    "react-redux": "^7.2.0",
-    "redux": "^4.0.5",
-    "redux-observable": "^1.2.0",
-    "redux-persist": "^6.0.0",
-    "reselect": "^4.0.0",
-    "rnna": "^0.2.1",
-    "rxjs": "^6.5.4"
+    "@rnna/navigator": "^0.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
