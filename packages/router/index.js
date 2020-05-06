@@ -72,6 +72,10 @@ export default class Router {
   getProps(component, state, params) {
     const controller = this.controllers.get(component.id);
 
+    if (!controller) {
+      throw new Error(`Controller does not exist (${component.id})`);
+    }
+
     return controller(state, this.services, ...params);
   }
 
