@@ -27,7 +27,7 @@ export default class Component extends Route {
     const layout = {
       id: this.id,
       name: this.name,
-      options: screenOptions,
+      options: { ...screenOptions },
     };
 
     _merge(layout.options, this.options);
