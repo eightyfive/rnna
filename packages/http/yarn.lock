@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-console.groups@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/console.groups/-/console.groups-0.1.1.tgz#08922366340d360295f3e317d87924aa0b49f44a"
-  integrity sha512-FHbSJMM2uUcHFVmp/O1i9Xd+9vL8doOm/lV+qy48HlS8NPYc4+AhzTXIjN3qax4Alk50hn+M8sweV/xZmfF3PQ==
+console.groups@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/console.groups/-/console.groups-0.1.2.tgz#0ca863a109d6d9b2f8bfefe4a3a277364c5a6211"
+  integrity sha512-Z3OKEmCCBqhPuAbY8rCLrhOARl95t2PouZWX0lz0eg4InljasJHTu/7Aetf0y0R8Hb8GOp9yLWmNMMcyWjVWFg==
   dependencies:
     console.unicorn "^0.1.1"
 
