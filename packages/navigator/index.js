@@ -1,16 +1,10 @@
 import { Navigation } from 'react-native-navigation';
 
-import _set from 'lodash.set';
 import _pick from 'lodash.pick';
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 
-import {
-  ModalNavigator,
-  Navigator,
-  OverlayNavigator,
-  WidgetComponent,
-} from './wix';
+import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
 
 import BottomTabNavigator from './BottomTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
@@ -18,7 +12,12 @@ import RootNavigator from './RootNavigator';
 import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
 
-import { createComponent, createRoutes, getRouteDepth } from './utils';
+import {
+  createComponents,
+  createComponent,
+  getRouteDepth,
+  toWixOptions,
+} from './utils';
 
 export { default as registerComponents } from './registerComponents';
 
@@ -27,32 +26,34 @@ const o = {
   values: Object.values,
 };
 
-export function createBottomTabNavigator(
-  routeConfigs,
-  options = {},
-  config = {},
-) {
-  const routes = createRoutes(toWixRoutes(routeConfigs));
+export function createBottomTabNavigator(tabs, options = {}, config = {}) {
+  const stacks = _mapValues(tabs, (tab, tabId) => {
+    const {
+      options: stackOptions = {},
+      config: stackConfig = {},
+      ...screens
+    } = tab;
 
-  const invalid = o
-    .values(routes)
-    .some(route => !(route instanceof StackNavigator));
+    stackConfig.parentId = config.parentId
+      ? `${config.parentId}/${tabId}`
+      : tabId;
 
-  if (invalid) {
-    throw new Error(
-      '`BottomTabNavigator` only accepts `StackNavigator` children',
+    return createStackNavigator(
+      screens,
+      o.assign({}, toWixOptions(stackOptions || {})),
+      stackConfig,
     );
-  }
+  });
 
   return new BottomTabNavigator(
-    routes,
+    stacks,
     toWixOptions(options),
     toBottomTabConfig(config),
   );
 }
 
-export function createDrawerNavigator(routeConfigs, config = {}) {
-  const routes = createRoutes(toWixRoutes(routeConfigs));
+export function createDrawerNavigator(screens, config = {}) {
+  const routes = createComponents(screens);
 
   if (config.contentOptions) {
     config.contentOptions = toWixOptions(config.contentOptions);
@@ -75,79 +76,32 @@ export function createDrawerNavigator(routeConfigs, config = {}) {
 }
 
 export function createRootNavigator(routes) {
-  const app = _mapValues(routes, (route, id) => {
-    const depth = getRouteDepth(route);
-    const { options = {}, config = {}, ...routeConfigs } = route;
-
-    config.parentId = id;
-
-    if (depth === 2) {
-      return createBottomTabNavigator(
-        createStackNavigators(routeConfigs, id),
-        options,
-        config,
-      );
-    }
-
-    if (depth === 1) {
-      return createStackNavigator(routeConfigs, toWixOptions(options), config);
-    }
-
-    throw new Error('Invalid routes obj');
-  });
-
-  return new RootNavigator(app);
+  return new RootNavigator(createRoutes(routes));
 }
 
-function createStackNavigators(routes, parentId) {
-  return _mapValues(routes, (route, id) => {
-    const { options = {}, config = {}, ...routeConfigs } = route;
+export function createStackNavigator(screens, options = {}, config = {}) {
+  const components = createComponents(screens);
 
-    config.parentId = `${parentId}/${id}`;
-
-    return createStackNavigator(routeConfigs, options, config);
-  });
-}
-
-export function createStackNavigator(routeConfigs, options = {}, config = {}) {
-  const routes = createRoutes(toWixRoutes(routeConfigs));
-
-  if (config.mode === 'overlay') {
-    if (o.values(routes).length > 1) {
-      throw new Error('`OverlayNavigator` only accepts one `Component` child');
-    }
-
-    return new OverlayNavigator(
-      o.values(routes).pop(),
+  if (config.mode === 'modal') {
+    return new ModalNavigator(
+      components,
       toWixOptions(options),
       toStackConfig(config),
     );
   }
 
-  const invalid = o.values(routes).some(route => route instanceof Navigator);
-
-  if (invalid) {
-    throw new Error(
-      `\`${
-        config.mode === 'modal' ? 'ModalNavigator' : 'StackNavigator'
-      }\` only accepts \`Component\` children`,
-    );
-  }
-
-  if (config.mode === 'modal') {
-    return new ModalNavigator(routes, toWixOptions(options), config);
-  }
-
-  return new StackNavigator(routes, toWixOptions(options), config);
+  return new StackNavigator(
+    components,
+    toWixOptions(options),
+    toStackConfig(config),
+  );
 }
 
 // TODO
 // https://reactnavigation.org/docs/en/switch-navigator.html
-export function createSwitchNavigator(routeConfigs, options = {}, config = {}) {
-  const routes = createRoutes(toWixRoutes(routeConfigs));
-
+export function createSwitchNavigator(routes, options = {}, config = {}) {
   return new SwitchNavigator(
-    routes,
+    createRoutes(routes),
     toWixOptions(options),
     toSwitchConfig(config),
   );
@@ -163,179 +117,6 @@ export function setDefaultOptions({ options, ...rest }) {
   Navigation.events().registerAppLaunchedListener(() =>
     Navigation.setDefaultOptions(defaultOptions),
   );
-}
-
-function toWixOptions({
-  // headerMode,
-
-  // https://reactnavigation.org/docs/stack-navigator/#options
-  title,
-  header,
-  headerShown,
-  headerTitle,
-  headerTitleAlign,
-  // headerTitleAllowFontScaling,
-  // headerBackAllowFontScaling,
-  // headerBackImage,
-  headerBackTitle,
-  headerBackTitleVisible,
-  // headerTruncatedBackTitle,
-  // headerRight,
-  // headerLeft,
-  headerStyle,
-  headerTitleStyle,
-  headerBackTitleStyle,
-  // headerLeftContainerStyle,
-  // headerRightContainerStyle,
-  // headerTitleContainerStyle,
-  headerTintColor,
-  // headerPressColorAndroid,
-  headerTransparent,
-  headerBackground,
-  // headerStatusBarHeight,
-  // cardShadowEnabled,
-  // cardOverlayEnabled,
-  // cardOverlay,
-  // cardStyle,
-  // animationEnabled,
-  // animationTypeForReplace,
-  // gestureEnabled,
-  // gestureResponseDistance,
-  // gestureVelocityImpact,
-  // gestureDirection,
-  // transitionSpec,
-  // cardStyleInterpolator,
-  // headerStyleInterpolator,
-  // safeAreaInsets,
-
-  // https://reactnavigation.org/docs/drawer-navigator#options
-  // drawerLabel,
-  // drawerIcon,
-  // swipeEnabled,
-  // unmountOnBlur,
-
-  // https://reactnavigation.org/docs/bottom-tab-navigator#options
-  tabBarVisible,
-  tabBarIcon,
-  tabBarLabel,
-  // tabBarButton,
-  // tabBarAccessibilityLabel,
-  // tabBarTestID,
-
-  // https://reactnavigation.org/docs/bottom-tab-navigator#props
-  // tabBar,
-  tabBarOptions,
-  ...options
-}) {
-  if (header === null || headerShown === false) {
-    _set(options, 'topBar.visible', false);
-    _set(options, 'topBar.drawBehind', true);
-  } else {
-    if (title) {
-      _set(options, 'topBar.title.text', title);
-    }
-
-    if (headerTitle) {
-      _set(options, 'topBar.title.component.name', headerTitle);
-    }
-
-    if (headerTitleAlign) {
-      _set(options, 'topBar.title.component.alignment', headerTitleAlign);
-    }
-
-    if (headerBackTitle) {
-      _set(options, 'topBar.backButton.title', headerBackTitle);
-    }
-
-    if (headerBackTitleVisible === false) {
-      _set(options, 'topBar.backButton.showTitle', false);
-    }
-
-    if (headerStyle) {
-      if (headerStyle.backgroundColor) {
-        _set(options, 'topBar.background.color', headerStyle.backgroundColor);
-      }
-    }
-
-    if (headerTitleStyle) {
-      if (headerTitleStyle.color) {
-        _set(options, 'topBar.title.color', headerTitleStyle.color);
-      }
-      if (headerTitleStyle.fontFamily) {
-        _set(options, 'topBar.title.fontFamily', headerTitleStyle.fontFamily);
-      }
-      if (headerTitleStyle.fontSize) {
-        _set(options, 'topBar.title.fontSize', headerTitleStyle.fontSize);
-      }
-      if (headerTitleStyle.fontWeight) {
-        _set(options, 'topBar.title.fontWeight', headerTitleStyle.fontWeight);
-      }
-    }
-
-    if (headerBackTitleStyle) {
-      if (headerBackTitleStyle.color) {
-        _set(options, 'topBar.backButton.color', headerBackTitleStyle.color);
-      }
-    }
-
-    if (headerTransparent) {
-      _set(options, 'topBar.drawBehind', true);
-    }
-
-    if (headerBackground) {
-      _set(options, 'topBar.background.component.name', headerBackground);
-    }
-
-    if (headerTintColor) {
-      _set(options, 'topBar.title.color', headerTintColor);
-      _set(options, 'topBar.backButton.color', headerTintColor);
-    }
-  }
-
-  // https://reactnavigation.org/docs/bottom-tab-navigator#tabbaroptions
-  if (tabBarOptions) {
-    if (tabBarOptions.activeTintColor) {
-      _set(
-        options,
-        'bottomTab.selectedTextColor',
-        tabBarOptions.activeTintColor,
-      );
-      _set(
-        options,
-        'bottomTab.selectedIconColor',
-        tabBarOptions.activeTintColor,
-      );
-    }
-
-    if (tabBarOptions.inactiveTintColor) {
-      _set(options, 'bottomTab.textColor', tabBarOptions.inactiveTintColor);
-      _set(options, 'bottomTab.iconColor', tabBarOptions.inactiveTintColor);
-    }
-
-    if (tabBarOptions.inactiveBackgroundColor) {
-      _set(
-        options,
-        'bottomTabs.backgroundColor',
-        tabBarOptions.inactiveBackgroundColor,
-      );
-    }
-  }
-
-  if (tabBarVisible === false) {
-    _set(options, 'bottomTabs.visible', false);
-  }
-
-  if (tabBarIcon) {
-    _set(options, 'bottomTab.icon', tabBarIcon);
-  }
-
-  if (tabBarLabel) {
-    _set(options, 'bottomTab.text', tabBarLabel);
-  }
-
-  // tabBarButton,
-
-  return options;
 }
 
 // https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
@@ -399,12 +180,27 @@ function toConfig({ screenOptions, ...rest }, keys) {
   return config;
 }
 
-function toWixRoutes(routes) {
-  return _mapValues(routes, route => {
-    if (_isObject(route)) {
-      return toWixOptions(route);
+function createRoutes(routes) {
+  return _mapValues(routes, (route, id) => {
+    const isOverlay = !_isObject(route);
+
+    if (isOverlay) {
+      return new OverlayNavigator(createComponent(id, route));
     }
 
-    return route;
+    const { options = {}, config = {}, ...screens } = route;
+    const depth = getRouteDepth(route);
+
+    config.parentId = id;
+
+    if (depth === 1) {
+      return createBottomTabNavigator(screens, options, config);
+    }
+
+    if (depth === 0) {
+      return createStackNavigator(screens, toWixOptions(options), config);
+    }
+
+    throw new Error('Invalid routes obj');
   });
 }

@@ -14,6 +14,19 @@ import {
   createWidget,
 } from './index';
 
+function Screen1() {}
+Screen1.options = { title: 'Title 1' };
+
+function Screen2() {}
+Screen2.options = { title: 'Title 2' };
+
+function Screen3() {}
+
+function Screen4() {}
+
+function Screen5() {}
+Screen5.options = { layout: { componentBackgroundColor: 'dummy' } };
+
 test('createWidget', () => {
   const widget = createWidget('A');
 
@@ -25,34 +38,32 @@ test('createRootNavigator (tabs)', () => {
   const app = createRootNavigator({
     tabs: {
       tab1: {
-        Screen1: { title: 'Title 1' },
+        Screen1,
         options: { bottomTab: { text: 'Title 1' } },
       },
       tab2: {
-        Screen2: { title: 'Title 2' },
+        Screen2,
         options: { bottomTab: { text: 'Title 2' } },
       },
     },
 
     stack: {
-      Screen3: {},
+      Screen3,
+      config: { foo: 'modal' },
     },
 
     modal: {
-      Screen4: {},
+      Screen4,
       config: { mode: 'modal' },
     },
 
-    overlay: {
-      Screen5: { layout: { componentBackgroundColor: 'dummy' } },
-      config: { mode: 'overlay' },
-    },
+    Screen5,
   });
 
   expect(app.get('tabs')).toBeInstanceOf(BottomTabNavigator);
   expect(app.get('stack')).toBeInstanceOf(StackNavigator);
   expect(app.get('modal')).toBeInstanceOf(ModalNavigator);
-  expect(app.get('overlay')).toBeInstanceOf(OverlayNavigator);
+  expect(app.get('Screen5')).toBeInstanceOf(OverlayNavigator);
 
   Navigation.setRoot.mockReset();
   app.go('tabs/tab1/Screen1');
@@ -96,46 +107,38 @@ test('createRootNavigator (tabs)', () => {
 });
 
 test('createRootNavigator (stack)', () => {
-  const app = createRootNavigator({
-    auth: {
-      Login: {},
-      Register: {},
-    },
-  });
+  const app = createRootNavigator({ main: { Screen3, Screen4 } });
 
   Navigation.setRoot.mockReset();
-  app.go('auth/Login');
+  app.go('main/Screen3');
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      stack: makeStack([makeComponent('auth/Login', {}, {}, 'Login')]),
+      stack: makeStack([makeComponent('main/Screen3', {}, {}, 'Screen3')]),
     },
   });
 });
-
-const A = {};
-const B = {};
 
 // Bottom tabs
 // TODO
 
 // Modal
 test('createModalNavigator', () => {
-  const app = createStackNavigator({ A, B }, {}, { mode: 'modal' });
+  const app = createStackNavigator({ Screen1, Screen2 }, {}, { mode: 'modal' });
 
   expect(app).toBeInstanceOf(ModalNavigator);
 });
 
-// Overlay
-test('createOverlayNavigator', () => {
-  const app = createStackNavigator({ A }, {}, { mode: 'overlay' });
+// // Overlay
+// test('createOverlayNavigator', () => {
+//   const app = createStackNavigator({ Screen1 }, {}, { mode: 'overlay' });
 
-  expect(app).toBeInstanceOf(OverlayNavigator);
-});
+//   expect(app).toBeInstanceOf(OverlayNavigator);
+// });
 
 // Stack
 test('createStackNavigator', () => {
-  const app = createStackNavigator({ A, B });
+  const app = createStackNavigator({ Screen1, Screen2 });
 
   expect(app).toBeInstanceOf(StackNavigator);
   expect(app).not.toBeInstanceOf(ModalNavigator);
