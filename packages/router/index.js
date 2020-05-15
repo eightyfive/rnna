@@ -1,12 +1,43 @@
+import _isObject from 'lodash.isplainobject';
 import shallowEqual from 'shallowequal';
+import { createRootNavigator } from '@rnna/navigator';
 
 const o = {
   entries: Object.entries,
 };
 
+function createControllers(routes) {
+  const controllers = new Map();
+  const screens = findScreens(routes);
+
+  for (const [id, Screen] of o.entries(screens)) {
+    controllers.set(id, Screen.controller);
+  }
+
+  return controllers;
+}
+
+function findScreens(routes, screens = {}, parentId = null) {
+  for (const [key, val] of o.entries(routes)) {
+    if (key === 'options' || key === 'config') {
+      continue;
+    }
+
+    const id = parentId ? `${parentId}/${key}` : key;
+
+    if (_isObject(val)) {
+      screens = findScreens(val, screens, id);
+    } else {
+      screens[id] = val;
+    }
+  }
+
+  return screens;
+}
+
 export default class Router {
-  constructor(navigator) {
-    this.navigator = navigator;
+  constructor() {
+    this.navigator = null;
 
     this.prevState = {};
     this.controllers = new Map();
@@ -20,15 +51,8 @@ export default class Router {
   }
 
   setRoutes(routes) {
-    if (routes instanceof Map) {
-      this.controllers = routes;
-    } else {
-      this.controllers = new Map(o.entries(routes));
-    }
-  }
-
-  addRoute(componentId, controller) {
-    this.controllers.set(componentId, controller);
+    this.navigator = createRootNavigator(routes);
+    this.controllers = createControllers(routes);
   }
 
   dispatch(componentId, state, params = []) {
