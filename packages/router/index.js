@@ -6,41 +6,12 @@ const o = {
   entries: Object.entries,
 };
 
-function createControllers(routes) {
-  const controllers = new Map();
-  const screens = findScreens(routes);
-
-  for (const [id, Screen] of o.entries(screens)) {
-    controllers.set(id, Screen.controller);
-  }
-
-  return controllers;
-}
-
-function findScreens(routes, screens = {}, parentId = null) {
-  for (const [key, val] of o.entries(routes)) {
-    if (key === 'options' || key === 'config') {
-      continue;
-    }
-
-    const id = parentId ? `${parentId}/${key}` : key;
-
-    if (_isObject(val)) {
-      screens = findScreens(val, screens, id);
-    } else {
-      screens[id] = val;
-    }
-  }
-
-  return screens;
-}
-
 export default class Router {
   constructor() {
     this.navigator = null;
+    this.screens = new Map();
 
     this.prevState = {};
-    this.controllers = new Map();
     this.cache = new Map();
     this.cache.set('params', new Map());
     this.services = {};
@@ -50,9 +21,36 @@ export default class Router {
     this.services[name] = service;
   }
 
-  setRoutes(routes) {
+  boot(routes) {
     this.navigator = createRootNavigator(routes);
-    this.controllers = createControllers(routes);
+
+    this.findScreens(routes);
+
+    return this.navigator.launch();
+  }
+
+  findScreens(routes, parentId = null) {
+    for (const [key, route] of o.entries(routes)) {
+      if (key === 'options' || key === 'config') {
+        continue;
+      }
+
+      const id = parentId ? `${parentId}/${key}` : key;
+
+      if (_isObject(route)) {
+        this.findScreens(route, id);
+      } else {
+        this.screens.set(id, route);
+      }
+    }
+  }
+
+  get(id) {
+    return this.navigator.get(id);
+  }
+
+  goBack() {
+    return this.navigator.goBack();
   }
 
   dispatch(componentId, state, params = []) {
@@ -94,13 +92,13 @@ export default class Router {
   }
 
   getProps(component, state, params) {
-    const controller = this.controllers.get(component.id);
+    const Screen = this.screens.get(component.id);
 
-    if (!controller) {
+    if (!Screen.controller) {
       throw new Error(`Controller does not exist (${component.id})`);
     }
 
-    return controller(state, this.services, ...params);
+    return Screen.controller(state, this.services, ...params);
   }
 
   getCache(name) {
