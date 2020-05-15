@@ -1,4 +1,4 @@
-import { createStyles } from './theme';
+import { createStyles } from './index';
 
 const Theme = {
   colors: {
