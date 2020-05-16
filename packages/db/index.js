@@ -148,12 +148,13 @@ function getResult(table, order = 'default') {
 
 function getResultSelector(table, order) {
   const { selectors } = cache;
+  const cacheKey = `${table}.${order}`;
 
-  if (!selectors.has(order)) {
-    selectors.set(order, createResultSelector(table, order));
+  if (!selectors.has(cacheKey)) {
+    selectors.set(cacheKey, createResultSelector(table, order));
   }
 
-  return selectors.get(order);
+  return selectors.get(cacheKey);
 }
 
 export function createResultSelector(table, order) {
