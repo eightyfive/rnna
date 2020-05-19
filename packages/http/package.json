@@ -8,7 +8,7 @@
     "rx"
   ],
   "dependencies": {
-    "console.groups": "^0.1.2",
+    "console.groups": "^0.1.3",
     "fetch-run": "^1.1.5"
   },
   "peerDependencies": {
