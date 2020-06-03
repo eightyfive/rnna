@@ -14,7 +14,7 @@ export default class RootNavigator extends SwitchNavigator {
 
     this.overlayIds = [];
 
-    for (const [id, route] of this.routes) {
+    for (const [id] of this.routes) {
       if (routes instanceof OverlayNavigator) {
         this.overlayIds.push(id);
       }
@@ -85,9 +85,11 @@ export default class RootNavigator extends SwitchNavigator {
 
       route.mount(params);
     } else if (this.route.id !== id) {
-      if (this.route instanceof ModalNavigator) {
+      if (route instanceof ModalNavigator) {
         // Only one modal at a time
-        this.dismissModal();
+        if (this.route instanceof ModalNavigator) {
+          this.dismissModal();
+        }
         this.history.push(id);
       } else {
         // Unmount old route
@@ -95,6 +97,7 @@ export default class RootNavigator extends SwitchNavigator {
         this.history = [id];
       }
 
+      // Finally mount NEW route
       route.mount(params);
     }
 
