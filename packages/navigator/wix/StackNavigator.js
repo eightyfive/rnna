@@ -17,28 +17,29 @@ export default class StackNavigator extends Navigator {
 
     // Event listeners
     this.listeners = {
-      _didDisappear: [],
+      _didAppear: [],
     };
 
-    this.addListener('_didDisappear', this.handleDidDisappear.bind(this));
+    this.addListener('_didAppear', this.handleDidAppear.bind(this));
 
-    this.listen('ComponentDidDisappear', '_didDisappear');
+    this.listen('ComponentDidAppear', '_didAppear');
   }
 
-  handleDidDisappear({ componentId: id }) {
+  handleDidAppear({ componentId: id }) {
     // A pop() happened outside of the StackNavigator
     // We need to sync history
 
-    // Nothing to pop
+    // Nothing to sync
     if (!this.route || this.history.length === 1) {
       return;
     }
 
-    if (id !== this.route.id) {
+    // Already current/visible
+    if (this.route.id === id) {
       return;
     }
 
-    // If navigator is active
+    // If this navigator is active
     let active = true;
 
     if (this.parent) {
@@ -46,8 +47,15 @@ export default class StackNavigator extends Navigator {
     }
 
     if (active) {
-      // console.log('didDisappear', id, name, this.history);
-      this.history.pop();
+      // TOFIX: Ugly (Force '/' path convention ?)
+      const componentId = id.split('/').pop();
+
+      // console.log('didAppear', id, name, this.history);
+      const index = this.history.findIndex(val => val === componentId);
+
+      if (index > -1) {
+        this.history = this.history.slice(0, index + 1);
+      }
     }
   }
 
