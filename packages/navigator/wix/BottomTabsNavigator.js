@@ -95,6 +95,10 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   goBack(fromId) {
-    // TODO
+    try {
+      this.route.goBack(fromId);
+    } catch (err) {
+      // TODO
+    }
   }
 }
