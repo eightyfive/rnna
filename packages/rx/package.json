@@ -7,7 +7,6 @@
     "rx"
   ],
   "dependencies": {
-    "fetch-run": "^1.1.2",
     "lodash.get": "^4.4.2"
   },
   "peerDependencies": {

@@ -9,8 +9,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 
-import HTTPError from 'fetch-run/http-error';
-
 export const fromApi = rr$ => {
   const req$ = rr$.pipe(
     take(1),
@@ -46,7 +44,7 @@ const isContentType = contentType => source =>
   source.pipe(filter(re => re.headers.get('Content-Type') === contentType));
 
 const isHTTPError = () => source =>
-  source.pipe(filter(err => err instanceof HTTPError));
+  source.pipe(filter(err => Boolean(err.response)));
 
 const mapError = () => source =>
   source.pipe(
