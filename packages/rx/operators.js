@@ -20,9 +20,13 @@ export const exec = cb => source =>
 export const ofReType = (...expressions) => source =>
   source.pipe(
     filter(({ type }) =>
-      expressions.some(re =>
-        typeof re === 'string' ? type === re : re.test(type),
-      ),
+      expressions.some(re => {
+        if (typeof re === 'string') {
+          return type === re || new RegExp(re).test(type);
+        }
+
+        return re.test(type);
+      }),
     ),
   );
 
