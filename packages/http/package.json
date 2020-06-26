@@ -9,7 +9,7 @@
   ],
   "dependencies": {
     "console.groups": "^0.1.3",
-    "fetch-run": "^1.1.5"
+    "fetch-run": "^1.1.6"
   },
   "peerDependencies": {
     "rxjs": "6.x"
