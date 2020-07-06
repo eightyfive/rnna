@@ -94,7 +94,7 @@ const selectResult = createCachedSelector(
   selectTable,
   selectOrder,
   (rows, order) => {
-    return order.map(id => rows[id]);
+    return (order || []).map(id => rows[id]);
   },
 )((state, table, order = 'default') => `${table}.${order}`);
 
@@ -109,7 +109,7 @@ function createRelationSelector(findSelector, table, name) {
     }
 
     // `relation` is an ID here
-    return related[relation];
+    return related[relation] || null;
   });
 }
 
