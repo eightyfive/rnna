@@ -1,6 +1,6 @@
 {
   "name": "@rnna/db",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "DB (React Native Navigation App)",
   "keywords": [
     "rnna",
@@ -13,8 +13,8 @@
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "pluralize": "^8.0.0",
-    "reselect": "^4.0.0",
-    "re-reselect": "^4.0.0"
+    "re-reselect": "^4.0.0",
+    "reselect": "^4.0.0"
   },
   "repository": {
     "type": "git",
