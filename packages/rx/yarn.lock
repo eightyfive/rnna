@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-fetch-run@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/fetch-run/-/fetch-run-1.1.2.tgz#518cb09119f83432a83836d274e2f3f2f8a08694"
-  integrity sha512-5AaihM0d75ZhnXYvxEn8B/FQxAGIKdQ64W1je15rpzQ2iAnufGbgwytmdXmki6HOwhR0QWRAAOHudqgEsXPKXg==
-
 lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
