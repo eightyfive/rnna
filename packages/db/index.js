@@ -3,6 +3,7 @@ import _set from 'lodash.set';
 import pluralize from 'pluralize';
 import { createSelector as createReselectSelector } from 'reselect';
 import { createCachedSelector } from 're-reselect';
+import { denormalize, schema } from 'normalizr';
 
 const o = Object;
 
@@ -26,14 +27,23 @@ const db = {
   options,
 };
 
+// Schemas
+const schemas = {};
+
 // Cache
 const cache = {
   slices: new Map(),
   selectors: new Map(),
 };
 
-// addTable
-function addTable(table, relations = []) {
+// addEntity
+function addEntity(table, entity = null) {
+  if (entity && !(entity instanceof schema.Entity)) {
+    throw new Error(
+      'Entity definition must be of type schema.Entity (normalizr)',
+    );
+  }
+
   // Ex: `table = "users"`
   const names = table; // `table` is plural by convention
   const name = pluralize.singular(names);
@@ -47,32 +57,21 @@ function addTable(table, relations = []) {
   // Ex: `getUsers`
   db[`get${Names}`] = createGetSelector(table);
 
-  for (let relation of relations) {
-    const relationSelector = createRelationSelector(
-      findSelector,
-      pluralize.plural(relation), // plural table name by convention
-      relation,
-    );
-
-    const Relation = ucfirst(relation); // plural or singular
-    const isPlural = pluralize.isPlural(relation);
-
-    if (isPlural) {
-      // Ex: `getUserPosts`
-      db[`get${Name}${Relation}`] = relationSelector;
-    } else {
-      // Ex: `findUserPost`
-      db[`find${Name}${Relation}`] = relationSelector;
-    }
-  }
+  // Save schema for denormalize
+  schemas[table] = entity;
 }
 
 // createFindSelector
 function createFindSelector(table) {
   return (state, id) => {
     const rows = _get(state, [...ns.tables, table]);
+    const row = rows[id];
 
-    return rows[id] || null;
+    if (row && schemas[table]) {
+      return denormalize(row, schemas[table], _get(state, ns.tables));
+    }
+
+    return row || null;
   };
 }
 
@@ -82,8 +81,12 @@ function createGetSelector(table) {
 }
 
 // selectResult
-const selectTable = (state, table, order = 'default') => {
-  return _get(state, [...ns.tables, table]);
+const selectTables = state => {
+  return _get(state, ns.tables);
+};
+
+const selectTableName = (state, table) => {
+  return table;
 };
 
 const selectOrder = (state, table, order = 'default') => {
@@ -91,27 +94,23 @@ const selectOrder = (state, table, order = 'default') => {
 };
 
 const selectResult = createCachedSelector(
-  selectTable,
+  selectTables,
+  selectTableName,
   selectOrder,
-  (rows, order) => {
-    return (order || []).map(id => rows[id]);
+  (tables, name, order) => {
+    const rows = tables[name];
+
+    return (order || []).map(id => {
+      const row = rows[id];
+
+      if (row && schemas[name]) {
+        return denormalize(row, schemas[name], tables);
+      }
+
+      return row || null;
+    });
   },
 )((state, table, order = 'default') => `${table}.${order}`);
-
-// createRelationSelector
-function createRelationSelector(findSelector, table, name) {
-  return createSelector(findSelector, [...ns.tables, table], (row, related) => {
-    const relation = row[name];
-
-    if (Array.isArray(relation)) {
-      // `relation` is an array of IDs here
-      return relation.map(id => related[id]);
-    }
-
-    // `relation` is an ID here
-    return related[relation] || null;
-  });
-}
 
 // getSlice
 function getSlice(path) {
@@ -176,6 +175,6 @@ export function produceTableOrder(orders, table, name, result) {
   }
 }
 
-db.addTable = addTable;
+db.addEntity = addEntity;
 
 export default db;

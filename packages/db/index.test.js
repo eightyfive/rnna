@@ -1,15 +1,24 @@
 import db from './index';
+import { denormalize, schema } from 'normalizr';
+
+const postSchema = new schema.Entity('posts');
+const profileSchema = new schema.Entity('profiles');
+
+const userSchema = new schema.Entity('users', {
+  posts: [postSchema],
+  profile: profileSchema,
+});
 
 beforeEach(() => {
-  db.addTable('users', ['posts', 'profile']);
+  db.addEntity('users', userSchema);
 });
 
 const user1 = { id: 1, name: 'Ben', posts: [1, 2], profile: 1 };
 const user2 = { id: 2, name: 'Carl' };
 const user3 = { id: 3, name: 'David' };
 
-const post1 = { id: 1, title: 'Post One' };
-const post2 = { id: 2, title: 'Post Two' };
+const post1 = { id: 1, title: 'ONE' };
+const post2 = { id: 2, title: 'TWO' };
 
 const profile1 = { id: 1, address: 'Tidy' };
 
@@ -38,20 +47,32 @@ const state = {
   },
 };
 
+const user1Denormalized = {
+  id: 1,
+  name: 'Ben',
+  posts: [post1, post2],
+  profile: profile1,
+};
+
 test('creates Find (one)', () => {
   expect(db.findUser).toBeDefined();
-  expect(db.findUser(state, 1)).toEqual(user1);
+
+  const user = db.findUser(state, 1);
+
+  expect(user.name).toBe('Ben');
+  expect(user.posts).toEqual([post1, post2]);
+  expect(user.profile).toEqual(profile1);
 });
 
 test('creates Get (many)', () => {
   expect(db.getUsers).toBeDefined();
 
   // "default" order by default
-  expect(db.getUsers(state)).toEqual([user1, user2, user3]);
+  expect(db.getUsers(state)).toEqual([user1Denormalized, user2, user3]);
 
   // "reverse" order
   const reversed = db.getUsers(state, 'reverse');
-  expect(reversed).toEqual([user3, user2, user1]);
+  expect(reversed).toEqual([user3, user2, user1Denormalized]);
 
   // Verify result is cached
   let newReversed = db.getUsers(state, 'reverse');
@@ -64,19 +85,5 @@ test('creates Get (many)', () => {
   newReversed = db.getUsers(newState, 'reverse');
 
   expect(newReversed).not.toBe(reversed);
-  expect(newReversed).toEqual([user3, user1, user2]);
-});
-
-test('creates find Relation (one)', () => {
-  expect(db.findUserProfile).toBeDefined();
-  expect(db.getUserProfile).not.toBeDefined();
-
-  expect(db.findUserProfile(state, 1)).toEqual(profile1);
-});
-
-test('creates get Relations (many)', () => {
-  expect(db.getUserPosts).toBeDefined();
-  expect(db.findUserPosts).not.toBeDefined();
-
-  expect(db.getUserPosts(state, 1)).toEqual([post1, post2]);
+  expect(newReversed).toEqual([user3, user1Denormalized, user2]);
 });
