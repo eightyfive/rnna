@@ -64,7 +64,7 @@ function addEntity(table, entity = null) {
 // createFindSelector
 function createFindSelector(table) {
   return (state, id) => {
-    const rows = _get(state, [...ns.tables, table]);
+    const rows = _get(state, [...ns.tables, table]) || {};
     const row = rows[id];
 
     if (row && schemas[table]) {
@@ -98,7 +98,7 @@ const selectResult = createCachedSelector(
   selectTableName,
   selectOrder,
   (tables, name, order) => {
-    const rows = tables[name];
+    const rows = tables[name] || {};
 
     return (order || []).map(id => {
       const row = rows[id];
