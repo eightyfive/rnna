@@ -89,18 +89,21 @@ export default class StackNavigator extends Navigator {
     Navigation.setRoot({ root: this.getInitialLayout(params) });
   }
 
-  push(toName, params, fromId) {
+  push(toName, params) {
     const component = this.get(toName);
+    const fromId = this.route.id;
 
     this.history.push(toName);
 
     Navigation.push(fromId, component.getLayout(params, this.defaultOptions));
   }
 
-  pop(fromId) {
+  pop() {
     if (this.history.length === 1) {
       throw new Error('No route to navigate back to');
     }
+
+    const fromId = this.route.id;
 
     this.history.pop();
 
@@ -128,17 +131,17 @@ export default class StackNavigator extends Navigator {
     return this.route;
   }
 
-  navigate(toName, params, fromId) {
+  navigate(toName, params) {
     const index = this.history.findIndex(name => name === toName);
 
     if (index === -1) {
-      this.push(toName, params, fromId);
+      this.push(toName, params);
     } else if (index >= 1) {
       this.popToIndex(index);
     }
   }
 
-  goBack(fromId) {
-    this.pop(fromId);
+  goBack() {
+    this.pop();
   }
 }

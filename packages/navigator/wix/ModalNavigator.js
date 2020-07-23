@@ -7,11 +7,11 @@ export default class ModalNavigator extends StackNavigator {
     Navigation.showModal(this.getInitialLayout(params));
   }
 
-  unmount(fromId) {
-    Navigation.dismissModal(fromId);
+  unmount() {
+    Navigation.dismissModal(this.route.id);
   }
 
-  dismiss(fromId) {
-    this.unmount(fromId);
+  dismiss() {
+    this.unmount();
   }
 }

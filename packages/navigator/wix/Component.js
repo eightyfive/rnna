@@ -21,7 +21,7 @@ export default class Component extends Route {
     Navigation.setRoot({ root: this.getLayout(params) });
   }
 
-  unmount(fromId) {}
+  unmount() {}
 
   getLayout(params, screenOptions = {}) {
     const layout = {

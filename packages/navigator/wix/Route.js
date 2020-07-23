@@ -3,7 +3,7 @@ export default /* abstract */ class Route {
     throwAbstract('mount');
   }
 
-  unmount(fromId) {
+  unmount() {
     throwAbstract('unmount');
   }
 

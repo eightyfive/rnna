@@ -36,7 +36,7 @@ export default class StackNavigator extends Wix {
     this.popToRoot();
   }
 
-  goBack(fromId) {
+  goBack() {
     this.pop();
   }
 }

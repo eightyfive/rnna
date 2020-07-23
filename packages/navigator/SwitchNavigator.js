@@ -29,7 +29,7 @@ export default class SwitchNavigator extends Navigator {
     return route;
   }
 
-  navigate(path, params, fromId) {
+  navigate(path, params) {
     const [id, rest] = this.parsePath(path);
 
     if (this.route.id !== id) {
@@ -42,16 +42,16 @@ export default class SwitchNavigator extends Navigator {
     }
 
     if (rest) {
-      this.route.navigate(rest, params, fromId);
+      this.route.navigate(rest, params);
     }
   }
 
-  goBack(fromId) {
+  goBack() {
     try {
-      this.route.goBack(fromId);
+      this.route.goBack();
     } catch (err) {
       if (this.history.length > 1) {
-        this.route.unmount(fromId);
+        this.route.unmount();
 
         this.history.pop();
         this.navigate(this.route.id);

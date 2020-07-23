@@ -29,11 +29,11 @@ export default class OverlayNavigator extends Navigator {
     return this.component;
   }
 
-  navigate(path, params, fromId) {
+  navigate(path, params) {
     this.mount(params);
   }
 
-  goBack(fromId) {
+  goBack() {
     this.unmount();
   }
 }

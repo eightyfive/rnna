@@ -91,18 +91,18 @@ export default /** abstract */ class Navigator extends Route {
     return this.routes.get(id);
   }
 
-  unmount(fromId) {}
+  unmount() {}
 
-  go(path, params, fromId) {
-    return this.navigate(path, params, fromId);
+  go(path, params) {
+    return this.navigate(path, params);
   }
 
-  navigate(path, params, fromId) {
-    throwAbstract('navigate(path, params, fromId)');
+  navigate(path, params) {
+    throwAbstract('navigate(path, params)');
   }
 
-  goBack(fromId) {
-    throwAbstract('goBack(fromId)');
+  goBack() {
+    throwAbstract('goBack()');
   }
 
   getComponent() {

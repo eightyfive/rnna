@@ -10,8 +10,6 @@ export default class RootNavigator extends SwitchNavigator {
 
     this.backBehavior = 'none'; // Force
     this.overlays = [];
-    this.fromId = this.initialRouteName;
-
     this.overlayIds = [];
 
     for (const [id] of this.routes) {
@@ -29,11 +27,9 @@ export default class RootNavigator extends SwitchNavigator {
       goBack: [],
     };
 
-    this.addListener('_didAppear', this.handleDidAppear);
     this.addListener('_modalDismiss', this.handleModalDismiss);
     this.addListener('_appLaunch', this.handleAppLaunch);
 
-    this.listen('ComponentDidAppear', '_didAppear');
     this.listen('ModalDismissed', '_modalDismiss');
 
     this.launched = new Promise(resolve =>
@@ -42,12 +38,6 @@ export default class RootNavigator extends SwitchNavigator {
 
     this.launched.then(() => this.listen('AppLaunched', '_appLaunch'));
   }
-
-  handleDidAppear = ({ componentId: id }) => {
-    if (this.isScene(id)) {
-      this.fromId = id;
-    }
-  };
 
   handleModalDismiss = () => {
     if (this.route instanceof ModalNavigator) {
@@ -87,7 +77,7 @@ export default class RootNavigator extends SwitchNavigator {
       } else {
         // Unmount old route
         if (this.route) {
-          this.route.unmount(this.fromId);
+          this.route.unmount();
         }
 
         this.history = [route.id];
@@ -97,22 +87,22 @@ export default class RootNavigator extends SwitchNavigator {
     }
 
     if (rest) {
-      this.route.navigate(rest, params, this.fromId);
+      this.route.navigate(rest, params);
     }
 
-    this.trigger('navigate', [this.fromId, path, params]);
+    this.trigger('navigate', [path, params]);
   }
 
   goBack() {
     try {
-      this.route.goBack(this.fromId);
+      this.route.goBack();
     } catch (err) {
       if (this.route instanceof ModalNavigator) {
         this.dismissModal();
       }
     }
 
-    this.trigger('goBack', [this.fromId]);
+    this.trigger('goBack', []);
   }
 
   dismissModal() {
@@ -120,7 +110,7 @@ export default class RootNavigator extends SwitchNavigator {
       throw new Error('No modal to dismiss');
     }
 
-    this.route.unmount(this.fromId);
+    this.route.unmount();
     this.history.pop();
   }
 

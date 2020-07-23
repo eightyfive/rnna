@@ -73,7 +73,7 @@ export default class BottomTabsNavigator extends Navigator {
     return this.route.getComponent();
   }
 
-  navigate(path, params, fromId) {
+  navigate(path, params) {
     const [id, rest] = this.parsePath(path);
     const index = this.order.findIndex(key => key === id);
 
@@ -90,13 +90,13 @@ export default class BottomTabsNavigator extends Navigator {
     }
 
     if (rest) {
-      this.route.navigate(rest, params, fromId);
+      this.route.navigate(rest, params);
     }
   }
 
-  goBack(fromId) {
+  goBack() {
     try {
-      this.route.goBack(fromId);
+      this.route.goBack();
     } catch (err) {
       // TODO
     }
