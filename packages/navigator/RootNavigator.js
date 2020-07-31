@@ -30,6 +30,7 @@ export default class RootNavigator extends SwitchNavigator {
     this.addListener('_modalDismiss', this.handleModalDismiss);
     this.addListener('_appLaunch', this.handleAppLaunch);
 
+    this.listen('ComponentDidAppear', '_didAppear');
     this.listen('ModalDismissed', '_modalDismiss');
 
     this.launched = new Promise(resolve =>
