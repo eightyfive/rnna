@@ -7,19 +7,15 @@ const o = {
 };
 
 export default class Router {
-  constructor(routes) {
+  constructor(routes, services = {}) {
     this.cache = new Map();
     this.cache.set('params', new Map());
     this.navigator = createRootNavigator(routes);
     this.prevState = {};
     this.screens = new Map();
-    this.services = {};
+    this.services = services;
 
     this.findScreens(routes);
-  }
-
-  inject(services) {
-    this.services = services;
   }
 
   boot() {
