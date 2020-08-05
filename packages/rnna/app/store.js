@@ -1,9 +1,13 @@
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { persistReducer } from 'redux-persist';
-import { createEpicMiddleware } from 'redux-observable';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
-import rootEpic from '../../../app/events';
-import rootReducer from '../../../app/state';
+import events from './events';
+import epics from '../../../app/epics';
+import reducers from '../../../app/state';
+
+const rootEpic = combineEpics(...events, ...epics);
+const rootReducer = combineReducers(reducers);
 
 export default function create(services, { persist: persistConfig }) {
   // Epics

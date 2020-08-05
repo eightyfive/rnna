@@ -27,6 +27,6 @@ export default {
   async boot() {
     await Promise.all([launched, persisted]);
 
-    store.dispatch({ type: '[RNNA] Boot' });
+    store.dispatch({ type: '[App] Boot' });
   },
 };
