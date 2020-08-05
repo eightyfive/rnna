@@ -9,6 +9,7 @@ import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
 import BottomTabNavigator from './BottomTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import RootNavigator from './RootNavigator';
+import Router from './Router';
 import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
 
@@ -77,6 +78,10 @@ export function createDrawerNavigator(screens, config = {}) {
 
 export function createRootNavigator(routes) {
   return new RootNavigator(createRoutes(routes));
+}
+
+export function createRouter(routes, services = {}) {
+  return new Router(createRoutes(routes), services);
 }
 
 export function createStackNavigator(screens, options = {}, config = {}) {

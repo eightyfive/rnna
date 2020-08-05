@@ -14,7 +14,7 @@ const api = createApi(Config.api);
 const router = createRouter(routes, services);
 
 // Boot navigation (async)
-const launched = router.boot();
+const launched = router.launch();
 
 // Store
 const store = createStore({ ...services, api, router }, Config.store);
