@@ -10,6 +10,8 @@ import {
 } from 'rxjs/operators';
 import { ofHTTPErrorType, ofType } from '@rnna/rx/operators';
 
+import { parseUrl, tmpl } from '../utils';
+
 export function on(...types) {
   const callback = types.pop();
 
@@ -50,14 +52,14 @@ export const fromApi = rr$ => {
           status: res.status,
           json,
         })),
-      ).pipe(map(apiAction));
+      );
     }),
 
     // Catch HTTP Error
     catchError(err => of(err).pipe(isHTTPError(), mapError())),
   );
 
-  return merge(req$, res$);
+  return merge(req$, res$).pipe(map(apiAction));
 };
 
 const apiAction = ({ method, url, status, json, err }) => {

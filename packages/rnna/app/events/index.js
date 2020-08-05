@@ -3,8 +3,8 @@ import { fromEvent, empty } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { exec, ofType } from '@rnna/rx/operators';
 
-import events from '../../../app/events';
-import { fromApi } from '../../events';
+import events from '../../../../app/events';
+import { mapResult } from '../../events';
 
 const epics = [];
 
@@ -81,7 +81,7 @@ const onAppState = (action$, state$, services) =>
 // Api
 const onApi = (action$, state$, services) =>
   action$.pipe(
-    switchMap(action => {
+    mergeMap(action => {
       const req = events.api(action, state$.value, services);
 
       if (req) {
