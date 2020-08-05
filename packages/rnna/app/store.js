@@ -2,12 +2,10 @@ import { applyMiddleware, createStore } from 'redux';
 import { persistReducer } from 'redux-persist';
 import { createEpicMiddleware } from 'redux-observable';
 
-import * as Config from '../../../app/config';
-
 import rootEpic from '../../../app/events';
 import rootReducer from '../../../app/state';
 
-export default function create(services) {
+export default function create(services, { persist: persistConfig }) {
   // Epics
   const epics = createEpicMiddleware({ dependencies: services });
 
@@ -21,13 +19,15 @@ export default function create(services) {
   }
 
   // Reducer
-  const reducer = persistReducer(Config.persist, rootReducer);
+  const reducer = persistReducer(persistConfig, rootReducer);
 
   // Store
   const store = createStore(reducer, applyMiddleware(...middlewares));
 
   // Configure services
-  services.setStore(store);
+  if (services.setStore) {
+    services.setStore(store);
+  }
 
   // Run epics
   epics.run(rootEpic);
