@@ -1,8 +1,8 @@
-import services from 'app/services';
+import services from '../../../app/services';
 import createStore from './store';
 import persistStore from './persistor';
 
-import routes from 'app/routes';
+import routes from '../../../app/routes';
 
 // Boot navigation (async)
 const launched = services.router.boot(routes);
@@ -13,7 +13,7 @@ const store = createStore(services);
 // Persist store (async)
 const persisted = persistStore(store);
 
-module.exports = {
+export default {
   async boot() {
     await Promise.all([launched, persisted]);
 

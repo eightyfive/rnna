@@ -2,12 +2,12 @@ import { applyMiddleware, createStore } from 'redux';
 import { persistReducer } from 'redux-persist';
 import { createEpicMiddleware } from 'redux-observable';
 
-import * as Config from 'app/config';
+import * as Config from '../../../app/config';
 
-import rootEpic from 'app/events';
-import rootReducer from 'app/state';
+import rootEpic from '../../../app/events';
+import rootReducer from '../../../app/state';
 
-export default function makeStore(services) {
+export default function create(services) {
   // Epics
   const epics = createEpicMiddleware({ dependencies: services });
 
