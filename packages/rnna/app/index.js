@@ -1,11 +1,12 @@
+import { createRouter } from '@rnna/navigator';
+
 import * as Config from '../../../app/config';
 import routes from '../../../app/routes';
 import services from '../../../app/services';
 
 import createStore from './store';
 import persistStore from './persistor';
-import createApi from './services/api';
-import createRouter from './services/router';
+import createApi from './api';
 
 // API
 const api = createApi(Config.api);
