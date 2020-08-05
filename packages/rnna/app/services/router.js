@@ -1,10 +1,7 @@
 import Router from '@rnna/router';
 
-export default function createRouter(services) {
-  const router = new Router();
-
-  router.inject('db', services.db);
-  router.inject('dispatch', services.dispatch);
+export default function createRouter(routes, services) {
+  const router = new Router(routes, services);
 
   return router;
 }

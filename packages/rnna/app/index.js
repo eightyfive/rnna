@@ -11,10 +11,10 @@ import createRouter from './services/router';
 const api = createApi(Config.api);
 
 // Router (navigation)
-const router = createRouter(services);
+const router = createRouter(routes, services);
 
 // Boot navigation (async)
-const launched = router.boot(routes);
+const launched = router.boot();
 
 // Store
 const store = createStore({ ...services, api, router }, Config.store);
