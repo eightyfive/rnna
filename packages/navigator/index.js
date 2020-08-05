@@ -22,10 +22,7 @@ import {
 
 export { default as registerComponents } from './registerComponents';
 
-const o = {
-  assign: Object.assign,
-  values: Object.values,
-};
+const o = Object;
 
 export function createBottomTabNavigator(tabs, options = {}, config = {}) {
   const stacks = _mapValues(tabs, (tab, tabId) => {
@@ -81,7 +78,27 @@ export function createRootNavigator(routes) {
 }
 
 export function createRouter(routes, services = {}) {
-  return new Router(createRoutes(routes), services);
+  const screens = findScreens(routes, new Map());
+
+  return new Router(createRoutes(routes), screens, services);
+}
+
+function findScreens(routes, screens, parentId = null) {
+  for (const [key, route] of o.entries(routes)) {
+    if (key === 'options' || key === 'config') {
+      continue;
+    }
+
+    const id = parentId ? `${parentId}/${key}` : key;
+
+    if (_isObject(route)) {
+      findScreens(route, screens, id);
+    } else {
+      screens.set(id, route);
+    }
+  }
+
+  return screens;
 }
 
 export function createStackNavigator(screens, options = {}, config = {}) {
