@@ -1,37 +1,16 @@
-import _isObject from 'lodash.isplainobject';
 import shallowEqual from 'shallowequal';
 
 import RootNavigator from './RootNavigator';
 
-const o = Object;
-
 export default class Router extends RootNavigator {
-  constructor(routes, services = {}) {
+  constructor(routes, screens, services = {}) {
     super(routes);
 
     this.cache = new Map();
     this.cache.set('params', new Map());
     this.prevState = {};
-    this.screens = new Map();
+    this.screens = screens;
     this.services = services;
-
-    this.findScreens(routes);
-  }
-
-  findScreens(routes, parentId = null) {
-    for (const [key, route] of o.entries(routes)) {
-      if (key === 'options' || key === 'config') {
-        continue;
-      }
-
-      const id = parentId ? `${parentId}/${key}` : key;
-
-      if (_isObject(route)) {
-        this.findScreens(route, id);
-      } else {
-        this.screens.set(id, route);
-      }
-    }
   }
 
   dispatch(componentId, state, params = []) {
