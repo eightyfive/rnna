@@ -13,9 +13,9 @@ import {
 
 import HTTPError from 'fetch-run/http-error';
 
-export const exec = cb => source =>
+export const exec = handler => source =>
   source.pipe(
-    tap(action => cb(action)),
+    tap(action => handler(action)),
     ignoreElements(),
   );
 
