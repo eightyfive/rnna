@@ -36,7 +36,7 @@ export const isReType = (...expressions) => source =>
 // Alias
 export const isType = isReType;
 
-export const ofHTTPErrorType = status => source =>
+export const isHTTPErrorType = status => source =>
   source.pipe(
     filter(
       ({ error, payload: err }) =>
@@ -141,3 +141,6 @@ export const catchIgnore = handler =>
 
     return empty();
   });
+
+export const switchMapTo = (input, ...pipeline) => source =>
+  source.pipe(switchMap(() => from(input).pipe(...pipeline)));
