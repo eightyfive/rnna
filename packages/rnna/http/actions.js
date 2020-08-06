@@ -43,7 +43,7 @@ const createActions = createType => next => rr$ => {
   );
 
   return next(
-    merge(req$, res$).pipe(map(re, createHttpAction(createType(re), re))),
+    merge(req$, res$).pipe(map(re => createHttpAction(createType(re), re))),
   );
 };
 
