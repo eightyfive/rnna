@@ -11,7 +11,7 @@ export default function createApi({ url, options, action }) {
   // Error middleware to throw HTTP errors (>= 400)
   api.use(uses.error);
 
-  // Emits both `req` & `res` (for `mapApi` operator to work)
+  // Emits both `req` & `res`
   api.use(next => req$ => merge(req$, next(req$)));
 
   api.use(createActions(createCreateType(action)));
