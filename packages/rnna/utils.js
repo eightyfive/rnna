@@ -68,21 +68,17 @@ export const actions = {
     return false;
   },
 
-  isHTTPVerb(type, ...verbs) {
+  isHTTP(type, code, verb) {
+    const codes = Array.isArray(code) ? code : [code];
+    const verbs = Array.isArray(verb) ? verb : [verb];
+
     const [method, url, status] = parseApi(type);
 
     if (method && url && status) {
-      return verbs.some(verb => verb === method);
-    }
+      const isCode = codes.some(c => c === status);
+      const isVerb = verb ? verbs.some(v => v === method) : true;
 
-    return false;
-  },
-
-  isHTTPCode(type, ...codes) {
-    const [method, url, status] = parseApi(type);
-
-    if (method && url && status) {
-      return codes.some(code => code === status);
+      return isCode && isVerb;
     }
 
     return false;
