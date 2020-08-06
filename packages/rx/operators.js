@@ -17,7 +17,7 @@ export const exec = cb => source =>
   );
 
 // Accepts regular expressions
-export const ofReType = (...expressions) => source =>
+export const isReType = (...expressions) => source =>
   source.pipe(
     filter(({ type }) =>
       expressions.some(re => {
@@ -31,7 +31,7 @@ export const ofReType = (...expressions) => source =>
   );
 
 // Alias
-export const ofType = ofReType;
+export const isType = isReType;
 
 export const ofHTTPErrorType = status => source =>
   source.pipe(
@@ -44,7 +44,7 @@ export const ofHTTPErrorType = status => source =>
   );
 
 export const takeUntilType = (action$, type) => source =>
-  source.pipe(takeUntil(action$.pipe(ofType(type))));
+  source.pipe(takeUntil(action$.pipe(isType(type))));
 
 export const pluck = (...paths) => source =>
   source.pipe(
