@@ -10,11 +10,13 @@ export function interpolate(template, data) {
         // :name
         .replace(`:${key}`, val)
         // :NAME
-        .replace(`:${key.toUpperCase()}`, val.toUpperCase())
+        .replace(`:${key.toUpperCase()}`, String(val).toUpperCase())
         // :Name
         .replace(
           `:${key.charAt(0).toUpperCase()}${key.slice(1)}`,
-          val.charAt(0).toUpperCase() + val.slice(1),
+          String(val)
+            .charAt(0)
+            .toUpperCase() + String(val).slice(1),
         ),
     template,
   );
