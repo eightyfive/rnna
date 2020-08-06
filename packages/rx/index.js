@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { map, switchMap, ignoreElements } from 'rxjs/operators';
+import { ignoreElements, map, switchMap, tap } from 'rxjs/operators';
 
 import { isType } from './operators';
 
