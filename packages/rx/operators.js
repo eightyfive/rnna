@@ -1,5 +1,7 @@
 import _get from 'lodash.get';
+import { empty } from 'rxjs';
 import {
+  catchError,
   filter,
   ignoreElements,
   map,
@@ -8,6 +10,7 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
+
 import HTTPError from 'fetch-run/http-error';
 
 export const exec = cb => source =>
@@ -129,3 +132,12 @@ export const startWithAction = (type, payload) => source =>
       payload,
     }),
   );
+
+export const catchIgnore = handler =>
+  catchError(err => {
+    if (handler) {
+      handler(err);
+    }
+
+    return empty();
+  });
