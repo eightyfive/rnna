@@ -129,9 +129,9 @@ export function createLog({ dark = true, color, prefix = '[DEBUG]' }) {
 // Actions
 export const mapAction = (mapType, mapPayload) => source =>
   source.pipe(
-    map(data => {
+    map(action => {
       let type;
-      let payload = data.payload || data;
+      let payload = action.payload || action;
 
       if (typeof mapType === 'function') {
         type = mapType(payload);
@@ -139,17 +139,34 @@ export const mapAction = (mapType, mapPayload) => source =>
         type = mapType;
       }
 
-      if (typeof mapPayload === 'undefined') {
-        return { type };
-      }
-
       if (typeof mapPayload === 'function') {
         payload = mapPayload(payload);
-      } else {
+      } else if (typeof mapPayload !== 'undefined') {
         payload = mapPayload;
       }
 
-      return { type, payload };
+      return {
+        type,
+        payload,
+      };
+    }),
+  );
+
+export const mapActionType = mapType => source =>
+  source.pipe(
+    map(action => {
+      let type;
+      let payload = action.payload || action;
+
+      if (typeof mapType === 'function') {
+        type = mapType(payload);
+      } else {
+        type = mapType;
+      }
+
+      return {
+        type,
+      };
     }),
   );
 
