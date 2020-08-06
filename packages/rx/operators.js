@@ -141,6 +141,3 @@ export const catchIgnore = handler =>
 
     return empty();
   });
-
-export const switchMapTo = (input, ...pipeline) => source =>
-  source.pipe(switchMap(() => from(input).pipe(...pipeline)));
