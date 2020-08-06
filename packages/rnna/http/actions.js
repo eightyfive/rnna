@@ -9,7 +9,9 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 
-const createActions = createType => next => rr$ => {
+const createActions = createType => next => oldReq$ => {
+  const rr$ = next(oldReq$);
+
   const req$ = rr$.pipe(
     take(1),
     // Emit request
@@ -22,11 +24,11 @@ const createActions = createType => next => rr$ => {
     withLatestFrom(req$),
 
     // Emit response
-    switchMap(([res, { method, url }]) => {
+    switchMap(([res, req]) => {
       return from(
         res.json().then(json => ({
-          method,
-          url,
+          method: req.method,
+          url: req.url,
           status: res.status,
           json,
         })),
@@ -42,8 +44,8 @@ const createActions = createType => next => rr$ => {
     ),
   );
 
-  return next(
-    merge(req$, res$).pipe(map(re => createHttpAction(createType(re), re))),
+  return merge(req$, res$).pipe(
+    map(re => createHttpAction(createType(re), re)),
   );
 };
 
