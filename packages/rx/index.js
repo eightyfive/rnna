@@ -1,24 +1,46 @@
 import { of } from 'rxjs';
+import { map, switchMap, ignoreElements } from 'rxjs/operators';
 
-import { isHTTPErrorType, isType } from './operators';
+import { isType } from './operators';
 
 export const ofAction = (type, payload) => of({ type, payload });
 
-export function on(...types) {
+export function execOn(...types) {
   const handler = types.pop();
 
   return (action$, state$, services) => {
     return action$.pipe(
       isType(...types),
-      handler(action.payload || action, state$.value, services),
+      tap(({ type, ...rest }) => {
+        handler(rest.payload || rest, state$.value, services);
+      }),
+      ignoreElements(),
     );
   };
 }
 
-export function onHTTP(code, handler) {
-  return (action$, state$, services) =>
-    action$.pipe(
-      isHTTPErrorType(code),
-      handler(action.payload || action, state$.value, services),
+export function mapOn(...types) {
+  const handler = types.pop();
+
+  return (action$, state$, services) => {
+    return action$.pipe(
+      isType(...types),
+      map(({ type, ...rest }) =>
+        handler(rest.payload || rest, state$.value, services),
+      ),
     );
+  };
+}
+
+export function switchOn(...types) {
+  const handler = types.pop();
+
+  return (action$, state$, services) => {
+    return action$.pipe(
+      isType(...types),
+      switchMap(({ type, ...rest }) =>
+        handler(rest.payload || rest, state$.value, services),
+      ),
+    );
+  };
 }
