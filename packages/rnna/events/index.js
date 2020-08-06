@@ -135,7 +135,11 @@ export function onHTTPErrorType(code, callback) {
   return (action$, state$, services) =>
     action$.pipe(
       ofHTTPErrorType(code),
-      switchMap(action => mapResult(callback, action, state$, services)),
+      switchMap(action => {
+        const result = callback(action, state$.value, services);
+
+        return mapResult(result);
+      }),
     );
 }
 
