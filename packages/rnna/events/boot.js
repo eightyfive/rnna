@@ -1,4 +1,4 @@
-import { switchMap, take } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 
 export default function createOnBoot(handler) {
   return (action$, state$, services) =>
