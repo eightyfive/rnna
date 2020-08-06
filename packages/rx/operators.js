@@ -70,62 +70,6 @@ export const pluck = (...paths) => source =>
     }),
   );
 
-// Log
-const colors = {
-  white: '#ffffff',
-  blue: '#4252db',
-  red: '#db4d52',
-};
-
-export function createLog({ dark = true, color, prefix = '[DEBUG]' }) {
-  let col;
-
-  if (color) {
-    col = color;
-  } else {
-    col = dark ? colors.white : colors.blue;
-  }
-
-  return label => source =>
-    source.pipe(
-      filter(() => __DEV__), // Safety
-      tap(data => {
-        let type;
-        let payload;
-
-        const isObj =
-          data !== null && !Array.isArray(data) && typeof data === 'object';
-
-        if (isObj) {
-          let rest;
-
-          ({ type, ...rest } = data);
-
-          payload = rest.hasOwnProperty('payload') ? rest.payload : rest;
-        } else {
-          payload = data;
-        }
-
-        let title;
-
-        if (label) {
-          title = `%c${prefix} ${label}`;
-        } else {
-          title = `%c${prefix}`;
-        }
-
-        console.group(title, `color: ${col};`);
-
-        if (type) {
-          console.log(`%c${type}`, `color: ${colors.red};`);
-        }
-        console.log(payload);
-
-        console.groupEnd();
-      }),
-    );
-}
-
 // Actions
 export const mapAction = (mapType, mapPayload) => source =>
   source.pipe(
