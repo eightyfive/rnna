@@ -1,9 +1,21 @@
+const o = Object;
+
 // Credits: https://stackoverflow.com/a/21553982/925307
 const reURL = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/;
 
-export function tmpl(template, data) {
-  return Object.keys(data).reduce(
-    (acc, key) => acc.replace(new RegExp(`{${key}}`), data[key]),
+export function interpolate(template, data) {
+  return o.entries(data || {}).reduce(
+    (acc, [key, val]) =>
+      acc
+        // :name
+        .replace(`:${key}`, val)
+        // :NAME
+        .replace(`:${key.toUpperCase()}`, val.toUpperCase())
+        // :Name
+        .replace(
+          `:${key.charAt(0).toUpperCase()}${key.slice(1)}`,
+          val.charAt(0).toUpperCase() + val.slice(1),
+        ),
     template,
   );
 }
