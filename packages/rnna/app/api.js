@@ -19,7 +19,7 @@ export default function createApi({ url, options, action }) {
   return api;
 }
 
-function createCreateType({ type, re }) {
+function createCreateType({ type, http }) {
   return ({ method, status, url }) => {
     const { pathname, search } = parseUrl(url);
     const verb = method === 'GET' && search ? 'SEARCH' : method;
@@ -30,6 +30,6 @@ function createCreateType({ type, re }) {
       status,
     };
 
-    return interpolate(type, re ? re(data) : data);
+    return interpolate(type, http ? http(data) : data);
   };
 }
