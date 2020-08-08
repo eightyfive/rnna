@@ -19,15 +19,17 @@ export default function createApi({ url, options, action }) {
   return api;
 }
 
-function createCreateType({ template, getUrl }) {
+function createCreateType({ type, re }) {
   return ({ method, status, url }) => {
     const { pathname, search } = parseUrl(url);
     const verb = method === 'GET' && search ? 'SEARCH' : method;
 
-    return interpolate(template, {
+    const data = {
       method: verb,
-      url: getUrl ? getUrl(pathname) : pathname,
+      url: pathname,
       status,
-    });
+    };
+
+    return interpolate(type, re ? re(data) : data);
   };
 }
