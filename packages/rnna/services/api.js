@@ -2,7 +2,7 @@ import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 import { merge } from 'rxjs';
 
-import createActions from './http/actions';
+import createActions from '../http/actions';
 import { parseUrl, interpolate } from '../utils';
 
 export default function apiProvider({ url, options, action }) {
