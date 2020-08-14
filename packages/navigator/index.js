@@ -77,10 +77,10 @@ export function createRootNavigator(routes) {
   return new RootNavigator(createRoutes(routes));
 }
 
-export function createRouter(routes, services = {}) {
+export function createRouter(routes) {
   const screens = findScreens(routes, new Map());
 
-  return new Router(createRoutes(routes), screens, services);
+  return new Router(createRoutes(routes), screens);
 }
 
 function findScreens(routes, screens, parentId = null) {

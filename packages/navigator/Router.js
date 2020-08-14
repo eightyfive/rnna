@@ -3,13 +3,17 @@ import shallowEqual from 'shallowequal';
 import RootNavigator from './RootNavigator';
 
 export default class Router extends RootNavigator {
-  constructor(routes, screens, services = {}) {
+  constructor(routes, screens) {
     super(routes);
 
     this.cache = new Map();
     this.cache.set('params', new Map());
     this.prevState = {};
     this.screens = screens;
+    this.services = {};
+  }
+
+  inject(services) {
     this.services = services;
   }
 
