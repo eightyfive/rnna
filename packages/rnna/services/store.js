@@ -2,6 +2,8 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
+const BOOT = { type: '[App] Boot' };
+
 function getPersistor(store) {
   return new Promise(resolve => {
     const persistor = persistStore(store, null, function hydrated() {
@@ -61,5 +63,5 @@ export default function storeProvider(
 
   const persistor = getPersistor(store);
 
-  return [store, persistor];
+  return [store, persistor, BOOT];
 }
