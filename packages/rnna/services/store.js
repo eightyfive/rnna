@@ -37,7 +37,7 @@ export default function storeProvider(
 
   if (rootEpic) {
     epicMiddleware = createEpicMiddleware({ dependencies: services });
-    middlewares.push(epicMiddleware);
+    middlewares.unshift(epicMiddleware);
   }
 
   // Store
