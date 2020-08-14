@@ -4,10 +4,19 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
 const BOOT = { type: '[App] Boot' };
 
-function getPersistor(store) {
+function isPersisted(persistor) {
+  const { bootstrapped } = persistor.getState();
+
+  return bootstrapped;
+}
+
+function getPersisted(persistor) {
   return new Promise(resolve => {
-    const persistor = persistStore(store, null, function hydrated() {
-      resolve(persistor);
+    const unsubscribe = persistor.subscribe(function handlePersistorState() {
+      if (isPersisted(persistor)) {
+        resolve();
+        unsubscribe();
+      }
     });
   });
 }
@@ -61,7 +70,13 @@ export default function storeProvider(
     epicMiddleware.run(rootEpic);
   }
 
-  const persistor = getPersistor(store);
+  const persistor = persistStore(store);
 
-  return [store, persistor, BOOT];
+  const persisted = getPersisted(persistor);
+
+  if (isPersisted(persistor)) {
+    persisted.resolve();
+  }
+
+  return { store, persistor, persisted, BOOT };
 }
