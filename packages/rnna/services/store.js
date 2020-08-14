@@ -51,8 +51,8 @@ export default function storeProvider(
     throw new Error('Either `reducers` or `reducer` config is required');
   }
 
-  const reducer = persistReducer(persistConfig, rootReducer);
-  const store = createStore(reducer, applyMiddleware(...middlewares));
+  const persistedReducer = persistReducer(persistConfig, rootReducer);
+  const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
   // Configure services
   if (services.setStore) {
