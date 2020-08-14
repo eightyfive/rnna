@@ -5,7 +5,7 @@ import { merge } from 'rxjs';
 import createActions from './http/actions';
 import { parseUrl, interpolate } from '../utils';
 
-export default function createApi({ url, options, action }) {
+export default function apiProvider({ url, options, action }) {
   const api = new Http(url, options);
 
   // Error middleware to throw HTTP errors (>= 400)

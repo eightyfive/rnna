@@ -6,10 +6,10 @@ import services from '../../../app/services';
 
 import createStore from './store';
 import persistStore from './persistor';
-import createApi from './api';
+import apiProvider from './api';
 
 // API
-const api = createApi(Config.api);
+const api = apiProvider(Config.api);
 
 // Router (navigation)
 const router = createRouter(routes, services);
