@@ -40,12 +40,6 @@ export default function storeProvider(
     middlewares.push(epicMiddleware);
   }
 
-  // Redux Flipper (DEV)
-  if (__DEV__) {
-    const createDebugger = require('redux-flipper').default;
-    middlewares.push(createDebugger());
-  }
-
   // Store
   let rootReducer;
 
