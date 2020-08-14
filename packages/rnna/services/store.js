@@ -54,11 +54,6 @@ export default function storeProvider(
   const persistedReducer = persistReducer(persistConfig, rootReducer);
   const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
-  // Configure services
-  if (services.setStore) {
-    services.setStore(store);
-  }
-
   // Run epics
   if (epicMiddleware) {
     epicMiddleware.run(rootEpic);
