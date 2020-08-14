@@ -67,5 +67,21 @@ export default function storeProvider(
     persisted.resolve();
   }
 
-  return { store, persistor, persisted, BOOT };
+  // https://redux.js.org/api/api-reference#store-api
+  const { getState, dispatch, subscribe, replaceReducer } = store;
+
+  return {
+    getState,
+    dispatch,
+    subscribe,
+    replaceReducer,
+    //
+    persistor,
+    persist() {
+      return persisted;
+    },
+    boot() {
+      store.dispatch(BOOT);
+    },
+  };
 }
