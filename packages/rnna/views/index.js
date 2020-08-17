@@ -2,6 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import SpaceSheet from 'react-native-spacesheet';
 
+export { makeCol, makeRow } from 'react-native-col/make';
+
 export function makeView(sizes, BaseView = View) {
   const spaceSheet = SpaceSheet.create(sizes);
 
