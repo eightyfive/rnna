@@ -1,13 +1,12 @@
 {
   "name": "rnna",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "React Native Navigation App (RNNA)",
   "keywords": [
     "rnna",
     "react-native",
     "template"
   ],
-  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/eightyfive/rnna/tree/master/packages/template"
