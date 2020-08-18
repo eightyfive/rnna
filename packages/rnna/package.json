@@ -7,10 +7,7 @@
     "react-native",
     "template"
   ],
-  "dependencies": {
-    "react-native-col": "^0.6.0",
-    "react-native-spacesheet": "^0.5.0"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/eightyfive/rnna/tree/master/packages/template"
