@@ -68,7 +68,16 @@ export default function storeProvider(
   }
 
   // https://redux.js.org/api/api-reference#store-api
-  const { getState, dispatch, subscribe, replaceReducer } = store;
+  const { getState, subscribe, replaceReducer } = store;
+
+  // FSA dispatch
+  function dispatch(action, payload) {
+    if (typeof action === 'string') {
+      return store.dispatch({ type: action, payload });
+    }
+
+    return store.dispatch(action);
+  }
 
   return {
     getState,
