@@ -18,6 +18,10 @@ export default class Router {
     this.findScreens(routes);
   }
 
+  inject(name, service) {
+    this.services[name] = service;
+  }
+
   boot() {
     return this.navigator.launch();
   }
