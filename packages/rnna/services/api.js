@@ -19,17 +19,17 @@ export default function apiProvider({ url, options, action }) {
   return api;
 }
 
-function createCreateType({ type, http }) {
+function createCreateType({ template, transform = i => i }) {
   return ({ method, status, url }) => {
     const { pathname, search } = parseUrl(url);
     const verb = method === 'GET' && search ? 'SEARCH' : method;
 
     const data = {
       method: verb,
-      url: pathname,
       status,
+      url: pathname,
     };
 
-    return interpolate(type, http ? http(data) : data);
+    return interpolate(template, transform(data));
   };
 }
