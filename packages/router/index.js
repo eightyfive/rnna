@@ -2,9 +2,7 @@ import _isObject from 'lodash.isplainobject';
 import shallowEqual from 'shallowequal';
 import { createRootNavigator } from '@rnna/navigator';
 
-const o = {
-  entries: Object.entries,
-};
+const o = Object;
 
 export default class Router {
   constructor(routes, services = {}) {
@@ -14,12 +12,13 @@ export default class Router {
     this.prevState = {};
     this.screens = new Map();
     this.services = services;
+    this.injections = {};
 
     this.findScreens(routes);
   }
 
   inject(name, service) {
-    this.services[name] = service;
+    this.injections[name] = service;
   }
 
   boot() {
@@ -58,6 +57,8 @@ export default class Router {
     }
 
     const props = this.getProps(component, state, params);
+
+    o.assign(props, this.injections);
 
     this.navigator.navigate(component.id, props);
 
