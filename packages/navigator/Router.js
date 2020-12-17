@@ -2,19 +2,22 @@ import shallowEqual from 'shallowequal';
 
 import RootNavigator from './RootNavigator';
 
+const o = Object;
+
 export default class Router extends RootNavigator {
-  constructor(routes, screens) {
+  constructor(routes, screens, services = {}) {
     super(routes);
 
     this.cache = new Map();
     this.cache.set('params', new Map());
     this.prevState = {};
     this.screens = screens;
-    this.services = {};
+    this.services = services || {};
+    this.injections = {};
   }
 
-  inject(services) {
-    this.services = services;
+  inject(name, service) {
+    this.injections[name] = service;
   }
 
   dispatch(componentId, state, params = []) {
@@ -58,11 +61,19 @@ export default class Router extends RootNavigator {
   getProps(component, state, params) {
     const Screen = this.screens.get(component.id);
 
-    if (typeof Screen.passProps === 'function') {
-      return Screen.passProps(state, this.services, ...params);
+    let props = {};
+
+    if (typeof Screen.controller === 'function') {
+      props = Screen.controller(state, this.services, ...params);
     }
 
-    return Screen.passProps ? { ...Screen.passProps } : {};
+    if (Screen.passProps) {
+      o.assign(props, Screen.passProps);
+    }
+
+    o.assign(props, this.injections);
+
+    return props;
   }
 
   getCache(name) {
