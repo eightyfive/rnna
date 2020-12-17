@@ -58,8 +58,6 @@ export default class Router {
 
     const props = this.getProps(component, state, params);
 
-    o.assign(props, this.injections);
-
     this.navigator.navigate(component.id, props);
 
     // Save params for render
@@ -92,11 +90,17 @@ export default class Router {
   getProps(component, state, params) {
     const Screen = this.screens.get(component.id);
 
+    let props;
+
     if (typeof Screen.controller === 'function') {
-      return Screen.controller(state, this.services, ...params);
+      props = Screen.controller(state, this.services, ...params);
+    } else {
+      props = Screen.passProps ? { ...Screen.passProps } : {};
     }
 
-    return Screen.passProps ? { ...Screen.passProps } : {};
+    o.assign(props, this.injections);
+
+    return props;
   }
 
   getCache(name) {
