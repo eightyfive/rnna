@@ -92,8 +92,8 @@ export default class Router {
   getProps(component, state, params) {
     const Screen = this.screens.get(component.id);
 
-    if (typeof Screen.passProps === 'function') {
-      return Screen.passProps(state, this.services, ...params);
+    if (typeof Screen.controller === 'function') {
+      return Screen.controller(state, this.services, ...params);
     }
 
     return Screen.passProps ? { ...Screen.passProps } : {};
