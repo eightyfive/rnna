@@ -5,5 +5,5 @@ export {
 export {
   createMargin,
   createPadding,
-  createView as createSpacedView,
-} from './spacing';
+  default as createSpacedView,
+} from 'react-native-spacing';
