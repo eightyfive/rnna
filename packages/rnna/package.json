@@ -7,6 +7,9 @@
     "react-native",
     "template"
   ],
+  "dependencies": {
+    "react-native-col": "^1"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/eightyfive/rnna/tree/master/packages/template"
