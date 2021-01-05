@@ -9,7 +9,7 @@
   ],
   "dependencies": {
     "react-native-col": "^1",
-    "react-native-spacing": "^0.3"
+    "react-native-spacing": "^0.4"
   },
   "repository": {
     "type": "git",
