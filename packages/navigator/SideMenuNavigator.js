@@ -19,16 +19,8 @@ export default class SideMenuNavigator extends StackNavigator {
     this.drawerPosition = config.drawerPosition || 'left';
     this.visible = false;
 
-    this.listeners = {
-      _didAppear: [],
-      _didDisappear: [],
-    };
-
-    this.addListener('_didAppear', this.handleDidAppear);
-    this.addListener('_didDisappear', this.handleDidDisappear);
-
-    this.listen('ComponentDidAppear', '_didAppear');
-    this.listen('ComponentDidDisappear', '_didDisappear');
+    this.addListener('ComponentDidAppear', this.handleDidAppear);
+    this.addListener('ComponentDidDisappear', this.handleDidDisappear);
   }
 
   handleDidAppear = ({ componentId: id }) => {

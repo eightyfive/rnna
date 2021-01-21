@@ -15,17 +15,10 @@ export default class StackNavigator extends Navigator {
       this.componentIds.set(name, component.id);
     }
 
-    // Event listeners
-    this.listeners = {
-      _didAppear: [],
-    };
-
-    this.addListener('_didAppear', this.handleDidAppear.bind(this));
-
-    this.listen('ComponentDidAppear', '_didAppear');
+    this.addListener('ComponentDidAppear', this.handleDidAppear);
   }
 
-  handleDidAppear({ componentId: id }) {
+  handleDidAppear = ({ componentId: id }) => {
     // A pop() happened outside of the StackNavigator
     // We need to sync history
 
@@ -57,7 +50,7 @@ export default class StackNavigator extends Navigator {
         this.history = this.history.slice(0, index + 1);
       }
     }
-  }
+  };
 
   getInitialLayout(params) {
     // TOFIX:

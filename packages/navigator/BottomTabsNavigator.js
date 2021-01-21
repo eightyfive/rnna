@@ -9,17 +9,7 @@ export default class BottomTabsNavigator extends Navigator {
     this.layoutId = config.layoutId || this.order.join('-');
     this.tabIndex = 0;
 
-    this.listeners = {
-      tabSelect: [],
-      tabPress: [],
-      tabLongPress: [],
-    };
-
-    this.addListener('tabSelect', this.handleTabSelect);
-
-    this.listen('BottomTabSelected', 'tabSelect');
-    this.listen('BottomTabPressed', 'tabPress');
-    this.listen('BottomTabLongPressed', 'tabLongPress');
+    this.addListener('BottomTabSelected', this.handleTabSelect);
   }
 
   handleTabSelect = ({ selectedTabIndex: index }) => {
