@@ -14,12 +14,7 @@ import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
 import WidgetComponent from './WidgetComponent';
 
-import {
-  createComponents,
-  createComponent,
-  getRouteDepth,
-  toWixOptions,
-} from './utils';
+import { createComponents, createComponent, getRouteDepth } from './utils';
 
 export { default as registerComponents } from './registerComponents';
 
@@ -37,26 +32,14 @@ export function createBottomTabsNavigator(tabs, options = {}, config = {}) {
       ? `${config.parentId}/${tabId}`
       : tabId;
 
-    return createStackNavigator(
-      screens,
-      o.assign({}, toWixOptions(stackOptions || {})),
-      stackConfig,
-    );
+    return createStackNavigator(screens, stackOptions || {}, stackConfig);
   });
 
-  return new BottomTabsNavigator(
-    stacks,
-    toWixOptions(options),
-    toBottomTabConfig(config),
-  );
+  return new BottomTabsNavigator(stacks, options, config);
 }
 
 export function createDrawerNavigator(screens, config = {}) {
   const routes = createComponents(screens);
-
-  if (config.contentOptions) {
-    config.contentOptions = toWixOptions(config.contentOptions);
-  }
 
   const { contentComponent, contentOptions = {} } = config;
 
@@ -67,11 +50,7 @@ export function createDrawerNavigator(screens, config = {}) {
   // TODO
   config.drawer = createComponent(contentComponent, contentOptions);
 
-  return new SideMenuNavigator(
-    routes,
-    toWixOptions(options),
-    toDrawerConfig(config),
-  );
+  return new SideMenuNavigator(routes, options, config);
 }
 
 export function createRootNavigator(routes) {
@@ -106,89 +85,26 @@ export function createStackNavigator(screens, options = {}, config = {}) {
   const components = createComponents(screens);
 
   if (config.mode === 'modal') {
-    return new ModalNavigator(
-      components,
-      toWixOptions(options),
-      toStackConfig(config),
-    );
+    return new ModalNavigator(components, options, config);
   }
 
-  return new StackNavigator(
-    components,
-    toWixOptions(options),
-    toStackConfig(config),
-  );
+  return new StackNavigator(components, options, config);
 }
 
 // TODO
 // https://reactnavigation.org/docs/en/switch-navigator.html
 export function createSwitchNavigator(routes, options = {}, config = {}) {
-  return new SwitchNavigator(
-    createRoutes(routes),
-    toWixOptions(options),
-    toSwitchConfig(config),
-  );
+  return new SwitchNavigator(createRoutes(routes), options, config);
 }
 
 export function createWidget(id) {
   return new WidgetComponent(id);
 }
 
-export function setDefaultOptions({ options, ...rest }) {
-  const defaultOptions = toWixOptions(rest, options);
-
+export function setDefaultOptions(defaultOptions) {
   Navigation.events().registerAppLaunchedListener(() =>
     Navigation.setDefaultOptions(defaultOptions),
   );
-}
-
-// https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
-function toStackConfig(config) {
-  return toConfig(config, [
-    'initialRouteParams',
-    'screenOptions',
-    'keyboardHandlingEnabled',
-    'mode',
-    'headerMode',
-  ]);
-}
-
-// https://reactnavigation.org/docs/en/bottom-tab-navigator.html#bottomtabnavigatorconfig
-function toBottomTabConfig(config) {
-  return toConfig(config, [
-    'screenOptions',
-    'backBehavior',
-    'lazy',
-    'tabBar',
-    'tabBarOptions',
-  ]);
-}
-
-// https://reactnavigation.org/docs/en/drawer-navigator.html#drawernavigatorconfig
-function toDrawerConfig(config) {
-  return toConfig(config, [
-    'screenOptions',
-    'backBehavior',
-    'drawerPosition',
-    'drawerType',
-    'edgeWidth',
-    'hideStatusBar',
-    'statusBarAnimation',
-    'keyboardDismissMode',
-    'minSwipeDistance',
-    'overlayColor',
-    'gestureHandlerProps',
-    'lazy',
-    'sceneContainerStyle',
-    'drawerStyle',
-    'drawerContent',
-    'drawerContentOptions',
-  ]);
-}
-
-// https://reactnavigation.org/docs/en/switch-navigator.html#switchnavigatorconfig
-function toSwitchConfig(config) {
-  return toConfig(config, ['resetOnBlur', 'backBehavior']);
 }
 
 const configKeys = ['initialRouteName', 'parentId'];
@@ -197,7 +113,7 @@ function toConfig({ screenOptions, ...rest }, keys) {
   const config = _pick(rest, configKeys.concat(keys));
 
   if (screenOptions) {
-    config.screenOptions = toWixOptions(screenOptions);
+    config.screenOptions = screenOptions;
   }
 
   return config;
@@ -217,7 +133,7 @@ function createRoutes(routes) {
     config.parentId = id;
 
     if (depth === 1) {
-      return createBottomTabNavigator(screens, options, config);
+      return createBottomTabsNavigator(screens, options, config);
     }
 
     if (depth === 0) {
