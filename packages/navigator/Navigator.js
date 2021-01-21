@@ -3,10 +3,7 @@ import { Navigation } from 'react-native-navigation';
 
 import Route from './Route';
 
-const o = {
-  entries: Object.entries,
-  keys: Object.keys,
-};
+const o = Object;
 
 function createId(parentId, id) {
   return parentId ? `${parentId}/${id}` : id;
@@ -23,7 +20,6 @@ export default /** abstract */ class Navigator extends Route {
     this.initialRouteName = config.initialRouteName || this.order[0];
     this.history = [];
     this.listeners = {};
-    this.subscriptions = {};
 
     this.parent = null;
     this.id = null;
@@ -34,43 +30,29 @@ export default /** abstract */ class Navigator extends Route {
     }
   }
 
-  addListener(event, listener) {
-    if (!this.listeners[event]) {
-      throw new Error(`Event "${event}" does not exist`);
+  addListener(eventName, listener) {
+    const events = Navigation.events();
+    const subscription = events[`register${eventName}Listener`](listener);
+
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = [];
     }
 
-    this.listeners[event].push(listener);
+    this.listeners[eventName].push(subscription);
+
+    return subscription;
   }
 
-  removeListener(event, listener) {
-    if (!this.listeners[event]) {
-      throw new Error(`Event "${event}" does not exist`);
-    }
+  removeListener(eventName, listener) {
+    const subscription = this.listeners[eventName].find(cb => cb === listener);
 
-    this.listeners[event] = this.listeners[event].filter(
-      callback => callback !== listener,
-    );
-  }
-
-  listen(wix, event) {
-    const events = Navigation.events();
-
-    this.subscriptions[event] = events[`register${wix}Listener`]((...args) =>
-      this.trigger(event, args),
-    );
-  }
-
-  listenOnce(wix, listener) {
-    const events = Navigation.events();
-
-    const subscription = events[`register${wix}Listener`]((...args) => {
+    if (subscription) {
       subscription.remove();
-      listener(...args);
-    });
-  }
 
-  trigger(event, args) {
-    this.listeners[event].map(listener => listener(...args));
+      this.listeners[eventName] = this.listeners[eventName].filter(
+        cb => cb !== listener,
+      );
+    }
   }
 
   get route() {
