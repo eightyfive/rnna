@@ -38,7 +38,7 @@ export function createBottomTabsNavigator(tabs, options = {}, config = {}) {
   return new BottomTabsNavigator(stacks, options, config);
 }
 
-export function createDrawerNavigator(screens, config = {}) {
+export function createSideMenuNavigator(screens, config = {}) {
   const routes = createComponents(screens);
 
   const { contentComponent, contentOptions = {} } = config;
