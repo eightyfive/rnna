@@ -32,7 +32,7 @@ describe('logger', () => {
       expect(res.status).toBe(200);
 
       expect(groupCollapsed).toHaveBeenCalledTimes(5);
-      expect(log).toHaveBeenCalledTimes(8);
+      expect(log).toHaveBeenCalledTimes(9);
 
       done();
     });
@@ -50,7 +50,7 @@ describe('logger', () => {
 
       expect(group).toHaveBeenCalledTimes(1);
       expect(groupCollapsed).toHaveBeenCalledTimes(4);
-      expect(log).toHaveBeenCalledTimes(8);
+      expect(log).toHaveBeenCalledTimes(9);
 
       done();
     });
