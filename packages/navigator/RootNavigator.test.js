@@ -1,6 +1,5 @@
-import { Component } from './wix';
-
 import BottomTabsNavigator from './BottomTasbNavigator';
+import Component from './Component';
 import RootNavigator from './RootNavigator';
 import StackNavigator from './StackNavigator';
 

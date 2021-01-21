@@ -19,39 +19,17 @@ export default class RootNavigator extends SwitchNavigator {
       }
     }
 
-    this.listeners = {
-      _didAppear: [],
-      _modalDismiss: [],
-      _appLaunch: [],
-
-      navigate: [],
-      goBack: [],
-    };
-
-    this.addListener('_modalDismiss', this.handleModalDismiss);
-    this.addListener('_appLaunch', this.handleAppLaunch);
-
-    this.listen('ComponentDidAppear', '_didAppear');
-    this.listen('ModalDismissed', '_modalDismiss');
-
-    this.launched = new Promise(resolve =>
-      this.listenOnce('AppLaunched', resolve),
-    );
-
-    this.launched.then(() => this.listen('AppLaunched', '_appLaunch'));
+    this.addListener('ModalDismissed', this.handleModalDismissed);
+    this.addListener('AppLaunched', this.handleAppLaunched);
   }
 
-  handleModalDismiss = () => {
+  handleModalDismissed = () => {
     if (this.route instanceof ModalNavigator) {
       this.history.pop();
     }
   };
 
-  handleAppLaunch = () => this.remount();
-
-  launch() {
-    return this.launched;
-  }
+  handleAppLaunched = () => this.remount();
 
   remount() {
     this.history.forEach(id => this.get(id).mount());
@@ -91,8 +69,6 @@ export default class RootNavigator extends SwitchNavigator {
     if (rest) {
       this.route.navigate(rest, params);
     }
-
-    this.trigger('navigate', [path, params]);
   }
 
   goBack() {
@@ -103,8 +79,6 @@ export default class RootNavigator extends SwitchNavigator {
         this.dismissModal();
       }
     }
-
-    this.trigger('goBack', []);
   }
 
   dismissModal() {
