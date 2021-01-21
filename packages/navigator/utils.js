@@ -4,7 +4,7 @@ import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 import _set from 'lodash.set';
 
-import { Component } from './wix';
+import Component from './Component';
 
 const o = {
   assign: Object.assign,
