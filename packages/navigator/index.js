@@ -107,18 +107,6 @@ export function setDefaultOptions(defaultOptions) {
   );
 }
 
-const configKeys = ['initialRouteName', 'parentId'];
-
-function toConfig({ screenOptions, ...rest }, keys) {
-  const config = _pick(rest, configKeys.concat(keys));
-
-  if (screenOptions) {
-    config.screenOptions = screenOptions;
-  }
-
-  return config;
-}
-
 function createRoutes(routes) {
   return _mapValues(routes, (route, id) => {
     const isOverlay = !_isObject(route);
