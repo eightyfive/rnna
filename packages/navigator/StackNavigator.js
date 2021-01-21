@@ -91,33 +91,33 @@ export default class StackNavigator extends Navigator {
     Navigation.push(fromId, component.getLayout(params, this.defaultOptions));
   }
 
-  pop() {
+  pop(n = 1) {
     if (this.history.length === 1) {
       throw new Error('No route to navigate back to');
     }
 
-    const fromId = this.route.id;
+    if (n === 1) {
+      const fromId = this.route.id;
 
-    this.history.pop();
+      this.history.pop();
 
-    Navigation.pop(fromId);
+      Navigation.pop(fromId);
+    } else {
+      const index = this.history.length - 1 - n;
+
+      if (index < 0) {
+        throw new Error(`Out of range pop: ${n}`);
+      }
+
+      // popToIndex
+      this.history = _take(this.history, index + 1);
+
+      const toName = _last(this.history);
+      const toId = this.componentIds.get(toName);
+
+      this.popTo(toId);
+    }
   }
-
-  // pop(n = 1) {
-  //   const index = this.history.length - 1 - n;
-
-  //   if (index < 0) {
-  //     throw new Error(`Out of range popTo: ${n}`);
-  //   }
-
-  //   // popToIndex
-  //   this.history = _take(this.history, index + 1);
-
-  //   const toName = _last(this.history);
-  //   const toId = this.componentIds.get(toName);
-
-  //   this.popTo(toId);
-  // }
 
   popTo(toId) {
     Navigation.popTo(toId);
