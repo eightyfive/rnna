@@ -1,4 +1,4 @@
-import BottomTabsNavigator from './BottomTasbNavigator';
+import BottomTabsNavigator from './BottomTabsNavigator';
 import Component from './Component';
 import RootNavigator from './RootNavigator';
 import StackNavigator from './StackNavigator';
@@ -53,5 +53,5 @@ test('navigate deep', () => {
   app.navigate('ef/F');
 
   expect(app.get('ef').mount).toHaveBeenCalled();
-  expect(app.get('ef').push).toHaveBeenCalledWith('F', undefined, 'abcd');
+  expect(app.get('ef').push).toHaveBeenCalledWith('F', undefined);
 });
