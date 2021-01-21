@@ -7,7 +7,7 @@ import _mapValues from 'lodash.mapvalues';
 import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
 
 import BottomTabsNavigator from './BottomTabsNavigator';
-import DrawerNavigator from './DrawerNavigator';
+import SideMenuNavigator from './SideMenuNavigator';
 import RootNavigator from './RootNavigator';
 import Router from './Router';
 import StackNavigator from './StackNavigator';
@@ -66,7 +66,7 @@ export function createDrawerNavigator(screens, config = {}) {
   // TODO
   config.drawer = createComponent(contentComponent, contentOptions);
 
-  return new DrawerNavigator(
+  return new SideMenuNavigator(
     routes,
     toWixOptions(options),
     toDrawerConfig(config),
