@@ -1,12 +1,12 @@
 import { Navigation } from 'react-native-navigation';
 
-import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
-
-import { makeComponent } from './wix/Component.test';
-import { makeStack } from './StackNavigator.test';
-
 import BottomTabsNavigator from './BottomTabsNavigator';
+import ModalNavigator from './ModalNavigator';
+import OverlayNavigator from './OverlayNavigator';
 import StackNavigator from './StackNavigator';
+import WidgetComponent from './WidgetComponent';
+import { makeComponent } from './Component.test';
+import { makeStack } from './StackNavigator.test';
 
 import {
   createStackNavigator,

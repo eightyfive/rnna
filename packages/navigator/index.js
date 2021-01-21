@@ -4,14 +4,15 @@ import _pick from 'lodash.pick';
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 
-import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
-
 import BottomTabsNavigator from './BottomTabsNavigator';
-import SideMenuNavigator from './SideMenuNavigator';
+import ModalNavigator from './ModalNavigator';
+import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
 import Router from './Router';
+import SideMenuNavigator from './SideMenuNavigator';
 import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
+import WidgetComponent from './WidgetComponent';
 
 import {
   createComponents,

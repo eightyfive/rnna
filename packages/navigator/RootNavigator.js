@@ -1,7 +1,8 @@
 import _last from 'lodash.last';
 import { Navigation } from 'react-native-navigation';
 
-import { ModalNavigator, OverlayNavigator } from './wix';
+import ModalNavigator from './ModalNavigator';
+import OverlayNavigator from './OverlayNavigator';
 import SwitchNavigator from './SwitchNavigator';
 
 export default class RootNavigator extends SwitchNavigator {
