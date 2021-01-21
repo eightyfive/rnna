@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Component';
+// import Component from './Component';
 import StackNavigator from './StackNavigator';
 
 export default class SideMenuNavigator extends StackNavigator {

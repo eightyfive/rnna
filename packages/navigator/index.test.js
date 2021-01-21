@@ -3,7 +3,7 @@ import { Navigation } from 'react-native-navigation';
 import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
 
 import { makeComponent } from './wix/Component.test';
-import { makeStack } from './wix/StackNavigator.test';
+import { makeStack } from './StackNavigator.test';
 
 import BottomTabsNavigator from './BottomTabsNavigator';
 import StackNavigator from './StackNavigator';
