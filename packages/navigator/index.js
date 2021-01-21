@@ -1,6 +1,5 @@
 import { Navigation } from 'react-native-navigation';
 
-import _pick from 'lodash.pick';
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 

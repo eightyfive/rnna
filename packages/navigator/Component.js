@@ -3,10 +3,6 @@ import _merge from 'lodash.merge';
 
 import Route from './Route';
 
-const o = {
-  assign: Object.assign,
-};
-
 export default class Component extends Route {
   constructor(id, options = {}) {
     super();
