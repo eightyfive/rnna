@@ -78,14 +78,14 @@ test('popToRoot', () => {
 
 test('navigate (push)', () => {
   app.push = jest.fn();
-  app.navigate('B', params, 'A');
+  app.navigate('B', params);
 
-  expect(app.push).toHaveBeenCalledWith('B', params, 'A');
+  expect(app.push).toHaveBeenCalledWith('B', params);
 });
 
 test('goBack', () => {
-  app.navigate('B', params, 'A');
-  app.navigate('C', params, 'B');
+  app.navigate('B', params);
+  app.navigate('C', params);
   app.goBack('C');
 
   expect(app.history).toEqual(['A', 'B']);

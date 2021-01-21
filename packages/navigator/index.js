@@ -125,7 +125,7 @@ function createRoutes(routes) {
     }
 
     if (depth === 0) {
-      return createStackNavigator(screens, toWixOptions(options), config);
+      return createStackNavigator(screens, options, config);
     }
 
     throw new Error('Invalid routes obj');

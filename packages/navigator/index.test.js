@@ -15,10 +15,10 @@ import {
 } from './index';
 
 function Screen1() {}
-Screen1.options = { title: 'Title 1' };
+Screen1.options = { topBar: { title: { text: 'Title 1' } } };
 
 function Screen2() {}
-Screen2.options = { title: 'Title 2' };
+Screen2.options = { topBar: { title: { text: 'Title 2' } } };
 
 function Screen3() {}
 
