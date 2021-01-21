@@ -20,7 +20,7 @@ export default class Router extends RootNavigator {
     this.injections[name] = service;
   }
 
-  dispatch(componentId, state, params = []) {
+  go(componentId, state, params = []) {
     const component = this.get(componentId);
 
     if (!component) {
