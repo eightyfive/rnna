@@ -1,6 +1,6 @@
 import { Component } from './wix';
 
-import BottomTabNavigator from './BottomTabNavigator';
+import BottomTabsNavigator from './BottomTasbNavigator';
 import RootNavigator from './RootNavigator';
 import StackNavigator from './StackNavigator';
 
@@ -26,7 +26,7 @@ beforeEach(() => {
   cd = new StackNavigator({ C, D });
   ef = new StackNavigator({ E, F });
 
-  abcd = new BottomTabNavigator({ ab, cd });
+  abcd = new BottomTabsNavigator({ ab, cd });
 
   app = new RootNavigator({
     abcd,

@@ -5,7 +5,7 @@ import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
 import { makeComponent } from './wix/Component.test';
 import { makeStack } from './wix/StackNavigator.test';
 
-import BottomTabNavigator from './BottomTabNavigator';
+import BottomTabsNavigator from './BottomTabsNavigator';
 import StackNavigator from './StackNavigator';
 
 import {
@@ -60,7 +60,7 @@ test('createRootNavigator (tabs)', () => {
     Screen5,
   });
 
-  expect(app.get('tabs')).toBeInstanceOf(BottomTabNavigator);
+  expect(app.get('tabs')).toBeInstanceOf(BottomTabsNavigator);
   expect(app.get('stack')).toBeInstanceOf(StackNavigator);
   expect(app.get('modal')).toBeInstanceOf(ModalNavigator);
   expect(app.get('Screen5')).toBeInstanceOf(OverlayNavigator);

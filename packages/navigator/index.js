@@ -6,7 +6,7 @@ import _mapValues from 'lodash.mapvalues';
 
 import { ModalNavigator, OverlayNavigator, WidgetComponent } from './wix';
 
-import BottomTabNavigator from './BottomTabNavigator';
+import BottomTabsNavigator from './BottomTabsNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import RootNavigator from './RootNavigator';
 import Router from './Router';
@@ -24,7 +24,7 @@ export { default as registerComponents } from './registerComponents';
 
 const o = Object;
 
-export function createBottomTabNavigator(tabs, options = {}, config = {}) {
+export function createBottomTabsNavigator(tabs, options = {}, config = {}) {
   const stacks = _mapValues(tabs, (tab, tabId) => {
     const {
       options: stackOptions = {},
@@ -43,7 +43,7 @@ export function createBottomTabNavigator(tabs, options = {}, config = {}) {
     );
   });
 
-  return new BottomTabNavigator(
+  return new BottomTabsNavigator(
     stacks,
     toWixOptions(options),
     toBottomTabConfig(config),
