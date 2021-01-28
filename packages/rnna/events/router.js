@@ -6,7 +6,7 @@ const render = (action$, state$, { router }) =>
   action$.pipe(
     take(1),
     switchMap(() =>
-      fromEvent(router, '_didAppear').pipe(
+      fromEvent(router, 'ComponentDidAppear').pipe(
         exec(({ componentId: id }) => {
           router.render(router.get(id), state$.value);
         }),
