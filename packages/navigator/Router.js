@@ -13,11 +13,6 @@ export default class Router extends RootNavigator {
     this.prevState = {};
     this.screens = screens;
     this.services = services || {};
-    this.injections = {};
-  }
-
-  inject(name, service) {
-    this.injections[name] = service;
   }
 
   go(componentId, state, params = []) {
@@ -70,8 +65,6 @@ export default class Router extends RootNavigator {
     if (Screen.passProps) {
       o.assign(props, Screen.passProps);
     }
-
-    o.assign(props, this.injections);
 
     return props;
   }
