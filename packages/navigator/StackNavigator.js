@@ -4,16 +4,17 @@ import { Navigation } from 'react-native-navigation';
 
 import Navigator from './Navigator';
 
+const o = Object;
+
 export default class StackNavigator extends Navigator {
   constructor(routes, options = {}, config = {}) {
     super(routes, options, config);
 
-    this.defaultOptions = config.defaultOptions || {};
     this.componentIds = new Map();
 
-    for (const [name, component] of this.routes) {
+    o.entries(this.routes).forEach(([name, component]) => {
       this.componentIds.set(name, component.id);
-    }
+    });
 
     this.addListener('ComponentDidAppear', this.handleDidAppear);
   }
@@ -66,9 +67,7 @@ export default class StackNavigator extends Navigator {
     const children = this.order.slice(0, index + 1);
 
     const layout = {
-      children: children.map(id =>
-        this.get(id).getLayout(params, this.defaultOptions),
-      ),
+      children: children.map(id => this.get(id).getLayout(params)),
     };
 
     if (this.options) {
@@ -88,7 +87,7 @@ export default class StackNavigator extends Navigator {
 
     this.history.push(toName);
 
-    Navigation.push(fromId, component.getLayout(params, this.defaultOptions));
+    Navigation.push(fromId, component.getLayout(params));
   }
 
   pop(n = 1) {

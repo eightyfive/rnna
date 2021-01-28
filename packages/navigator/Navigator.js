@@ -5,10 +5,6 @@ import Route from './Route';
 
 const o = Object;
 
-function createId(parentId, id) {
-  return parentId ? `${parentId}/${id}` : id;
-}
-
 export default /** abstract */ class Navigator extends Route {
   constructor(routes, options, config) {
     super();
@@ -17,17 +13,20 @@ export default /** abstract */ class Navigator extends Route {
     this.options = options;
 
     this.order = o.keys(routes);
-    this.initialRouteName = config.initialRouteName || this.order[0];
     this.history = [];
     this.listeners = {};
 
     this.parent = null;
     this.id = null;
 
-    for (const [id, route] of this.routes) {
+    const { initialRouteName, parentId } = config;
+
+    this.initialRouteName = initialRouteName || this.order[0];
+
+    o.entries(this.routes).forEach(([id, route]) => {
       route.parent = this;
-      route.id = createId(config.parentId, id);
-    }
+      route.id = parentId ? `${parentId}/${id}` : id;
+    });
   }
 
   addListener(eventName, listener) {
@@ -74,10 +73,6 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   unmount() {}
-
-  go(path, params) {
-    return this.navigate(path, params);
-  }
 
   navigate(path, params) {
     throwAbstract('navigate(path, params)');

@@ -20,13 +20,7 @@ const C = new Component('C', { topBar: { title: { text: 'Title C' } } });
 const params = { foo: 'bar' };
 
 beforeEach(() => {
-  app = new StackNavigator(
-    { A, B, C },
-    {},
-    {
-      defaultOptions: { topBar: { backButton: { visible: false } } },
-    },
-  );
+  app = new StackNavigator({ A, B, C }, {}, {});
 
   app.mount();
 });
@@ -40,7 +34,6 @@ test('mount', () => {
         makeComponent('A', {
           topBar: {
             title: { text: 'Title A' },
-            backButton: { visible: false },
           },
         }),
       ]),
@@ -59,7 +52,6 @@ test('push', () => {
       {
         topBar: {
           title: { text: 'Title B' },
-          backButton: { visible: false },
         },
       },
       params,
