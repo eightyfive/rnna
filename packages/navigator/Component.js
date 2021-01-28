@@ -19,11 +19,10 @@ export default class Component extends Route {
 
   unmount() {}
 
-  getLayout(params, screenOptions = {}) {
+  getLayout(params) {
     const layout = {
       id: this.id,
       name: this.name,
-      options: { ...screenOptions },
     };
 
     _merge(layout.options, this.options);
