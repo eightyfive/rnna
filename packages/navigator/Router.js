@@ -56,10 +56,10 @@ export default class Router extends RootNavigator {
   getProps(component, state, params) {
     const Screen = this.screens.get(component.id);
 
-    let props = {};
+    const props = {};
 
     if (typeof Screen.controller === 'function') {
-      props = Screen.controller(state, this.services, ...params);
+      o.assign(props, Screen.controller(state, this.services, ...params));
     }
 
     if (Screen.passProps) {
