@@ -23,15 +23,14 @@ export default class Component extends Route {
     const layout = {
       id: this.id,
       name: this.name,
+      options: { ...this.options },
     };
-
-    _merge(layout.options, this.options);
 
     if (params) {
       this.passProps = params;
     }
 
-    layout.passProps = this.passProps;
+    layout.passProps = { ...this.passProps };
 
     return { component: layout };
   }
