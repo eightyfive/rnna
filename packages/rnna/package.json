@@ -4,10 +4,10 @@
   "description": "React Native Navigation App (RNNA)",
   "keywords": [
     "rnna",
-    "react-native",
-    "template"
+    "react-native"
   ],
   "dependencies": {
+    "immer": "^8.0.1",
     "react-native-col": "^1",
     "react-native-spacing": "^0.4"
   },
