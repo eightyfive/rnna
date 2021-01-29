@@ -66,7 +66,7 @@ test('createRootNavigator (tabs)', () => {
   expect(app.get('Screen5')).toBeInstanceOf(OverlayNavigator);
 
   Navigation.setRoot.mockReset();
-  app.go('tabs/tab1/Screen1');
+  app.navigate('tabs/tab1/Screen1');
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
@@ -110,7 +110,7 @@ test('createRootNavigator (stack)', () => {
   const app = createRootNavigator({ main: { Screen3, Screen4 } });
 
   Navigation.setRoot.mockReset();
-  app.go('main/Screen3');
+  app.navigate('main/Screen3');
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
