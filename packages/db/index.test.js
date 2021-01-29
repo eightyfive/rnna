@@ -78,7 +78,7 @@ test('creates Get (many)', () => {
 
   // Clear cache
   const newState = { ...state };
-  state.db.orders.users.reverse = [3, 1, 2];
+  state.db.orders.reverse = [3, 1, 2];
 
   newReversed = db.getUsers(newState, 'reverse');
 
