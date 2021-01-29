@@ -12,9 +12,9 @@ export default class StackNavigator extends Navigator {
 
     this.componentIds = new Map();
 
-    o.entries(this.routes).forEach(([name, component]) => {
+    for (const [name, component] of this.routes) {
       this.componentIds.set(name, component.id);
-    });
+    }
 
     this.addListener('ComponentDidAppear', this.handleDidAppear);
   }

@@ -23,10 +23,10 @@ export default /** abstract */ class Navigator extends Route {
 
     this.initialRouteName = initialRouteName || this.order[0];
 
-    o.entries(this.routes).forEach(([id, route]) => {
+    for (const [id, route] of this.routes) {
       route.parent = this;
       route.id = parentId ? `${parentId}/${id}` : id;
-    });
+    }
   }
 
   addListener(eventName, listener) {
