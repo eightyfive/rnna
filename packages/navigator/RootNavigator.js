@@ -13,8 +13,8 @@ export default class RootNavigator extends SwitchNavigator {
     this.overlays = [];
     this.overlayIds = [];
 
-    for (const [id] of this.routes) {
-      if (routes instanceof OverlayNavigator) {
+    for (const [id, route] of this.routes) {
+      if (route instanceof OverlayNavigator) {
         this.overlayIds.push(id);
       }
     }
