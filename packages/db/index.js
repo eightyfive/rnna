@@ -77,7 +77,7 @@ function createFindSelector(table) {
 
 // createGetSelector
 function createGetSelector(table) {
-  return (state, order = 'default') => selectResult(state, table, order);
+  return (state, order = null) => selectResult(state, table, order);
 }
 
 // selectResult
@@ -89,8 +89,8 @@ const selectTableName = (state, table) => {
   return table;
 };
 
-const selectOrder = (state, table, order = 'default') => {
-  return _get(state, [...ns.orders, table, order]);
+const selectOrder = (state, table, order = null) => {
+  return _get(state, [...ns.orders, order || table]);
 };
 
 const selectResult = createCachedSelector(

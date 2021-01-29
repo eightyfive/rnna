@@ -1,5 +1,5 @@
 import db from './index';
-import { denormalize, schema } from 'normalizr';
+import { schema } from 'normalizr';
 
 const postSchema = new schema.Entity('posts');
 const profileSchema = new schema.Entity('profiles');
@@ -39,10 +39,8 @@ const state = {
       },
     },
     orders: {
-      users: {
-        default: [1, 2, 3],
-        reverse: [3, 2, 1],
-      },
+      users: [1, 2, 3],
+      reverse: [3, 2, 1],
     },
   },
 };
