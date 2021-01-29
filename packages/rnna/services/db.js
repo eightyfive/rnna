@@ -1,3 +1,4 @@
+import db, { createSelector } from '@rnna/db';
 import produce from 'immer';
 import { produceTableOrder, produceTables } from '@rnna/db';
 
@@ -21,3 +22,7 @@ export function createDbReducer(reducer, getOrderName = i => i) {
     return reducer(draft, action);
   }, initialState);
 }
+
+export { createSelector };
+
+export default db;
