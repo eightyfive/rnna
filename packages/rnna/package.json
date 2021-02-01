@@ -1,15 +1,15 @@
 {
   "name": "rnna",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "React Native Navigation App (RNNA)",
   "keywords": [
     "rnna",
     "react-native"
   ],
   "dependencies": {
-    "@rnna/db": "^0",
+    "@rnna/db": "^0.0.11",
     "@rnna/http": "^0",
-    "@rnna/navigator": "^0",
+    "@rnna/navigator": "^0.2.1",
     "immer": "^8.0.1",
     "lodash.get": "^4.4.2",
     "lodash.isplainobject": "^4.0.6",
