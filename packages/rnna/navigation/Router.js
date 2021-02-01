@@ -1,5 +1,6 @@
+import _isObject from 'lodash.isplainobject';
+import _mapValues from 'lodash.mapvalues';
 import shallowEqual from 'shallowequal';
-
 import RootNavigator from './RootNavigator';
 
 const o = Object;
@@ -72,4 +73,26 @@ export default class Router extends RootNavigator {
   getCache(name) {
     return this.cache.get(name);
   }
+}
+
+// Traverse obj for depth
+export function getRouteDepth(route, currentDepth = 0, depth = 0) {
+  for (const [key, val] of o.entries(route)) {
+    const isRoute = key !== 'config' && key !== 'options';
+    const isDeep = isRoute && _isObject(val);
+
+    if (isDeep) {
+      currentDepth++;
+    }
+
+    if (isDeep) {
+      depth = getRouteDepth(val, currentDepth, depth);
+    } else {
+      depth = Math.max(currentDepth, depth);
+    }
+
+    currentDepth = 0;
+  }
+
+  return depth;
 }

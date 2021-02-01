@@ -12,12 +12,17 @@
     "@rnna/navigator": "^0",
     "immer": "^8.0.1",
     "lodash.get": "^4.4.2",
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.last": "^3.0.0",
+    "lodash.mapvalues": "^4.6.0",
     "react-native-col": "^1",
     "react-native-spacing": "^0.4",
-    "rxjs": "6.x"
+    "rxjs": "6.x",
+    "shallowequal": "^1.1.0"
   },
   "peerDependencies": {
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-navigation": "*"
   },
   "repository": {
     "type": "git",

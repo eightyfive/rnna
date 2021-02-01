@@ -1,9 +1,8 @@
 import _last from 'lodash.last';
 import { Navigation } from 'react-native-navigation';
-
-import ModalNavigator from './ModalNavigator';
-import OverlayNavigator from './OverlayNavigator';
-import SwitchNavigator from './SwitchNavigator';
+import ModalNavigator from '@rnna/navigator/ModalNavigator';
+import OverlayNavigator from '@rnna/navigator/OverlayNavigator';
+import SwitchNavigator from '@rnna/navigator/SwitchNavigator';
 
 export default class RootNavigator extends SwitchNavigator {
   constructor(routes, options = {}, config = {}) {

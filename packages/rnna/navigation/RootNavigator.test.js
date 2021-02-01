@@ -1,7 +1,7 @@
-import BottomTabsNavigator from './BottomTabsNavigator';
-import Component from './Component';
-import RootNavigator from './RootNavigator';
-import StackNavigator from './StackNavigator';
+import BottomTabsNavigator from '@rnna/navigator/BottomTabsNavigator';
+import Component from '@rnna/navigator/Component';
+import RootNavigator from '@rnna/navigator/RootNavigator';
+import StackNavigator from '@rnna/navigator/StackNavigator';
 
 let app;
 
@@ -15,8 +15,6 @@ const F = new Component('F');
 let ab;
 let cd;
 let ef;
-
-let tabs;
 
 beforeEach(() => {
   jest.clearAllMocks();
