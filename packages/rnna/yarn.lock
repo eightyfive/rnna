@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+immer@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
+  integrity sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==
+
+lodash.get@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
+  integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
+
 react-native-col@^1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/react-native-col/-/react-native-col-1.1.2.tgz#f8962a4e604db3e60aef76c679f7e94b5bbf8b4b"
@@ -11,3 +21,15 @@ react-native-spacing@^0.4:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-native-spacing/-/react-native-spacing-0.4.0.tgz#cd1a71ae76b78793cb066f546c0b2571a31458c7"
   integrity sha512-ZB00TMP8uBMzM+qxep2ApiaxM3CFbeNQpAlv/ZUgTVwGEA2sFmm1olziKpY8T1ftyuWmJzYTWkcPS6DMUBadcQ==
+
+rxjs@6.x:
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
+  integrity sha512-trsQc+xYYXZ3urjOiJOuCOa5N3jAZ3eiSpQB5hIT8zGlL2QfnHLJ2r7GMkBGuIausdJN1OneaI6gQlsqNHHmZQ==
+  dependencies:
+    tslib "^1.9.0"
+
+tslib@^1.9.0:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
+  integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==

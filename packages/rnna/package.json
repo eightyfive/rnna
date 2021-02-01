@@ -7,9 +7,17 @@
     "react-native"
   ],
   "dependencies": {
+    "@rnna/db": "^0",
+    "@rnna/http": "^0",
+    "@rnna/navigator": "^0",
     "immer": "^8.0.1",
+    "lodash.get": "^4.4.2",
     "react-native-col": "^1",
-    "react-native-spacing": "^0.4"
+    "react-native-spacing": "^0.4",
+    "rxjs": "6.x"
+  },
+  "peerDependencies": {
+    "react-native": "*"
   },
   "repository": {
     "type": "git",
