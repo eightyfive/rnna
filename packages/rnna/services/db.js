@@ -1,6 +1,5 @@
-import db, { createSelector } from '@rnna/db';
+import db, { createSelector, produceTableOrder, produceTables } from '@rnna/db';
 import produce from 'immer';
-import { produceTableOrder, produceTables } from '@rnna/db';
 
 const initialState = {
   tables: {},
