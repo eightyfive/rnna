@@ -14,6 +14,11 @@ export default class Router extends RootNavigator {
     this.prevState = {};
     this.screens = screens;
     this.services = services || {};
+    this.props = {};
+  }
+
+  addGlobalProp(name, prop) {
+    this.props[name] = prop;
   }
 
   go(componentId, state, params = []) {
@@ -57,7 +62,7 @@ export default class Router extends RootNavigator {
   getProps(component, state, params) {
     const Screen = this.screens.get(component.id);
 
-    const props = {};
+    const props = o.assign({}, this.props);
 
     if (typeof Screen.controller === 'function') {
       o.assign(props, Screen.controller(state, this.services, ...params));
