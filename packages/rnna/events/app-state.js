@@ -1,5 +1,5 @@
 import { AppState } from 'react-native';
-import { fromEvent } from 'rxjs';
+import { empty, fromEvent } from 'rxjs';
 import { mergeMap, switchMap, take } from 'rxjs/operators';
 
 export default function createOnAppState(handler) {
@@ -8,7 +8,15 @@ export default function createOnAppState(handler) {
       take(1),
       switchMap(() =>
         fromEvent(AppState, 'change').pipe(
-          mergeMap(name => handler(name, state$.value, services)),
+          mergeMap(name => {
+            const res = handler(name, state$.value, services);
+
+            if (res === undefined) {
+              return empty();
+            }
+
+            return res;
+          }),
         ),
       ),
     );
