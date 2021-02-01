@@ -1,6 +1,6 @@
 import { fromEvent } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { exec } from '@rnna/rx/operators';
+import { exec } from '../rx/operators';
 
 const render = (action$, state$, { router }) =>
   action$.pipe(
