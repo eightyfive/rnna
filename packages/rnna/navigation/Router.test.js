@@ -1,4 +1,4 @@
-import { getRouteDepth } from './utils';
+import { getRouteDepth } from './router';
 
 function A() {}
 function B() {}

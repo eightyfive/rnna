@@ -1,7 +1,8 @@
 import BottomTabsNavigator from '@rnna/navigator/BottomTabsNavigator';
 import Component from '@rnna/navigator/Component';
-import RootNavigator from '@rnna/navigator/RootNavigator';
 import StackNavigator from '@rnna/navigator/StackNavigator';
+
+import RootNavigator from './RootNavigator';
 
 let app;
 

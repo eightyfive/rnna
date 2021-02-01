@@ -7,6 +7,7 @@ import ModalNavigator from './ModalNavigator';
 import SideMenuNavigator from './SideMenuNavigator';
 import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
+import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
 
 import { createComponents, createComponent } from './utils';
