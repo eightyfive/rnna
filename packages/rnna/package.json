@@ -10,6 +10,7 @@
     "@rnna/db": "^0.0.11",
     "@rnna/http": "^0",
     "@rnna/navigator": "^0.2.1",
+    "fetch-run": "1.1.6",
     "immer": "^8.0.1",
     "lodash.get": "^4.4.2",
     "lodash.isplainobject": "^4.0.6",
@@ -17,6 +18,9 @@
     "lodash.mapvalues": "^4.6.0",
     "react-native-col": "^1",
     "react-native-spacing": "^0.4",
+    "redux": "^4.0.5",
+    "redux-observable": "^1.2.0",
+    "redux-persist": "^6.0.0",
     "rxjs": "6.x",
     "shallowequal": "^1.1.0"
   },
