@@ -41,7 +41,7 @@ export function parseUrl(href) {
 
 const isApiType = /^\[API\] (GET|SEARCH|POST|PUT|PATCH|DELETE) (\/[^\s]+) (\d{3})$/;
 
-function parseApi(type) {
+export function parseApiType(type) {
   const [, method, url, status] = isApiType.exec(type) || [];
 
   if (status) {
@@ -53,7 +53,7 @@ function parseApi(type) {
 
 export const actions = {
   isApi(type, verb, pattern, code) {
-    const [method, url, status] = parseApi(type);
+    const [method, url, status] = parseApiType(type);
 
     if (method && url && status) {
       const regExp = new RegExp(`^${pattern.replace('{id}', '\\d+')}$`);
@@ -72,7 +72,7 @@ export const actions = {
     const codes = Array.isArray(code) ? code : [code];
     const verbs = Array.isArray(verb) ? verb : [verb];
 
-    const [method, url, status] = parseApi(type);
+    const [method, url, status] = parseApiType(type);
 
     if (method && url && status) {
       const isCode = codes.some(c => c === status);
@@ -85,7 +85,7 @@ export const actions = {
   },
 
   isHTTPError(type, code = 400) {
-    const [method, url, status] = parseApi(type);
+    const [method, url, status] = parseApiType(type);
 
     if (method && url && status) {
       return status >= code;
