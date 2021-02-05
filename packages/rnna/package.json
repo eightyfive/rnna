@@ -18,6 +18,7 @@
     "lodash.mapvalues": "^4.6.0",
     "react-native-col": "^1",
     "react-native-spacing": "^0.4",
+    "react-native-textography": "^0",
     "redux": "^4.0.5",
     "redux-observable": "^1.2.0",
     "redux-persist": "^6.0.0",
