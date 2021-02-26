@@ -7,6 +7,6 @@ export default function createOnStore(handler) {
     action$.pipe(
       filter(({ type }) => type === PERSISTED),
       take(1),
-      switchMap(({ payload: store }) => handler(store, state$.value, services)),
+      switchMap(({ payload: store }) => handler(store, services)),
     );
 }
