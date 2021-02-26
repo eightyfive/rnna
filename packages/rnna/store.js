@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
-export const BOOT = '[App] Boot';
+export const PERSISTED = '[App] Store';
 
 function isPersisted(persistor) {
   const { bootstrapped } = persistor.getState();
@@ -86,11 +86,10 @@ export default function storeProvider(
     replaceReducer,
     //
     persistor,
-    persist() {
-      return persisted;
-    },
-    boot() {
-      dispatch(BOOT, store);
+    async persist() {
+      await persisted;
+
+      dispatch(PERSISTED, store);
     },
   };
 }
