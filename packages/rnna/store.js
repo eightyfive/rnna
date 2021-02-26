@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
-export const PERSISTED = '[App] Store';
+export const PERSISTED = '[App] Store ready';
 
 function isPersisted(persistor) {
   const { bootstrapped } = persistor.getState();
@@ -65,7 +65,7 @@ export default function storeProvider(
 
   const persistor = persistStore(store);
 
-  const persisted = getPersisted(persistor);
+  const persisting = getPersisted(persistor);
 
   // https://redux.js.org/api/api-reference#store-api
   const { getState, subscribe, replaceReducer } = store;
@@ -87,9 +87,9 @@ export default function storeProvider(
     //
     persistor,
     async persist() {
-      await persisted;
+      await persisting;
 
-      dispatch(PERSISTED, store);
+      dispatch(PERSISTED);
     },
   };
 }

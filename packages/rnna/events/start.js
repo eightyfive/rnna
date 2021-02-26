@@ -2,11 +2,11 @@ import { filter, switchMap, take } from 'rxjs/operators';
 
 import { PERSISTED } from '../store';
 
-export default function createOnStore(handler) {
+export default function createOnStart(handler) {
   return (action$, state$, services) =>
     action$.pipe(
       filter(({ type }) => type === PERSISTED),
       take(1),
-      switchMap(({ payload: store }) => handler(store, services)),
+      switchMap(() => handler(state$.value, services)),
     );
 }
