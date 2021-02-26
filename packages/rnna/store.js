@@ -11,6 +11,10 @@ function isPersisted(persistor) {
 }
 
 function getPersisted(persistor) {
+  if (isPersisted(persistor)) {
+    return Promise.resolve();
+  }
+
   return new Promise(resolve => {
     const unsubscribe = persistor.subscribe(function handlePersistorState() {
       if (isPersisted(persistor)) {
@@ -62,10 +66,6 @@ export default function storeProvider(
   const persistor = persistStore(store);
 
   const persisted = getPersisted(persistor);
-
-  if (isPersisted(persistor)) {
-    persisted.resolve();
-  }
 
   // https://redux.js.org/api/api-reference#store-api
   const { getState, subscribe, replaceReducer } = store;
