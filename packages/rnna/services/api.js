@@ -12,9 +12,7 @@ import {
 import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 
-import { parseUrl, interpolate } from '../utils';
-
-export default function apiProvider({ url, options, action }) {
+export default function apiProvider({ url, options, createActionType }) {
   const api = new Http(url, options);
 
   // Error middleware to throw HTTP errors (>= 400)
@@ -23,24 +21,9 @@ export default function apiProvider({ url, options, action }) {
   // Emits both `req` & `res`
   api.use(next => req$ => merge(req$, next(req$)));
 
-  api.use(createUseActions(createCreateType(action)));
+  api.use(createUseActions(createActionType));
 
   return api;
-}
-
-function createCreateType({ template, transform = i => i }) {
-  return ({ method, status, url }) => {
-    const { pathname, search } = parseUrl(url);
-    const verb = method === 'GET' && search ? 'SEARCH' : method;
-
-    const data = {
-      method: verb,
-      status,
-      url: pathname,
-    };
-
-    return interpolate(template, transform(data));
-  };
 }
 
 const createUseActions = createType => next => oldReq$ => {
