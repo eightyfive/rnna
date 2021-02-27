@@ -2,22 +2,20 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
-export const START = '[App] Start';
-
-function isPersisted(persistor) {
+function isHydrated(persistor) {
   const { bootstrapped } = persistor.getState();
 
   return bootstrapped;
 }
 
-function getPersisted(persistor) {
-  if (isPersisted(persistor)) {
+function getHydratedAsync(persistor) {
+  if (isHydrated(persistor)) {
     return Promise.resolve();
   }
 
   return new Promise(resolve => {
     const unsubscribe = persistor.subscribe(function handlePersistorState() {
-      if (isPersisted(persistor)) {
+      if (isHydrated(persistor)) {
         resolve();
         unsubscribe();
       }
@@ -56,6 +54,7 @@ export default function storeProvider(
   }
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
+
   const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
   // Run epics
@@ -65,7 +64,7 @@ export default function storeProvider(
 
   const persistor = persistStore(store);
 
-  const persisting = getPersisted(persistor);
+  const whenHydrated = getHydratedAsync(persistor);
 
   // https://redux.js.org/api/api-reference#store-api
   const { getState, subscribe, replaceReducer } = store;
@@ -86,10 +85,8 @@ export default function storeProvider(
     replaceReducer,
     //
     persistor,
-    async start() {
-      await persisting;
-
-      dispatch(START);
+    hydrate() {
+      return whenHydrated;
     },
   };
 }
