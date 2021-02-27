@@ -1,11 +1,10 @@
 import { filter, switchMap, take } from 'rxjs/operators';
+import { REHYDRATE } from 'redux-persist';
 
-import { START } from '../store';
-
-export default function createOnStart(handler) {
+export default function createOnRun(handler) {
   return (action$, state$, services) =>
     action$.pipe(
-      filter(({ type }) => type === START),
+      filter(({ type }) => type === REHYDRATE),
       take(1),
       switchMap(() => handler(state$.value, services)),
     );
