@@ -12,7 +12,7 @@ import {
 import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 
-export default function apiProvider({ url, options, createActionType }) {
+export default function createApi({ url, options, createActionType }) {
   const api = new Http(url, options);
 
   // Error middleware to throw HTTP errors (>= 400)

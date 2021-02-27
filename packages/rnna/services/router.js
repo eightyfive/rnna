@@ -10,7 +10,7 @@ import Router, { getRouteDepth } from '../navigation/Router';
 
 const o = Object;
 
-export default function routerProvider(routes, services = {}) {
+export default function createRouter(routes, services = {}) {
   const screens = findScreens(routes, new Map());
 
   return new Router(createRoutes(routes), screens, services);
