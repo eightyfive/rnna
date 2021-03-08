@@ -1,45 +1,19 @@
-import { produceTableOrder, produceTables } from '@rnna/db';
 import produce from 'immer';
 
 import { parseApiType } from '../utils';
 
-const initialState = {
-  tables: {},
-  orders: {},
-};
+export { produceTableOrder, produceTables } from '@rnna/db';
 
-function getResourceName({ type, url }) {
-  if (url) {
-    return url.replace('/', '').replace(/\//g, '-');
-  }
-
-  return type;
-}
-
-export function createDbReducer(reducer, getOrderName = getResourceName) {
+export function createReducer(reducer, initialState = {}) {
   return produce((draft, { type, payload }) => {
-    const { entities, result } = payload || {};
+    const action = { type, payload };
 
-    if (entities) {
-      produceTables(draft.tables, entities);
+    const [method, pathname, status] = parseApiType(type);
+
+    if (method && pathname && status) {
+      action.meta = { http: true, method, pathname, status };
     }
 
-    const [method, url, status] = parseApiType(type);
-    const data = { type, payload, method, url, status };
-
-    if (Array.isArray(result)) {
-      produceTableOrder(draft.orders, getOrderName(data), result);
-    }
-
-    return reducer(draft, data);
-  }, initialState);
-}
-
-export function createHttpReducer(reducer) {
-  return produce((draft, { type, payload }) => {
-    const [method, url, status] = parseApiType(type);
-    const data = { type, payload, method, url, status };
-
-    return reducer(draft, data);
+    return reducer(draft, action);
   }, initialState);
 }
