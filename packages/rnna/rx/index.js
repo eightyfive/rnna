@@ -3,6 +3,7 @@ import { ignoreElements, map, switchMap, tap } from 'rxjs/operators';
 
 import { isType } from './operators';
 
+// RxJS
 export const ofAction = (type, payload) => of({ type, payload });
 
 export function execOn(...types) {
