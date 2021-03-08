@@ -1,3 +1,4 @@
+import parseUrl from 'url-parse';
 import { from, merge, of } from 'rxjs';
 import {
   catchError,
@@ -8,11 +9,23 @@ import {
   take,
   withLatestFrom,
 } from 'rxjs/operators';
-
 import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 
-export default function createApi({ url, options, createActionType }) {
+function createApiType({ method, status, url }) {
+  const { pathname, search } = parseUrl(url);
+
+  const verb = method === 'GET' && search ? 'SEARCH' : method;
+  const path = pathname.replace('/api', '');
+
+  return `[API] ${verb} ${path} ${status}`;
+}
+
+export default function createApi({
+  url,
+  options,
+  createActionType = createApiType,
+}) {
   const api = new Http(url, options);
 
   // Error middleware to throw HTTP errors (>= 400)
