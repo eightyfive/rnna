@@ -22,7 +22,7 @@ export default function createApi({ url, options }) {
   api.use(next => req$ => merge(req$, next(req$)));
 
   // Emits req, res & err actions
-  api.use(useActions());
+  api.use(useActions);
 
   return api;
 }
