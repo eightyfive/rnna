@@ -72,7 +72,14 @@ const useActions = next => oldReq$ => {
     // Emit error action
     catchError(err =>
       of(err).pipe(
-        filter(err => Boolean(err.response)),
+        filter(err => {
+          if (err.response) {
+            return true;
+          }
+
+          // Re-throw if not HTTP error
+          throw err;
+        }),
         switchMap(err =>
           from(err.response.json()).pipe(
             map(json => {
