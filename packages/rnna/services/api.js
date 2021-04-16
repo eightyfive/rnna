@@ -12,15 +12,6 @@ import {
 import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 
-function createApiType({ req }) {
-  const { pathname } = parseUrl(req.url);
-
-  // const verb = method === 'GET' && search ? 'SEARCH' : method;
-  const path = pathname.substring(1);
-
-  return path;
-}
-
 export default function createApi({ url, options }) {
   const api = new Http(url, options);
 
