@@ -12,20 +12,16 @@ import {
 import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 
-function createApiType({ method, status, url }) {
-  const { pathname, search } = parseUrl(url);
+function createApiType({ req }) {
+  const { pathname } = parseUrl(req.url);
 
-  const verb = method === 'GET' && search ? 'SEARCH' : method;
-  const path = pathname.replace('/api', '');
+  // const verb = method === 'GET' && search ? 'SEARCH' : method;
+  const path = pathname.substring(1);
 
-  return `[API] ${verb} ${path} ${status}`;
+  return path;
 }
 
-export default function createApi({
-  url,
-  options,
-  createActionType = createApiType,
-}) {
+export default function createApi({ url, options }) {
   const api = new Http(url, options);
 
   // Error middleware to throw HTTP errors (>= 400)
@@ -34,18 +30,29 @@ export default function createApi({
   // Emits both `req` & `res`
   api.use(next => req$ => merge(req$, next(req$)));
 
-  api.use(createUseActions(createActionType));
+  // Emits req, res & err actions
+  api.use(useActions());
 
   return api;
 }
 
-const createUseActions = createType => next => oldReq$ => {
+const useActions = next => oldReq$ => {
   const rr$ = next(oldReq$);
 
   const req$ = rr$.pipe(
     take(1),
-    // Emit request
-    map(req => ({ method: req.method, url: req.url, status: 202 })),
+    // Emit request action
+    map(req => {
+      const { pathname } = parseUrl(req.url);
+
+      return {
+        type: pathname.substring(1),
+        meta: {
+          req,
+          res: null,
+        },
+      };
+    }),
   );
 
   const res$ = rr$.pipe(
@@ -53,74 +60,54 @@ const createUseActions = createType => next => oldReq$ => {
     filter(res => res.headers.get('Content-Type') === 'application/json'),
     withLatestFrom(req$),
 
-    // Emit response
+    // Emit response action
     switchMap(([res, req]) => {
-      return from(
-        res.json().then(json => ({
-          method: req.method,
-          url: req.url,
-          status: res.status,
-          json,
-        })),
+      return from(res.json()).pipe(
+        map(json => {
+          const { pathname } = parseUrl(req.url);
+
+          return {
+            type: pathname.substring(1),
+            payload: json.data || json,
+            meta: {
+              req,
+              res,
+            },
+          };
+        }),
       );
     }),
 
-    // Catch HTTP Error
+    // Emit error action
     catchError(err =>
       of(err).pipe(
         filter(err => Boolean(err.response)),
-        mapError(),
+        switchMap(err =>
+          from(err.response.json()).pipe(
+            map(json => {
+              const req = err.request;
+              const res = err.response;
+
+              const { pathname } = parseUrl(req.url);
+
+              err.data = json.data || json;
+
+              // Emit error
+              return {
+                type: pathname.substring(1),
+                payload: err,
+                error: true,
+                meta: {
+                  req,
+                  res,
+                },
+              };
+            }),
+          ),
+        ),
       ),
     ),
   );
 
-  return merge(req$, res$).pipe(
-    map(re => createHttpAction(createType(re), re)),
-  );
+  return merge(req$, res$);
 };
-
-const createHttpAction = (type, { json, err }) => {
-  // Error action
-  if (err) {
-    return {
-      type,
-      error: true,
-      payload: err,
-    };
-  }
-
-  // Response action
-  if (json) {
-    return {
-      type,
-      payload: json.data || json,
-    };
-  }
-
-  // Request action
-  return {
-    type,
-  };
-};
-
-const mapError = () => source =>
-  source.pipe(
-    switchMap(err =>
-      from(
-        err.response.json().then(data => {
-          const req = err.request;
-          const res = err.response;
-
-          err.data = data;
-
-          // Emit error
-          return {
-            method: req.method,
-            url: req.url,
-            status: res.status,
-            err,
-          };
-        }),
-      ),
-    ),
-  );
