@@ -24,7 +24,7 @@ export default class Screen extends PureComponent {
 
   dispatch(label, payload) {
     const { dispatch } = this.props;
-    const { displayName } = this.contructor;
+    const { displayName } = this.constructor;
 
     let type;
 
