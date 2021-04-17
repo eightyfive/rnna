@@ -4,9 +4,7 @@ import {
   catchError,
   filter,
   map,
-  skip,
   switchMap,
-  take,
   withLatestFrom,
 } from 'rxjs/operators';
 import Http from '@rnna/http';
@@ -18,24 +16,20 @@ export default function createApi({ url, options }) {
   // Error middleware to throw HTTP errors (>= 400)
   api.use(uses.error);
 
-  // Emits both `req` & `res`
-  api.use(next => req$ => merge(req$, next(req$)));
-
   // Emits req, res & err actions
-  api.use(useActions);
+  api.use(emitActions);
 
   return api;
 }
 
-const useActions = next => oldReq$ => {
-  const rr$ = next(oldReq$);
+const emitActions = next => req$ => {
+  const res$ = next(req$);
 
-  const req$ = rr$.pipe(
-    take(1),
-    // Emit request action
+  const reqAction$ = req$.pipe(
     map(req => {
       const { pathname } = parseUrl(req.url);
 
+      // Req action
       return {
         type: pathname.substring(1),
         meta: {
@@ -46,14 +40,13 @@ const useActions = next => oldReq$ => {
     }),
   );
 
-  const res$ = rr$.pipe(
-    skip(1),
+  const resAction$ = res$.pipe(
     filter(res => res.headers.get('Content-Type') === 'application/json'),
     withLatestFrom(req$),
 
-    // Emit response action
-    switchMap(([res, req]) => {
-      return from(res.json()).pipe(
+    // Res action
+    switchMap(([res, req]) =>
+      from(res.json()).pipe(
         map(json => {
           const { pathname } = parseUrl(req.url);
 
@@ -66,10 +59,10 @@ const useActions = next => oldReq$ => {
             },
           };
         }),
-      );
-    }),
+      ),
+    ),
 
-    // Emit error action
+    // Error action
     catchError(err =>
       of(err).pipe(
         filter(err => {
@@ -90,7 +83,6 @@ const useActions = next => oldReq$ => {
 
               err.data = json.data || json;
 
-              // Emit error
               return {
                 type: pathname.substring(1),
                 payload: err,
@@ -107,5 +99,5 @@ const useActions = next => oldReq$ => {
     ),
   );
 
-  return merge(req$, res$);
+  return merge(reqAction$, resAction$);
 };
