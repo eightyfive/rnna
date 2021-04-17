@@ -1,4 +1,4 @@
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
 export { default as onAppState } from './app-state';
@@ -13,7 +13,7 @@ export function onAction(handler) {
         const res = handler(action, state$.value, services);
 
         if (res === undefined) {
-          return empty();
+          return EMPTY;
         }
 
         return res;

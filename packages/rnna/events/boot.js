@@ -1,4 +1,4 @@
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { REHYDRATE } from 'redux-persist';
 
@@ -11,7 +11,7 @@ export default function createOnBoot(handler) {
         const res = handler(state$.value, services);
 
         if (res === undefined) {
-          return empty();
+          return EMPTY;
         }
 
         return res;

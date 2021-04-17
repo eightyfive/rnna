@@ -1,5 +1,5 @@
 import { AppState } from 'react-native';
-import { empty, fromEvent } from 'rxjs';
+import { EMPTY, fromEvent } from 'rxjs';
 import { mergeMap, switchMap, take } from 'rxjs/operators';
 
 export default function createOnAppState(handler) {
@@ -12,7 +12,7 @@ export default function createOnAppState(handler) {
             const res = handler(name, state$.value, services);
 
             if (res === undefined) {
-              return empty();
+              return EMPTY;
             }
 
             return res;

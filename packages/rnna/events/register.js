@@ -1,4 +1,4 @@
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
 export default function createOnRegister(handler) {
@@ -9,7 +9,7 @@ export default function createOnRegister(handler) {
         const res = handler(services);
 
         if (res === undefined) {
-          return empty();
+          return EMPTY;
         }
 
         return res;

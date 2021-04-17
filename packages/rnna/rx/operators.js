@@ -1,5 +1,5 @@
 import _get from 'lodash.get';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import {
   catchError,
   filter,
@@ -139,5 +139,5 @@ export const catchIgnore = handler =>
       handler(err);
     }
 
-    return empty();
+    return EMPTY;
   });
