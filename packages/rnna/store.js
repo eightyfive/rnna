@@ -24,34 +24,24 @@ function getHydratedAsync(persistor) {
 }
 
 export default function storeProvider(
-  { epics, epic, middlewares = [], persist: persistConfig, reducers, reducer },
+  { epics, middlewares = [], persist: persistConfig, reducers },
   services = {},
 ) {
   // Epics
   let rootEpic;
   let epicMiddleware;
 
-  if (epic) {
-    rootEpic = epic;
-  } else if (epics) {
+  if (epics) {
     rootEpic = combineEpics(...epics);
-  }
-
-  if (rootEpic) {
     epicMiddleware = createEpicMiddleware({ dependencies: services });
+
     middlewares.unshift(epicMiddleware);
   }
 
   // Store
   let rootReducer;
 
-  if (reducer) {
-    rootReducer = reducer;
-  } else if (reducers) {
-    rootReducer = combineReducers(reducers);
-  } else {
-    throw new Error('Either `reducers` or `reducer` config is required');
-  }
+  rootReducer = combineReducers(reducers);
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
 
