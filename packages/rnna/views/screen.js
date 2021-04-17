@@ -28,7 +28,7 @@ export default class Screen extends PureComponent {
 
     let type;
 
-    if (displayName && label.indexOf(displayName) !== 0) {
+    if (displayName) {
       type = `${displayName}/${label}`;
     } else {
       type = label;
