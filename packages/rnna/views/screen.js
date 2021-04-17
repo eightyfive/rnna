@@ -11,14 +11,6 @@ export default class Screen extends PureComponent {
     this.setter = _memoize(this.setter, memoKey);
   }
 
-  dispatch = (label, payload) => {
-    const { dispatch } = this.props;
-
-    const type = `[${this.constructor.displayName}] ${label}`;
-
-    dispatch(type, payload);
-  };
-
   dispatcher = label => payload => {
     // onPress(ev) is undocumented
     if (payload && payload.nativeEvent) {
@@ -30,5 +22,22 @@ export default class Screen extends PureComponent {
 
   setter = key => val => this.setState({ [key]: val });
 
-  set = (key, val) => this.setState({ [key]: val });
+  dispatch(label, payload) {
+    const { dispatch } = this.props;
+    const { displayName } = this.contructor;
+
+    let type;
+
+    if (displayName && label.indexOf(displayName) !== 0) {
+      type = `${displayName}/${label}`;
+    } else {
+      type = label;
+    }
+
+    return dispatch(type, payload);
+  }
+
+  set(key, val) {
+    return this.setState({ [key]: val });
+  }
 }
