@@ -1,11 +1,8 @@
 import produce from 'immer';
 import { createSelector } from 'reselect';
 import { denormalize } from 'normalizr';
-import plural from 'pluralize';
 
 import Provider from '../provider';
-
-const { singular } = plural;
 
 class ResourceProvider extends Provider {
   constructor(endpoint, entitySchema) {
@@ -31,12 +28,11 @@ class ResourceProvider extends Provider {
     });
 
     // Selectors
-    const Name = ucfirst(singular(this.name));
-    const Names = ucfirst(plural(this.name));
+    services.db.users = {};
 
-    Object.assign(services.db, {
-      [`find${Name}`]: createFind(this.schema, this.relations),
-      [`get${Names}`]: createGet(this.schema, this.relations),
+    Object.assign(services.db.users, {
+      find: createFind(this.schema, this.relations),
+      get: createGet(this.schema, this.relations),
     });
   }
 }
@@ -231,11 +227,6 @@ const createGet = (schema, relations) =>
         return table[id] ? denormalize(table[id], schema, tables) : null;
       }),
   );
-
-// Credits: https://stackoverflow.com/a/1026087/925307
-function ucfirst(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
 
 export default function createResource(endpoint, schema) {
   return new ResourceProvider(endpoint, schema);
