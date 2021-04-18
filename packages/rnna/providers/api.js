@@ -12,6 +12,8 @@ import {
 import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 
+import Provider from '../provider';
+
 class ApiProvider extends Provider {
   constructor(url, options) {
     super();
