@@ -6,7 +6,7 @@ import StackNavigator from '@rnna/navigator/StackNavigator';
 import { makeComponent } from '@rnna/navigator/Component.test';
 import { makeStack } from '@rnna/navigator/StackNavigator.test';
 
-import createRouter from './router';
+import createRouterProvider from './router';
 
 function Screen1() {}
 Screen1.options = { topBar: { title: { text: 'Title 1' } } };
@@ -22,7 +22,7 @@ function Screen5() {}
 Screen5.options = { layout: { componentBackgroundColor: 'dummy' } };
 
 test('createRouter (tabs)', () => {
-  const app = createRouter({
+  const provider = createRouterProvider({
     tabs: {
       tab1: {
         Screen1,
@@ -46,6 +46,11 @@ test('createRouter (tabs)', () => {
 
     Screen5,
   });
+
+  const services = {};
+
+  provider.register(services, {}, []);
+  const app = services.router;
 
   expect(app.get('tabs')).toBeInstanceOf(BottomTabsNavigator);
   expect(app.get('stack')).toBeInstanceOf(StackNavigator);
@@ -94,7 +99,12 @@ test('createRouter (tabs)', () => {
 });
 
 test('createRouter (stack)', () => {
-  const app = createRouter({ main: { Screen3, Screen4 } });
+  const provider = createRouterProvider({ main: { Screen3, Screen4 } });
+
+  const services = {};
+
+  provider.register(services, {}, []);
+  const app = services.router;
 
   Navigation.setRoot.mockReset();
   app.navigate('main/Screen3');
