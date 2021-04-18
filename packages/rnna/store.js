@@ -24,14 +24,40 @@ function getHydratedAsync(persistor) {
 }
 
 export default function storeProvider(
-  { epics, middlewares = [], persist: persistConfig, reducers },
+  {
+    epics = [],
+    middlewares = [],
+    persist: persistConfig,
+    reducers = {},
+    plugins = [],
+  },
   services = {},
 ) {
+  // Plugins
+  plugins.forEach(plugin => {
+    // Plugin service
+    const service = plugin.register(services);
+
+    if (service) {
+      services[plugin.getName()] = service;
+    }
+
+    // Plugin reducer
+    const reducer = plugin.getReducer();
+
+    if (reducer) {
+      reducers[plugin.getName()] = reducer;
+    }
+
+    // Plugin epics
+    epics.push(...plugin.getEpics());
+  });
+
   // Epics
   let rootEpic;
   let epicMiddleware;
 
-  if (epics) {
+  if (epics.length) {
     rootEpic = combineEpics(...epics);
     epicMiddleware = createEpicMiddleware({ dependencies: services });
 
@@ -39,9 +65,7 @@ export default function storeProvider(
   }
 
   // Store
-  let rootReducer;
-
-  rootReducer = combineReducers(reducers);
+  const rootReducer = combineReducers(reducers);
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
 
