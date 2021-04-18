@@ -8,11 +8,11 @@ import {
   createStackNavigator,
 } from '@rnna/navigator';
 
-import Plugin from '../plugin';
+import Provider from '../provider';
 import Router, { getRouteDepth } from '../navigation/Router';
 import { exec } from '../rx/operators';
 
-class RouterPlugin extends Plugin {
+class RouterProvider extends Provider {
   constructor(routes) {
     this.routes = routes;
   }
@@ -95,5 +95,5 @@ function createRoutes(routes) {
 }
 
 export default function createRouter(routes) {
-  return new RouterPlugin(routes);
+  return new RouterProvider(routes);
 }

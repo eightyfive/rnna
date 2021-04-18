@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 import { denormalize } from 'normalizr';
 
-import Plugin from '../plugin';
+import Provider from '../provider';
 
-class ResourcePlugin extends Plugin {
+class ResourceProvider extends Provider {
   constructor(endpoint, entitySchema) {
     this.endpoint = endpoint;
     this.schema = entitySchema;
@@ -230,5 +230,5 @@ function produceOrder(draft, result) {
 }
 
 export default function createResource(endpoint, schema) {
-  return new ResourcePlugin(endpoint, schema);
+  return new ResourceProvider(endpoint, schema);
 }

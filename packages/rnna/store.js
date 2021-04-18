@@ -29,13 +29,13 @@ export default function storeProvider(
     middlewares = [],
     persist: persistConfig,
     reducers = {},
-    plugins = [],
+    providers = [],
   },
   services = {},
 ) {
-  // Plugins
-  plugins.forEach(plugin => {
-    plugin.register(services, reducers, epics);
+  // Providers
+  providers.forEach(provider => {
+    provider.register(services, reducers, epics);
   });
 
   // Epics
