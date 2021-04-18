@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { denormalize } from 'normalizr';
 
-import Plugin from './';
+import Plugin from '../plugin';
 
 class ResourcePlugin extends Plugin {
   constructor(endpoint, entitySchema) {
