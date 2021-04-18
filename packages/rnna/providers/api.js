@@ -10,16 +10,20 @@ import {
 import Http from '@rnna/http';
 import * as uses from '@rnna/http/use';
 
-export default function createApi({ url, options }) {
-  const api = new Http(url, options);
+class ApiProvider extends Provider {
+  constructor(url, options) {
+    this.api = new Http(url, options);
+  }
 
-  // Error middleware to throw HTTP errors (>= 400)
-  api.use(uses.error);
+  register(services, reducers, epics) {
+    // Error middleware to throw HTTP errors (>= 400)
+    this.api.use(uses.error);
 
-  // Emits req, res & err actions
-  api.use(emitActions);
+    // Emits req, res & err actions
+    this.api.use(emitActions);
 
-  return api;
+    Object.assign(services, { api: this.api });
+  }
 }
 
 const emitActions = next => req$ => {
@@ -101,3 +105,7 @@ const emitActions = next => req$ => {
 
   return merge(reqAction$, resAction$);
 };
+
+export default function createApi({ url, options }) {
+  return new ApiProvider(url, options);
+}
