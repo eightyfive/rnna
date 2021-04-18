@@ -140,7 +140,7 @@ class Resource {
     if (!this.selectFind) {
       this.selectFind = createSelector(
         this.selectTable,
-        this.selectTables,
+        this.selectRelations,
         (table, tables, id) => this.denormalize(table, id, tables),
       );
     }
@@ -153,7 +153,7 @@ class Resource {
       this.selectResult = createSelector(
         this.selectTable,
         this.selectOrder,
-        this.selectTables,
+        this.selectRelations,
         (table, order, tables) => {
           return order.map(id => this.denormalize(table, id, tables));
         },
@@ -167,7 +167,7 @@ class Resource {
 
   selectOrder = state => state[this.key].order;
 
-  selectTables = state => {
+  selectRelations = state => {
     const tables = {};
 
     this.relations.forEach(key => {
@@ -197,20 +197,12 @@ const initialState = {
 function createReducer(key) {
   return produce((draft, { type, payload = {}, meta = {} }) => {
     const { entities, result } = payload;
+    const { req, res } = meta;
 
-    if (entities) {
+    if (res && res.ok && type === this.endpoint) {
       produceTable(draft, entities[key]);
-    }
 
-    if (type === this.endpoint) {
-      const { req, res } = meta;
-
-      if (
-        req.method === 'GET' &&
-        Array.isArray(result) &&
-        res &&
-        res.status === 200
-      ) {
+      if (req.method === 'GET' && Array.isArray(result)) {
         produceOrder(draft, result);
       }
     }
