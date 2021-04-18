@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { createSelector } from 'reselect';
 import parseUrl from 'url-parse';
 import { from, merge, of } from 'rxjs';
@@ -29,11 +30,13 @@ class ApiProvider extends Provider {
 
     Object.assign(reducers, { http: createReducer() });
 
-    services.db.fetching = selectFetching();
-    services.db.creating = selectCreating();
-    services.db.reading = selectReading();
-    services.db.updating = selectUpdating();
-    services.db.deleting = selectDeleting();
+    Object.assign(services.db, {
+      fetching,
+      creating,
+      reading,
+      updating,
+      deleting,
+    });
   }
 }
 
@@ -194,15 +197,15 @@ function createReducer() {
 // Selectors
 const hasPaths = paths => paths.length > 0;
 
-const selectFetching = createSelector(({ http }) => http.fetching, hasPaths);
+const fetching = createSelector(state => state.http.fetching, hasPaths);
 
-const selectCreating = createSelector(({ http }) => http.creating, hasPaths);
+const creating = createSelector(state => state.http.creating, hasPaths);
 
-const selectReading = createSelector(({ http }) => http.reading, hasPaths);
+const reading = createSelector(state => state.http.reading, hasPaths);
 
-const selectUpdating = createSelector(({ http }) => http.updating, hasPaths);
+const updating = createSelector(state => state.http.updating, hasPaths);
 
-const selectDeleting = createSelector(({ http }) => http.deleting, hasPaths);
+const deleting = createSelector(state => state.http.deleting, hasPaths);
 
 export default function createApi({ url, options }) {
   return new ApiProvider(url, options);
