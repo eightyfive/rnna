@@ -87,3 +87,5 @@ const actions = next => req$ => {
 
   return merge(reqAction$, resAction$);
 };
+
+export default actions;
