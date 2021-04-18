@@ -11,12 +11,11 @@ class ResourcePlugin extends Plugin {
     this.schema = entitySchema;
   }
 
-  register({ api }) {
-    return new Resource(api, this.endpoint, this.schema);
-  }
-
-  getReducer() {
-    return createReducer(this.schema.key);
+  register(services, reducers, epics) {
+    Object.assign(services, {
+      users: new Resource(api, this.endpoint, this.schema),
+    });
+    Object.assign(reducers, { users: createReducer(this.schema.key) });
   }
 }
 
