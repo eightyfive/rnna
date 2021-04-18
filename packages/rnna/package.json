@@ -7,7 +7,6 @@
     "react-native"
   ],
   "dependencies": {
-    "@rnna/db": "^0.0.11",
     "@rnna/http": "^0",
     "@rnna/navigator": "^0.2.1",
     "fetch-run": "1.1.6",
