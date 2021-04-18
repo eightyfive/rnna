@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { createSelector } from 'reselect';
 import { denormalize } from 'normalizr';
 import plural from 'pluralize';
