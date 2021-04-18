@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect';
 import parseUrl from 'url-parse';
 import { from, merge, of } from 'rxjs';
 import {
@@ -26,11 +27,11 @@ class ApiProvider extends Provider {
 
     Object.assign(reducers, { http: createReducer() });
 
-    services.db.fetching = createFetching();
-    services.db.creating = createCreating();
-    services.db.reading = createReading();
-    services.db.updating = createUpdating();
-    services.db.deleting = createDeleting();
+    services.db.fetching = selectFetching();
+    services.db.creating = selectCreating();
+    services.db.reading = selectReading();
+    services.db.updating = selectUpdating();
+    services.db.deleting = selectDeleting();
   }
 }
 
@@ -191,15 +192,15 @@ function createReducer() {
 // Selectors
 const hasPaths = paths => paths.length > 0;
 
-const createFetching = createSelector(({ http }) => http.fetching, hasPaths);
+const selectFetching = createSelector(({ http }) => http.fetching, hasPaths);
 
-const createCreating = createSelector(({ http }) => http.creating, hasPaths);
+const selectCreating = createSelector(({ http }) => http.creating, hasPaths);
 
-const createReading = createSelector(({ http }) => http.reading, hasPaths);
+const selectReading = createSelector(({ http }) => http.reading, hasPaths);
 
-const createUpdating = createSelector(({ http }) => http.updating, hasPaths);
+const selectUpdating = createSelector(({ http }) => http.updating, hasPaths);
 
-const createDeleting = createSelector(({ http }) => http.deleting, hasPaths);
+const selectDeleting = createSelector(({ http }) => http.deleting, hasPaths);
 
 export default function createApi({ url, options }) {
   return new ApiProvider(url, options);
