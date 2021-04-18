@@ -8,6 +8,8 @@ const { singular } = plural;
 
 class ResourceProvider extends Provider {
   constructor(endpoint, entitySchema) {
+    super();
+
     this.name = entitySchema.key;
     this.endpoint = endpoint;
     this.schema = entitySchema;

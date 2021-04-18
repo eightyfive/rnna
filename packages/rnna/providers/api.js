@@ -13,6 +13,8 @@ import * as uses from '@rnna/http/use';
 
 class ApiProvider extends Provider {
   constructor(url, options) {
+    super();
+
     this.http = new Http(url, options);
   }
 

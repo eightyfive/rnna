@@ -14,6 +14,8 @@ import { exec } from '../rx/operators';
 
 class RouterProvider extends Provider {
   constructor(routes) {
+    super();
+
     this.routes = routes;
   }
 
