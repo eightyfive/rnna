@@ -5,16 +5,17 @@ import Provider from '../provider';
 
 class ResourceProvider extends Provider {
   constructor(endpoint, entitySchema) {
+    this.name = entitySchema.key;
     this.endpoint = endpoint;
     this.schema = entitySchema;
   }
 
   register(services, reducers, epics) {
-    const users = new Resource(api, this.endpoint, this.schema);
+    const resource = new Resource(services.api, this.endpoint, this.schema);
     const reducer = createReducer(this.schema.key);
 
-    Object.assign(services, { users });
-    Object.assign(reducers, { users: reducer });
+    Object.assign(services, { [this.name]: resource });
+    Object.assign(reducers, { [this.name]: reducer });
   }
 }
 
