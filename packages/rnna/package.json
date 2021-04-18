@@ -27,8 +27,7 @@
     "redux-persist": "^6.0.0",
     "reselect": "^4.0.0",
     "rxjs": "6.x",
-    "shallowequal": "^1.1.0",
-    "url-parse": "^1.5.1"
+    "shallowequal": "^1.1.0"
   },
   "peerDependencies": {
     "react-native": "*",
