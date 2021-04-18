@@ -12,17 +12,25 @@ import * as uses from '@rnna/http/use';
 
 class ApiProvider extends Provider {
   constructor(url, options) {
-    this.api = new Http(url, options);
+    this.http = new Http(url, options);
   }
 
   register(services, reducers, epics) {
     // Error middleware to throw HTTP errors (>= 400)
-    this.api.use(uses.error);
+    this.http.use(uses.error);
 
     // Emits req, res & err actions
-    this.api.use(emitActions);
+    this.http.use(emitActions);
 
-    Object.assign(services, { api: this.api });
+    Object.assign(services, { api: this.http });
+
+    Object.assign(reducers, { http: createReducer() });
+
+    services.db.fetching = createFetching();
+    services.db.creating = createCreating();
+    services.db.reading = createReading();
+    services.db.updating = createUpdating();
+    services.db.deleting = createDeleting();
   }
 }
 
@@ -105,6 +113,93 @@ const emitActions = next => req$ => {
 
   return merge(reqAction$, resAction$);
 };
+
+// Resource reducer
+const initialState = {
+  GET: {},
+  POST: {},
+  PUT: {},
+  DELETE: {},
+  //
+  fetching: [],
+  creating: [],
+  reading: [],
+  updating: [],
+  deleting: [],
+};
+
+function createReducer() {
+  return produce((draft, { type, payload = {}, meta = {} }) => {
+    const { req, res } = meta;
+
+    // Request
+    if (req && !res) {
+      draft[req.method][type] = 202;
+
+      draft.fetching.push(type);
+
+      // C
+      if (req.method === 'POST') {
+        draft.creating.push(type);
+      }
+
+      // R
+      if (req.method === 'GET') {
+        draft.reading.push(type);
+      }
+
+      // U
+      if (req.method === 'PUT') {
+        draft.updating.push(type);
+      }
+
+      // D
+      if (req.method === 'DELETE') {
+        draft.deleting.push(type);
+      }
+    }
+
+    // Response
+    if (req && res) {
+      draft[req.method][type] = res.status;
+
+      draft.fetching = draft.fetching.filter(path => path !== type);
+
+      // C
+      if (req.method === 'POST') {
+        draft.creating = draft.creating.filter(path => path !== type);
+      }
+
+      // R
+      if (req.method === 'GET') {
+        draft.reading = draft.reading.filter(path => path !== type);
+      }
+
+      // U
+      if (req.method === 'PUT') {
+        draft.updating = draft.updating.filter(path => path !== type);
+      }
+
+      // D
+      if (req.method === 'DELETE') {
+        draft.deleting = draft.deleting.filter(path => path !== type);
+      }
+    }
+  }, initialState);
+}
+
+// Selectors
+const hasPaths = paths => paths.length > 0;
+
+const createFetching = createSelector(({ http }) => http.fetching, hasPaths);
+
+const createCreating = createSelector(({ http }) => http.creating, hasPaths);
+
+const createReading = createSelector(({ http }) => http.reading, hasPaths);
+
+const createUpdating = createSelector(({ http }) => http.updating, hasPaths);
+
+const createDeleting = createSelector(({ http }) => http.deleting, hasPaths);
 
 export default function createApi({ url, options }) {
   return new ApiProvider(url, options);
