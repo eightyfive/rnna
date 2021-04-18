@@ -7,7 +7,7 @@
     "react-native"
   ],
   "dependencies": {
-    "@rnna/http": "^0.0.14",
+    "@rnna/http": "^0.0.15",
     "@rnna/navigator": "^0.2.1",
     "fetch-run": "1.1.6",
     "immer": "^8.0.1",
