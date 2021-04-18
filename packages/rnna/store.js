@@ -23,7 +23,7 @@ function getHydratedAsync(persistor) {
   });
 }
 
-export default function storeProvider(
+export default function createStore(
   {
     epics = [],
     middlewares = [],
