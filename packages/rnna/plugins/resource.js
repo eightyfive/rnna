@@ -5,17 +5,16 @@ import Plugin from '../plugin';
 
 class ResourcePlugin extends Plugin {
   constructor(endpoint, entitySchema) {
-    super(entitySchema.key);
-
     this.endpoint = endpoint;
     this.schema = entitySchema;
   }
 
   register(services, reducers, epics) {
-    Object.assign(services, {
-      users: new Resource(api, this.endpoint, this.schema),
-    });
-    Object.assign(reducers, { users: createReducer(this.schema.key) });
+    const users = new Resource(api, this.endpoint, this.schema);
+    const reducer = createReducer(this.schema.key);
+
+    Object.assign(services, { users });
+    Object.assign(reducers, { users: reducer });
   }
 }
 
