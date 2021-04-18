@@ -1,17 +1,7 @@
 export default class Plugin {
-  constructor(name) {
-    this.name = name;
-  }
-
-  getName() {
-    return this.name;
-  }
-
-  register() {}
-
-  getReducer() {}
-
-  getEpics() {
-    return [];
+  register(services, reducers, epics) {
+    throw new Error(
+      `Abstract: Implement ${this.constructor.name} register method`,
+    );
   }
 }

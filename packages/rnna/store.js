@@ -35,22 +35,7 @@ export default function storeProvider(
 ) {
   // Plugins
   plugins.forEach(plugin => {
-    // Plugin service
-    const service = plugin.register(services);
-
-    if (service) {
-      services[plugin.getName()] = service;
-    }
-
-    // Plugin reducer
-    const reducer = plugin.getReducer();
-
-    if (reducer) {
-      reducers[plugin.getName()] = reducer;
-    }
-
-    // Plugin epics
-    epics.push(...plugin.getEpics());
+    plugin.register(services, reducers, epics);
   });
 
   // Epics
