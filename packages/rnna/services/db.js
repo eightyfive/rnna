@@ -25,7 +25,3 @@ export function createSelector(...names) {
 
   return reSelector(...slices, selector);
 }
-
-const db = {};
-
-export default db;
