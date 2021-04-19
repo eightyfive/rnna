@@ -11,8 +11,6 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import HTTPError from 'fetch-run/http-error';
-
 export const exec = handler => source =>
   source.pipe(
     tap(action => handler(action)),
@@ -35,16 +33,6 @@ export const isReType = (...expressions) => source =>
 
 // Alias
 export const isType = isReType;
-
-export const isHTTPErrorType = status => source =>
-  source.pipe(
-    filter(
-      ({ error, payload: err }) =>
-        error === true &&
-        err instanceof HTTPError &&
-        (status ? err.response.status === status : true),
-    ),
-  );
 
 export const takeUntilType = (action$, type) => source =>
   source.pipe(takeUntil(action$.pipe(isType(type))));
