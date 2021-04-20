@@ -17,7 +17,6 @@
     "lodash.memoize": "4.x",
     "lodash.mergewith": "4.x",
     "normalizr": "3.x",
-    "parse-url": "5.x",
     "react-native-col": "1.x",
     "react-native-spacing": "0.x",
     "react-native-textography": "0.x",
@@ -26,7 +25,8 @@
     "redux-persist": "6.x",
     "reselect": "4.x",
     "rxjs": "6.x",
-    "shallowequal": "1.x"
+    "shallowequal": "1.x",
+    "url-parse": "1.5.x"
   },
   "peerDependencies": {
     "react-native": "*",

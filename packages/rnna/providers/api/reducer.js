@@ -1,4 +1,4 @@
-import parseUrl from 'parse-url';
+import parseUrl from 'url-parse';
 import produce from 'immer';
 
 const initialState = {

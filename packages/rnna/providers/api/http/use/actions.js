@@ -1,4 +1,4 @@
-import parseUrl from 'parse-url';
+import parseUrl from 'url-parse';
 import { from, merge, of } from 'rxjs';
 import {
   catchError,
