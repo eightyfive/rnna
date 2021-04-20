@@ -45,9 +45,7 @@ const initialState = {
 };
 
 function createReducer() {
-  return produce((draft, { type, payload = {}, meta = {} }) => {
-    const { req, res } = meta;
-
+  return produce((draft, { type, meta: { req, res } }) => {
     // Request
     if (req && !res) {
       draft[req.method][type] = 202;
