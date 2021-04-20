@@ -15,7 +15,9 @@ const initialState = {
 };
 
 export default function createReducer() {
-  return produce((draft, { meta: { req, res } }) => {
+  return produce((draft, { meta = {} }) => {
+    const { req, res } = meta;
+
     if (req) {
       const { pathname } = parseUrl(req.url);
 
