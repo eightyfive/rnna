@@ -1,5 +1,3 @@
-import { fromEvent } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
 import {
@@ -8,50 +6,7 @@ import {
   createStackNavigator,
 } from '@rnna/navigator';
 
-import Provider from '../provider';
 import Router, { getRouteDepth } from '../navigation/Router';
-import { exec } from '../rx/operators';
-
-class RouterProvider extends Provider {
-  constructor(routes) {
-    super();
-
-    this.routes = routes;
-  }
-
-  register(services, reducers, epics) {
-    const screens = findScreens(this.routes, new Map());
-    const router = new Router(createRoutes(this.routes), screens, services);
-
-    Object.assign(services, { router });
-
-    epics.unshift(render$, rerender$);
-  }
-}
-
-const render$ = (action$, state$, { router }) =>
-  action$.pipe(
-    take(1),
-    switchMap(() =>
-      fromEvent(router, 'ComponentDidAppear').pipe(
-        exec(({ componentId: id }) => {
-          router.render(router.get(id), state$.value);
-        }),
-      ),
-    ),
-  );
-
-const rerender$ = (action$, state$, { router }) =>
-  action$.pipe(
-    take(1),
-    switchMap(() =>
-      state$.pipe(
-        exec(state => {
-          router.rerender(state);
-        }),
-      ),
-    ),
-  );
 
 function findScreens(routes, screens, parentId = null) {
   for (const [key, route] of Object.entries(routes)) {
@@ -96,6 +51,8 @@ function createRoutes(routes) {
   });
 }
 
-export default function createRouter(routes) {
-  return new RouterProvider(routes);
+export default function createRouter(routes, services) {
+  const screens = findScreens(routes, new Map());
+
+  return new Router(createRoutes(routes), screens, services);
 }
