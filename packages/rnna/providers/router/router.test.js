@@ -1,117 +1,38 @@
-import { Navigation } from 'react-native-navigation';
-import BottomTabsNavigator from '@rnna/navigator/BottomTabsNavigator';
-import ModalNavigator from '@rnna/navigator/ModalNavigator';
-import OverlayNavigator from '@rnna/navigator/OverlayNavigator';
-import StackNavigator from '@rnna/navigator/StackNavigator';
-import { makeComponent } from '@rnna/navigator/Component.test';
-import { makeStack } from '@rnna/navigator/StackNavigator.test';
+import { getRouteDepth } from './router';
 
-import createRouterProvider from './router';
+function A() {}
+function B() {}
+function C() {}
 
-function Screen1() {}
-Screen1.options = { topBar: { title: { text: 'Title 1' } } };
+const topBar = { title: { text: 'Foo' } };
+const bottomTab = { text: 'Tab label' };
 
-function Screen2() {}
-Screen2.options = { topBar: { title: { text: 'Title 2' } } };
+const tabs = {
+  ab: { A, B, config: { foo: 'bar' } },
+  c: { C, options: { topBar } },
+  options: { bottomTab },
+};
 
-function Screen3() {}
+const stack = {
+  C,
+  options: { topBar },
+  config: { mode: 'modal' },
+};
 
-function Screen4() {}
-
-function Screen5() {}
-Screen5.options = { layout: { componentBackgroundColor: 'dummy' } };
-
-test('createRouter (tabs)', () => {
-  const provider = createRouterProvider({
-    tabs: {
-      tab1: {
-        Screen1,
-        options: { bottomTab: { text: 'Title 1' } },
-      },
-      tab2: {
-        Screen2,
-        options: { bottomTab: { text: 'Title 2' } },
-      },
-    },
-
-    stack: {
-      Screen3,
-      config: { foo: 'modal' },
-    },
-
-    modal: {
-      Screen4,
-      config: { mode: 'modal' },
-    },
-
-    Screen5,
-  });
-
-  const services = {};
-
-  provider.register(services, {}, []);
-  const app = services.router;
-
-  expect(app.get('tabs')).toBeInstanceOf(BottomTabsNavigator);
-  expect(app.get('stack')).toBeInstanceOf(StackNavigator);
-  expect(app.get('modal')).toBeInstanceOf(ModalNavigator);
-  expect(app.get('Screen5')).toBeInstanceOf(OverlayNavigator);
-
-  Navigation.setRoot.mockReset();
-  app.navigate('tabs/tab1/Screen1');
-
-  expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: {
-      bottomTabs: {
-        id: 'tab1-tab2',
-        children: [
-          {
-            stack: makeStack(
-              [
-                makeComponent(
-                  'tabs/tab1/Screen1',
-                  { topBar: { title: { text: 'Title 1' } } },
-                  {},
-                  'Screen1',
-                ),
-              ],
-              { bottomTab: { text: 'Title 1' } },
-            ),
-          },
-          {
-            stack: makeStack(
-              [
-                makeComponent(
-                  'tabs/tab2/Screen2',
-                  { topBar: { title: { text: 'Title 2' } } },
-                  {},
-                  'Screen2',
-                ),
-              ],
-              { bottomTab: { text: 'Title 2' } },
-            ),
-          },
-        ],
-        options: {},
-      },
-    },
-  });
+test('Depth (stack)', () => {
+  expect(getRouteDepth(stack)).toBe(0);
 });
 
-test('createRouter (stack)', () => {
-  const provider = createRouterProvider({ main: { Screen3, Screen4 } });
+test('Depth (tabs)', () => {
+  expect(getRouteDepth(tabs)).toBe(1);
+});
 
-  const services = {};
-
-  provider.register(services, {}, []);
-  const app = services.router;
-
-  Navigation.setRoot.mockReset();
-  app.navigate('main/Screen3');
-
-  expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: {
-      stack: makeStack([makeComponent('main/Screen3', {}, {}, 'Screen3')]),
-    },
-  });
+test('Depth (root)', () => {
+  expect(
+    getRouteDepth({
+      tabs,
+      stack,
+      C, // Overlay
+    }),
+  ).toBe(2);
 });

@@ -1,30 +1,38 @@
-import { fromEvent } from 'rxjs';
+// import { fromEvent } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
 import { exec } from '../../rx/operators';
 
-const render$ = (action$, state$, { router }) =>
-  action$.pipe(
-    take(1),
-    switchMap(() =>
-      fromEvent(router, 'ComponentDidAppear').pipe(
-        exec(({ componentId: id }) => {
-          router.render(router.get(id), state$.value);
-        }),
-      ),
-    ),
-  );
+// const update$ = (action$, state$, { router }) =>
+//   action$.pipe(
+//     take(1),
+//     switchMap(() =>
+//       fromEvent(router, 'ComponentDidAppear').pipe(
+//         exec(({ componentId }) => {
+//           router.update(componentId);
+//         }),
+//       ),
+//     ),
+//   );
 
-const rerender$ = (action$, state$, { router }) =>
+export const onState$ = (action$, state$, { router }) =>
   action$.pipe(
     take(1),
     switchMap(() =>
       state$.pipe(
         exec(state => {
-          router.rerender(state);
+          router.update(state);
         }),
       ),
     ),
   );
 
-export default [render$, rerender$];
+export const go$ = (action$, state$, { router }) =>
+  action$.pipe(
+    filter(({ type }) => type.indexOf('go/') === 0),
+    exec(({ type, payload: params = [] }) => {
+      const componentId = type.replace('go/', '');
+
+      router.go(componentId, params);
+    }),
+  );

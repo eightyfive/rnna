@@ -1,58 +1,101 @@
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
-import {
-  createBottomTabsNavigator,
-  createOverlayNavigator,
-  createStackNavigator,
-} from '@rnna/navigator';
+import shallowEqual from 'shallowequal';
 
-import Router, { getRouteDepth } from '../navigation/Router';
+import RootNavigator from './RootNavigator';
 
-function findScreens(routes, screens, parentId = null) {
-  for (const [key, route] of Object.entries(routes)) {
-    if (key === 'options' || key === 'config') {
-      continue;
+export default class Router extends RootNavigator {
+  constructor(routes, screens, services = {}) {
+    super(routes);
+
+    this.cache = new Map();
+    this.cache.set('params', new Map());
+    this.screens = screens;
+    this.services = services || {};
+    this.props = {};
+
+    this.state = null;
+    this.componentId = null;
+  }
+
+  addGlobalProp(name, prop) {
+    this.props[name] = prop;
+  }
+
+  go(componentId, params) {
+    if (!this.screens.has(componentId)) {
+      throw new Error(`Component "${componentId}" not found`);
     }
 
-    const id = parentId ? `${parentId}/${key}` : key;
+    this.componentId = componentId;
 
-    if (_isObject(route)) {
-      findScreens(route, screens, id);
-    } else {
-      screens.set(id, route);
+    const props = this.getProps(componentId, params);
+
+    // Save latest params for `@see update`
+    this.getCache('params').set(componentId, params);
+
+    this.navigate(componentId, props);
+  }
+
+  update(state) {
+    const component = this.get(this.componentId);
+
+    if (!component) {
+      throw new Error(`Component "${this.componentId || 'NULL'}" not found`);
+    }
+
+    this.state = state;
+
+    const params = this.getCache('params').get(componentId) || [];
+    const props = this.getProps(componentId, params);
+
+    if (!shallowEqual(props, component.passProps)) {
+      component.update(props);
     }
   }
 
-  return screens;
+  getProps(componentId, params) {
+    const Screen = this.screens.get(componentId);
+
+    const props = Object.assign({}, this.props);
+
+    if (typeof Screen.controller === 'function') {
+      Object.assign(
+        props,
+        Screen.controller(this.state, this.services, ...params),
+      );
+    }
+
+    if (Screen.passProps) {
+      Object.assign(props, Screen.passProps);
+    }
+
+    return props;
+  }
+
+  getCache(name) {
+    return this.cache.get(name);
+  }
 }
 
-function createRoutes(routes) {
-  return _mapValues(routes, (route, id) => {
-    const isOverlay = !_isObject(route);
+// Traverse obj for depth
+export function getRouteDepth(route, currentDepth = 0, depth = 0) {
+  for (const [key, val] of Object.entries(route)) {
+    const isRoute = key !== 'config' && key !== 'options';
+    const isDeep = isRoute && _isObject(val);
 
-    if (isOverlay) {
-      return createOverlayNavigator(id, route);
+    if (isDeep) {
+      currentDepth++;
     }
 
-    const { options = {}, config = {}, ...screens } = route;
-    const depth = getRouteDepth(route);
-
-    config.parentId = id;
-
-    if (depth === 1) {
-      return createBottomTabsNavigator(screens, options, config);
+    if (isDeep) {
+      depth = getRouteDepth(val, currentDepth, depth);
+    } else {
+      depth = Math.max(currentDepth, depth);
     }
 
-    if (depth === 0) {
-      return createStackNavigator(screens, options, config);
-    }
+    currentDepth = 0;
+  }
 
-    throw new Error('Invalid routes obj');
-  });
-}
-
-export default function createRouter(routes, services) {
-  const screens = findScreens(routes, new Map());
-
-  return new Router(createRoutes(routes), screens, services);
+  return depth;
 }
