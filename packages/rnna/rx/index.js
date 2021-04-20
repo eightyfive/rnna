@@ -4,7 +4,7 @@ import { ignoreElements, map, switchMap, tap } from 'rxjs/operators';
 import { isType } from './operators';
 
 // RxJS
-export const ofAction = (type, payload) => of({ type, payload });
+export const ofAction = (type, payload, meta) => of({ type, payload, meta });
 
 export function execOn(...types) {
   const handler = types.pop();

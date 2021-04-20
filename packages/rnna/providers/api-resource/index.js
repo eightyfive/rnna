@@ -1,5 +1,6 @@
 import Provider from '../../provider';
 import { createFind, createGet } from './db';
+import events from './events';
 import createReducer from './reducer';
 import Resource from './resource';
 
@@ -18,7 +19,7 @@ class ResourceProvider extends Provider {
   register(services, reducers, epics) {
     // Services
     Object.assign(services, {
-      [this.name]: new Resource(services.api, this.schema.key, this.endpoint),
+      [this.name]: new Resource(services.api, this.name, this.endpoint),
     });
 
     // Reducers
@@ -33,6 +34,9 @@ class ResourceProvider extends Provider {
       find: createFind(this.schema, this.relations),
       get: createGet(this.schema, this.relations),
     });
+
+    // Events
+    epics.push(...events);
   }
 }
 

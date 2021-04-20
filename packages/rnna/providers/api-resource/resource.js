@@ -1,111 +1,122 @@
+import { ofAction } from '../../rx';
+
 export default class Resource {
-  constructor(http, key, endpoint) {
+  constructor(http, name, endpoint) {
     this.http = http;
     this.endpoint = endpoint;
-    this.key = key;
+    this.name = name;
   }
 
   // CRUD: CREATE
   create(data) {
+    return ofAction(`${this.name}/creating`, data, { resource: this.name });
+  }
+
+  doCreate(data) {
     return this.http.post(this.endpoint, data).pipe(
       map(action => {
         const { res } = action.meta;
 
-        if (!res) {
-          return { ...action, type: `${this.key}/creating` };
-        }
+        if (res) {
+          if (res.status === 200) {
+            return { ...action, type: `${this.name}/created` };
+          }
 
-        if (res.status === 200) {
-          return { ...action, type: `${this.key}/created` };
+          // Error action
+          return action;
         }
-
-        // Err
-        return action;
       }),
     );
   }
 
   // CRUD: READ
   read(id) {
+    return ofAction(`${this.name}/reading`, id, { resource: this.name });
+  }
+
+  doRead(id) {
     return this.http.get(`${this.endpoint}/${id}`).pipe(
       map(action => {
         const { res } = action.meta;
 
-        if (!res) {
-          return { ...action, type: `${this.key}/reading`, payload: id };
-        }
+        if (res) {
+          if (res.status === 200) {
+            return { ...action, type: `${this.name}/read` };
+          }
 
-        if (res.status === 200) {
-          return { ...action, type: `${this.key}/read` };
+          // Error action
+          return action;
         }
-
-        // Err
-        return action;
       }),
     );
   }
 
   // CRUD: UPDATE
   update(id, data) {
+    return ofAction(`${this.name}/updating`, data, { id, resource: this.name });
+  }
+
+  doUpdate(id, data) {
     return this.http.put(`${this.endpoint}/${id}`, data).pipe(
       map(action => {
         const { res } = action.meta;
 
-        if (!res) {
-          return { ...action, type: `${this.key}/updating`, payload: id };
-        }
+        if (res) {
+          if (res.status === 200) {
+            return { ...action, type: `${this.name}/updated` };
+          }
 
-        if (res.status === 200) {
-          return { ...action, type: `${this.key}/updated` };
+          // Error action
+          return action;
         }
-
-        // Err
-        return action;
       }),
     );
   }
 
   // CRUD: DELETE
   delete(id) {
+    return ofAction(`${this.name}/deleting`, id, { resource: this.name });
+  }
+
+  doDelete(id) {
     return this.http.delete(`${this.endpoint}/${id}`).pipe(
       map(action => {
         const { res } = action.meta;
 
-        if (!res) {
-          // TODO: Is `id` still the same when exec ?
-          return { ...action, type: `${this.key}/deleting`, payload: id };
-        }
+        if (res) {
+          if (res.status === 200) {
+            return { ...action, type: `${this.name}/deleted` };
+          }
 
-        if (res.status === 200) {
-          return { ...action, type: `${this.key}/deleted` };
+          // Error action
+          return action;
         }
-
-        // Err
-        return action;
       }),
     );
   }
 
-  // CRUD: LIST
-  search(where) {
-    const action$ = where
-      ? this.http.search(this.endpoint, where)
+  // CRUDL: INDEX (list)
+  index(filters) {
+    return ofAction(`${this.name}/indexing`, filters, { resource: this.name });
+  }
+
+  doIndex(filters) {
+    const action$ = filters
+      ? this.http.search(this.endpoint, filters)
       : this.http.get(this.endpoint);
 
     return action$.pipe(
       map(action => {
         const { res } = action.meta;
 
-        if (!res) {
-          return { ...action, type: `${this.key}/searching`, payload: where };
-        }
+        if (res) {
+          if (res.status === 200) {
+            return { ...action, type: `${this.name}/indexed` };
+          }
 
-        if (res.status === 200) {
-          return { ...action, type: `${this.key}/searched` };
+          // Error action
+          return action;
         }
-
-        // Err
-        return action;
       }),
     );
   }

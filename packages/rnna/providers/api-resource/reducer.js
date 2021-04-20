@@ -6,11 +6,11 @@ const initialState = {
 };
 
 export default function createReducer(key) {
-  return produce((draft, { type, payload = {}, meta = {} }) => {
+  return produce((draft, { payload = {}, meta = {} }) => {
     const { entities, result } = payload;
     const { req, res } = meta;
 
-    if (res && res.ok && type === this.endpoint) {
+    if (res && res.ok && entities && entities[key]) {
       produceTable(draft, entities[key]);
 
       if (req.method === 'GET' && Array.isArray(result)) {
