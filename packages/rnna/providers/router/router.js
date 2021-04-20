@@ -22,7 +22,7 @@ export default class Router extends RootNavigator {
     this.props[name] = prop;
   }
 
-  go(componentId, params) {
+  go(componentId, params = []) {
     if (!this.screens.has(componentId)) {
       throw new Error(`Component "${componentId}" not found`);
     }
@@ -37,20 +37,26 @@ export default class Router extends RootNavigator {
     this.navigate(componentId, props);
   }
 
-  update(state) {
-    const component = this.get(this.componentId);
+  update(componentId) {
+    const component = this.get(componentId);
 
     if (!component) {
-      throw new Error(`Component "${this.componentId || 'NULL'}" not found`);
+      throw new Error(`Component "${componentId || 'NULL'}" not found`);
     }
-
-    this.state = state;
 
     const params = this.getCache('params').get(componentId) || [];
     const props = this.getProps(componentId, params);
 
     if (!shallowEqual(props, component.passProps)) {
       component.update(props);
+    }
+  }
+
+  onState(state) {
+    this.state = state;
+
+    if (this.componentId) {
+      this.update(this.componentId);
     }
   }
 

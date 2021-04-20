@@ -19,6 +19,6 @@ class RouterProvider extends Provider {
   }
 }
 
-export default function createRouter(routes) {
+export default function createRouterProvider(routes) {
   return new RouterProvider(routes);
 }

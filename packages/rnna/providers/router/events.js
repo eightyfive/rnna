@@ -1,19 +1,19 @@
-// import { fromEvent } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs/operators';
 
 import { exec } from '../../rx/operators';
 
-// const update$ = (action$, state$, { router }) =>
-//   action$.pipe(
-//     take(1),
-//     switchMap(() =>
-//       fromEvent(router, 'ComponentDidAppear').pipe(
-//         exec(({ componentId }) => {
-//           router.update(componentId);
-//         }),
-//       ),
-//     ),
-//   );
+export const update$ = (action$, state$, { router }) =>
+  action$.pipe(
+    take(1),
+    switchMap(() =>
+      fromEvent(router, 'ComponentDidAppear').pipe(
+        exec(({ componentId }) => {
+          router.update(componentId);
+        }),
+      ),
+    ),
+  );
 
 export const onState$ = (action$, state$, { router }) =>
   action$.pipe(
@@ -21,7 +21,7 @@ export const onState$ = (action$, state$, { router }) =>
     switchMap(() =>
       state$.pipe(
         exec(state => {
-          router.update(state);
+          router.onState(state);
         }),
       ),
     ),
