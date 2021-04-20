@@ -36,6 +36,6 @@ class ResourceProvider extends Provider {
   }
 }
 
-export default function createResource(endpoint, schema) {
+export default function createApiResource(endpoint, schema) {
   return new ResourceProvider(endpoint, schema);
 }
