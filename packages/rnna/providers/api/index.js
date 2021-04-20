@@ -1,6 +1,6 @@
 import Provider from '../../provider';
 import createReducer from './reducer';
-import * as selectors from './selectors';
+import * as selectors from './db';
 import createHttp from './http';
 
 class ApiProvider extends Provider {
