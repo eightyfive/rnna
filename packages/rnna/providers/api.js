@@ -18,7 +18,7 @@ class ApiProvider extends Provider {
 
     Object.assign(services, { api: this.http });
 
-    Object.assign(reducers, { http: createReducer() });
+    Object.assign(reducers, { api: createReducer() });
 
     Object.assign(services.db, {
       fetching,
