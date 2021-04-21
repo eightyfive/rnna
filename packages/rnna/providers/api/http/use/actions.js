@@ -1,12 +1,8 @@
 import parseUrl from 'url-parse';
-import { from, merge, of } from 'rxjs';
-import {
-  catchError,
-  filter,
-  map,
-  switchMap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { merge, of } from 'rxjs';
+import { catchError, filter, map, withLatestFrom } from 'rxjs/operators';
+
+const reAjaxError = /^Ajax(?:Timeout)?Error$/;
 
 const actions = next => req$ => {
   const res$ = next(req$);
@@ -31,58 +27,40 @@ const actions = next => req$ => {
     withLatestFrom(req$),
 
     // Res action
-    switchMap(([res, req]) =>
-      from(res.json()).pipe(
-        map(json => {
-          const { pathname } = parseUrl(req.url);
+    map(([res, req]) => {
+      const { pathname } = parseUrl(req.url);
+      const data = res.response.data || res.response;
 
-          return {
-            type: pathname.substring(1),
-            payload: json.data || json,
-            meta: {
-              req,
-              res,
-            },
-          };
-        }),
-      ),
-    ),
+      return {
+        type: pathname.substring(1),
+        payload: data,
+        meta: {
+          req,
+          res,
+        },
+      };
+    }),
 
     // Error action
-    catchError(err =>
-      of(err).pipe(
-        filter(err => {
-          if (err.response) {
-            return true;
-          }
+    catchError(err => {
+      if (!reAjaxError.test(err.name)) {
+        throw err;
+      }
 
-          // Re-throw if not HTTP error
-          throw err;
-        }),
-        switchMap(err =>
-          from(err.response.json()).pipe(
-            map(json => {
-              const req = err.request;
-              const res = err.response;
+      const req = err.request;
 
-              const { pathname } = parseUrl(req.url);
+      const { pathname } = parseUrl(req.url);
 
-              err.data = json.data || json;
-
-              return {
-                type: pathname.substring(1),
-                payload: err,
-                error: true,
-                meta: {
-                  req,
-                  res,
-                },
-              };
-            }),
-          ),
-        ),
-      ),
-    ),
+      return of({
+        type: pathname.substring(1),
+        payload: err,
+        error: true,
+        meta: {
+          req,
+          res: err.response,
+        },
+      });
+    }),
   );
 
   return merge(reqAction$, resAction$);
