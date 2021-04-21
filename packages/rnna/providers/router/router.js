@@ -16,7 +16,11 @@ export default class Router extends RootNavigator {
 
     this.state = null;
     this.componentId = null;
+
+    this.addListener('ComponentDidAppear', this.handleDidAppear);
   }
+
+  handleDidAppear = ({ componentId }) => router.update(componentId);
 
   addGlobalProp(name, prop) {
     this.props[name] = prop;

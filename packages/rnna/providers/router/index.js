@@ -1,5 +1,5 @@
 import Provider from '../../provider';
-import { onState$, go$ } from './events';
+import events from './events';
 import createRouter from './factory';
 
 class RouterProvider extends Provider {
@@ -14,8 +14,7 @@ class RouterProvider extends Provider {
 
     Object.assign(services, { router });
 
-    epics.unshift(onState$);
-    epics.push(go$);
+    epics.unshift(...events);
   }
 }
 
