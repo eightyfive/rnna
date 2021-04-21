@@ -25,7 +25,7 @@ export default class Router extends RootNavigator {
     this.props[name] = prop;
   }
 
-  go(componentId, params = []) {
+  go(componentId, ...params) {
     if (!this.screens.has(componentId)) {
       throw new Error(`Component "${componentId}" not found`);
     }
