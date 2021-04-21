@@ -1,9 +1,9 @@
-import Provider from '../../provider';
+import Bundle from '../../bundle';
 import createReducer from './reducer';
 import * as selectors from './db';
 import createHttp from './http';
 
-class ApiProvider extends Provider {
+class ApiBundle extends Bundle {
   constructor(config) {
     super();
 
@@ -19,6 +19,6 @@ class ApiProvider extends Provider {
   }
 }
 
-export default function createApi(config) {
-  return new ApiProvider(config);
+export default function bundleApi(config) {
+  return new ApiBundle(config);
 }

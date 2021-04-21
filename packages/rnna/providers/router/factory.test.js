@@ -22,7 +22,7 @@ function Screen5() {}
 Screen5.options = { layout: { componentBackgroundColor: 'dummy' } };
 
 test('createRouter (tabs)', () => {
-  const provider = factory({
+  const bundle = factory({
     tabs: {
       tab1: {
         Screen1,
@@ -49,7 +49,7 @@ test('createRouter (tabs)', () => {
 
   const services = {};
 
-  provider.register(services, {}, []);
+  bundle.register(services, {}, []);
   const app = services.router;
 
   expect(app.get('tabs')).toBeInstanceOf(BottomTabsNavigator);
@@ -99,11 +99,11 @@ test('createRouter (tabs)', () => {
 });
 
 test('createRouter (stack)', () => {
-  const provider = factory({ main: { Screen3, Screen4 } });
+  const bundle = factory({ main: { Screen3, Screen4 } });
 
   const services = {};
 
-  provider.register(services, {}, []);
+  bundle.register(services, {}, []);
   const app = services.router;
 
   Navigation.setRoot.mockReset();

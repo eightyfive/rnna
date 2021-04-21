@@ -29,13 +29,13 @@ export default function getStore(
     middlewares = [],
     persist: persistConfig,
     reducers = {},
-    providers = [],
+    bundles = [],
   },
   services = {},
 ) {
-  // Providers
-  providers.forEach(provider => {
-    provider.register(services, reducers, epics);
+  // Bundles
+  bundles.forEach(bundle => {
+    bundle.register(services, reducers, epics);
   });
 
   // Epics

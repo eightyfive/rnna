@@ -1,8 +1,8 @@
-import Provider from '../../provider';
+import Bundle from '../../bundle';
 import events from './events';
 import createRouter from './factory';
 
-class RouterProvider extends Provider {
+class RouterBundle extends Bundle {
   constructor(routes) {
     super();
 
@@ -18,6 +18,6 @@ class RouterProvider extends Provider {
   }
 }
 
-export default function createRouterProvider(routes) {
-  return new RouterProvider(routes);
+export default function bundleRouter(routes) {
+  return new RouterBundle(routes);
 }

@@ -1,10 +1,10 @@
-import Provider from '../../provider';
+import Bundle from '../../bundle';
 import { createFind, createGet } from './db';
 import events from './events';
 import createReducer from './reducer';
 import Resource from './resource';
 
-class ResourceProvider extends Provider {
+class ResourceBundle extends Bundle {
   constructor(endpoint, entitySchema) {
     super();
 
@@ -40,6 +40,6 @@ class ResourceProvider extends Provider {
   }
 }
 
-export default function createApiResource(endpoint, schema) {
-  return new ResourceProvider(endpoint, schema);
+export default function bundleResource(endpoint, schema) {
+  return new ResourceBundle(endpoint, schema);
 }
