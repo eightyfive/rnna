@@ -2,7 +2,7 @@ import { merge } from 'rxjs';
 import { map, skip, tap } from 'rxjs/operators';
 import mock from 'xhr-mock';
 
-import ajax from './index';
+import HttpClient from './http-client';
 
 let api;
 
@@ -10,7 +10,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   mock.setup();
 
-  api = ajax.create({
+  api = new HttpClient({
     url: 'http://example.org',
     headers: {
       'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ beforeEach(() => {
 
 afterEach(() => mock.teardown());
 
-describe('ajax', () => {
+describe('HttpClient', () => {
   it('logs `req` & `res`', done => {
     const log = jest.fn();
 
