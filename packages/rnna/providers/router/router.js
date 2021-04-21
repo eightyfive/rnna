@@ -42,14 +42,15 @@ export default class Router extends RootNavigator {
   }
 
   update(componentId) {
-    const component = this.get(componentId);
-
-    if (!component) {
-      throw new Error(`Component "${componentId || 'NULL'}" not found`);
+    if (!this.screens.has(componentId)) {
+      throw new Error(`Component "${componentId}" not found`);
     }
+
+    this.componentId = componentId;
 
     const params = this.getCache('params').get(componentId) || [];
     const props = this.getProps(componentId, params);
+    const component = this.get(componentId);
 
     if (!shallowEqual(props, component.passProps)) {
       component.update(props);
