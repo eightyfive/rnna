@@ -1,38 +1,26 @@
-import { from, merge } from 'rxjs';
-import { map, switchMap, skip, tap } from 'rxjs/operators';
+import { merge } from 'rxjs';
+import { map, skip, tap } from 'rxjs/operators';
+import mock from 'xhr-mock';
 
-import Http from './index';
+import ajax from './index';
 
 let api;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  fetch.resetMocks();
+  mock.setup();
 
-  api = new Http('http://example.org', {
+  api = ajax.create({
+    url: 'http://example.org',
     headers: {
       'Content-Type': 'application/json',
     },
   });
 });
 
-describe('Http', () => {
-  it('calls fetch', done => {
-    api.get('api/resource').subscribe(undefined, undefined, () => {
-      expect(fetch).toHaveBeenCalled();
-      done();
-    });
-  });
+afterEach(() => mock.teardown());
 
-  it('emits `res`', done => {
-    api.get('api/resource').subscribe(res => {
-      expect(res.ok).toBe(true);
-      expect(res.status).toBe(200);
-
-      done();
-    });
-  });
-
+describe('ajax', () => {
   it('logs `req` & `res`', done => {
     const log = jest.fn();
 
@@ -42,23 +30,12 @@ describe('Http', () => {
       return merge(req$.pipe(tap(log)), res$.pipe(tap(log))).pipe(skip(1));
     });
 
+    mock.get('http://example.org/api/resource', { status: 200 });
+
     api.get('api/resource').subscribe(res => {
       expect(log).toHaveBeenCalledTimes(2);
       expect(log).toHaveBeenNthCalledWith(2, res);
 
-      done();
-    });
-  });
-
-  it('maps `res` to json and keeps `req` in stream', done => {
-    fetch.mockResponse('{"foo": "bar"}');
-
-    api.use(next => req$ =>
-      next(req$).pipe(switchMap(res => from(res.json()))),
-    );
-
-    api.get('api/resource').subscribe(res => {
-      expect(res).toEqual({ foo: 'bar' });
       done();
     });
   });
@@ -70,11 +47,13 @@ describe('Http', () => {
       return next(
         req$.pipe(
           tap(req => log(req.method)),
-          map(req => new Request(req, { method: 'POST' })),
+          map(req => ({ ...req, method: 'POST' })),
           tap(req => log(req.method)),
         ),
       );
     });
+
+    mock.post('http://example.org/api/resource', { status: 200 });
 
     api.get('api/resource').subscribe(res => {
       expect(log).toHaveBeenCalledTimes(2);
@@ -94,6 +73,8 @@ describe('Http', () => {
       return merge(req$, res$);
     });
 
+    mock.get('http://example.org/api/resource', { status: 200 });
+
     api.get('api/resource').subscribe(
       val => values.push(val),
       undefined,
@@ -102,11 +83,29 @@ describe('Http', () => {
         const [req, res] = values;
 
         expect(req.method).toBe('GET');
-        expect(req.headers.get('Content-Type')).toBe('application/json');
+        expect(req.headers['Content-Type']).toBe('application/json');
         expect(req.url).toBe('http://example.org/api/resource');
 
-        expect(res.ok).toBe(true);
         expect(res.status).toBe(200);
+
+        done();
+      },
+    );
+  });
+
+  it('throws error', done => {
+    mock.post('http://example.org/api/resource', {
+      status: 422,
+      reason: 'Unprocessable Entity',
+      body: '{"foo":"bar"}',
+    });
+
+    api.post('api/resource').subscribe(
+      () => {},
+      err => {
+        expect(err.name).toBe('AjaxError');
+        expect(err.status).toBe(422);
+        expect(err.response).toEqual({ foo: 'bar' });
 
         done();
       },
