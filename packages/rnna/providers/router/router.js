@@ -46,7 +46,9 @@ export default class Router extends RootNavigator {
       throw new Error(`Component "${componentId}" not found`);
     }
 
-    this.componentId = componentId;
+    if (componentId !== this.componentId) {
+      this.componentId = componentId;
+    }
 
     const params = this.getCache('params').get(componentId) || [];
     const props = this.getProps(componentId, params);
