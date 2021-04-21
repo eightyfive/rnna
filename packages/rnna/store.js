@@ -33,7 +33,7 @@ export default function getStore(
   },
   services = {},
 ) {
-  // Bundles
+  // Register bundles
   bundles.forEach(bundle => {
     bundle.register(services, reducers, epics);
   });
@@ -55,6 +55,11 @@ export default function getStore(
   const persistedReducer = persistReducer(persistConfig, rootReducer);
 
   const store = createStore(persistedReducer, applyMiddleware(...middlewares));
+
+  // Boot bundles
+  bundles.forEach(bundle => {
+    bundle.boot(store);
+  });
 
   // Run epics
   if (epicMiddleware) {
