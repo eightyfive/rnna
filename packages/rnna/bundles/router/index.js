@@ -7,14 +7,19 @@ class RouterBundle extends Bundle {
     super();
 
     this.routes = routes;
+    this.router = null;
   }
 
   register(services, reducers, epics) {
-    const router = createRouter(this.routes, services);
+    this.router = createRouter(this.routes, services);
 
-    Object.assign(services, { router });
+    Object.assign(services, { router: this.router });
 
     epics.unshift(...events);
+  }
+
+  boot(store) {
+    this.router.addGlobalProp('dispatch', store.dispatch);
   }
 }
 
