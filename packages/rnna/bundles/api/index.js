@@ -1,6 +1,6 @@
 import Bundle from '../../bundle';
 import createReducer from './reducer';
-import * as selectors from './db';
+import * as selectors from './selectors';
 import createHttp from './http';
 
 class ApiBundle extends Bundle {

@@ -1,5 +1,5 @@
 import Bundle from '../../bundle';
-import { createFind, createGet } from './db';
+import { createFind, createGet } from './selectors';
 import events from './events';
 import createReducer from './reducer';
 import Resource from './resource';
@@ -28,6 +28,7 @@ class ResourceBundle extends Bundle {
     });
 
     // Selectors
+    // TODO: Remove namespace for: getUsers, findUser.
     services.db[this.name] = {};
 
     Object.assign(services.db[this.name], {
