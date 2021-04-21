@@ -56,24 +56,23 @@ export default function getStore(
 
   const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
-  // Boot bundles
-  bundles.forEach(bundle => {
-    bundle.boot(store);
-  });
-
-  // Run epics
-  if (epicMiddleware) {
-    epicMiddleware.run(rootEpic);
-  }
-
   const persistor = persistStore(store);
 
   const whenHydrated = getHydratedAsync(persistor);
 
   // https://redux.js.org/api/api-reference#store-api
-  const { dispatch, getState, subscribe, replaceReducer } = store;
+  const { getState, subscribe, replaceReducer } = store;
 
-  return {
+  // FSA dispatch
+  function dispatch(action, payload) {
+    if (typeof action === 'string') {
+      return store.dispatch({ type: action, payload });
+    }
+
+    return store.dispatch(action);
+  }
+
+  const appStore = {
     getState,
     dispatch,
     subscribe,
@@ -84,4 +83,16 @@ export default function getStore(
       return whenHydrated;
     },
   };
+
+  // Boot bundles
+  bundles.forEach(bundle => {
+    bundle.boot(appStore);
+  });
+
+  // Run epics
+  if (epicMiddleware) {
+    epicMiddleware.run(rootEpic);
+  }
+
+  return appStore;
 }
