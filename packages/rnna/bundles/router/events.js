@@ -8,7 +8,7 @@ const onState$ = (action$, state$, { router }) =>
     switchMap(() =>
       state$.pipe(
         exec(state => {
-          router.onState(state);
+          router.onState();
         }),
       ),
     ),

@@ -14,7 +14,6 @@ export default class Router extends RootNavigator {
     this.services = services || {};
     this.props = {};
 
-    this.state = null;
     this.componentId = null;
 
     this.addListener('ComponentDidAppear', this.handleDidAppear);
@@ -59,9 +58,7 @@ export default class Router extends RootNavigator {
     }
   }
 
-  onState(state) {
-    this.state = state;
-
+  onState() {
     if (this.componentId) {
       this.update(this.componentId);
     }
@@ -73,10 +70,7 @@ export default class Router extends RootNavigator {
     const props = Object.assign({}, this.props);
 
     if (typeof Screen.controller === 'function') {
-      Object.assign(
-        props,
-        Screen.controller(this.state, this.services, ...params),
-      );
+      Object.assign(props, Screen.controller(...params, this.services));
     }
 
     if (Screen.passProps) {
