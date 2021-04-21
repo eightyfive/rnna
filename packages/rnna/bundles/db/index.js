@@ -1,14 +1,12 @@
 import Bundle from '../../bundle';
-import db from './db';
+import createDb from './db';
 import events from './events';
 
 class DbBundle extends Bundle {
   constructor(selectors) {
     super();
 
-    this.db = db;
-
-    Object.assign(this.db, selectors);
+    this.db = createDb(selectors);
   }
 
   register(services, reducers, epics) {
