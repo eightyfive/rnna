@@ -71,16 +71,7 @@ export default function getStore(
   const whenHydrated = getHydratedAsync(persistor);
 
   // https://redux.js.org/api/api-reference#store-api
-  const { getState, subscribe, replaceReducer } = store;
-
-  // FSA dispatch
-  function dispatch(action, payload) {
-    if (typeof action === 'string') {
-      return store.dispatch({ type: action, payload });
-    }
-
-    return store.dispatch(action);
-  }
+  const { dispatch, getState, subscribe, replaceReducer } = store;
 
   return {
     getState,

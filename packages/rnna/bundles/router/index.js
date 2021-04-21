@@ -19,7 +19,16 @@ class RouterBundle extends Bundle {
   }
 
   boot(store) {
-    this.router.addGlobalProp('dispatch', store.dispatch);
+    // FSA dispatch
+    function dispatch(action, payload) {
+      if (typeof action === 'string') {
+        return store.dispatch({ type: action, payload });
+      }
+
+      return store.dispatch(action);
+    }
+
+    this.router.addGlobalProp('dispatch', dispatch);
   }
 }
 
