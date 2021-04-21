@@ -1,5 +1,4 @@
-import { fromEvent } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 import { exec } from '../../rx/operators';
 
