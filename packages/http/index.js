@@ -86,6 +86,7 @@ export default class Http {
     // Request
     // https://github.com/ReactiveX/rxjs/blob/6.5.5/src/internal/observable/dom/AjaxObservable.ts#L7
     const req = {
+      ...this.defaults,
       url,
       method,
       headers,
