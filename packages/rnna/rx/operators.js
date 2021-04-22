@@ -65,38 +65,21 @@ export const pluck = (...paths) => source =>
 export const mapAction = (mapType, mapPayload) => source =>
   source.pipe(
     map(action => {
-      let type;
-      let payload = action.payload || action;
+      let data;
 
-      if (typeof mapType === 'function') {
-        type = mapType(payload);
+      if (action) {
+        data = action.payload || action;
       } else {
-        type = mapType;
+        data = action;
       }
+
+      const type = typeof mapType === 'function' ? mapType(data) : mapType;
 
       if (typeof mapPayload === 'function') {
-        payload = mapPayload(payload);
-      } else if (typeof mapPayload !== 'undefined') {
-        payload = mapPayload;
-      }
-
-      return {
-        type,
-        payload,
-      };
-    }),
-  );
-
-export const mapActionType = mapType => source =>
-  source.pipe(
-    map(action => {
-      let type;
-      let payload = action.payload || action;
-
-      if (typeof mapType === 'function') {
-        type = mapType(payload);
-      } else {
-        type = mapType;
+        return {
+          type,
+          payload: mapPayload(data),
+        };
       }
 
       return {
