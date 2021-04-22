@@ -9,7 +9,7 @@ export function onAction(handler) {
   return (action$, state$, services) =>
     action$.pipe(
       mergeMap(action => {
-        const res = handler(action, state$.value, services);
+        const res = handler(action, services);
 
         if (res === undefined) {
           return EMPTY;

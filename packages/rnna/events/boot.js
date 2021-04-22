@@ -8,7 +8,7 @@ export default function createOnBoot(handler) {
       filter(({ type }) => type === REHYDRATE),
       take(1),
       switchMap(() => {
-        const res = handler(state$.value, services);
+        const res = handler(services);
 
         if (res === undefined) {
           return EMPTY;

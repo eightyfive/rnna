@@ -9,7 +9,7 @@ export default function createOnAppState(handler) {
       switchMap(() =>
         fromEvent(AppState, 'change').pipe(
           mergeMap(name => {
-            const res = handler(name, state$.value, services);
+            const res = handler(name, services);
 
             if (res === undefined) {
               return EMPTY;
