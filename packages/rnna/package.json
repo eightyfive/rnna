@@ -7,9 +7,7 @@
     "react-native"
   ],
   "dependencies": {
-    "@rnna/http": "latest",
     "@rnna/navigator": "latest",
-    "immer": "8.x",
     "lodash.get": "4.x",
     "lodash.isplainobject": "4.x",
     "lodash.last": "3.x",
@@ -23,10 +21,8 @@
     "redux": "4.x",
     "redux-observable": "1.x",
     "redux-persist": "6.x",
-    "reselect": "4.x",
     "rxjs": "6.x",
-    "shallowequal": "1.x",
-    "url-parse": "1.5.x"
+    "shallowequal": "1.x"
   },
   "peerDependencies": {
     "react-native": "*",
@@ -34,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eightyfive/rnna/tree/master/packages/template"
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/rnna"
   },
   "author": "Benoit Sagols",
   "license": "MIT",

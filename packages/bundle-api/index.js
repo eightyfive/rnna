@@ -1,4 +1,5 @@
-import Bundle from '../../bundle';
+import Bundle from 'rnna/bundle';
+
 import createReducer from './reducer';
 import * as selectors from './selectors';
 import createHttp from './http';

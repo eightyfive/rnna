@@ -1,0 +1,28 @@
+{
+  "name": "@rnna/bundle-api",
+  "version": "0.0.0",
+  "description": "API Bundle (React Native Navigation App)",
+  "keywords": [
+    "rnna",
+    "rnna-bundle",
+    "react-native"
+  ],
+  "dependencies": {
+    "@rnna/http": "latest",
+    "immer": "8.x",
+    "reselect": "4.x",
+    "url-parse": "1.5.x"
+  },
+  "peerDependencies": {
+    "rnna": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/bundle-api"
+  },
+  "author": "Benoit Sagols",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
