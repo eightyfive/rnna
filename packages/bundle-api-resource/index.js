@@ -1,4 +1,5 @@
-import Bundle from '../../bundle';
+import Bundle from 'rnna/bundle';
+
 import { createFind, createGet } from './selectors';
 import events from './events';
 import createReducer from './reducer';

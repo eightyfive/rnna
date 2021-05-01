@@ -1,4 +1,4 @@
-import { ofAction } from '../../rx';
+import { ofAction } from 'rnna/rx';
 
 export default class Resource {
   constructor(http, name, endpoint) {
