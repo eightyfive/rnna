@@ -1,4 +1,5 @@
-import Bundle from '../../bundle';
+import Bundle from 'rnna/bundle';
+
 import createDb from './db';
 import events from './events';
 

@@ -1,6 +1,5 @@
 import { switchMap, take } from 'rxjs/operators';
-
-import { exec } from '../../rx/operators';
+import { exec } from 'rnna/rx/operators';
 
 const onState$ = (action$, state$, { db }) =>
   action$.pipe(
