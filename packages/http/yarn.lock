@@ -2,18 +2,6 @@
 # yarn lockfile v1
 
 
-console.groups@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/console.groups/-/console.groups-0.1.3.tgz#29b0a509569d1789ca63c52f2af0ca884a22efed"
-  integrity sha512-sKa+wSdCiew27R6FBEsoLGiy3Z1H0twYgTU+CYHZ8RCl9wuUMD5rNCSvZBi1XMy2F0QYByh1uUrOU5F+oNbyGQ==
-  dependencies:
-    console.unicorn "^0.1.1"
-
-console.unicorn@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/console.unicorn/-/console.unicorn-0.1.1.tgz#477b8178439144bc03b534008eef057dfb7bf3d4"
-  integrity sha512-frvYTGRrojgf82A7wqpxNdAgntZv66v1VHbvWZ0qHRtnpa3VJ7wGR+elyiW8z+DEOmSAFCq7Rlg2+SAeBTXNWg==
-
 dom-walk@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
