@@ -1,4 +1,5 @@
-import Bundle from '../../bundle';
+import Bundle from 'rnna/bundle';
+
 import events from './events';
 import createRouter from './factory';
 

@@ -1,0 +1,30 @@
+{
+  "name": "@rnna/bundle-router",
+  "version": "0.0.0",
+  "description": "Router Bundle (React Native Navigation App)",
+  "keywords": [
+    "rnna",
+    "rnna-bundle",
+    "react-native"
+  ],
+  "dependencies": {
+    "@rnna/navigator": "latest",
+    "lodash.isplainobject": "4.x",
+    "lodash.last": "3.x",
+    "lodash.mapvalues": "4.x",
+    "shallowequal": "1.x"
+  },
+  "peerDependencies": {
+    "react-native-navigation": "*",
+    "rnna": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/bundle-router"
+  },
+  "author": "Benoit Sagols",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
