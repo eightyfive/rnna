@@ -5,16 +5,16 @@ export default class Router {
     this.props = {};
     this.listeners = [];
 
-    window.addEventListener('popstate', this.handlePopstate);
+    window.addEventListener('popstate', ev => this.handlePopstate(ev));
   }
 
-  handlePopstate = ev => {
+  handlePopstate(ev) {
     const { pathname } = new URL(document.location);
 
     const path = pathname.substring(1);
 
     this.triggerChange(path, (ev.state || {}).params || []);
-  };
+  }
 
   addGlobalProp(name, prop) {
     this.props[name] = prop;
@@ -40,10 +40,10 @@ export default class Router {
         Screen.controller(this.services),
       );
 
-      return <Screen {...props} />;
+      return [Screen, props];
     }
 
-    return null;
+    return [];
   }
 
   subscribe(listener) {
