@@ -29,14 +29,24 @@ export default function getStore(
     middlewares = [],
     persist: persistConfig,
     reducers = {},
+    providers = [],
     bundles = [],
   },
-  services = {},
+  container,
 ) {
   // Register bundles
   bundles.forEach(bundle => {
-    bundle.register(services, reducers, epics);
+    providers.push(bundle.getServiceProvider());
+
+    Object.assign(reducers, bundle.getReducers());
+
+    epics.push(...bundle.getEpics());
   });
+
+  // Register service providers
+  providers.forEach(provider => provider.register(container));
+
+  const services = container.container;
 
   // Epics
   let rootEpic;
@@ -56,43 +66,33 @@ export default function getStore(
 
   const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
+  // Boot service providers
+  providers.forEach(provider => provider.boot(services, store));
+
+  // Persistor
   const persistor = persistStore(store);
 
   const whenHydrated = getHydratedAsync(persistor);
 
-  // https://redux.js.org/api/api-reference#store-api
-  const { getState, subscribe, replaceReducer } = store;
+  // "Enhance" store
+  const storeDispatch = store.dispatch;
 
   // FSA dispatch
-  function dispatch(action, payload) {
+  store.dispatch = (action, payload) => {
     if (typeof action === 'string') {
-      return store.dispatch({ type: action, payload });
+      return storeDispatch({ type: action, payload });
     }
 
-    return store.dispatch(action);
-  }
-
-  const appStore = {
-    getState,
-    dispatch,
-    subscribe,
-    replaceReducer,
-    //
-    persistor,
-    hydrate() {
-      return whenHydrated;
-    },
+    return storeDispatch(action);
   };
 
-  // Boot bundles
-  bundles.forEach(bundle => {
-    bundle.boot(appStore);
-  });
+  store.persistor = persistor;
+  store.hydrate = () => whenHydrated;
 
   // Run epics
   if (epicMiddleware) {
     epicMiddleware.run(rootEpic);
   }
 
-  return appStore;
+  return store;
 }
