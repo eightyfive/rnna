@@ -22,7 +22,7 @@ export default class BottomTabsNavigator extends Navigator {
     const layout = {
       id: this.layoutId,
       children: this.order.map(id =>
-        this.getTab(id).getInitialLayout(
+        this.getStack(id).getInitialLayout(
           id === this.initialRouteName ? props : undefined,
         ),
       ),
@@ -35,8 +35,8 @@ export default class BottomTabsNavigator extends Navigator {
     return { bottomTabs: layout };
   }
 
-  getTab(id) {
-    return this.getRoute(id, 'Tab');
+  getStack(id) {
+    return this.getRoute(id, 'Stack');
   }
 
   get route() {
