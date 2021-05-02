@@ -6,15 +6,15 @@ export default class Router extends RouterBase {
 
     this.listeners = [];
 
-    window.addEventListener('popstate', ev => this.handlePopstate(ev));
+    window.addEventListener('popstate', () => this.handlePopstate());
   }
 
-  handlePopstate(ev) {
+  handlePopstate() {
     const { pathname } = new URL(document.location);
 
     const path = pathname.substring(1);
 
-    this.triggerChange(path, (ev.state || {}).params || []);
+    this.triggerChange(path);
   }
 
   render(path) {
