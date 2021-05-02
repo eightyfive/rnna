@@ -1,25 +1,20 @@
-import Bundle from 'rnna/bundle';
+import { Bundle } from 'rnna';
 
 import createReducer from './reducer';
-import * as selectors from './selectors';
-import createHttp from './http';
+import ApiProvider from './provider';
 
-class ApiBundle extends Bundle {
-  constructor(config) {
-    super();
-
-    this.http = createHttp(config);
+export default class ApiBundle extends Bundle {
+  getServiceProvider() {
+    return new ApiProvider();
   }
 
-  register(services, reducers, epics) {
-    Object.assign(services, { api: this.http });
-
-    Object.assign(reducers, { api: createReducer() });
-
-    Object.assign(services.db, selectors);
+  getReducers() {
+    return {
+      api: createReducer(),
+    };
   }
-}
 
-export default function bundleApi(config) {
-  return new ApiBundle(config);
+  getEpics() {
+    return [];
+  }
 }

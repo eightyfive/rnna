@@ -8,7 +8,7 @@
     "react-native"
   ],
   "dependencies": {
-    "@rnna/http": "latest",
+    "@rnna/provider-api": "latest",
     "immer": "8.x",
     "reselect": "4.x",
     "url-parse": "1.5.x"
