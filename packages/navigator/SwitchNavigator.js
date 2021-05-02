@@ -37,7 +37,7 @@ export default class SwitchNavigator extends Navigator {
 
       this.history.push(id);
 
-      // Mount new route
+      // Mount new route (navigator/component)
       route.mount(props);
     }
 

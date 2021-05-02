@@ -132,10 +132,10 @@ export default class StackNavigator extends Navigator {
   }
 
   getComponent() {
-    if (!this.route) {
-      return null;
-    }
+    return this.component;
+  }
 
+  get component() {
     return this.route;
   }
 
@@ -143,8 +143,13 @@ export default class StackNavigator extends Navigator {
     const index = this.history.findIndex(name => name === toName);
 
     if (index === -1) {
+      // Push new screen
       this.push(toName, props);
-    } else if (index >= 1) {
+    } else if (index === this.history.length - 1) {
+      // Update current screen
+      this.component.render(props);
+    } else {
+      // Pop to previous screen
       this.popToIndex(index);
     }
   }
