@@ -39,16 +39,6 @@ export default class BottomTabsNavigator extends Navigator {
     return this.getRoute(id, 'Tab');
   }
 
-  getRoute(index) {
-    if (typeof index === 'number') {
-      const id = this.order[index];
-
-      return this.routes.get(id);
-    }
-
-    return super.getRoute(index);
-  }
-
   get route() {
     const id = this.order[this.tabIndex];
 
