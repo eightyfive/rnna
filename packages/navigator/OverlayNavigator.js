@@ -25,10 +25,6 @@ export default class OverlayNavigator extends Navigator {
     }
   }
 
-  getComponent() {
-    return this.component;
-  }
-
   render(path, props) {
     this.mount(props);
   }

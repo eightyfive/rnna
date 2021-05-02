@@ -111,10 +111,6 @@ export default class RootNavigator extends SwitchNavigator {
     return null;
   }
 
-  getComponent() {
-    return this.overlay ? this.overlay.getComponent() : super.getComponent();
-  }
-
   onDismissOverlay(componentId) {
     this.overlays = this.overlays.filter(id => id !== componentId);
   }

@@ -55,14 +55,6 @@ export default class BottomTabsNavigator extends Navigator {
     Navigation.setRoot({ root: this.getLayout(initialProps) });
   }
 
-  getComponent() {
-    if (!this.route) {
-      return null;
-    }
-
-    return this.route.getComponent();
-  }
-
   render(path, props) {
     const [id, rest] = this.parsePath(path);
     const index = this.order.findIndex(key => key === id);

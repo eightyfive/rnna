@@ -131,10 +131,6 @@ export default class StackNavigator extends Navigator {
     Navigation.popToRoot(fromId);
   }
 
-  getComponent() {
-    return this.component;
-  }
-
   get component() {
     return this.route;
   }
