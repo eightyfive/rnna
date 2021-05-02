@@ -53,21 +53,21 @@ export default class StackNavigator extends Navigator {
     }
   };
 
-  getInitialLayout(params) {
+  getInitialLayout(props) {
     // TOFIX:
     // Here because of BottomTabs.children.getInitialLayout()
     // Should be in Stack.mount
     this.history = [this.initialRouteName];
 
-    return this.getLayout(params, this.initialRouteName);
+    return this.getLayout(props, this.initialRouteName);
   }
 
-  getLayout(params, componentId) {
+  getLayout(props, componentId) {
     const index = this.order.findIndex(id => id === componentId);
     const children = this.order.slice(0, index + 1);
 
     const layout = {
-      children: children.map(id => this.get(id).getLayout(params)),
+      children: children.map(id => this.get(id).getLayout(props)),
     };
 
     if (this.options) {
@@ -77,17 +77,17 @@ export default class StackNavigator extends Navigator {
     return { stack: layout };
   }
 
-  mount(params) {
-    Navigation.setRoot({ root: this.getInitialLayout(params) });
+  mount(initialProps) {
+    Navigation.setRoot({ root: this.getInitialLayout(initialProps) });
   }
 
-  push(toName, params) {
+  push(toName, props) {
     const component = this.get(toName);
     const fromId = this.route.id;
 
     this.history.push(toName);
 
-    Navigation.push(fromId, component.getLayout(params));
+    Navigation.push(fromId, component.getLayout(props));
   }
 
   pop(n = 1) {
@@ -139,11 +139,11 @@ export default class StackNavigator extends Navigator {
     return this.route;
   }
 
-  navigate(toName, params) {
+  navigate(toName, props) {
     const index = this.history.findIndex(name => name === toName);
 
     if (index === -1) {
-      this.push(toName, params);
+      this.push(toName, props);
     } else if (index >= 1) {
       this.popToIndex(index);
     }

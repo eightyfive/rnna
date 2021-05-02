@@ -2,12 +2,12 @@ import { Navigation } from 'react-native-navigation';
 
 import Component from './Component';
 
-export function makeComponent(id, options = {}, params = {}, name = null) {
+export function makeComponent(id, options = {}, props = {}, name = null) {
   return {
     id: id,
     name: name || id,
     options,
-    passProps: params,
+    passProps: props,
   };
 }
 
@@ -35,7 +35,7 @@ test('mount (options)', () => {
   });
 });
 
-test('mount (params)', () => {
+test('mount (props)', () => {
   const component = new Component('A');
 
   component.mount({ foo: 'bar' });

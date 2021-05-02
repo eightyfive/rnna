@@ -9,8 +9,8 @@ export default class OverlayNavigator extends Navigator {
     this.component = component;
   }
 
-  mount(params) {
-    Navigation.showOverlay(this.component.getLayout(params));
+  mount(initialProps) {
+    Navigation.showOverlay(this.component.getLayout(initialProps));
   }
 
   unmount() {
@@ -29,8 +29,8 @@ export default class OverlayNavigator extends Navigator {
     return this.component;
   }
 
-  navigate(path, params) {
-    this.mount(params);
+  navigate(path, props) {
+    this.mount(props);
   }
 
   goBack() {

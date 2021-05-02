@@ -17,7 +17,7 @@ const A = new Component('A', { topBar: { title: { text: 'Title A' } } });
 const B = new Component('B', { topBar: { title: { text: 'Title B' } } });
 const C = new Component('C', { topBar: { title: { text: 'Title C' } } });
 
-const params = { foo: 'bar' };
+const props = { foo: 'bar' };
 
 beforeEach(() => {
   app = new StackNavigator({ A, B, C }, {}, {});
@@ -42,7 +42,7 @@ test('mount', () => {
 });
 
 test('push', () => {
-  app.push('B', params, 'A');
+  app.push('B', props, 'A');
 
   expect(app.history).toEqual(['A', 'B']);
 
@@ -54,14 +54,14 @@ test('push', () => {
           title: { text: 'Title B' },
         },
       },
-      params,
+      props,
     ),
   });
 });
 
 test('popToRoot', () => {
-  app.push('B', params, 'A');
-  app.push('C', params, 'B');
+  app.push('B', props, 'A');
+  app.push('C', props, 'B');
   app.popToRoot('C');
 
   expect(app.history).toEqual(['A']);
@@ -70,14 +70,14 @@ test('popToRoot', () => {
 
 test('navigate (push)', () => {
   app.push = jest.fn();
-  app.navigate('B', params);
+  app.navigate('B', props);
 
-  expect(app.push).toHaveBeenCalledWith('B', params);
+  expect(app.push).toHaveBeenCalledWith('B', props);
 });
 
 test('goBack', () => {
-  app.navigate('B', params);
-  app.navigate('C', params);
+  app.navigate('B', props);
+  app.navigate('C', props);
   app.goBack('C');
 
   expect(app.history).toEqual(['A', 'B']);

@@ -35,14 +35,14 @@ export default class SideMenuNavigator extends StackNavigator {
     }
   };
 
-  mount(params) {
-    Navigation.setRoot({ root: this.getInitialLayout(params) });
+  mount(initialProps) {
+    Navigation.setRoot({ root: this.getInitialLayout(initialProps) });
   }
 
-  getLayout(params, routeName) {
+  getLayout(props, routeName) {
     const layout = {
-      center: super.getLayout(params, routeName),
-      [this.drawerPosition]: this.drawer.getLayout(params),
+      center: super.getLayout(props, routeName),
+      [this.drawerPosition]: this.drawer.getLayout(props),
     };
 
     if (this.options) {

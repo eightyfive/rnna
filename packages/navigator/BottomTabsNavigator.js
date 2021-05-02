@@ -18,12 +18,12 @@ export default class BottomTabsNavigator extends Navigator {
     }
   };
 
-  getLayout(params) {
+  getLayout(props) {
     const layout = {
       id: this.layoutId,
       children: this.order.map(id =>
         this.get(id).getInitialLayout(
-          id === this.initialRouteName ? params : undefined,
+          id === this.initialRouteName ? props : undefined,
         ),
       ),
     };
@@ -51,8 +51,8 @@ export default class BottomTabsNavigator extends Navigator {
     return this.get(id);
   }
 
-  mount(params) {
-    Navigation.setRoot({ root: this.getLayout(params) });
+  mount(initialProps) {
+    Navigation.setRoot({ root: this.getLayout(initialProps) });
   }
 
   getComponent() {
@@ -63,7 +63,7 @@ export default class BottomTabsNavigator extends Navigator {
     return this.route.getComponent();
   }
 
-  navigate(path, params) {
+  navigate(path, props) {
     const [id, rest] = this.parsePath(path);
     const index = this.order.findIndex(key => key === id);
 
@@ -80,7 +80,7 @@ export default class BottomTabsNavigator extends Navigator {
     }
 
     if (rest) {
-      this.route.navigate(rest, params);
+      this.route.navigate(rest, props);
     }
   }
 

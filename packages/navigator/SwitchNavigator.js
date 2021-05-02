@@ -7,10 +7,10 @@ export default class SwitchNavigator extends Navigator {
     this.backBehavior = config.backBehavior || 'none';
   }
 
-  mount(params) {
+  mount(initialProps) {
     this.history = [this.initialRouteName];
 
-    this.route.mount(params);
+    this.route.mount(initialProps);
   }
 
   get(path) {
@@ -29,7 +29,7 @@ export default class SwitchNavigator extends Navigator {
     return route;
   }
 
-  navigate(path, params) {
+  navigate(path, props) {
     const [id, rest] = this.parsePath(path);
 
     if (this.route.id !== id) {
@@ -38,11 +38,11 @@ export default class SwitchNavigator extends Navigator {
       this.history.push(id);
 
       // Mount new route
-      route.mount(params);
+      route.mount(props);
     }
 
     if (rest) {
-      this.route.navigate(rest, params);
+      this.route.navigate(rest, props);
     }
   }
 

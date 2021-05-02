@@ -13,21 +13,21 @@ export default class Component extends Route {
     this.passProps = {};
   }
 
-  mount(params) {
-    Navigation.setRoot({ root: this.getLayout(params) });
+  mount(initialProps) {
+    Navigation.setRoot({ root: this.getLayout(initialProps) });
   }
 
   unmount() {}
 
-  getLayout(params) {
+  getLayout(props) {
     const layout = {
       id: this.id,
       name: this.name,
       options: { ...this.options },
     };
 
-    if (params) {
-      this.passProps = params;
+    if (props) {
+      this.passProps = props;
     }
 
     layout.passProps = { ...this.passProps };
@@ -35,9 +35,9 @@ export default class Component extends Route {
     return { component: layout };
   }
 
-  update(params) {
-    this.passProps = params;
+  update(props) {
+    this.passProps = props;
 
-    Navigation.updateProps(this.id, params);
+    Navigation.updateProps(this.id, props);
   }
 }

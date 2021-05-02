@@ -1,5 +1,5 @@
 export default /* abstract */ class Route {
-  mount(params) {
+  mount(initialProps) {
     throwAbstract('mount');
   }
 
@@ -7,7 +7,7 @@ export default /* abstract */ class Route {
     throwAbstract('unmount');
   }
 
-  getLayout(params) {
+  getLayout(props) {
     throwAbstract('getLayout');
   }
 }
