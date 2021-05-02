@@ -6,7 +6,15 @@ const initialState = {
   result: [1, 2],
 };
 
-db.setState({ ...initialState });
+let state = { ...initialState };
+
+const store = {
+  getState() {
+    return state;
+  },
+};
+
+db.setStore(store);
 
 describe('DB', () => {
   it('sets state', () => {
@@ -26,12 +34,10 @@ describe('DB', () => {
 
   it('changes state & selects', () => {
     // Change array VALUE in order to trigger selector change
-    const state = {
+    state = {
       ...initialState,
       result: [1, 2, 3],
     };
-
-    db.setState(state);
 
     expect(db.state).toEqual(state);
     expect(db.getResult()).toEqual(['A', 'B', 'C']);

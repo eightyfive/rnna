@@ -1,23 +1,19 @@
 export default function createDb(selectors = {}) {
-  let state;
+  let store;
 
-  function setState(val) {
-    state = val;
-  }
-
-  function getState() {
-    return state;
+  function setStore(val) {
+    store = val;
   }
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
   const handler = {
     get(target, key) {
-      if (key === 'setState') {
-        return setState;
+      if (key === 'setStore') {
+        return setStore;
       }
 
       if (key === 'state') {
-        return getState();
+        return store.getState();
       }
 
       const selector = target[key];
@@ -26,12 +22,12 @@ export default function createDb(selectors = {}) {
         throw new Error(`Selector \`${key}\` does not exist`);
       }
 
-      return (...args) => selector(getState(), ...args);
+      return (...args) => selector(store.getState(), ...args);
     },
 
     set(target, key, val) {
-      if (key === 'state') {
-        throw new Error(`Use \`setState\` method`);
+      if (key === 'store') {
+        throw new Error(`Use \`setStore\` method`);
       }
 
       if (typeof target[key] !== 'undefined') {
