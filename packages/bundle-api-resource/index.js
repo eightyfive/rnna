@@ -1,47 +1,24 @@
-import Bundle from 'rnna/bundle';
+import { Bundle } from 'rnna';
 
-import { createFind, createGet } from './selectors';
-import events from './events';
 import createReducer from './reducer';
-import Resource from './resource';
+import ResourceProvider from './provider';
 
-class ResourceBundle extends Bundle {
-  constructor(endpoint, entitySchema) {
+export default class ResourceBundle extends Bundle {
+  constructor(name) {
     super();
 
-    this.name = entitySchema.key;
-    this.endpoint = endpoint;
-    this.schema = entitySchema;
-    this.relations = Object.values(entitySchema.schema).map(schema =>
-      Array.isArray(schema) ? schema[0].key : schema.key,
-    );
+    this.name = name;
   }
 
-  register(services, reducers, epics) {
-    // Services
-    Object.assign(services, {
-      [this.name]: new Resource(services.api, this.name, this.endpoint),
-    });
-
-    // Reducers
-    Object.assign(reducers, {
-      [this.name]: createReducer(this.schema.key),
-    });
-
-    // Selectors
-    // TODO: Remove namespace for: getUsers, findUser.
-    services.db[this.name] = {};
-
-    Object.assign(services.db[this.name], {
-      find: createFind(this.schema, this.relations),
-      get: createGet(this.schema, this.relations),
-    });
-
-    // Events
-    epics.push(...events);
+  getServiceProvider() {
+    return new ResourceProvider(this.name);
   }
-}
 
-export default function bundleResource(endpoint, schema) {
-  return new ResourceBundle(endpoint, schema);
+  getReducers() {
+    return { [this.name]: createReducer(this.name) };
+  }
+
+  getEpics() {
+    return [];
+  }
 }

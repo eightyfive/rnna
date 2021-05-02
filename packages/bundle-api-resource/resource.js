@@ -1,122 +1,102 @@
 import { ofAction } from 'rnna/rx';
 
 export default class Resource {
-  constructor(http, name, endpoint) {
-    this.http = http;
+  constructor(endpoint, schema) {
     this.endpoint = endpoint;
-    this.name = name;
+    this.schema = schema;
   }
 
-  // CRUD: CREATE
-  create(data) {
-    return ofAction(`${this.name}/creating`, data, { resource: this.name });
-  }
-
-  doCreate(data) {
-    return this.http.post(this.endpoint, data).pipe(
+  store(data) {
+    return this.endpoint.create(data).pipe(
       map(action => {
-        const { res } = action.meta;
+        const { req, res } = action.meta;
 
-        if (res) {
-          if (res.status === 200) {
-            return { ...action, type: `${this.name}/created` };
-          }
-
-          // Error action
-          return action;
+        if (req && !res) {
+          return { ...action, type: `${this.schema.key}/storing` };
         }
+
+        if (req && res && res.status === 200) {
+          return { ...action, type: `${this.schema.key}/stored` };
+        }
+
+        // Error action
+        return action;
       }),
     );
   }
 
-  // CRUD: READ
-  read(id) {
-    return ofAction(`${this.name}/reading`, id, { resource: this.name });
-  }
-
-  doRead(id) {
-    return this.http.get(`${this.endpoint}/${id}`).pipe(
+  find(id) {
+    return this.endpoint.read(id).pipe(
       map(action => {
-        const { res } = action.meta;
+        const { req, res } = action.meta;
 
-        if (res) {
-          if (res.status === 200) {
-            return { ...action, type: `${this.name}/read` };
-          }
-
-          // Error action
-          return action;
+        if (req && !res) {
+          return { ...action, type: `${this.schema.key}/finding` };
         }
+
+        if (req && res && res.status === 200) {
+          return { ...action, type: `${this.schema.key}/found` };
+        }
+
+        // Error action
+        return action;
       }),
     );
   }
 
-  // CRUD: UPDATE
   update(id, data) {
-    return ofAction(`${this.name}/updating`, data, { id, resource: this.name });
-  }
-
-  doUpdate(id, data) {
-    return this.http.put(`${this.endpoint}/${id}`, data).pipe(
+    return this.endpoint.update(id, data).pipe(
       map(action => {
-        const { res } = action.meta;
+        const { req, res } = action.meta;
 
-        if (res) {
-          if (res.status === 200) {
-            return { ...action, type: `${this.name}/updated` };
-          }
-
-          // Error action
-          return action;
+        if (req && !res) {
+          return { ...action, type: `${this.schema.key}/updating` };
         }
+
+        if (req && res && res.status === 200) {
+          return { ...action, type: `${this.schema.key}/updated` };
+        }
+
+        // Error action
+        return action;
       }),
     );
   }
 
-  // CRUD: DELETE
   delete(id) {
-    return ofAction(`${this.name}/deleting`, id, { resource: this.name });
-  }
-
-  doDelete(id) {
-    return this.http.delete(`${this.endpoint}/${id}`).pipe(
+    return this.endpoint.delete(id).pipe(
       map(action => {
-        const { res } = action.meta;
+        const { req, res } = action.meta;
 
-        if (res) {
-          if (res.status === 200) {
-            return { ...action, type: `${this.name}/deleted` };
-          }
-
-          // Error action
-          return action;
+        if (req && !res) {
+          return { ...action, type: `${this.schema.key}/deleting` };
         }
+
+        if (req && res && res.status === 200) {
+          return { ...action, type: `${this.schema.key}/deleted` };
+        }
+
+        // Error action
+        return action;
       }),
     );
   }
 
-  // CRUDL: INDEX (list)
-  index(filters) {
-    return ofAction(`${this.name}/indexing`, filters, { resource: this.name });
-  }
-
-  doIndex(filters) {
-    const action$ = filters
-      ? this.http.search(this.endpoint, filters)
-      : this.http.get(this.endpoint);
-
-    return action$.pipe(
+  list(filters) {
+    return this.endpoint.list(filters).pipe(
       map(action => {
-        const { res } = action.meta;
+        const { req, res } = action.meta;
 
-        if (res) {
-          if (res.status === 200) {
-            return { ...action, type: `${this.name}/indexed` };
-          }
-
-          // Error action
-          return action;
+        if (req && !res) {
+          return { ...action, type: `${this.schema.key}/listing` };
         }
+
+        if (req && res && res.status === 200) {
+          return { ...action, type: `${this.schema.key}/listed` };
+        }
+
+        // Error action
+        return action;
       }),
     );
   }
