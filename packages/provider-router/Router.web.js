@@ -17,8 +17,8 @@ export default class Router extends RouterBase {
     this.triggerChange(path, (ev.state || {}).params || []);
   }
 
-  go(path) {
-    super.go(path);
+  render(path) {
+    super.render(path);
 
     window.history.pushState({}, null, path);
 

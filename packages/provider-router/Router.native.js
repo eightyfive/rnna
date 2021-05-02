@@ -10,10 +10,10 @@ export default class Router extends RouterBase {
   handleDidAppear = ({ componentId }) => {
     const path = this.paths.get(componentId);
 
-    this.go(path);
+    this.render(path);
   };
 
   onState() {
-    this.go(this.path);
+    this.render(this.path);
   }
 }

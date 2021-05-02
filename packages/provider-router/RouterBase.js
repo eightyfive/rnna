@@ -36,7 +36,7 @@ export default class RouterBase extends RouterNavigator {
     return [];
   }
 
-  go(path) {
+  render(path) {
     const [componentId, Component, params] = this.match(path);
 
     if (!componentId) {
@@ -58,7 +58,7 @@ export default class RouterBase extends RouterNavigator {
       Object.assign(props, Component.passProps);
     }
 
-    this.render(componentId, props);
+    super.render(componentId, props);
   }
 
   onState() {
