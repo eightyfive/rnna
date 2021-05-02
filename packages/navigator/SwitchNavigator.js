@@ -13,11 +13,11 @@ export default class SwitchNavigator extends Navigator {
     this.route.mount(initialProps);
   }
 
-  get(path) {
+  getRoute(path) {
     const ids = path.split('/');
 
     if (ids.length === 1) {
-      return super.get(ids[0]);
+      return super.getRoute(ids[0]);
     }
 
     let route = this;
@@ -33,7 +33,7 @@ export default class SwitchNavigator extends Navigator {
     const [id, rest] = this.parsePath(path);
 
     if (this.route.id !== id) {
-      const route = this.get(id);
+      const route = this.routes.get(id);
 
       this.history.push(id);
 

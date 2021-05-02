@@ -31,14 +31,14 @@ export default class RootNavigator extends SwitchNavigator {
   handleAppLaunched = () => this.remount();
 
   remount() {
-    this.history.forEach(id => this.get(id).mount());
+    this.history.forEach(id => this.getRoute(id).mount());
 
-    this.overlays.forEach(id => this.get(id).mount());
+    this.overlays.forEach(id => this.getRoute(id).mount());
   }
 
   render(path, props) {
     const [id, rest] = this.parsePath(path);
-    const route = this.get(id);
+    const route = this.getRoute(id);
 
     if (!this.route || (this.route && this.route.id !== route.id)) {
       const isOverlay = route instanceof OverlayNavigator;
@@ -105,7 +105,7 @@ export default class RootNavigator extends SwitchNavigator {
     const id = _last(this.overlays);
 
     if (id) {
-      return this.get(id);
+      return this.getRoute(id);
     }
 
     return null;

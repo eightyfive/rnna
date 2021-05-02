@@ -57,15 +57,15 @@ export default /** abstract */ class Navigator extends Route {
     const id = _last(this.history);
 
     if (id) {
-      return this.get(id);
+      return this.routes.get(id);
     }
 
     return null;
   }
 
-  get(id) {
+  getRoute(id, type = 'Route') {
     if (!this.routes.has(id)) {
-      throw new Error(`Unknown route: ${id}`);
+      throw new Error(`${type} not found: ${id}`);
     }
 
     return this.routes.get(id);

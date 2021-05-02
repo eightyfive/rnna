@@ -67,7 +67,7 @@ export default class StackNavigator extends Navigator {
     const children = this.order.slice(0, index + 1);
 
     const layout = {
-      children: children.map(id => this.get(id).getLayout(props)),
+      children: children.map(id => this.getComponent(id).getLayout(props)),
     };
 
     if (this.options) {
@@ -81,8 +81,12 @@ export default class StackNavigator extends Navigator {
     Navigation.setRoot({ root: this.getInitialLayout(initialProps) });
   }
 
+  getComponent(id) {
+    return this.getRoute(id, 'Component');
+  }
+
   push(toName, props) {
-    const component = this.get(toName);
+    const component = this.getComponent(toName);
     const fromId = this.route.id;
 
     this.history.push(toName);

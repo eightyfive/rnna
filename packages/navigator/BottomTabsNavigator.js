@@ -22,7 +22,7 @@ export default class BottomTabsNavigator extends Navigator {
     const layout = {
       id: this.layoutId,
       children: this.order.map(id =>
-        this.get(id).getInitialLayout(
+        this.getTab(id).getInitialLayout(
           id === this.initialRouteName ? props : undefined,
         ),
       ),
@@ -35,20 +35,24 @@ export default class BottomTabsNavigator extends Navigator {
     return { bottomTabs: layout };
   }
 
-  get(index) {
+  getTab(id) {
+    return this.getRoute(id, 'Tab');
+  }
+
+  getRoute(index) {
     if (typeof index === 'number') {
       const id = this.order[index];
 
       return this.routes.get(id);
     }
 
-    return super.get(index);
+    return super.getRoute(index);
   }
 
   get route() {
     const id = this.order[this.tabIndex];
 
-    return this.get(id);
+    return this.routes.get(id);
   }
 
   mount(initialProps) {
