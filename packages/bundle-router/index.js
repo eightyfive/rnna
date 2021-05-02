@@ -1,6 +1,5 @@
 import Bundle from 'rnna/bundle';
 
-import events from './events';
 import createRouter from './factory';
 
 class RouterBundle extends Bundle {
@@ -15,12 +14,12 @@ class RouterBundle extends Bundle {
     this.router = createRouter(this.routes, services);
 
     Object.assign(services, { router: this.router });
-
-    epics.unshift(...events);
   }
 
   boot(store) {
     this.router.addGlobalProp('dispatch', store.dispatch);
+
+    store.subscribe(() => this.router.onState());
   }
 }
 

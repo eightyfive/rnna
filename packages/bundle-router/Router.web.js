@@ -30,6 +30,10 @@ export default class Router {
     this.listeners.map(listener => listener(path, params));
   }
 
+  onState() {
+    this.triggerChange(null, []);
+  }
+
   render(path) {
     const Screen = this.routes[path] || null;
 
