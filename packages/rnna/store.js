@@ -82,9 +82,6 @@ export default function getStore(
     hydrate() {
       return whenHydrated;
     },
-    getServices() {
-      return services;
-    },
   };
 
   // Boot bundles
