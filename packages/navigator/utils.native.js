@@ -2,7 +2,7 @@ import { Navigation } from 'react-native-navigation';
 import React from 'react';
 import _mapValues from 'lodash.mapvalues';
 
-import Component from './Component';
+import Component from './Component.native';
 
 export function createComponents(screens) {
   return _mapValues(screens, (Screen, id) => createComponent(id, Screen));

@@ -2,7 +2,7 @@ import { Navigation } from 'react-native-navigation';
 
 import { makeComponent } from './Component.test';
 
-import Component from './Component';
+import Component from './Component.native';
 import OverlayNavigator from './OverlayNavigator';
 
 let app;

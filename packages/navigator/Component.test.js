@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Component';
+import Component from './Component.native';
 
 export function makeComponent(id, options = {}, props = {}, name = null) {
   return {

@@ -1,4 +1,4 @@
-import Component from './Component';
+import Component from './Component.native';
 
 export default class WidgetComponent extends Component {
   constructor(id, options) {
