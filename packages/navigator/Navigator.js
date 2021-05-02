@@ -1,5 +1,5 @@
 import _last from 'lodash.last';
-import { Navigation } from 'react-native-navigation';
+import Events from './Events';
 
 import Route from './Route';
 
@@ -30,8 +30,7 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   addListener(eventName, listener) {
-    const events = Navigation.events();
-    const subscription = events[`register${eventName}Listener`](listener);
+    const subscription = Events.addListener(eventName, listener);
 
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
@@ -46,7 +45,7 @@ export default /** abstract */ class Navigator extends Route {
     const subscription = this.listeners[eventName].find(cb => cb === listener);
 
     if (subscription) {
-      subscription.remove();
+      Events.removeListener(subscription);
 
       this.listeners[eventName] = this.listeners[eventName].filter(
         cb => cb !== listener,
