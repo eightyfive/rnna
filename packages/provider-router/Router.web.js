@@ -1,8 +1,9 @@
-export default class Router {
-  constructor(routes, services = {}) {
-    this.routes = routes;
-    this.services = services;
-    this.props = {};
+import RouterBase from './RouterBase';
+
+export default class Router extends RouterBase {
+  constructor(routes, components, services = {}) {
+    super(routes, components, services);
+
     this.listeners = [];
 
     window.addEventListener('popstate', ev => this.handlePopstate(ev));
@@ -16,38 +17,20 @@ export default class Router {
     this.triggerChange(path, (ev.state || {}).params || []);
   }
 
-  addGlobalProp(name, prop) {
-    this.props[name] = prop;
+  go(path) {
+    super.go(path);
+
+    window.history.pushState({}, null, path);
+
+    this.triggerChange(path);
   }
 
-  go(path, ...params) {
-    window.history.pushState({ params }, null, path);
-
-    this.triggerChange(path, params);
-  }
-
-  triggerChange(path, params) {
-    this.listeners.map(listener => listener(path, params));
+  triggerChange(path) {
+    this.listeners.map(listener => listener(path));
   }
 
   onState() {
-    this.triggerChange(null, []);
-  }
-
-  render(path) {
-    const Screen = this.routes[path] || null;
-
-    if (Screen) {
-      const props = Object.assign(
-        {},
-        this.props,
-        Screen.controller(this.services),
-      );
-
-      return [Screen, props];
-    }
-
-    return [];
+    this.triggerChange(this.path);
   }
 
   subscribe(listener) {

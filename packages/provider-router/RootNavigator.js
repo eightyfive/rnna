@@ -36,7 +36,7 @@ export default class RootNavigator extends SwitchNavigator {
     this.overlays.forEach(id => this.get(id).mount());
   }
 
-  navigate(path, props) {
+  render(path, props) {
     const [id, rest] = this.parsePath(path);
     const route = this.get(id);
 
@@ -66,7 +66,7 @@ export default class RootNavigator extends SwitchNavigator {
     }
 
     if (rest) {
-      this.route.navigate(rest, props);
+      this.route.render(rest, props);
     }
   }
 

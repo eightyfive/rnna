@@ -58,7 +58,7 @@ test('createRouter (tabs)', () => {
   expect(app.get('Screen5')).toBeInstanceOf(OverlayNavigator);
 
   Navigation.setRoot.mockReset();
-  app.navigate('tabs/tab1/Screen1');
+  app.render('tabs/tab1/Screen1');
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
@@ -107,7 +107,7 @@ test('createRouter (stack)', () => {
   const app = services.router;
 
   Navigation.setRoot.mockReset();
-  app.navigate('main/Screen3');
+  app.render('main/Screen3');
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {

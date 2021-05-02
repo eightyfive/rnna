@@ -1,4 +1,4 @@
-import { getRouteDepth } from './router';
+import { getRouteDepth } from './factory.native';
 
 function A() {}
 function B() {}

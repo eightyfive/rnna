@@ -42,14 +42,14 @@ test('mount', () => {
   expect(app.get('ef').mount).not.toHaveBeenCalled();
 });
 
-test('navigate', () => {
-  app.navigate('ef');
+test('render', () => {
+  app.render('ef');
 
   expect(app.get('ef').mount).toHaveBeenCalled();
 });
 
-test('navigate deep', () => {
-  app.navigate('ef/F');
+test('render deep', () => {
+  app.render('ef/F');
 
   expect(app.get('ef').mount).toHaveBeenCalled();
   expect(app.get('ef').push).toHaveBeenCalledWith('F', undefined);
