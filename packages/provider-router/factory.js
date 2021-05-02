@@ -51,8 +51,8 @@ function createRoutes(routes) {
   });
 }
 
-export default function createRouter(routes, services) {
+export default function createRouter(routes, db) {
   const screens = findScreens(routes, new Map());
 
-  return new Router(createRoutes(routes), screens, services);
+  return new Router(createRoutes(routes), screens, { db });
 }

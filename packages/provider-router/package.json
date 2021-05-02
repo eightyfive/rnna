@@ -1,7 +1,7 @@
 {
-  "name": "@rnna/bundle-router",
+  "name": "@rnna/provider-router",
   "version": "0.0.1-alpha.2",
-  "description": "Router Bundle (React Native Navigation App)",
+  "description": "Router provider (React Native Navigation App)",
   "keywords": [
     "rnna",
     "rnna-bundle",
