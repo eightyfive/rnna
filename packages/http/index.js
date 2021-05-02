@@ -1,6 +1,7 @@
 import { ajax } from 'rxjs/ajax';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import Endpoint from './endpoint';
 
 export default class Http {
   constructor(defaults = {}) {
@@ -97,5 +98,9 @@ export default class Http {
     }
 
     return this.run(req);
+  }
+
+  endpoint(ns) {
+    return new Endpoint(this, ns);
   }
 }
