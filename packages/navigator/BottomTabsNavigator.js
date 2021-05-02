@@ -63,7 +63,7 @@ export default class BottomTabsNavigator extends Navigator {
     return this.route.getComponent();
   }
 
-  navigate(path, props) {
+  render(path, props) {
     const [id, rest] = this.parsePath(path);
     const index = this.order.findIndex(key => key === id);
 
@@ -80,7 +80,7 @@ export default class BottomTabsNavigator extends Navigator {
     }
 
     if (rest) {
-      this.route.navigate(rest, props);
+      this.route.render(rest, props);
     }
   }
 

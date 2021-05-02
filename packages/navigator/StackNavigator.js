@@ -92,7 +92,7 @@ export default class StackNavigator extends Navigator {
 
   pop(n = 1) {
     if (this.history.length === 1) {
-      throw new Error('No route to navigate back to');
+      throw new Error('No route to render back to');
     }
 
     if (n === 1) {
@@ -139,7 +139,7 @@ export default class StackNavigator extends Navigator {
     return this.route;
   }
 
-  navigate(toName, props) {
+  render(toName, props) {
     const index = this.history.findIndex(name => name === toName);
 
     if (index === -1) {

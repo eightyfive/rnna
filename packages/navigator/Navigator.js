@@ -73,8 +73,8 @@ export default /** abstract */ class Navigator extends Route {
 
   unmount() {}
 
-  navigate(path, props) {
-    throwAbstract('navigate(path, props)');
+  render(path, props) {
+    throwAbstract('render(path, props)');
   }
 
   goBack() {

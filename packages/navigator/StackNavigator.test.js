@@ -68,16 +68,16 @@ test('popToRoot', () => {
   expect(Navigation.popToRoot).toHaveBeenCalledWith('C');
 });
 
-test('navigate (push)', () => {
+test('render (push)', () => {
   app.push = jest.fn();
-  app.navigate('B', props);
+  app.render('B', props);
 
   expect(app.push).toHaveBeenCalledWith('B', props);
 });
 
 test('goBack', () => {
-  app.navigate('B', props);
-  app.navigate('C', props);
+  app.render('B', props);
+  app.render('C', props);
   app.goBack('C');
 
   expect(app.history).toEqual(['A', 'B']);

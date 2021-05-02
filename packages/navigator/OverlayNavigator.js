@@ -29,7 +29,7 @@ export default class OverlayNavigator extends Navigator {
     return this.component;
   }
 
-  navigate(path, props) {
+  render(path, props) {
     this.mount(props);
   }
 
