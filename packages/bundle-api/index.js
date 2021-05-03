@@ -1,11 +1,15 @@
 import { Bundle } from 'rnna';
 
+import createHttp from './http';
 import createReducer from './reducer';
-import ApiProvider from './provider';
 
 export default class ApiBundle extends Bundle {
-  getServiceProvider() {
-    return new ApiProvider();
+  register(container) {
+    container.service('api', createHttp, 'api.defaults');
+  }
+
+  boot(services, store) {
+    Object.assign(services.db, selectors);
   }
 
   getReducers() {
