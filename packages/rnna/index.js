@@ -1,4 +1,4 @@
-export { default as Container } from 'bottlejs';
+export { default as Container } from './container';
 
 export class Bundle {
   register(container) {
