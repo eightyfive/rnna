@@ -1,8 +1,8 @@
-import { ServiceProvider } from 'rnna';
+import { Bundle } from 'rnna';
 
 import createRouter from './factory';
 
-export default class RouterProvider extends ServiceProvider {
+export default class RouterProvider extends Bundle {
   register(container) {
     container.service('router', createRouter, 'router.routes', 'db');
   }
