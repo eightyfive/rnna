@@ -1,26 +1,19 @@
 export { default as Container } from 'bottlejs';
 
-export class ServiceProvider {
+export class Bundle {
   register(container) {
-    throw new Error(`Abstract: Implement ServiceProvider register method`);
+    throw new Error(`Abstract: Implement Bundle::register method`);
   }
 
-  boot(services, store) {}
-}
-
-export class Bundle {
-  getServiceProvider() {
-    throw new Error(`Abstract: Implement Bundle getServiceProvider method`);
-    // return @see ServiceProvider;
+  boot(services, store) {
+    //
   }
 
   getReducers() {
-    throw new Error(`Abstract: Implement Bundle getReducers method`);
-    // return {};
+    return {};
   }
 
   getEpics() {
-    throw new Error(`Abstract: Implement Bundle getEpics method`);
-    // return [];
+    return [];
   }
 }
