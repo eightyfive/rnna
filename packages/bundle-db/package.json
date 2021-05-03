@@ -1,10 +1,10 @@
 {
-  "name": "@rnna/provider-db",
+  "name": "@rnna/bundle-db",
   "version": "0.0.0",
-  "description": "DB provider (React Native Navigation App)",
+  "description": "DB bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
-    "rnna-provider",
+    "rnna-bundle",
     "react-native"
   ],
   "devDependencies": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eightyfive/rnna/tree/master/packages/provider-db"
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/bundle-db"
   },
   "author": "Benoit Sagols",
   "license": "MIT",

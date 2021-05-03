@@ -1,8 +1,8 @@
-import { ServiceProvider } from 'rnna';
+import { Bundle } from 'rnna';
 
 import createDb from './db';
 
-export default class DbProvider extends ServiceProvider {
+export default class DbProvider extends Bundle {
   register(container) {
     container.service('db', createDb, 'db.selectors');
   }
