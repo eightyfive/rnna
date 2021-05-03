@@ -29,22 +29,18 @@ export default function getStore(
     middlewares = [],
     persist: persistConfig,
     reducers = {},
-    providers = [],
     bundles = [],
   },
   container,
 ) {
   // Register bundles
   bundles.forEach(bundle => {
-    providers.push(bundle.getServiceProvider());
+    bundle.register(container);
 
     Object.assign(reducers, bundle.getReducers());
 
     epics.push(...bundle.getEpics());
   });
-
-  // Register service providers
-  providers.forEach(provider => provider.register(container));
 
   // Epics
   let rootEpic;
@@ -64,8 +60,10 @@ export default function getStore(
 
   const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
-  // Boot service providers
-  providers.forEach(provider => provider.boot(container.services, store));
+  // Boot bundles
+  bundles.forEach(bundle => {
+    bundle.boot(container.services, store);
+  });
 
   // Persistor
   const persistor = persistStore(store);

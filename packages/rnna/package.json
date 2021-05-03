@@ -7,7 +7,6 @@
     "react-native"
   ],
   "dependencies": {
-    "bottlejs": "2.x",
     "lodash.get": "4.x",
     "lodash.memoize": "4.x",
     "lodash.mergewith": "4.x",
