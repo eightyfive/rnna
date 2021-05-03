@@ -1,10 +1,10 @@
 {
-  "name": "@rnna/provider-router",
+  "name": "@rnna/bundle-router",
   "version": "0.0.0",
-  "description": "Router provider (React Native Navigation App)",
+  "description": "Router bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
-    "rnna-provider",
+    "rnna-bundle",
     "react-native"
   ],
   "dependencies": {
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eightyfive/rnna/tree/master/packages/provider-router"
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/bundle-router"
   },
   "author": "Benoit Sagols",
   "license": "MIT",
