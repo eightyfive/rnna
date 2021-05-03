@@ -1,6 +1,6 @@
 import parseUrl from 'url-parse';
 import { merge, of } from 'rxjs';
-import { catchError, filter, map, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, withLatestFrom } from 'rxjs/operators';
 
 const reAjaxError = /^Ajax(?:Timeout)?Error$/;
 
@@ -9,39 +9,39 @@ const actions = next => req$ => {
 
   const reqAction$ = req$.pipe(
     map(req => {
-      const { pathname } = parseUrl(req.url);
+      const url = parseUrl(req.url);
 
       // Req action
       return {
-        type: pathname.substring(1),
+        type: 'http/req',
         meta: {
           req,
           res: null,
+          url,
         },
       };
     }),
   );
 
   const resAction$ = res$.pipe(
-    filter(res => res.headers.get('Content-Type') === 'application/json'),
     withLatestFrom(req$),
 
-    // Res action
     map(([res, req]) => {
-      const { pathname } = parseUrl(req.url);
+      const url = parseUrl(req.url);
       const data = res.response.data || res.response;
 
+      // Res action
       return {
-        type: pathname.substring(1),
+        type: 'http/res',
         payload: data,
         meta: {
           req,
           res,
+          url,
         },
       };
     }),
 
-    // Error action
     catchError(err => {
       if (!reAjaxError.test(err.name)) {
         throw err;
@@ -49,15 +49,17 @@ const actions = next => req$ => {
 
       const req = err.request;
 
-      const { pathname } = parseUrl(req.url);
+      const url = parseUrl(req.url);
 
+      // Err action
       return of({
-        type: pathname.substring(1),
+        type: 'http/error',
         payload: err,
         error: true,
         meta: {
           req,
           res: err.response,
+          url,
         },
       });
     }),

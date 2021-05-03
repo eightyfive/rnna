@@ -8,8 +8,7 @@
     "react-native"
   ],
   "dependencies": {
-    "@rnna/http": "latest",
-    "url-parse": "1.5.x"
+    "@rnna/http": "latest"
   },
   "peerDependencies": {
     "rnna": "*"

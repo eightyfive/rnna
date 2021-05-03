@@ -1,37 +1,37 @@
 export default class Endpoint {
-  constructor(http, namespace) {
+  constructor(http, name) {
     this.http = http;
-    this.ns = namespace;
+    this.name = name;
   }
 
   // CRUDL
 
   // C
   create(data) {
-    return this.http.post(this.ns, data);
+    return this.http.post(this.name, data);
   }
 
   // R
   read(id) {
-    return this.http.get(`${this.ns}/${id}`);
+    return this.http.get(`${this.name}/${id}`);
   }
 
   // U
   update(id, data) {
-    return this.http.put(`${this.ns}/${id}`, data);
+    return this.http.put(`${this.name}/${id}`, data);
   }
 
   // D
   delete(id) {
-    return this.http.delete(`${this.ns}/${id}`);
+    return this.http.delete(`${this.name}/${id}`);
   }
 
   // L
   list(filters) {
     if (filters) {
-      return this.http.search(this.ns, filters);
+      return this.http.search(this.name, filters);
     }
 
-    return this.http.get(this.ns);
+    return this.http.get(this.name);
   }
 }
