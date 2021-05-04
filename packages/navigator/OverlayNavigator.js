@@ -13,8 +13,6 @@ export default class OverlayNavigator extends Navigator {
       throw new Error('Overlay route must be a `Component` instance');
     }
 
-    this.history.reset(name);
-
     super.addRoute(name, component);
   }
 
@@ -29,7 +27,7 @@ export default class OverlayNavigator extends Navigator {
   }
 
   dismiss() {
-    const component = this.getCurrentRoute();
+    const component = this.getRoute(this.initialRouteName);
 
     Navigation.dismissOverlay(component.id);
 
@@ -39,7 +37,7 @@ export default class OverlayNavigator extends Navigator {
   }
 
   render(path, props) {
-    const component = this.getCurrentRoute();
+    const component = this.getRoute(this.initialRouteName);
 
     component.render(props);
   }
