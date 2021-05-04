@@ -4,7 +4,7 @@ import { Navigation } from 'react-native-navigation';
 import StackNavigator from './StackNavigator';
 
 export default class SideMenuNavigator extends StackNavigator {
-  constructor(routes, options = {}, config = {}) {
+  constructor(config = {}) {
     // if (!config.drawer) {
     //   throw new Error('config.drawer is required');
     // }
@@ -13,7 +13,7 @@ export default class SideMenuNavigator extends StackNavigator {
     //   throw new Error('config.drawer must be of type `Component`');
     // }
 
-    super(routes, options, config);
+    super(config);
 
     this.drawer = config.drawer;
     this.drawerPosition = config.drawerPosition || 'left';

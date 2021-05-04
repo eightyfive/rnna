@@ -2,30 +2,35 @@ import Events from './Events';
 
 import Route from './Route';
 
-const o = Object;
-
 export default /** abstract */ class Navigator extends Route {
-  constructor(routes, options, config) {
+  constructor(config) {
     super();
 
-    this.routes = new Map(o.entries(routes));
-    this.options = options;
-
-    this.order = o.keys(routes);
+    this.routes = new Map();
+    this.options = config.options || {};
+    this.initialRouteName = null;
     this.history = [];
+    this.routeName = null;
+
     this.listeners = {};
 
     this.parent = null;
     this.id = null;
 
-    const { initialRouteName, parentId } = config;
-
-    this.initialRouteName = initialRouteName || this.order[0];
+    const { parentId } = config;
 
     for (const [id, route] of this.routes) {
       route.parent = this;
       route.id = parentId ? `${parentId}/${id}` : id;
     }
+  }
+
+  addRoute(name, route) {
+    if (!this.routes.size) {
+      this.initialRouteName = name;
+    }
+
+    this.routes.set(name, route);
   }
 
   addListener(eventName, listener) {
@@ -52,22 +57,40 @@ export default /** abstract */ class Navigator extends Route {
     }
   }
 
-  get route() {
-    const id = Array.from(this.history).pop();
-
-    if (id) {
-      return this.routes.get(id);
+  getRoute(name) {
+    if (!this.routes.has(name)) {
+      throw new Error(`Route not found: ${name}`);
     }
 
-    return null;
+    return this.routes.get(name);
   }
 
-  getRoute(id, type = 'Route') {
-    if (!this.routes.has(id)) {
-      throw new Error(`${type} not found: ${id}`);
+  getCurrentRoute() {
+    return this.getRoute(this.routeName);
+  }
+
+  findRouteNameById(id) {
+    for (const [name, route] of this.routes) {
+      if (route.id === id) {
+        return name;
+      }
     }
 
-    return this.routes.get(id);
+    throw new Error(`Route not found: ${id}`);
+  }
+
+  findRouteIndexByName(name) {
+    let index = 0;
+
+    for (const routeName of this.routes.keys()) {
+      if (routeName === name) {
+        return index;
+      }
+
+      index++;
+    }
+
+    throw new Error(`Route not found: ${name}`);
   }
 
   unmount() {}

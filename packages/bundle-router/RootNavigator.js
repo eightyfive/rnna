@@ -4,113 +4,120 @@ import OverlayNavigator from '@rnna/navigator/OverlayNavigator';
 import SwitchNavigator from '@rnna/navigator/SwitchNavigator';
 
 export default class RootNavigator extends SwitchNavigator {
-  constructor(routes, options = {}, config = {}) {
-    super(routes, options, config);
+  constructor(config = {}) {
+    super(config);
 
     this.backBehavior = 'none'; // Force
-    this.overlays = [];
-    this.overlayIds = [];
-
-    for (const [id, route] of this.routes) {
-      if (route instanceof OverlayNavigator) {
-        this.overlayIds.push(id);
-      }
-    }
+    this.overlayNames = [];
 
     this.addListener('ModalDismissed', this.handleModalDismissed);
     this.addListener('AppLaunched', this.handleAppLaunched);
   }
 
   handleModalDismissed = () => {
-    if (this.route instanceof ModalNavigator) {
+    const navigator = this.getCurrentRoute();
+
+    if (navigator instanceof ModalNavigator) {
       this.history.pop();
+      this.routeName = Array.from(this.history).pop();
     }
   };
 
   handleAppLaunched = () => this.remount();
 
   remount() {
-    this.history.forEach(id => this.getRoute(id).mount());
+    this.history.forEach(name => this.getRoute(name).mount());
 
-    this.overlays.forEach(id => this.getRoute(id).mount());
+    this.overlayNames.forEach(name => this.getRoute(name).mount());
   }
 
   render(path, props) {
-    const [id, rest] = this.parsePath(path);
-    const route = this.getRoute(id);
+    const [name, rest] = this.parsePath(path);
 
-    if (!this.route || (this.route && this.route.id !== route.id)) {
-      const isOverlay = route instanceof OverlayNavigator;
-      const isModal = route instanceof ModalNavigator;
+    let navigator;
+
+    if (this.routeName !== name) {
+      navigator = this.getRoute(name);
+
+      const isOverlay = navigator instanceof OverlayNavigator;
+      const isModal = navigator instanceof ModalNavigator;
+
+      const currentRoute = this.getCurrentRoute();
 
       if (isOverlay) {
-        this.overlays.push(route.id);
+        this.overlayNames.push(name);
       } else if (isModal) {
         // Only one modal at a time
-        if (this.route instanceof ModalNavigator) {
+        if (currentRoute instanceof ModalNavigator) {
           this.dismissModal();
         }
 
-        this.history.push(route.id);
+        this.history.push(name);
       } else {
         // Unmount old route
-        if (this.route) {
-          this.route.unmount();
+        if (currentRoute) {
+          currentRoute.unmount();
         }
 
-        this.history = [route.id];
+        this.history = [name];
       }
 
-      route.mount(props);
+      this.routeName = name;
+
+      navigator.mount(props);
     }
 
-    if (rest) {
-      this.route.render(rest, props);
-    }
+    // Grab new current navigator (if changed)
+    navigator = this.getCurrentRoute();
+    navigator.render(rest, props);
   }
 
   goBack() {
+    const navigator = this.getCurrentRoute();
+
     try {
-      this.route.goBack();
+      navigator.goBack();
     } catch (err) {
-      if (this.route instanceof ModalNavigator) {
+      if (navigator instanceof ModalNavigator) {
         this.dismissModal();
       }
     }
   }
 
   dismissModal() {
-    if (!(this.route instanceof ModalNavigator)) {
+    const navigator = this.getCurrentRoute();
+
+    if (!(navigator instanceof ModalNavigator)) {
       throw new Error('No modal to dismiss');
     }
 
-    this.route.unmount();
+    navigator.unmount();
+
     this.history.pop();
+    this.routeName = Array.from(this.history).pop();
   }
 
   dismissAllModals() {
-    if (this.route instanceof ModalNavigator) {
+    const navigator = this.getCurrentRoute();
+
+    if (navigator instanceof ModalNavigator) {
       Navigation.dismissAllModals();
     }
   }
 
-  isScene(id) {
+  isScene(name) {
     const isWidget = id.indexOf('widget-') === 0;
 
-    return !isWidget && !this.overlayIds.includes(id);
-  }
+    const navigator = this.getRoute(name);
 
-  get overlay() {
-    const id = Array.from(this.overlays).pop();
-
-    if (id) {
-      return this.getRoute(id);
-    }
-
-    return null;
+    return !isWidget && !(navigator instanceof OverlayNavigator);
   }
 
   onDismissOverlay(componentId) {
-    this.overlays = this.overlays.filter(id => id !== componentId);
+    const componentName = this.findRouteNameById(componentId);
+
+    this.overlayNames = this.overlayNames.filter(
+      name => name !== componentName,
+    );
   }
 }

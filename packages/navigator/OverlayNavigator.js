@@ -1,29 +1,25 @@
 import { Navigation } from 'react-native-navigation';
 
+import Component from './Component';
 import Navigator from './Navigator';
 
 export default class OverlayNavigator extends Navigator {
-  constructor(config = {}) {
-    super({}, config.options || {}, config);
-
-    this.components = new Map();
-  }
-
-  addRoute(name, route) {
-    this.addComponent(name, route);
-  }
-
-  addComponent(name, component) {
-    if (this.components.size === 1) {
+  addRoute(name, component) {
+    if (this.routes.size === 1) {
       throw new Error('OverlayNavigator may not have more than one route');
     }
 
-    this.components.set(name, component);
-    this.componentName = name;
+    if (!(component instanceof Component)) {
+      throw new Error('Overlay route must be a `Component` instance');
+    }
+
+    this.routeName = name;
+
+    super.addRoute(name, component);
   }
 
   mount(initialProps) {
-    const component = this.components.get(this.componentName);
+    const component = this.getRoute(this.initialRouteName);
 
     Navigation.showOverlay(component.getLayout(initialProps));
   }
@@ -33,7 +29,7 @@ export default class OverlayNavigator extends Navigator {
   }
 
   dismiss() {
-    const component = this.components.get(this.componentName);
+    const component = this.getCurrentRoute();
 
     Navigation.dismissOverlay(component.id);
 
