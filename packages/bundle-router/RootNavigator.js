@@ -7,7 +7,6 @@ export default class RootNavigator extends SwitchNavigator {
   constructor(config = {}) {
     super(config);
 
-    this.backBehavior = 'none'; // Force
     this.overlayNames = [];
 
     this.addListener('ModalDismissed', this.handleModalDismissed);
@@ -19,7 +18,6 @@ export default class RootNavigator extends SwitchNavigator {
 
     if (navigator instanceof ModalNavigator) {
       this.history.pop();
-      this.routeName = Array.from(this.history).pop();
     }
   };
 
@@ -36,40 +34,68 @@ export default class RootNavigator extends SwitchNavigator {
 
     let navigator;
 
-    if (this.routeName !== name) {
+    if (!this.history.is(name)) {
       navigator = this.getRoute(name);
 
-      const isOverlay = navigator instanceof OverlayNavigator;
-      const isModal = navigator instanceof ModalNavigator;
-
-      const currentRoute = this.getCurrentRoute();
-
-      if (isOverlay) {
+      if (navigator instanceof OverlayNavigator) {
+        this.renderOverlay(name, props);
         this.overlayNames.push(name);
-      } else if (isModal) {
-        // Only one modal at a time
-        if (currentRoute instanceof ModalNavigator) {
-          this.dismissModal();
-        }
-
-        this.history.push(name);
+      } else if (navigator instanceof ModalNavigator) {
+        this.renderModal(name);
       } else {
-        // Unmount old route
-        if (currentRoute) {
-          currentRoute.unmount();
-        }
-
-        this.history = [name];
+        this.renderMain(name, props);
       }
-
-      this.routeName = name;
-
-      navigator.mount(props);
     }
 
-    // Grab new current navigator (if changed)
+    if (rest) {
+      // Grab new current navigator (may have changed)
+      navigator = this.getCurrentRoute();
+      navigator.render(rest, props);
+    }
+  }
+
+  renderModal(name, props) {
+    let navigator = this.getCurrentRoute();
+
+    // Only one modal at a time
+    if (navigator instanceof ModalNavigator) {
+      this.dismissModal();
+    }
+
+    this.history.push(name);
+
     navigator = this.getCurrentRoute();
-    navigator.render(rest, props);
+    navigator.mount(props);
+  }
+
+  renderMain(name, props) {
+    let navigator = this.getCurrentRoute();
+
+    // Only one main navigator at a time
+    if (navigator) {
+      navigator.unmount();
+    }
+
+    this.history.reset(name);
+
+    navigator = this.getCurrentRoute();
+    navigator.mount(props);
+  }
+
+  renderOverlay(name, props) {
+    const overlayName = this.overlayNames.find(val => val === name);
+
+    let navigator;
+
+    if (overlayName) {
+      navigator = this.getRoute(overlayName);
+      navigator.update(props);
+    } else {
+      this.overlayNames.push(name);
+
+      navigator = this.getRoute(name);
+      navigator.mount(props);
+    }
   }
 
   goBack() {
@@ -94,7 +120,6 @@ export default class RootNavigator extends SwitchNavigator {
     navigator.unmount();
 
     this.history.pop();
-    this.routeName = Array.from(this.history).pop();
   }
 
   dismissAllModals() {

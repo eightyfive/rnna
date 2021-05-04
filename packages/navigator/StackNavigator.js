@@ -17,7 +17,7 @@ export default class StackNavigator extends Navigator {
     const component = this.getCurrentRoute();
 
     // Nothing to sync
-    if (!component || this.history.length === 1) {
+    if (!component || this.history.size(1)) {
       return;
     }
 
@@ -41,7 +41,7 @@ export default class StackNavigator extends Navigator {
       const index = this.history.findIndex(name => name === componentName);
 
       if (index > -1) {
-        this.history = this.history.slice(0, index + 1);
+        this.history.sliceTo(index);
       }
     }
   };
@@ -58,8 +58,7 @@ export default class StackNavigator extends Navigator {
     // TOFIX:
     // Here because of BottomTabs.children.getInitialLayout()
     // Should be in Stack.mount
-    this.history = [this.initialRouteName];
-    this.routeName = this.initialRouteName;
+    this.history.reset(this.initialRouteName);
 
     return this.getLayout(props, this.initialRouteName);
   }
@@ -88,45 +87,47 @@ export default class StackNavigator extends Navigator {
     const componentTo = this.getRoute(toName);
 
     this.history.push(toName);
-    this.routeName = toName;
 
     Navigation.push(componentFrom.id, componentTo.getLayout(props));
   }
 
   pop(n = 1) {
-    if (this.history.length === 1) {
-      throw new Error('No route to render back to');
+    const len = this.history.size();
+    const newLen = len - n;
+
+    if (n < 1 || newLen < 1) {
+      throw new Error(`Invalid pop number: ${n} (${len})`);
     }
 
     if (n === 1) {
-      const componentFrom = this.getCurrentRoute();
-
-      this.history.pop();
-      this.routeName = Array.from(this.history).pop();
+      const name = this.history.pop();
+      const componentFrom = this.getRoute(name);
 
       Navigation.pop(componentFrom.id);
     } else {
-      const index = this.history.length - 1 - n;
+      this.popToIndex(newLen - 1);
+    }
+  }
 
-      if (index === -1) {
-        throw new Error(`Out of range pop: ${n}`);
-      }
+  popToIndex(index) {
+    const len = this.history.size();
 
-      // popToIndex
-      this.history = this.history.slice(0, index + 1);
+    if (index < 0 || index > len - 1) {
+      throw new Error(`Invalid pop index: ${index} (${len})`);
+    }
 
-      const toName = Array.from(this.history).pop();
-      const componentTo = this.getRoute(toName);
+    if (index === 0) {
+      this.popToRoot();
+    } else {
+      this.history.sliceTo(index);
+
+      const componentTo = this.getCurrentRoute();
 
       this.popTo(componentTo.id);
     }
   }
 
   popTo(toId) {
-    const componentName = this.findRouteNameById(toId);
-
-    this.routeName = componentName;
-
     Navigation.popTo(toId);
   }
 
@@ -134,25 +135,24 @@ export default class StackNavigator extends Navigator {
     const componentFrom = this.getCurrentRoute();
 
     // Reset history
-    this.history = [this.initialRouteName];
-    this.routeName = this.initialRouteName;
+    this.history.reset(this.initialRouteName);
 
     Navigation.popToRoot(componentFrom.id);
   }
 
   render(toName, props) {
-    const index = this.history.findIndex(name => name === toName);
-
-    if (index === -1) {
-      // Push new screen
-      this.push(toName, props);
-    } else if (index === this.history.length - 1) {
+    if (this.history.is(toName)) {
       const component = this.getCurrentRoute();
 
-      // Update current screen
+      // Update current component
       component.render(props);
+    } else if (!this.history.has(toName)) {
+      // Push new screen
+      this.push(toName, props);
     } else {
       // Pop to previous screen
+      const index = this.history.findIndex(toName);
+
       this.popToIndex(index);
     }
   }

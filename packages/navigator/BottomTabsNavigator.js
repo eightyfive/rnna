@@ -53,8 +53,8 @@ export default class BottomTabsNavigator extends Navigator {
     const [name, rest] = this.parsePath(path);
     const stack = this.getRoute(name);
 
-    if (this.routeName !== name) {
-      this.routeName = name;
+    if (!this.history.is(name)) {
+      this.history.reset(name);
 
       const index = this.findRouteIndexByName(name);
 

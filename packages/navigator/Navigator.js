@@ -1,5 +1,6 @@
 import Events from './Events';
 
+import History from './History';
 import Route from './Route';
 
 export default /** abstract */ class Navigator extends Route {
@@ -9,8 +10,7 @@ export default /** abstract */ class Navigator extends Route {
     this.routes = new Map();
     this.options = config.options || {};
     this.initialRouteName = null;
-    this.history = [];
-    this.routeName = null;
+    this.history = new History();
 
     this.listeners = {};
 
@@ -66,7 +66,7 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   getCurrentRoute() {
-    return this.getRoute(this.routeName);
+    return this.getRoute(this.history.current);
   }
 
   findRouteNameById(id) {
