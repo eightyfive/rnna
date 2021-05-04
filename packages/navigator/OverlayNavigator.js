@@ -3,14 +3,29 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class OverlayNavigator extends Navigator {
-  constructor(component, options = {}, config = {}) {
-    super({ [component.name]: component }, options, config);
+  constructor(config = {}) {
+    super({}, config.options || {}, config);
 
-    this.component = component;
+    this.components = new Map();
+  }
+
+  addRoute(name, route) {
+    this.addComponent(name, route);
+  }
+
+  addComponent(name, component) {
+    if (this.components.size === 1) {
+      throw new Error('OverlayNavigator may not have more than one route');
+    }
+
+    this.components.set(name, component);
+    this.componentName = name;
   }
 
   mount(initialProps) {
-    Navigation.showOverlay(this.component.getLayout(initialProps));
+    const component = this.components.get(this.componentName);
+
+    Navigation.showOverlay(component.getLayout(initialProps));
   }
 
   unmount() {
@@ -18,7 +33,9 @@ export default class OverlayNavigator extends Navigator {
   }
 
   dismiss() {
-    Navigation.dismissOverlay(this.component.id);
+    const component = this.components.get(this.componentName);
+
+    Navigation.dismissOverlay(component.id);
 
     if (this.parent) {
       this.parent.onDismissOverlay(this.id);

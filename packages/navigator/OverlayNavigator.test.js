@@ -10,7 +10,9 @@ let app;
 const A = new Component('A');
 
 beforeEach(() => {
-  app = new OverlayNavigator(A);
+  app = new OverlayNavigator();
+
+  app.addRoute('A', A);
 });
 
 test('mount', () => {
