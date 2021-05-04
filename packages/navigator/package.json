@@ -11,8 +11,7 @@
   "dependencies": {
     "lodash.last": "^3.0.0",
     "lodash.mapvalues": "^4.6.0",
-    "lodash.merge": "^4.6.2",
-    "lodash.take": "^4.1.1"
+    "lodash.merge": "^4.6.2"
   },
   "peerDependencies": {
     "react-native": "0.x",

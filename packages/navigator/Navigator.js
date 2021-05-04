@@ -1,4 +1,3 @@
-import _last from 'lodash.last';
 import Events from './Events';
 
 import Route from './Route';
@@ -54,7 +53,7 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   get route() {
-    const id = _last(this.history);
+    const id = Array.from(this.history).pop();
 
     if (id) {
       return this.routes.get(id);

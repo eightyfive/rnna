@@ -1,4 +1,3 @@
-import _last from 'lodash.last';
 import { Navigation } from 'react-native-navigation';
 import ModalNavigator from '@rnna/navigator/ModalNavigator';
 import OverlayNavigator from '@rnna/navigator/OverlayNavigator';
@@ -102,7 +101,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   get overlay() {
-    const id = _last(this.overlays);
+    const id = Array.from(this.overlays).pop();
 
     if (id) {
       return this.getRoute(id);
