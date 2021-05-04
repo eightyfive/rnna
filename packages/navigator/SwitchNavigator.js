@@ -23,7 +23,9 @@ export default class SwitchNavigator extends Navigator {
 
     let navigator;
 
-    if (!this.history.isCurrent(name)) {
+    if (this.history.isCurrent(name)) {
+      navigator = this.getCurrentRoute();
+    } else {
       this.history.reset(name);
 
       // Mount new navigator
@@ -31,9 +33,6 @@ export default class SwitchNavigator extends Navigator {
       navigator.mount(props);
     }
 
-    if (!navigator) {
-      navigator = this.getCurrentRoute();
-    }
     navigator.render(childPath, props);
   }
 
