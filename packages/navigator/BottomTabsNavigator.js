@@ -3,10 +3,14 @@ import { Navigation } from 'react-native-navigation';
 import Navigator from './Navigator';
 
 export default class BottomTabsNavigator extends Navigator {
-  constructor(routes, options = {}, config = {}) {
-    super(routes, options, config);
+  static layoutIndex = 0;
 
-    this.layoutId = config.layoutId || this.order.join('-');
+  constructor(config = {}) {
+    super({}, config.options || {}, config);
+
+    this.stacks = new Map();
+
+    this.layoutId = `BottomTabs${this.constructor.layoutIndex++}`;
     this.tabIndex = 0;
 
     this.addListener('BottomTabSelected', this.handleTabSelect);
@@ -18,25 +22,42 @@ export default class BottomTabsNavigator extends Navigator {
     }
   };
 
-  getLayout(props) {
-    const layout = {
-      id: this.layoutId,
-      children: this.order.map(id =>
-        this.getStack(id).getInitialLayout(
-          id === this.initialRouteName ? props : undefined,
-        ),
-      ),
-    };
+  findStackIndexByName(name) {
+    let index = 0;
 
-    if (this.options) {
-      layout.options = { ...this.options };
+    for (const stackName of this.stacks.keys()) {
+      if (stackName === name) {
+        return index;
+      }
+
+      index++;
     }
 
-    return { bottomTabs: layout };
+    throw new Error(`Tab not found: ${name}`);
   }
 
-  getStack(id) {
-    return this.getRoute(id, 'Stack');
+  addRoute(name, route) {
+    this.addStack(name, route);
+  }
+
+  addStack(name, stack) {
+    this.stacks.set(name, stack);
+  }
+
+  getLayout(props) {
+    const order = Array.from(this.stacks.keys());
+
+    const layout = {
+      id: this.layoutId,
+      children: order.map(name =>
+        this.stacks
+          .get(name)
+          .getInitialLayout(name === this.initialRouteName ? props : undefined),
+      ),
+      options: { ...this.options },
+    };
+
+    return { bottomTabs: layout };
   }
 
   get route() {
@@ -50,29 +71,33 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   render(path, props) {
-    const [id, rest] = this.parsePath(path);
-    const index = this.order.findIndex(key => key === id);
+    const [stackName, rest] = this.parsePath(path);
+    const stack = this.stacks.get(stackName);
 
-    if (index === -1) {
-      throw new Error(`Unknown tab: ${id}`);
+    if (!stack) {
+      throw new Error(`Tab not found: ${stackName}`);
     }
 
-    if (this.tabIndex !== index) {
-      this.tabIndex = index;
+    if (this.stackName !== stackName) {
+      this.stackName = stackName;
+
+      const stackIndex = this.findStackIndexByName(stackName);
 
       Navigation.mergeOptions(this.layoutId, {
-        bottomTabs: { currentTabIndex: index },
+        bottomTabs: { currentTabIndex: stackIndex },
       });
     }
 
     if (rest) {
-      this.route.render(rest, props);
+      stack.render(rest, props);
     }
   }
 
   goBack() {
     try {
-      this.route.goBack();
+      const stack = this.stacks.get(stackName);
+
+      stack.goBack();
     } catch (err) {
       // TODO
     }
