@@ -3,14 +3,18 @@ import _isObject from 'lodash.isplainobject';
 import RouterNavigator from './RouterNavigator';
 
 export default class RouterBase extends RouterNavigator {
-  constructor(routes, components, services = {}) {
+  constructor(routes, components) {
     super(routes);
 
     this.path = null;
     this.paths = new Map();
     this.components = components;
-    this.services = services;
+    this.services = {};
     this.props = {};
+  }
+
+  setServices(services) {
+    this.services = services;
   }
 
   addGlobalProp(name, prop) {

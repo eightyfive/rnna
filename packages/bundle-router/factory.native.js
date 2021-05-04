@@ -51,10 +51,10 @@ function createRoutes(routes) {
   });
 }
 
-export default function createRouter(routes, db) {
+export default function createRouter(routes) {
   const components = findComponents(routes, new Map());
 
-  return new Router(createRoutes(routes), components, { db });
+  return new Router(createRoutes(routes), components);
 }
 
 // Traverse obj for depth
