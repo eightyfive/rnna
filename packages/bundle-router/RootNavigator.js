@@ -39,36 +39,18 @@ export default class RootNavigator extends SwitchNavigator {
     } else if (navigator instanceof ModalNavigator) {
       this.renderModal(name, childPath, props);
     } else {
-      this.renderMain(name, childPath, props);
+      this.dismissModal(false);
+
+      super.render(path, props);
     }
-  }
-
-  renderMain(name, childPath, props) {
-    let navigator;
-
-    this.dismissModal(false);
-
-    if (!this.history.isCurrent(name)) {
-      // Only one main navigator at a time
-      navigator = this.getCurrentRoute();
-      navigator.unmount();
-
-      this.history.reset(name);
-
-      navigator = this.getCurrentRoute();
-      navigator.mount(props);
-    }
-
-    if (!navigator) {
-      navigator = this.getCurrentRoute();
-    }
-    navigator.render(childPath, props);
   }
 
   renderModal(name, childPath, props) {
     let navigator;
 
-    if (!this.history.isCurrent(name)) {
+    if (this.history.isCurrent(name)) {
+      navigator = this.getCurrentRoute();
+    } else {
       // Only one modal at a time
       this.dismissModal(false);
 
@@ -79,9 +61,6 @@ export default class RootNavigator extends SwitchNavigator {
       navigator.mount(props);
     }
 
-    if (!navigator) {
-      navigator = this.getCurrentRoute();
-    }
     navigator.render(childPath, props);
   }
 

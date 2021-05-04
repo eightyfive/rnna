@@ -26,6 +26,12 @@ export default class SwitchNavigator extends Navigator {
     if (this.history.isCurrent(name)) {
       navigator = this.getCurrentRoute();
     } else {
+      // Unmount old navigator
+      navigator = this.getCurrentRoute();
+      navigator.unmount();
+
+      // TODO ?
+      // history.push(...) + goBack() ?
       this.history.reset(name);
 
       // Mount new navigator
