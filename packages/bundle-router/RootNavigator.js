@@ -59,7 +59,9 @@ export default class RootNavigator extends SwitchNavigator {
       navigator.mount(props);
     }
 
-    navigator = this.getCurrentRoute();
+    if (!navigator) {
+      navigator = this.getCurrentRoute();
+    }
     navigator.render(rest, props);
   }
 
@@ -77,7 +79,9 @@ export default class RootNavigator extends SwitchNavigator {
       navigator.mount(props);
     }
 
-    navigator = this.getCurrentRoute();
+    if (!navigator) {
+      navigator = this.getCurrentRoute();
+    }
     navigator.render(rest, props);
   }
 

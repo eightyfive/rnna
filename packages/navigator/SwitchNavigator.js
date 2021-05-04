@@ -31,7 +31,9 @@ export default class SwitchNavigator extends Navigator {
       navigator.mount(props);
     }
 
-    navigator = this.getCurrentRoute();
+    if (!navigator) {
+      navigator = this.getCurrentRoute();
+    }
     navigator.render(rest, props);
   }
 
