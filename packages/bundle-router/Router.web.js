@@ -14,11 +14,11 @@ export default class Router extends RouterBase {
 
     const path = pathname.substring(1);
 
-    this.triggerChange(path);
+    this.dispatch(path);
   }
 
-  render(path) {
-    super.render(path);
+  dispatch(path) {
+    super.dispatch(path);
 
     window.history.pushState({}, null, path);
 
@@ -30,7 +30,7 @@ export default class Router extends RouterBase {
   }
 
   onState() {
-    this.triggerChange(this.path);
+    this.dispatch(this.path);
   }
 
   subscribe(listener) {
