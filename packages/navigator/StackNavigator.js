@@ -1,51 +1,48 @@
-import _last from 'lodash.last';
-import _take from 'lodash.take';
 import { Navigation } from 'react-native-navigation';
 
+import Component from './Component';
 import Navigator from './Navigator';
 
-const o = Object;
-
 export default class StackNavigator extends Navigator {
-  constructor(routes, options = {}, config = {}) {
-    super(routes, options, config);
+  constructor(config = {}) {
+    super({}, config.options || {}, config);
 
-    this.componentIds = new Map();
-
-    for (const [name, component] of this.routes) {
-      this.componentIds.set(name, component.id);
-    }
+    this.components = new Map();
+    this.history = [];
+    this.initialComponentName = null;
 
     this.addListener('ComponentDidAppear', this.handleDidAppear);
   }
 
-  handleDidAppear = ({ componentId: id }) => {
+  handleDidAppear = ({ componentId }) => {
     // A pop() happened outside of the StackNavigator
     // We need to sync history
 
+    const component = this.components.get(this.componentName);
+
     // Nothing to sync
-    if (!this.route || this.history.length === 1) {
+    if (!component || this.history.length === 1) {
       return;
     }
 
     // Already current/visible
-    if (this.route.id === id) {
+    if (component.id === componentId) {
       return;
     }
 
     // If this navigator is active
-    let active = true;
+    let active;
 
     if (this.parent) {
       active = this.id === this.parent.route.id;
+    } else {
+      active = true;
     }
 
     if (active) {
-      // TOFIX: Ugly (Force '/' path convention ?)
-      const componentId = id.split('/').pop();
+      const componentName = componentId.split('/').pop();
 
-      // console.log('didAppear', id, name, this.history);
-      const index = this.history.findIndex(val => val === componentId);
+      const index = this.history.findIndex(name => name === componentName);
 
       if (index > -1) {
         this.history = this.history.slice(0, index + 1);
@@ -53,26 +50,53 @@ export default class StackNavigator extends Navigator {
     }
   };
 
+  addRoute(name, route) {
+    this.addComponent(name, route);
+  }
+
+  addComponent(name, component) {
+    if (!(component instanceof Component)) {
+      throw new Error('Stack route must be a `Component` instance');
+    }
+
+    if (!this.components.size) {
+      this.initialComponentName = name;
+    }
+
+    this.components.set(name, component);
+  }
+
+  findComponentNameById(id) {
+    for (const [name, component] of this.components) {
+      if (component.id === id) {
+        return name;
+      }
+    }
+
+    throw new Error(`Component not found: ${id}`);
+  }
+
   getInitialLayout(props) {
     // TOFIX:
     // Here because of BottomTabs.children.getInitialLayout()
     // Should be in Stack.mount
-    this.history = [this.initialRouteName];
+    this.history = [this.initialComponentName];
+    this.componentName = this.initialComponentName;
 
-    return this.getLayout(props, this.initialRouteName);
+    return this.getLayout(props, this.initialComponentName);
   }
 
-  getLayout(props, componentId) {
-    const index = this.order.findIndex(id => id === componentId);
-    const children = this.order.slice(0, index + 1);
+  getLayout(props, componentName) {
+    const order = Array.from(this.components.keys());
+    const index = order.findIndex(name => name === componentName);
+    const componentNames = order.slice(0, index + 1);
 
     const layout = {
-      children: children.map(id => this.getComponent(id).getLayout(props)),
+      children: componentNames.map(name =>
+        this.components.get(name).getLayout(props),
+      ),
+      options: { ...this.options },
     };
-
-    if (this.options) {
-      layout.options = { ...this.options };
-    }
 
     return { stack: layout };
   }
@@ -81,17 +105,14 @@ export default class StackNavigator extends Navigator {
     Navigation.setRoot({ root: this.getInitialLayout(initialProps) });
   }
 
-  getComponent(id) {
-    return this.getRoute(id, 'Component');
-  }
-
   push(toName, props) {
-    const component = this.getComponent(toName);
-    const fromId = this.route.id;
+    const componentFrom = this.components.get(this.componentName);
+    const componentTo = this.components.get(toName);
 
     this.history.push(toName);
+    this.componentName = toName;
 
-    Navigation.push(fromId, component.getLayout(props));
+    Navigation.push(componentFrom.id, componentTo.getLayout(props));
   }
 
   pop(n = 1) {
@@ -100,43 +121,45 @@ export default class StackNavigator extends Navigator {
     }
 
     if (n === 1) {
-      const fromId = this.route.id;
+      const componentFrom = this.components.get(this.componentName);
 
       this.history.pop();
+      this.componentName = Array.from(this.history).pop();
 
-      Navigation.pop(fromId);
+      Navigation.pop(componentFrom.id);
     } else {
       const index = this.history.length - 1 - n;
 
-      if (index < 0) {
+      if (index === -1) {
         throw new Error(`Out of range pop: ${n}`);
       }
 
       // popToIndex
-      this.history = _take(this.history, index + 1);
+      this.history = this.history.slice(0, index + 1);
 
-      const toName = _last(this.history);
-      const toId = this.componentIds.get(toName);
+      const toName = Array.from(this.history).pop();
+      const componentTo = this.components.get(toName);
 
-      this.popTo(toId);
+      this.popTo(componentTo.id);
     }
   }
 
   popTo(toId) {
+    const componentName = this.findComponentNameById(toId);
+
+    this.componentName = componentName;
+
     Navigation.popTo(toId);
   }
 
   popToRoot() {
-    const fromId = this.route.id;
+    const componentFrom = this.components.get(this.componentName);
 
     // Reset history
-    this.history = [this.initialRouteName];
+    this.history = [this.initialComponentName];
+    this.componentName = this.initialComponentName;
 
-    Navigation.popToRoot(fromId);
-  }
-
-  get component() {
-    return this.route;
+    Navigation.popToRoot(componentFrom.id);
   }
 
   render(toName, props) {
@@ -146,8 +169,10 @@ export default class StackNavigator extends Navigator {
       // Push new screen
       this.push(toName, props);
     } else if (index === this.history.length - 1) {
+      const component = this.components.get(this.componentName);
+
       // Update current screen
-      this.component.render(props);
+      component.render(props);
     } else {
       // Pop to previous screen
       this.popToIndex(index);

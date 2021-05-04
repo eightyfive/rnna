@@ -13,7 +13,11 @@ const A = new Component('A');
 const B = new Component('B');
 
 beforeEach(() => {
-  app = new ModalNavigator({ A, B });
+  app = new ModalNavigator();
+
+  app.addRoute('A', A);
+  app.addRoute('B', B);
+
   app.mount({ foo: 'bar' });
 });
 

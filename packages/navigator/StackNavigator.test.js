@@ -20,7 +20,11 @@ const C = new Component('C', { topBar: { title: { text: 'Title C' } } });
 const props = { foo: 'bar' };
 
 beforeEach(() => {
-  app = new StackNavigator({ A, B, C }, {}, {});
+  app = new StackNavigator();
+
+  app.addRoute('A', A);
+  app.addRoute('B', B);
+  app.addRoute('C', C);
 
   app.mount();
 });
