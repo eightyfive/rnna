@@ -60,11 +60,6 @@ export default function getStore(
 
   const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
-  // Boot bundles
-  bundles.forEach(bundle => {
-    bundle.boot(container.services, store);
-  });
-
   // Persistor
   const persistor = persistStore(store);
 
@@ -84,6 +79,11 @@ export default function getStore(
 
   store.persistor = persistor;
   store.hydrate = () => whenHydrated;
+
+  // Boot bundles
+  bundles.forEach(bundle => {
+    bundle.boot(container.services, store);
+  });
 
   // Run epics
   if (epicMiddleware) {
