@@ -50,7 +50,7 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   render(path, props) {
-    const [name, rest] = this.splitPath(path);
+    const [name, componentName] = this.splitPath(path);
     const stack = this.getRoute(name);
 
     if (!this.history.isCurrent(name)) {
@@ -63,7 +63,7 @@ export default class BottomTabsNavigator extends Navigator {
       });
     }
 
-    stack.render(rest, props);
+    stack.render(componentName, props);
   }
 
   goBack() {

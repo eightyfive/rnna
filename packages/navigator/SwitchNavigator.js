@@ -19,7 +19,7 @@ export default class SwitchNavigator extends Navigator {
   }
 
   render(path, props) {
-    const [name, rest] = this.splitPath(path);
+    const [name, childPath] = this.splitPath(path);
 
     let navigator;
 
@@ -34,7 +34,7 @@ export default class SwitchNavigator extends Navigator {
     if (!navigator) {
       navigator = this.getCurrentRoute();
     }
-    navigator.render(rest, props);
+    navigator.render(childPath, props);
   }
 
   goBack() {

@@ -30,20 +30,20 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   render(path, props) {
-    const [name, rest] = this.splitPath(path);
+    const [name, childPath] = this.splitPath(path);
 
     let navigator = this.getRoute(name);
 
     if (navigator instanceof OverlayNavigator) {
-      this.renderOverlay(name, rest, props);
+      this.renderOverlay(name, childPath, props);
     } else if (navigator instanceof ModalNavigator) {
-      this.renderModal(name, rest, props);
+      this.renderModal(name, childPath, props);
     } else {
-      this.renderMain(name, rest, props);
+      this.renderMain(name, childPath, props);
     }
   }
 
-  renderMain(name, rest, props) {
+  renderMain(name, childPath, props) {
     let navigator;
 
     this.dismissModal(false);
@@ -62,10 +62,10 @@ export default class RootNavigator extends SwitchNavigator {
     if (!navigator) {
       navigator = this.getCurrentRoute();
     }
-    navigator.render(rest, props);
+    navigator.render(childPath, props);
   }
 
-  renderModal(name, rest, props) {
+  renderModal(name, childPath, props) {
     let navigator;
 
     if (!this.history.isCurrent(name)) {
@@ -82,16 +82,16 @@ export default class RootNavigator extends SwitchNavigator {
     if (!navigator) {
       navigator = this.getCurrentRoute();
     }
-    navigator.render(rest, props);
+    navigator.render(childPath, props);
   }
 
-  renderOverlay(name, rest, props) {
+  renderOverlay(name, childPath, props) {
     const found = this.overlayNames.find(val => val === name);
 
     const navigator = this.getRoute(name);
 
     if (found) {
-      navigator.render(rest, props);
+      navigator.render(childPath, props);
     } else {
       this.overlayNames.push(name);
 

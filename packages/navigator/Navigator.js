@@ -104,9 +104,9 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   splitPath(path) {
-    const [id, ...rest] = path.split('/');
+    const [id, ...childPath] = path.split('/');
 
-    return [id, rest.length ? rest.join('/') : null];
+    return [id, childPath.length ? childPath.join('/') : null];
   }
 }
 
