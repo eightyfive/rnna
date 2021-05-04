@@ -23,6 +23,22 @@ export default class RootNavigator extends SwitchNavigator {
 
   handleAppLaunched = () => this.remount();
 
+  addModal(name, navigator) {
+    if (!(navigator instanceof ModalNavigator)) {
+      throw new Error('Root route must be a `ModalNavigator` instance');
+    }
+
+    super.addRoute(name, navigator);
+  }
+
+  addOverlay(name, navigator) {
+    if (!(navigator instanceof OverlayNavigator)) {
+      throw new Error('Root route must be an `OverlayNavigator` instance');
+    }
+
+    super.addRoute(name, navigator);
+  }
+
   remount() {
     this.history.forEach(name => this.getRoute(name).mount());
 
@@ -30,7 +46,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   render(path, props) {
-    const [name, childPath] = this.splitPath(path);
+    const [name, childPath] = this.readPath(path);
 
     let navigator = this.getRoute(name);
 
