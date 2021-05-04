@@ -19,11 +19,11 @@ export default class SwitchNavigator extends Navigator {
   }
 
   render(path, props) {
-    const [name, rest] = this.parsePath(path);
+    const [name, rest] = this.splitPath(path);
 
     let navigator;
 
-    if (!this.history.is(name)) {
+    if (!this.history.isCurrent(name)) {
       this.history.reset(name);
 
       // Mount new navigator
@@ -31,10 +31,8 @@ export default class SwitchNavigator extends Navigator {
       navigator.mount(props);
     }
 
-    if (rest) {
-      navigator = this.getCurrentRoute();
-      navigator.render(rest, props);
-    }
+    navigator = this.getCurrentRoute();
+    navigator.render(rest, props);
   }
 
   goBack() {

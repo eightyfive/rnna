@@ -103,7 +103,7 @@ export default /** abstract */ class Navigator extends Route {
     throwAbstract('goBack()');
   }
 
-  parsePath(path) {
+  splitPath(path) {
     const [id, ...rest] = path.split('/');
 
     return [id, rest.length ? rest.join('/') : null];

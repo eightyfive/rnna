@@ -23,7 +23,7 @@ export default class History {
     return this.findIndex(name) > -1;
   }
 
-  is(name) {
+  isCurrent(name) {
     return this.current === name;
   }
 

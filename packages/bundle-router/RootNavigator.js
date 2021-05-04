@@ -30,70 +30,67 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   render(path, props) {
-    const [name, rest] = this.parsePath(path);
+    const [name, rest] = this.splitPath(path);
 
+    let navigator = this.getRoute(name);
+
+    if (navigator instanceof OverlayNavigator) {
+      this.renderOverlay(name, rest, props);
+    } else if (navigator instanceof ModalNavigator) {
+      this.renderModal(name, rest, props);
+    } else {
+      this.renderMain(name, rest, props);
+    }
+  }
+
+  renderMain(name, rest, props) {
     let navigator;
 
-    if (!this.history.is(name)) {
-      navigator = this.getRoute(name);
+    this.dismissModal(false);
 
-      if (navigator instanceof OverlayNavigator) {
-        this.renderOverlay(name, props);
-        this.overlayNames.push(name);
-      } else if (navigator instanceof ModalNavigator) {
-        this.renderModal(name);
-      } else {
-        this.renderMain(name, props);
-      }
-    }
-
-    if (rest) {
-      // Grab new current navigator (may have changed)
+    if (!this.history.isCurrent(name)) {
+      // Only one main navigator at a time
       navigator = this.getCurrentRoute();
-      navigator.render(rest, props);
-    }
-  }
-
-  renderModal(name, props) {
-    let navigator = this.getCurrentRoute();
-
-    // Only one modal at a time
-    if (navigator instanceof ModalNavigator) {
-      this.dismissModal();
-    }
-
-    this.history.push(name);
-
-    navigator = this.getCurrentRoute();
-    navigator.mount(props);
-  }
-
-  renderMain(name, props) {
-    let navigator = this.getCurrentRoute();
-
-    // Only one main navigator at a time
-    if (navigator) {
       navigator.unmount();
+
+      this.history.reset(name);
+
+      navigator = this.getCurrentRoute();
+      navigator.mount(props);
     }
 
-    this.history.reset(name);
-
     navigator = this.getCurrentRoute();
-    navigator.mount(props);
+    navigator.render(rest, props);
   }
 
-  renderOverlay(name, props) {
-    const overlayName = this.overlayNames.find(val => val === name);
-
+  renderModal(name, rest, props) {
     let navigator;
 
-    if (overlayName) {
-      navigator = this.getRoute(overlayName);
-      navigator.update(props);
+    if (!this.history.isCurrent(name)) {
+      // Only one modal at a time
+      this.dismissModal(false);
+
+      this.history.push(name);
+
+      // Mount modal
+      navigator = this.getCurrentRoute();
+      navigator.mount(props);
+    }
+
+    navigator = this.getCurrentRoute();
+    navigator.render(rest, props);
+  }
+
+  renderOverlay(name, rest, props) {
+    const found = this.overlayNames.find(val => val === name);
+
+    const navigator = this.getRoute(name);
+
+    if (found) {
+      navigator.render(rest, props);
     } else {
       this.overlayNames.push(name);
 
-      navigator = this.getRoute(name);
       navigator.mount(props);
     }
   }
@@ -104,22 +101,24 @@ export default class RootNavigator extends SwitchNavigator {
     try {
       navigator.goBack();
     } catch (err) {
-      if (navigator instanceof ModalNavigator) {
-        this.dismissModal();
-      }
+      this.dismissModal(false);
     }
   }
 
-  dismissModal() {
+  dismissModal(strict = true) {
     const navigator = this.getCurrentRoute();
 
-    if (!(navigator instanceof ModalNavigator)) {
+    const isModal = navigator instanceof ModalNavigator;
+
+    if (strict && !isModal) {
       throw new Error('No modal to dismiss');
     }
 
-    navigator.unmount();
+    if (isModal) {
+      navigator.unmount();
 
-    this.history.pop();
+      this.history.pop();
+    }
   }
 
   dismissAllModals() {

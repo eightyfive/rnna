@@ -141,10 +141,10 @@ export default class StackNavigator extends Navigator {
   }
 
   render(toName, props) {
-    if (this.history.is(toName)) {
+    if (this.history.isCurrent(toName)) {
+      // Update current component
       const component = this.getCurrentRoute();
 
-      // Update current component
       component.render(props);
     } else if (!this.history.has(toName)) {
       // Push new screen

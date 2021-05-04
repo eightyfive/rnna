@@ -39,16 +39,12 @@ export default class OverlayNavigator extends Navigator {
   }
 
   render(path, props) {
-    this.mount(props);
+    const component = this.getCurrentRoute();
+
+    component.render(props);
   }
 
   goBack() {
     this.unmount();
-  }
-
-  update(props) {
-    const component = this.getCurrentRoute();
-
-    component.update(props);
   }
 }
