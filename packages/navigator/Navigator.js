@@ -103,10 +103,10 @@ export default /** abstract */ class Navigator extends Route {
     throwAbstract('goBack()');
   }
 
-  splitPath(path) {
-    const [id, ...childPath] = path.split('/');
+  readPath(path) {
+    const [name, ...childPath] = path.split('/');
 
-    return [id, childPath.length ? childPath.join('/') : null];
+    return [name, childPath.length ? childPath.join('/') : null];
   }
 }
 

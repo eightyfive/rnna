@@ -8,12 +8,12 @@ export default class ModalNavigator extends StackNavigator {
   }
 
   unmount() {
-    const component = this.getCurrentRoute();
-
-    Navigation.dismissModal(component.id);
+    this.dismiss();
   }
 
   dismiss() {
-    this.unmount();
+    const component = this.getCurrentRoute();
+
+    Navigation.dismissModal(component.id);
   }
 }

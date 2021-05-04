@@ -19,7 +19,7 @@ export default class SwitchNavigator extends Navigator {
   }
 
   render(path, props) {
-    const [name, childPath] = this.splitPath(path);
+    const [name, childPath] = this.readPath(path);
 
     let navigator;
 

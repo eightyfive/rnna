@@ -50,7 +50,7 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   render(path, props) {
-    const [name, componentName] = this.splitPath(path);
+    const [name, componentName] = this.readPath(path);
     const stack = this.getRoute(name);
 
     if (!this.history.isCurrent(name)) {

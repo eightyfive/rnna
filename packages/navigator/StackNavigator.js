@@ -140,18 +140,18 @@ export default class StackNavigator extends Navigator {
     Navigation.popToRoot(componentFrom.id);
   }
 
-  render(toName, props) {
-    if (this.history.isCurrent(toName)) {
+  render(componentName, props) {
+    if (this.history.isCurrent(componentName)) {
       // Update current component
       const component = this.getCurrentRoute();
 
       component.render(props);
-    } else if (!this.history.has(toName)) {
+    } else if (!this.history.has(componentName)) {
       // Push new screen
-      this.push(toName, props);
+      this.push(componentName, props);
     } else {
       // Pop to previous screen
-      const index = this.history.findIndex(toName);
+      const index = this.history.findIndex(componentName);
 
       this.popToIndex(index);
     }
