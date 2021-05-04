@@ -9,7 +9,7 @@ export default class StackNavigator extends Navigator {
 
     this.components = new Map();
     this.history = [];
-    this.initialComponentName = null;
+    this.initialRouteName = null;
 
     this.addListener('ComponentDidAppear', this.handleDidAppear);
   }
@@ -60,7 +60,7 @@ export default class StackNavigator extends Navigator {
     }
 
     if (!this.components.size) {
-      this.initialComponentName = name;
+      this.initialRouteName = name;
     }
 
     this.components.set(name, component);
@@ -80,10 +80,10 @@ export default class StackNavigator extends Navigator {
     // TOFIX:
     // Here because of BottomTabs.children.getInitialLayout()
     // Should be in Stack.mount
-    this.history = [this.initialComponentName];
-    this.componentName = this.initialComponentName;
+    this.history = [this.initialRouteName];
+    this.componentName = this.initialRouteName;
 
-    return this.getLayout(props, this.initialComponentName);
+    return this.getLayout(props, this.initialRouteName);
   }
 
   getLayout(props, componentName) {
@@ -156,8 +156,8 @@ export default class StackNavigator extends Navigator {
     const componentFrom = this.components.get(this.componentName);
 
     // Reset history
-    this.history = [this.initialComponentName];
-    this.componentName = this.initialComponentName;
+    this.history = [this.initialRouteName];
+    this.componentName = this.initialRouteName;
 
     Navigation.popToRoot(componentFrom.id);
   }

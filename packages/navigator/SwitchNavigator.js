@@ -1,10 +1,36 @@
 import Navigator from './Navigator';
 
 export default class SwitchNavigator extends Navigator {
-  constructor(routes, options = {}, config = {}) {
-    super(routes, options, config);
+  constructor(config = {}) {
+    super({}, config.options || {}, config);
+
+    this.navigators = new Map();
 
     this.backBehavior = config.backBehavior || 'none';
+  }
+
+  addRoute(name, route) {
+    this.addNavigator(name, route);
+  }
+
+  addNavigator(name, navigator) {
+    if (!(navigator instanceof Navigator)) {
+      throw new Error('Switch route must be a `Navigator` instance');
+    }
+
+    if (!this.navigators.size) {
+      this.initialRouteName = name;
+    }
+
+    this.navigators.set(name, navigator);
+  }
+
+  getRoute(name) {
+    return this.getNavigator(name);
+  }
+
+  getNavigator(name) {
+    return this.navigators.get(name);
   }
 
   mount(initialProps) {
@@ -30,31 +56,41 @@ export default class SwitchNavigator extends Navigator {
   }
 
   render(path, props) {
-    const [id, rest] = this.parsePath(path);
+    const [name, rest] = this.parsePath(path);
 
-    if (this.route.id !== id) {
-      const route = this.routes.get(id);
+    if (this.navigatorName !== name) {
+      const navigator = this.navigators.get(this.navigatorName);
 
-      this.history.push(id);
+      this.history.push(name);
 
-      // Mount new route (navigator/component)
-      route.mount(props);
+      this.navigatorName = name;
+
+      // Mount new name (navigator/component)
+      navigator.mount(props);
     }
 
     if (rest) {
-      this.route.render(rest, props);
+      const navigator = this.navigators.get(this.navigatorName);
+
+      navigator.render(rest, props);
     }
   }
 
   goBack() {
+    let navigator = this.navigators.get(this.navigatorName);
+
     try {
-      this.route.goBack();
+      navigator.goBack();
     } catch (err) {
       if (this.history.length > 1) {
-        this.route.unmount();
+        navigator.unmount();
 
         this.history.pop();
-        this.render(this.route.id);
+        this.navigatorName = Array.from(this.history).pop();
+
+        navigator = this.navigators.get(this.navigatorName);
+
+        this.render(this.navigatorName);
       } else {
         throw err;
       }

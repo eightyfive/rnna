@@ -41,6 +41,10 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   addStack(name, stack) {
+    if (!this.stacks.size) {
+      this.initialRouteName = name;
+    }
+
     this.stacks.set(name, stack);
   }
 
