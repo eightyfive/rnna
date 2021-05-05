@@ -29,8 +29,21 @@ export function createBottomTabs(tabs, options = {}, config = {}) {
   return new BottomTabsNavigator(stacks, options, config);
 }
 
-export function createOverlay(id, route) {
-  return new OverlayNavigator(createComponent(id, route));
+export function createOverlay(componentName, OverlayComponent, config = {}) {
+  const { parentId, ...restConfig } = config;
+
+  const overlay = new OverlayNavigator(restConfig);
+
+  const component = Component.register(
+    componentName,
+    OverlayComponent,
+    config.options || {},
+    parentId,
+  );
+
+  overlay.addRoute(component);
+
+  return overlay;
 }
 
 export function createSideMenu(screens, config = {}) {
@@ -59,16 +72,12 @@ export function createStack(screens, config = {}) {
     stack = new StackNavigator(restConfig);
   }
 
-  Object.entries(screens).forEach(([componentName, Screen]) => {
-    const componentId = parentId
-      ? `${parentId}/${componentName}`
-      : componentName;
-
+  Object.entries(screens).forEach(([componentName, ScreenComponent]) => {
     const component = Component.register(
-      Screen,
-      componentId,
       componentName,
-      Screen.options || {},
+      ScreenComponent,
+      ScreenComponent.options || {},
+      parentId,
     );
 
     stack.addRoute(componentName, component);

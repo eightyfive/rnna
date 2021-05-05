@@ -13,10 +13,14 @@ export default class Component extends Route {
     this.passProps = {};
   }
 
-  static register(Screen, id, name, options = {}) {
-    Navigation.registerComponent(name, () => Screen);
+  static register(componentName, Screen, options = {}, parentId = null) {
+    Navigation.registerComponent(componentName, () => Screen);
 
-    return new Component(id, name, options);
+    const componentId = parentId
+      ? `${parentId}/${componentName}`
+      : componentName;
+
+    return new Component(componentId, componentName, options);
   }
 
   mount(initialProps) {

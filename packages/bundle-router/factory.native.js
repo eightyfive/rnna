@@ -23,17 +23,17 @@ function findComponents(routes, components, parentId = null) {
 }
 
 function createRoutes(routes) {
-  return _mapValues(routes, (route, id) => {
+  return _mapValues(routes, (route, name) => {
     const isOverlay = !_isObject(route);
 
     if (isOverlay) {
-      return createOverlay(id, route);
+      return createOverlay(name, route);
     }
 
     const { options = {}, config = {}, ...nestedRoutes } = route;
     const depth = getRouteDepth(route);
 
-    config.parentId = id;
+    config.parentId = name;
 
     if (depth === 1) {
       return createBottomTabs(nestedRoutes, options, config);
