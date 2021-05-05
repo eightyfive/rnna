@@ -84,8 +84,8 @@ export function createSwitch(navigators, config = {}) {
   return switchNavigator;
 }
 
-export function createWidget(id) {
-  return new WidgetComponent(id);
+export function createWidget(name, Widget) {
+  return WidgetComponent.register(name, Widget);
 }
 
 function createComponents(screens, parentId) {

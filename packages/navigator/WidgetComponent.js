@@ -1,7 +1,15 @@
+import { Navigation } from 'react-native-navigation';
+
 import Component from './Component.native';
 
 export default class WidgetComponent extends Component {
-  constructor(id, name, options = {}) {
-    super(`widget-${id}`, name, options);
+  constructor(name) {
+    super(`widget-${name}`, name, {});
+  }
+
+  static register(componentName, Widget) {
+    Navigation.registerComponent(componentName, () => Widget);
+
+    return new WidgetComponent(componentName);
   }
 }

@@ -1,5 +1,4 @@
 import { Navigation } from 'react-native-navigation';
-import _merge from 'lodash.merge';
 
 import Route from './Route';
 
@@ -13,8 +12,13 @@ export default class Component extends Route {
     this.passProps = {};
   }
 
-  static register(componentName, Screen, options = {}, parentId = null) {
-    Navigation.registerComponent(componentName, () => Screen);
+  static register(
+    componentName,
+    ScreenComponent,
+    options = {},
+    parentId = null,
+  ) {
+    Navigation.registerComponent(componentName, () => ScreenComponent);
 
     const componentId = parentId
       ? `${parentId}/${componentName}`

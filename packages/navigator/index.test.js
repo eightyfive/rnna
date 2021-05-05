@@ -11,11 +11,14 @@ Screen1.options = { topBar: { title: { text: 'Title 1' } } };
 function Screen2() {}
 Screen2.options = { topBar: { title: { text: 'Title 2' } } };
 
+function Widget() {}
+
 test('createWidget', () => {
-  const widget = createWidget('A');
+  const widget = createWidget('A', Widget);
 
   expect(widget instanceof WidgetComponent).toBe(true);
   expect(widget.id).toBe('widget-A');
+  expect(widget.name).toBe('A');
 });
 
 // Bottom tabs
