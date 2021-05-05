@@ -47,34 +47,31 @@ export function createSideMenu(screens, config = {}) {
 }
 
 export function createStack(screens, config = {}) {
-  let stack;
+  const { parentId, ...restConfig } = config;
 
-  const { parentId, mode, ...restConfig } = config;
+  const stack = new StackNavigator(restConfig);
 
-  if (mode === 'modal') {
-    stack = new ModalNavigator(restConfig);
-  } else {
-    stack = new StackNavigator(restConfig);
-  }
+  const components = createComponents(screens, parentId);
 
-  Object.entries(screens).forEach(([componentName, ScreenComponent]) => {
-    const component = Component.register(
-      componentName,
-      ScreenComponent,
-      ScreenComponent.options || {},
-      parentId,
-    );
-
-    stack.addRoute(componentName, component);
+  components.forEach(([name, component]) => {
+    stack.addRoute(name, component);
   });
 
   return stack;
 }
 
 export function createModal(screens, config = {}) {
-  config.mode = 'modal';
+  const { parentId, ...restConfig } = config;
 
-  return createStack(screens, config);
+  const modal = new ModalNavigator(restConfig);
+
+  const components = createComponents(screens, parentId);
+
+  components.forEach(([name, component]) => {
+    modal.addRoute(name, component);
+  });
+
+  return modal;
 }
 
 export function createSwitch(navigators, config = {}) {
@@ -89,4 +86,17 @@ export function createSwitch(navigators, config = {}) {
 
 export function createWidget(id) {
   return new WidgetComponent(id);
+}
+
+function createComponents(screens, parentId) {
+  return Object.entries(screens).map(([componentName, ScreenComponent]) => {
+    const component = Component.register(
+      componentName,
+      ScreenComponent,
+      ScreenComponent.options || {},
+      parentId,
+    );
+
+    return [componentName, component];
+  });
 }
