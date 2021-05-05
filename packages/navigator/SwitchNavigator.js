@@ -5,15 +5,19 @@ import OverlayNavigator from './OverlayNavigator';
 export default class SwitchNavigator extends Navigator {
   addRoute(name, navigator) {
     if (!(navigator instanceof Navigator)) {
-      throw new Error('Switch route must be a `Navigator` instance');
+      throw new Error('Switch route must be of type `Navigator`');
     }
 
     if (navigator instanceof ModalNavigator) {
-      throw new Error('Switch route cannot be a `ModalNavigator` instance');
+      throw new Error('Switch route cannot be `ModalNavigator`');
     }
 
     if (navigator instanceof OverlayNavigator) {
-      throw new Error('Switch route cannot be an `OverlayNavigator` instance');
+      throw new Error('Switch route cannot be `OverlayNavigator`');
+    }
+
+    if (navigator instanceof SwitchNavigator) {
+      throw new Error('Switch route cannot be `SwitchNavigator`');
     }
 
     super.addRoute(name, navigator);
