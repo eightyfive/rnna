@@ -47,18 +47,7 @@ export function createOverlay(componentName, OverlayComponent, config = {}) {
 }
 
 export function createSideMenu(screens, config = {}) {
-  const routes = createComponents(screens);
-
-  const { contentComponent, contentOptions = {} } = config;
-
-  if (!contentComponent) {
-    throw new Error('config.contentComponent is required');
-  }
-
   // TODO
-  config.drawer = createComponent(contentComponent, contentOptions);
-
-  return new SideMenuNavigator(routes, options, config);
 }
 
 export function createStack(screens, config = {}) {
