@@ -128,11 +128,15 @@ export default class RootNavigator extends SwitchNavigator {
     }
   }
 
-  onDismissOverlay(componentId) {
-    const componentName = this.findComponentNameById(componentId);
+  dismissOverlay(overlayName) {
+    const navigator = this.getRoute(overlayName);
 
-    this.overlayNames = this.overlayNames.filter(
-      name => name !== componentName,
-    );
+    if (!(navigator instanceof OverlayNavigator)) {
+      throw new Error(`Overlay not found: ${overlayName}`);
+    }
+
+    this.overlayNames = this.overlayNames.filter(name => name !== overlayName);
+
+    navigator.dismiss();
   }
 }

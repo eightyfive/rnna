@@ -30,10 +30,6 @@ export default class OverlayNavigator extends Navigator {
     const component = this.getRoute(this.initialRouteName);
 
     Navigation.dismissOverlay(component.id);
-
-    if (this.parent) {
-      this.parent.onDismissOverlay(this.id);
-    }
   }
 
   render(path, props) {
