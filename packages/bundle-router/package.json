@@ -8,10 +8,7 @@
     "react-native"
   ],
   "dependencies": {
-    "@rnna/navigator": "latest",
-    "lodash.isplainobject": "4.x",
-    "lodash.last": "3.x",
-    "lodash.mapvalues": "4.x"
+    "@rnna/navigator": "latest"
   },
   "peerDependencies": {
     "react-native-navigation": "*",
