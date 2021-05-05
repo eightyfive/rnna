@@ -9,22 +9,20 @@ import SwitchNavigator from './SwitchNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
 
-export function createBottomTabs(tabs, options = {}, config = {}) {
-  const stacks = _mapValues(tabs, (tab, tabId) => {
-    const {
-      options: stackOptions = {},
-      config: stackConfig = {},
-      ...screens
-    } = tab;
+export function createBottomTabs(tabs, config = {}) {
+  const bottomTabs = new BottomTabsNavigator(config);
 
-    stackConfig.parentId = config.parentId
-      ? `${config.parentId}/${tabId}`
-      : tabId;
+  Object.entries(tabs).forEach(([tabName, tabConfig]) => {
+    const { config: stackConfig = {}, ...screens } = tabConfig;
 
-    return createStack(screens, stackOptions || {}, stackConfig);
+    stackConfig.parentId = tabName;
+
+    const stack = createStack(screens, stackConfig);
+
+    bottomTabs.addRoute(tabName, stack);
   });
 
-  return new BottomTabsNavigator(stacks, options, config);
+  return bottomTabs;
 }
 
 export function createOverlay(componentName, OverlayComponent, config = {}) {
