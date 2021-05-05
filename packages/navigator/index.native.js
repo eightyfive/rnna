@@ -11,8 +11,6 @@ import WidgetComponent from './WidgetComponent';
 
 import { createComponents, createComponent } from './utils.native';
 
-export { default as registerComponents } from './registerComponents';
-
 export function createBottomTabs(tabs, options = {}, config = {}) {
   const stacks = _mapValues(tabs, (tab, tabId) => {
     const {
