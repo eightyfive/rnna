@@ -1,16 +1,20 @@
+import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
 // import OverlayNavigator from './OverlayNavigator';
 import StackNavigator from './StackNavigator';
 import WidgetComponent from './WidgetComponent';
 
-import { createModal, createStack, createWidget } from './index.native';
+import {
+  createBottomTabs,
+  createModal,
+  createStack,
+  createWidget,
+} from './index.native';
 
-function Screen1() {}
-Screen1.options = { topBar: { title: { text: 'Title 1' } } };
-
-function Screen2() {}
-Screen2.options = { topBar: { title: { text: 'Title 2' } } };
-
+function A() {}
+function B() {}
+function C() {}
+function D() {}
 function Widget() {}
 
 test('createWidget', () => {
@@ -22,19 +26,38 @@ test('createWidget', () => {
 });
 
 // Bottom tabs
-// TODO
+test('createBottomTabs', () => {
+  const app = createBottomTabs({
+    ab: { A, B },
+    cd: { C, D },
+  });
+
+  expect(app).toBeInstanceOf(BottomTabsNavigator);
+
+  expect(app.routes.has('ab')).toBe(true);
+  expect(app.getRoute('ab').getRoute('A').id).toBe('ab/A');
+  expect(app.getRoute('ab').getRoute('A').name).toBe('A');
+  expect(app.getRoute('ab').getRoute('B').id).toBe('ab/B');
+  expect(app.getRoute('ab').getRoute('B').name).toBe('B');
+
+  expect(app.routes.has('cd')).toBe(true);
+  expect(app.getRoute('cd').getRoute('C').id).toBe('cd/C');
+  expect(app.getRoute('cd').getRoute('C').name).toBe('C');
+  expect(app.getRoute('cd').getRoute('D').id).toBe('cd/D');
+  expect(app.getRoute('cd').getRoute('D').name).toBe('D');
+});
 
 // Modal
 test('createModal', () => {
-  const app = createModal({ Screen1, Screen2 });
+  const app = createModal({ A, B });
 
   expect(app).toBeInstanceOf(ModalNavigator);
-  expect(app.routes.has('Screen1')).toBe(true);
-  expect(app.routes.has('Screen2')).toBe(true);
-  expect(app.routes.get('Screen1').id).toBe('Screen1');
-  expect(app.routes.get('Screen1').name).toBe('Screen1');
-  expect(app.routes.get('Screen2').id).toBe('Screen2');
-  expect(app.routes.get('Screen2').name).toBe('Screen2');
+  expect(app.routes.has('A')).toBe(true);
+  expect(app.routes.has('B')).toBe(true);
+  expect(app.getRoute('A').id).toBe('A');
+  expect(app.getRoute('A').name).toBe('A');
+  expect(app.getRoute('B').id).toBe('B');
+  expect(app.getRoute('B').name).toBe('B');
 });
 
 // Overlay
@@ -42,13 +65,15 @@ test('createModal', () => {
 
 // Stack
 test('createStack', () => {
-  const app = createStack({ Screen1, Screen2 }, { parentId: 'someTabName' });
+  const app = createStack({ A, B });
 
   expect(app).toBeInstanceOf(StackNavigator);
-  expect(app.routes.has('Screen1')).toBe(true);
-  expect(app.routes.has('Screen2')).toBe(true);
-  expect(app.routes.get('Screen1').id).toBe('someTabName/Screen1');
-  expect(app.routes.get('Screen1').name).toBe('Screen1');
-  expect(app.routes.get('Screen2').id).toBe('someTabName/Screen2');
-  expect(app.routes.get('Screen2').name).toBe('Screen2');
+
+  expect(app.routes.has('A')).toBe(true);
+  expect(app.getRoute('A').id).toBe('A');
+  expect(app.getRoute('A').name).toBe('A');
+
+  expect(app.routes.has('B')).toBe(true);
+  expect(app.getRoute('B').id).toBe('B');
+  expect(app.getRoute('B').name).toBe('B');
 });

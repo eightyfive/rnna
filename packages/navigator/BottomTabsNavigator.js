@@ -43,6 +43,8 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   mount(initialProps) {
+    this.history.reset(this.initialRouteName);
+
     Navigation.setRoot({ root: this.getLayout(initialProps) });
   }
 

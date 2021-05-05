@@ -1,14 +1,13 @@
-import Component from './Component';
-import { createBottomTabs, createModal, createStack } from './index.native';
+import { createBottomTabs, createStack } from './index.native';
 
 import RootNavigator from './RootNavigator';
 
-const A = new Component('A', 'A');
-const B = new Component('B', 'B');
-const C = new Component('C', 'C');
-const D = new Component('D', 'D');
-const E = new Component('E', 'E');
-const F = new Component('F', 'F');
+function A() {}
+function B() {}
+function C() {}
+function D() {}
+function E() {}
+function F() {}
 
 let app;
 let abcdMount;
