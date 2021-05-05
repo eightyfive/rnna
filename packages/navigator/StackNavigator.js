@@ -14,34 +14,14 @@ export default class StackNavigator extends Navigator {
     // A pop() happened outside of the StackNavigator
     // We need to sync history
 
-    const component = this.getCurrentRoute();
+    const componentName = this.findComponentNameById(componentId);
 
-    // Nothing to sync
-    if (!component || this.history.size(1)) {
-      return;
-    }
+    if (componentName) {
+      const componentIndex = this.findRouteIndexByName(componentName);
 
-    // Already current/visible
-    if (component.id === componentId) {
-      return;
-    }
-
-    // If this navigator is active
-    let active;
-
-    if (this.parent) {
-      active = this.id === this.parent.route.id;
-    } else {
-      active = true;
-    }
-
-    if (active) {
-      const componentName = componentId.split('/').pop();
-
-      const index = this.history.findIndex(name => name === componentName);
-
-      if (index > -1) {
-        this.history.sliceTo(index);
+      if (componentIndex > 1 && !this.history.isCurrent(componentName)) {
+        // Sync history
+        this.history.sliceTo(componentIndex);
       }
     }
   };

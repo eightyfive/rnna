@@ -9,17 +9,14 @@ export default class BottomTabsNavigator extends Navigator {
   constructor(config = {}) {
     super(config);
 
+    // Tab loading
+    // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
+    const { tabsAttachMode } = this.options;
+
+    this.options.tabsAttachMode = tabsAttachMode || 'onSwitchToTab';
+
     this.layoutId = `BottomTabs${this.constructor.layoutIndex++}`;
-    this.tabIndex = 0;
-
-    this.addListener('BottomTabSelected', this.handleTabSelect);
   }
-
-  handleTabSelect = ({ selectedTabIndex: index }) => {
-    if (this.tabIndex !== index) {
-      this.tabIndex = index;
-    }
-  };
 
   addRoute(name, stack) {
     if (!(stack instanceof StackNavigator)) {

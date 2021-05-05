@@ -129,7 +129,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   onDismissOverlay(componentId) {
-    const componentName = this.findRouteNameById(componentId);
+    const componentName = this.findComponentNameById(componentId);
 
     this.overlayNames = this.overlayNames.filter(
       name => name !== componentName,

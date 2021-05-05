@@ -11,18 +11,7 @@ export default /** abstract */ class Navigator extends Route {
     this.options = config.options || {};
     this.initialRouteName = null;
     this.history = new History();
-
     this.listeners = {};
-
-    this.parent = null;
-    this.id = null;
-
-    const { parentId } = config;
-
-    for (const [id, route] of this.routes) {
-      route.parent = this;
-      route.id = parentId ? `${parentId}/${id}` : id;
-    }
   }
 
   addRoute(name, route) {
@@ -69,14 +58,14 @@ export default /** abstract */ class Navigator extends Route {
     return this.getRoute(this.history.current);
   }
 
-  findRouteNameById(id) {
-    for (const [name, route] of this.routes) {
-      if (route.id === id) {
-        return name;
+  findComponentNameById(componentId) {
+    for (const [componentName, component] of this.routes) {
+      if (component.id === componentId) {
+        return componentName;
       }
     }
 
-    throw new Error(`Route not found: ${id}`);
+    return null;
   }
 
   findRouteIndexByName(name) {
@@ -90,7 +79,7 @@ export default /** abstract */ class Navigator extends Route {
       index++;
     }
 
-    throw new Error(`Route not found: ${name}`);
+    return -1;
   }
 
   unmount() {}
