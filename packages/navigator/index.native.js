@@ -14,7 +14,7 @@ import { createComponents, createComponent } from './utils';
 
 export { default as registerComponents } from './registerComponents';
 
-export function createBottomTabsNavigator(tabs, options = {}, config = {}) {
+export function createBottomTabs(tabs, options = {}, config = {}) {
   const stacks = _mapValues(tabs, (tab, tabId) => {
     const {
       options: stackOptions = {},
@@ -26,17 +26,17 @@ export function createBottomTabsNavigator(tabs, options = {}, config = {}) {
       ? `${config.parentId}/${tabId}`
       : tabId;
 
-    return createStackNavigator(screens, stackOptions || {}, stackConfig);
+    return createStack(screens, stackOptions || {}, stackConfig);
   });
 
   return new BottomTabsNavigator(stacks, options, config);
 }
 
-export function createOverlayNavigator(id, route) {
+export function createOverlay(id, route) {
   return new OverlayNavigator(createComponent(id, route));
 }
 
-export function createSideMenuNavigator(screens, config = {}) {
+export function createSideMenu(screens, config = {}) {
   const routes = createComponents(screens);
 
   const { contentComponent, contentOptions = {} } = config;
@@ -51,7 +51,7 @@ export function createSideMenuNavigator(screens, config = {}) {
   return new SideMenuNavigator(routes, options, config);
 }
 
-export function createStackNavigator(screens, options = {}, config = {}) {
+export function createStack(screens, options = {}, config = {}) {
   const components = createComponents(screens);
 
   if (config.mode === 'modal') {
@@ -61,9 +61,15 @@ export function createStackNavigator(screens, options = {}, config = {}) {
   return new StackNavigator(components, options, config);
 }
 
+export function createModal(screens, options = {}, config = {}) {
+  const components = createComponents(screens);
+
+  return new ModalNavigator(components, options, config);
+}
+
 // TODO
 // https://reactnavigation.org/docs/en/switch-navigator.html
-export function createSwitchNavigator(navigators, options = {}, config = {}) {
+export function createSwitch(navigators, options = {}, config = {}) {
   return new SwitchNavigator(navigators, options, config);
 }
 

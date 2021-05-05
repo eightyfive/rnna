@@ -1,10 +1,6 @@
 import _isObject from 'lodash.isplainobject';
 import _mapValues from 'lodash.mapvalues';
-import {
-  createBottomTabsNavigator,
-  createOverlayNavigator,
-  createStackNavigator,
-} from '@rnna/navigator';
+import { createBottomTabs, createOverlay, createStack } from '@rnna/navigator';
 
 import Router from './Router';
 
@@ -31,7 +27,7 @@ function createRoutes(routes) {
     const isOverlay = !_isObject(route);
 
     if (isOverlay) {
-      return createOverlayNavigator(id, route);
+      return createOverlay(id, route);
     }
 
     const { options = {}, config = {}, ...nestedRoutes } = route;
@@ -40,11 +36,11 @@ function createRoutes(routes) {
     config.parentId = id;
 
     if (depth === 1) {
-      return createBottomTabsNavigator(nestedRoutes, options, config);
+      return createBottomTabs(nestedRoutes, options, config);
     }
 
     if (depth === 0) {
-      return createStackNavigator(nestedRoutes, options, config);
+      return createStack(nestedRoutes, options, config);
     }
 
     throw new Error('Invalid routes obj');

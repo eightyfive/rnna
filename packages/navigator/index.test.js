@@ -3,7 +3,7 @@ import ModalNavigator from './ModalNavigator';
 import StackNavigator from './StackNavigator';
 import WidgetComponent from './WidgetComponent';
 
-import { createStackNavigator, createWidget } from './index';
+import { createStack, createWidget } from './index';
 
 function Screen1() {}
 Screen1.options = { topBar: { title: { text: 'Title 1' } } };
@@ -22,8 +22,8 @@ test('createWidget', () => {
 // TODO
 
 // Modal
-test('createModalNavigator', () => {
-  const app = createStackNavigator({ Screen1, Screen2 }, {}, { mode: 'modal' });
+test('createModal', () => {
+  const app = createStack({ Screen1, Screen2 }, {}, { mode: 'modal' });
 
   expect(app).toBeInstanceOf(ModalNavigator);
 });
@@ -32,8 +32,8 @@ test('createModalNavigator', () => {
 // TODO
 
 // Stack
-test('createStackNavigator', () => {
-  const app = createStackNavigator({ Screen1, Screen2 });
+test('createStack', () => {
+  const app = createStack({ Screen1, Screen2 });
 
   expect(app).toBeInstanceOf(StackNavigator);
   expect(app).not.toBeInstanceOf(ModalNavigator);
