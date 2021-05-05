@@ -3,13 +3,11 @@ import _mapValues from 'lodash.mapvalues';
 import BottomTabsNavigator from './BottomTabsNavigator';
 import Component from './Component.native';
 import ModalNavigator from './ModalNavigator';
-import SideMenuNavigator from './SideMenuNavigator';
+// import SideMenuNavigator from './SideMenuNavigator';
 import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
-
-import { createComponents, createComponent } from './utils.native';
 
 export function createBottomTabs(tabs, options = {}, config = {}) {
   const stacks = _mapValues(tabs, (tab, tabId) => {
