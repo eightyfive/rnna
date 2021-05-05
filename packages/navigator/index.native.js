@@ -81,10 +81,14 @@ export function createModal(screens, config = {}) {
   return createStack(screens, config);
 }
 
-// TODO
-// https://reactnavigation.org/docs/en/switch-navigator.html
-export function createSwitch(navigators, options = {}, config = {}) {
-  return new SwitchNavigator(navigators, options, config);
+export function createSwitch(navigators, config = {}) {
+  const switchNavigator = new SwitchNavigator(config);
+
+  Object.entries(navigators).forEach(([name, navigator]) => {
+    switchNavigator.addRoute(name, navigator);
+  });
+
+  return switchNavigator;
 }
 
 export function createWidget(id) {
