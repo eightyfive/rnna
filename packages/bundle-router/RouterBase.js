@@ -1,4 +1,4 @@
-import Component from '@rnna/navigator/Component';
+import ComponentRegistry from '@rnna/navigator/Component';
 
 export default class RouterBase {
   constructor(root) {
@@ -24,7 +24,10 @@ export default class RouterBase {
       this.components = new Map();
 
       this.root.getComponents().forEach(component => {
-        this.components.set(component.id, Component.registry.get(component.id));
+        this.components.set(
+          component.id,
+          ComponentRegistry.registry.get(component.id),
+        );
       });
     }
 
