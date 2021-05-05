@@ -34,6 +34,10 @@ export default class StackNavigator extends Navigator {
     super.addRoute(name, component);
   }
 
+  getComponents() {
+    return Array.from(this.routes.values());
+  }
+
   getInitialLayout(props) {
     // TOFIX:
     // Here because of BottomTabs.children.getInitialLayout()

@@ -23,6 +23,16 @@ export default class SwitchNavigator extends Navigator {
     super.addRoute(name, navigator);
   }
 
+  getComponents() {
+    const components = [];
+
+    for (const route of this.routes.values()) {
+      components.push(...route.getComponents());
+    }
+
+    return components;
+  }
+
   mount(initialProps) {
     this.history.reset(this.initialRouteName);
 

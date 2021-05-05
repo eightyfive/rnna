@@ -16,6 +16,12 @@ export default class OverlayNavigator extends Navigator {
     super.addRoute(name, component);
   }
 
+  getComponents() {
+    const component = this.getRoute(this.initialRouteName);
+
+    return [component];
+  }
+
   mount(initialProps) {
     const component = this.getRoute(this.initialRouteName);
 

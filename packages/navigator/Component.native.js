@@ -14,17 +14,21 @@ export default class Component extends Route {
 
   static register(
     componentName,
-    ScreenComponent,
+    ReactComponent,
     options = {},
     parentId = null,
   ) {
-    Navigation.registerComponent(componentName, () => ScreenComponent);
+    Navigation.registerComponent(componentName, () => ReactComponent);
 
     const componentId = parentId
       ? `${parentId}/${componentName}`
       : componentName;
 
-    return new Component(componentId, componentName, options);
+    const component = new Component(componentId, componentName, options);
+
+    component.Component = ReactComponent;
+
+    return component;
   }
 
   mount(initialProps) {

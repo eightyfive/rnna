@@ -4,7 +4,7 @@ export default class RouterBase {
 
     this.path = null;
     this.paths = new Map();
-    this.components = components;
+    this.components = null;
     this.services = {};
     this.props = {};
   }
@@ -17,10 +17,22 @@ export default class RouterBase {
     this.props[name] = prop;
   }
 
-  match(path) {
-    let componentId, Component, params;
+  getComponents() {
+    if (!this.components) {
+      this.components = new Map();
 
-    for ([componentId, Component] of this.components) {
+      this.root.getComponents().forEach(component => {
+        this.components.set(component.id, component.Component);
+      });
+    }
+
+    return this.components;
+  }
+
+  match(path) {
+    for (const [componentId, Component] of this.getComponents()) {
+      let params;
+
       if (typeof Component.match === 'function') {
         params = Component.match(path);
       } else {

@@ -26,6 +26,16 @@ export default class BottomTabsNavigator extends Navigator {
     super.addRoute(name, stack);
   }
 
+  getComponents() {
+    const components = [];
+
+    for (const stack of this.routes.values()) {
+      components.push(...stack.getComponents());
+    }
+
+    return components;
+  }
+
   getLayout(props) {
     const stackNames = Array.from(this.routes.keys());
 
