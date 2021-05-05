@@ -7,7 +7,7 @@ import OverlayNavigator from './OverlayNavigator';
 
 let app;
 
-const A = new Component('A');
+const A = new Component('A', 'A');
 
 beforeEach(() => {
   app = new OverlayNavigator();
@@ -19,7 +19,7 @@ test('mount', () => {
   app.mount();
 
   expect(Navigation.showOverlay).toHaveBeenCalledWith({
-    component: makeComponent('A'),
+    component: makeComponent('A', 'A'),
   });
 });
 

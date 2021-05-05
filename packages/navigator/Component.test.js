@@ -2,47 +2,47 @@ import { Navigation } from 'react-native-navigation';
 
 import Component from './Component.native';
 
-export function makeComponent(id, options = {}, props = {}, name = null) {
+export function makeComponent(id, name, options = {}, props = {}) {
   return {
-    id: id,
-    name: name || id,
+    id,
+    name,
     options,
     passProps: props,
   };
 }
 
 test('mount', () => {
-  const component = new Component('A');
+  const component = new Component('A', 'A');
 
   component.mount();
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      component: makeComponent('A'),
+      component: makeComponent('A', 'A'),
     },
   });
 });
 
 test('mount (options)', () => {
-  const component = new Component('A', { topBar: { title: 'A Title' } });
+  const component = new Component('A', 'A', { topBar: { title: 'A Title' } });
 
   component.mount();
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      component: makeComponent('A', { topBar: { title: 'A Title' } }),
+      component: makeComponent('A', 'A', { topBar: { title: 'A Title' } }),
     },
   });
 });
 
 test('mount (props)', () => {
-  const component = new Component('A');
+  const component = new Component('A', 'A');
 
   component.mount({ foo: 'bar' });
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      component: makeComponent('A', {}, { foo: 'bar' }),
+      component: makeComponent('A', 'A', {}, { foo: 'bar' }),
     },
   });
 });

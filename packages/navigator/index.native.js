@@ -1,8 +1,7 @@
-import { Navigation } from 'react-native-navigation';
-
 import _mapValues from 'lodash.mapvalues';
 
 import BottomTabsNavigator from './BottomTabsNavigator';
+import Component from './Component.native';
 import ModalNavigator from './ModalNavigator';
 import SideMenuNavigator from './SideMenuNavigator';
 import StackNavigator from './StackNavigator';
@@ -10,7 +9,7 @@ import SwitchNavigator from './SwitchNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
 
-import { createComponents, createComponent } from './utils';
+import { createComponents, createComponent } from './utils.native';
 
 export { default as registerComponents } from './registerComponents';
 
@@ -51,20 +50,39 @@ export function createSideMenu(screens, config = {}) {
   return new SideMenuNavigator(routes, options, config);
 }
 
-export function createStack(screens, options = {}, config = {}) {
-  const components = createComponents(screens);
+export function createStack(screens, config = {}) {
+  let stack;
 
-  if (config.mode === 'modal') {
-    return new ModalNavigator(components, options, config);
+  const { parentId, mode, ...restConfig } = config;
+
+  if (mode === 'modal') {
+    stack = new ModalNavigator(restConfig);
+  } else {
+    stack = new StackNavigator(restConfig);
   }
 
-  return new StackNavigator(components, options, config);
+  Object.entries(screens).forEach(([componentName, Screen]) => {
+    const componentId = parentId
+      ? `${parentId}/${componentName}`
+      : componentName;
+
+    const component = Component.register(
+      Screen,
+      componentId,
+      componentName,
+      Screen.options || {},
+    );
+
+    stack.addRoute(componentName, component);
+  });
+
+  return stack;
 }
 
-export function createModal(screens, options = {}, config = {}) {
-  const components = createComponents(screens);
+export function createModal(screens, config = {}) {
+  config.mode = 'modal';
 
-  return new ModalNavigator(components, options, config);
+  return createStack(screens, config);
 }
 
 // TODO

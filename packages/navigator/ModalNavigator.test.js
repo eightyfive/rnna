@@ -9,8 +9,8 @@ import ModalNavigator from './ModalNavigator';
 
 let app;
 
-const A = new Component('A');
-const B = new Component('B');
+const A = new Component('A', 'A');
+const B = new Component('B', 'B');
 
 beforeEach(() => {
   app = new ModalNavigator();
@@ -25,7 +25,7 @@ test('mount', () => {
   expect(app instanceof StackNavigator).toBe(true);
 
   expect(Navigation.showModal).toHaveBeenCalledWith({
-    stack: makeStack([makeComponent('A', {}, { foo: 'bar' })]),
+    stack: makeStack([makeComponent('A', 'A', {}, { foo: 'bar' })]),
   });
 });
 

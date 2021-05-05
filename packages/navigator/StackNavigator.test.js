@@ -13,9 +13,9 @@ export function makeStack(components, options = {}) {
 
 let app;
 
-const A = new Component('A', { topBar: { title: { text: 'Title A' } } });
-const B = new Component('B', { topBar: { title: { text: 'Title B' } } });
-const C = new Component('C', { topBar: { title: { text: 'Title C' } } });
+const A = new Component('A', 'A', { topBar: { title: { text: 'Title A' } } });
+const B = new Component('B', 'B', { topBar: { title: { text: 'Title B' } } });
+const C = new Component('C', 'C', { topBar: { title: { text: 'Title C' } } });
 
 const props = { foo: 'bar' };
 
@@ -35,7 +35,7 @@ test('mount', () => {
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
       stack: makeStack([
-        makeComponent('A', {
+        makeComponent('A', 'A', {
           topBar: {
             title: { text: 'Title A' },
           },
@@ -52,6 +52,7 @@ test('push', () => {
 
   expect(Navigation.push).toHaveBeenCalledWith('A', {
     component: makeComponent(
+      'B',
       'B',
       {
         topBar: {

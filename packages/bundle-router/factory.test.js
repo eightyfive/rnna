@@ -70,9 +70,9 @@ test('createRouter (tabs)', () => {
               [
                 makeComponent(
                   'tabs/tab1/Screen1',
+                  'Screen1',
                   { topBar: { title: { text: 'Title 1' } } },
                   {},
-                  'Screen1',
                 ),
               ],
               { bottomTab: { text: 'Title 1' } },
@@ -83,9 +83,9 @@ test('createRouter (tabs)', () => {
               [
                 makeComponent(
                   'tabs/tab2/Screen2',
+                  'Screen2',
                   { topBar: { title: { text: 'Title 2' } } },
                   {},
-                  'Screen2',
                 ),
               ],
               { bottomTab: { text: 'Title 2' } },
@@ -111,7 +111,7 @@ test('createRouter (stack)', () => {
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
-      stack: makeStack([makeComponent('main/Screen3', {}, {}, 'Screen3')]),
+      stack: makeStack([makeComponent('main/Screen3', 'Screen3', {}, {})]),
     },
   });
 });

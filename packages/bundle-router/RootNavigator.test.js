@@ -6,12 +6,12 @@ import RootNavigator from './RootNavigator';
 
 let app;
 
-const A = new Component('A');
-const B = new Component('B');
-const C = new Component('C');
-const D = new Component('D');
-const E = new Component('E');
-const F = new Component('F');
+const A = new Component('A', 'A');
+const B = new Component('B', 'B');
+const C = new Component('C', 'C');
+const D = new Component('D', 'D');
+const E = new Component('E', 'E');
+const F = new Component('F', 'F');
 
 let ab;
 let cd;

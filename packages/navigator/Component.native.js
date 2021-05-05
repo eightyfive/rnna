@@ -4,13 +4,19 @@ import _merge from 'lodash.merge';
 import Route from './Route';
 
 export default class Component extends Route {
-  constructor(id, options = {}) {
+  constructor(id, name, options = {}) {
     super();
 
     this.id = id;
-    this.name = id;
+    this.name = name;
     this.options = options;
     this.passProps = {};
+  }
+
+  static register(Screen, id, name, options = {}) {
+    Navigation.registerComponent(name, () => Screen);
+
+    return new Component(id, name, options);
   }
 
   mount(initialProps) {
