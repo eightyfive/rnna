@@ -1,10 +1,6 @@
-import _isObject from 'lodash.isplainobject';
-
-import RouterNavigator from './RouterNavigator';
-
-export default class RouterBase extends RouterNavigator {
-  constructor(routes, components) {
-    super(routes);
+export default class RouterBase {
+  constructor(root) {
+    this.root = root;
 
     this.path = null;
     this.paths = new Map();
@@ -66,7 +62,7 @@ export default class RouterBase extends RouterNavigator {
       Object.assign(props, Component.passProps);
     }
 
-    this.render(componentId, props);
+    this.root.render(componentId, props);
   }
 
   onState() {
