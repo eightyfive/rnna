@@ -76,9 +76,3 @@ export function createSwitch(navigators, options = {}, config = {}) {
 export function createWidget(id) {
   return new WidgetComponent(id);
 }
-
-export function setDefaultOptions(defaultOptions) {
-  Navigation.events().registerAppLaunchedListener(() =>
-    Navigation.setDefaultOptions(defaultOptions),
-  );
-}
