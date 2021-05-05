@@ -128,14 +128,6 @@ export default class RootNavigator extends SwitchNavigator {
     }
   }
 
-  isScene(name) {
-    const isWidget = id.indexOf('widget-') === 0;
-
-    const navigator = this.getRoute(name);
-
-    return !isWidget && !(navigator instanceof OverlayNavigator);
-  }
-
   onDismissOverlay(componentId) {
     const componentName = this.findRouteNameById(componentId);
 
