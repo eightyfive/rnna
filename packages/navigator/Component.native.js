@@ -1,5 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
+import Registry from './Registry';
 import Route from './Route';
 
 export default class Component extends Route {
@@ -12,21 +13,17 @@ export default class Component extends Route {
     this.passProps = {};
   }
 
-  static registry = new Map();
-
   static register(
     componentName,
     ReactComponent,
     options = {},
     parentId = null,
   ) {
-    Navigation.registerComponent(componentName, () => ReactComponent);
-
     const componentId = parentId
       ? `${parentId}/${componentName}`
       : componentName;
 
-    Component.registry.set(componentId, ReactComponent);
+    Registry.register(componentId, componentName, ReactComponent);
 
     return new Component(componentId, componentName, options);
   }
