@@ -28,7 +28,7 @@ export default class RootNavigator extends SwitchNavigator {
       throw new Error('Root route must be a `ModalNavigator` instance');
     }
 
-    super.addRoute(name, navigator);
+    this.routes.set(name, navigator);
   }
 
   addOverlay(name, navigator) {
@@ -36,7 +36,7 @@ export default class RootNavigator extends SwitchNavigator {
       throw new Error('Root route must be an `OverlayNavigator` instance');
     }
 
-    super.addRoute(name, navigator);
+    this.routes.set(name, navigator);
   }
 
   remount() {
