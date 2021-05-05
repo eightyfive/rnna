@@ -1,3 +1,3 @@
-import RootNavigator from './RootNavigator';
+import RootNavigator from '@rnna/navigator/RootNavigator';
 
 export default RootNavigator;

@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
-import ModalNavigator from '@rnna/navigator/ModalNavigator';
-import OverlayNavigator from '@rnna/navigator/OverlayNavigator';
-import SwitchNavigator from '@rnna/navigator/SwitchNavigator';
+import ModalNavigator from './ModalNavigator';
+import OverlayNavigator from './OverlayNavigator';
+import SwitchNavigator from './SwitchNavigator';
 
 export default class RootNavigator extends SwitchNavigator {
   constructor(config = {}) {

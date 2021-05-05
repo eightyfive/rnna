@@ -32,6 +32,7 @@ beforeEach(() => {
 test('mount', () => {
   expect(app.history.get()).toEqual(['A']);
 
+  expect(Navigation.push).not.toHaveBeenCalled();
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
       stack: makeStack([
