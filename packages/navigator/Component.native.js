@@ -12,6 +12,8 @@ export default class Component extends Route {
     this.passProps = {};
   }
 
+  static registry = new Map();
+
   static register(
     componentName,
     ReactComponent,
@@ -24,11 +26,9 @@ export default class Component extends Route {
       ? `${parentId}/${componentName}`
       : componentName;
 
-    const component = new Component(componentId, componentName, options);
+    Component.registry.set(componentId, ReactComponent);
 
-    component.Component = ReactComponent;
-
-    return component;
+    return new Component(componentId, componentName, options);
   }
 
   mount(initialProps) {
