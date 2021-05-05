@@ -7,6 +7,13 @@
     "rnna-bundle",
     "react-native"
   ],
+  "main": "dist/index.js",
+  "files": [
+    "dist/*.js"
+  ],
+  "scripts": {
+    "build": "npx babel src --out-dir dist"
+  },
   "dependencies": {
     "@rnna/navigator": "latest"
   },
