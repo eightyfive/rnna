@@ -8,6 +8,14 @@
     "wix",
     "Navigation"
   ],
+  "main": "dist/index.native.js",
+  "browser": "dist/index.web.js",
+  "files": [
+    "dist/*.js"
+  ],
+  "scripts": {
+    "build": "npx babel src --out-dir dist"
+  },
   "dependencies": {
     "lodash.isplainobject": "4.x"
   },
