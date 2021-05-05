@@ -4,7 +4,7 @@ import History from './History';
 import Route from './Route';
 
 export default /** abstract */ class Navigator extends Route {
-  constructor(config) {
+  constructor(config = {}) {
     super();
 
     this.routes = new Map();

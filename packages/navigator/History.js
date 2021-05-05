@@ -7,6 +7,10 @@ export default class History {
     return Array.from(this.names).pop() || null;
   }
 
+  get() {
+    return this.names;
+  }
+
   reset(initialName) {
     this.names = [initialName];
   }
