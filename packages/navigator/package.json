@@ -8,7 +8,7 @@
     "wix",
     "Navigation"
   ],
-  "main": "dist/index.native.js",
+  "main": "src/index.native.js",
   "browser": "dist/index.web.js",
   "files": [
     "dist/*.js"
