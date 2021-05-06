@@ -11,7 +11,8 @@
   "browser": "dist/index.js",
   "react-native": "src/index.js",
   "files": [
-    "dist/**/*.js"
+    "dist/**/*.js",
+    "src/**/*.js"
   ],
   "scripts": {
     "build": "npx babel src --out-dir dist"

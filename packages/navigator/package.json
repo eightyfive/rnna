@@ -10,8 +10,10 @@
   ],
   "main": "src/index.native.js",
   "browser": "dist/index.web.js",
+  "react-native": "src/index.native.js",
   "files": [
-    "dist/*.js"
+    "dist/*.js",
+    "src/**/*.js"
   ],
   "scripts": {
     "build": "npx babel src --out-dir dist"
