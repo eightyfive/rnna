@@ -100,7 +100,7 @@ export function createRoot(routes, config = {}) {
     if (type === 'overlay') {
       root.addOverlay(name, createOverlay(name, route));
     } else {
-      const { config: navigatorConfig, ...nestedRoutes } = route;
+      const { config: navigatorConfig = {}, ...nestedRoutes } = route;
 
       navigatorConfig.parentId = name;
 
