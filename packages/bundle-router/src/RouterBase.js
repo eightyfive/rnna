@@ -1,4 +1,4 @@
-import Registry from '@rnna/navigator/Registry';
+import { Registry } from '@rnna/navigator';
 
 export default class RouterBase {
   constructor(root) {

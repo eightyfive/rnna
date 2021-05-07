@@ -10,6 +10,8 @@ import SwitchNavigator from './SwitchNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
 
+export { default as Registry } from './Registry';
+
 export function createBottomTabs(tabs, config = {}) {
   const bottomTabs = new BottomTabsNavigator(config);
 
