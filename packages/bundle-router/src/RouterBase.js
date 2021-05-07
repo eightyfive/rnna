@@ -82,4 +82,20 @@ export default class RouterBase {
   onState() {
     //
   }
+
+  goBack() {
+    this.root.goBack();
+  }
+
+  dismissModal() {
+    this.root.dismissModal();
+  }
+
+  dismissAllModals() {
+    this.root.dismissAllModals();
+  }
+
+  dismissOverlay(overlayName) {
+    this.root.dismissOverlay(overlayName);
+  }
 }
