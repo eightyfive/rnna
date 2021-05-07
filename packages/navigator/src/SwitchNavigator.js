@@ -52,7 +52,10 @@ export default class SwitchNavigator extends Navigator {
     } else {
       // Unmount old navigator
       navigator = this.getCurrentRoute();
-      navigator.unmount();
+
+      if (navigator) {
+        navigator.unmount();
+      }
 
       // TODO ?
       // history.push(...) + goBack() ?

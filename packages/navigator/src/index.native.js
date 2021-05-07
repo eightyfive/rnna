@@ -102,6 +102,8 @@ export function createRoot(routes, config = {}) {
     } else {
       const { config: navigatorConfig, ...nestedRoutes } = route;
 
+      navigatorConfig.parentId = name;
+
       if (type === 'bottomTabs') {
         root.addRoute(name, createBottomTabs(nestedRoutes, navigatorConfig));
       } else if (type === 'stack') {

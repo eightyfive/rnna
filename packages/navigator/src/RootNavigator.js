@@ -55,7 +55,11 @@ export default class RootNavigator extends SwitchNavigator {
     } else if (navigator instanceof ModalNavigator) {
       this.renderModal(name, childPath, props);
     } else {
-      this.dismissModal(false);
+      navigator = this.getCurrentRoute();
+
+      if (navigator && navigator instanceof ModalNavigator) {
+        this.dismissModal();
+      }
 
       super.render(path, props);
     }
@@ -68,7 +72,11 @@ export default class RootNavigator extends SwitchNavigator {
       navigator = this.getCurrentRoute();
     } else {
       // Only one modal at a time
-      this.dismissModal(false);
+      navigator = this.getCurrentRoute();
+
+      if (navigator && navigator instanceof ModalNavigator) {
+        this.dismissModal();
+      }
 
       this.history.push(name);
 
@@ -100,24 +108,22 @@ export default class RootNavigator extends SwitchNavigator {
     try {
       navigator.goBack();
     } catch (err) {
-      this.dismissModal(false);
+      if (navigator instanceof ModalNavigator) {
+        this.dismissModal();
+      }
     }
   }
 
-  dismissModal(strict = true) {
+  dismissModal() {
     const navigator = this.getCurrentRoute();
 
-    const isModal = navigator instanceof ModalNavigator;
-
-    if (strict && !isModal) {
+    if (!(navigator instanceof ModalNavigator)) {
       throw new Error('No modal to dismiss');
     }
 
-    if (isModal) {
-      navigator.unmount();
+    navigator.unmount();
 
-      this.history.pop();
-    }
+    this.history.pop();
   }
 
   dismissAllModals() {

@@ -55,7 +55,7 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   getCurrentRoute() {
-    return this.getRoute(this.history.current);
+    return this.history.current ? this.getRoute(this.history.current) : null;
   }
 
   findComponentNameById(componentId) {
