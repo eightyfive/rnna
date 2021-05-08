@@ -13,7 +13,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   handleModalDismissed = () => {
-    const navigator = this.getRoute(this.routeName);
+    const navigator = this.getRoute();
 
     if (navigator instanceof ModalNavigator) {
       this.history.pop();
@@ -68,7 +68,7 @@ export default class RootNavigator extends SwitchNavigator {
     let navigator;
 
     if (this.routeName === name) {
-      navigator = this.getRoute(this.routeName);
+      navigator = this.getRoute();
     } else {
       // Only one modal at a time
       const modal = this.getModal();
@@ -80,7 +80,7 @@ export default class RootNavigator extends SwitchNavigator {
       this.history.push(name);
 
       // Mount modal
-      navigator = this.getRoute(this.routeName);
+      navigator = this.getRoute();
       navigator.mount(props);
     }
 
@@ -102,7 +102,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   goBack() {
-    const navigator = this.getRoute(this.routeName);
+    const navigator = this.getRoute();
 
     try {
       navigator.goBack();
@@ -114,7 +114,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   getModal() {
-    const route = this.getRoute(this.routeName);
+    const route = this.getRoute();
 
     if (route instanceof ModalNavigator) {
       return route;

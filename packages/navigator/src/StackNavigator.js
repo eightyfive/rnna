@@ -67,7 +67,7 @@ export default class StackNavigator extends Navigator {
   }
 
   push(toName, props) {
-    const componentFrom = this.getRoute(this.routeName);
+    const componentFrom = this.getRoute();
     const componentTo = this.getRoute(toName);
 
     this.history.push(toName);
@@ -105,7 +105,7 @@ export default class StackNavigator extends Navigator {
     } else {
       this.history.splice(index + 1);
 
-      const componentTo = this.getRoute(this.routeName);
+      const componentTo = this.getRoute();
 
       this.popTo(componentTo.id);
     }
@@ -116,7 +116,7 @@ export default class StackNavigator extends Navigator {
   }
 
   popToRoot() {
-    const componentFrom = this.getRoute(this.routeName);
+    const componentFrom = this.getRoute();
 
     // Reset history
     this.history = [this.initialRouteName];
@@ -129,7 +129,7 @@ export default class StackNavigator extends Navigator {
 
     if (this.routeName === componentName) {
       // Update current component
-      const component = this.getRoute(this.routeName);
+      const component = this.getRoute();
 
       component.render(props);
     } else if (index === -1) {

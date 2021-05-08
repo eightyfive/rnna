@@ -45,11 +45,19 @@ export default /** abstract */ class Navigator extends Route {
   }
 
   getRoute(name) {
-    if (!this.routes.has(name)) {
-      throw new Error(`Route not found: ${name}`);
+    if (name) {
+      if (!this.routes.has(name)) {
+        throw new Error(`Route not found: ${name}`);
+      }
+
+      return this.routes.get(name);
     }
 
-    return this.routes.get(name);
+    if (this.routeName) {
+      return this.routes.get(this.routeName);
+    }
+
+    return null;
   }
 
   get routeName() {

@@ -51,7 +51,7 @@ export default class SwitchNavigator extends Navigator {
   render(path, props) {
     const [name, childPath] = this.readPath(path);
 
-    let route = this.getRoute(this.routeName);
+    let route = this.getRoute();
 
     if (this.routeName !== name) {
       // Unmount old route
@@ -64,7 +64,7 @@ export default class SwitchNavigator extends Navigator {
       this.history = [name];
 
       // Mount new route
-      route = this.getRoute(this.routeName);
+      route = this.getRoute();
       route.mount(props);
     } else if (route instanceof Component) {
       route.render(props);
