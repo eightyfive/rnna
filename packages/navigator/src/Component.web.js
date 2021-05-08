@@ -1,5 +1,6 @@
 import { AppRegistry } from 'react-native';
 
+import Registry from './Registry';
 import Route from './Route';
 
 export default class Component extends Route {
@@ -11,6 +12,12 @@ export default class Component extends Route {
     this.options = options;
     this.passProps = {};
     this.rootTag = options.rootTag || document.getElementById('root');
+  }
+
+  static register(componentId, componentName, ReactComponent, options = {}) {
+    Registry.register(componentId, componentName, ReactComponent);
+
+    return new Component(componentId, componentName, options);
   }
 
   mount(initialProps) {
