@@ -1,9 +1,10 @@
 import { BottomTabs, Modal, Overlay, Stack, Widget } from './Layouts';
 import RootNavigator from './RootNavigator';
+import Registry from './Registry';
 import SwitchNavigator from './SwitchNavigator';
 import * as Utils from './utils';
 
-export { default as Registry } from './Registry';
+export { Registry };
 
 export function createBottomTabs(routes, config = {}) {
   const { parentId, ...restConfig } = config;
@@ -42,7 +43,11 @@ export function createModal(routes, config = {}) {
 }
 
 export function createWidget(name, ReactComponent) {
-  return Widget.register(name, ReactComponent);
+  const widget = new Widget(name);
+
+  Registry.register(widget.id, name, ReactComponent);
+
+  return widget;
 }
 
 export function createRootNavigator(routes, config = {}) {
