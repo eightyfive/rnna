@@ -1,3 +1,4 @@
+import Component from './Component';
 import ModalNavigator from './ModalNavigator';
 import Navigator from './Navigator';
 import OverlayNavigator from './OverlayNavigator';
@@ -28,7 +29,11 @@ export default class SwitchNavigator extends Navigator {
     const components = [];
 
     for (const route of this.routes.values()) {
-      components.push(...route.getComponents());
+      if (route instanceof Component) {
+        components.push(route);
+      } else {
+        components.push(...route.getComponents());
+      }
     }
 
     return components;
