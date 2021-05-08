@@ -1,6 +1,7 @@
-import Route from './Route';
 import ModalNavigator from './ModalNavigator';
+import Navigator from './Navigator';
 import OverlayNavigator from './OverlayNavigator';
+import Route from './Route';
 
 export default class SwitchNavigator extends Navigator {
   addRoute(name, navigator) {
