@@ -21,7 +21,7 @@ export default class StackNavigator extends Navigator {
 
       if (componentIndex > 1 && !this.history.isCurrent(componentName)) {
         // Sync history
-        this.history.sliceTo(componentIndex);
+        this.history.popTo(componentIndex);
       }
     }
   };
@@ -67,7 +67,7 @@ export default class StackNavigator extends Navigator {
   }
 
   push(toName, props) {
-    const componentFrom = this.getCurrentRoute();
+    const componentFrom = this.getRoute(this.history.last());
     const componentTo = this.getRoute(toName);
 
     this.history.push(toName);
@@ -103,9 +103,9 @@ export default class StackNavigator extends Navigator {
     if (index === 0) {
       this.popToRoot();
     } else {
-      this.history.sliceTo(index);
+      this.history.popTo(index);
 
-      const componentTo = this.getCurrentRoute();
+      const componentTo = this.getRoute(this.history.last());
 
       this.popTo(componentTo.id);
     }
@@ -116,7 +116,7 @@ export default class StackNavigator extends Navigator {
   }
 
   popToRoot() {
-    const componentFrom = this.getCurrentRoute();
+    const componentFrom = this.getRoute(this.history.last());
 
     // Reset history
     this.history.reset(this.initialRouteName);
@@ -127,7 +127,7 @@ export default class StackNavigator extends Navigator {
   render(componentName, props) {
     if (this.history.isCurrent(componentName)) {
       // Update current component
-      const component = this.getCurrentRoute();
+      const component = this.getRoute(this.history.last());
 
       component.render(props);
     } else if (!this.history.has(componentName)) {

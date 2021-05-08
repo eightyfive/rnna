@@ -14,7 +14,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   handleModalDismissed = () => {
-    const navigator = this.getCurrentRoute();
+    const navigator = this.getRoute(this.history.last());
 
     if (navigator instanceof ModalNavigator) {
       this.history.pop();
@@ -55,7 +55,7 @@ export default class RootNavigator extends SwitchNavigator {
     } else if (navigator instanceof OverlayNavigator) {
       this.renderOverlay(name, childPath, props);
     } else {
-      navigator = this.getCurrentRoute();
+      navigator = this.getRoute(this.history.last());
 
       if (navigator && navigator instanceof ModalNavigator) {
         this.dismissModal();
@@ -69,10 +69,10 @@ export default class RootNavigator extends SwitchNavigator {
     let navigator;
 
     if (this.history.isCurrent(name)) {
-      navigator = this.getCurrentRoute();
+      navigator = this.getRoute(this.history.last());
     } else {
       // Only one modal at a time
-      navigator = this.getCurrentRoute();
+      navigator = this.getRoute(this.history.last());
 
       if (navigator && navigator instanceof ModalNavigator) {
         this.dismissModal();
@@ -81,7 +81,7 @@ export default class RootNavigator extends SwitchNavigator {
       this.history.push(name);
 
       // Mount modal
-      navigator = this.getCurrentRoute();
+      navigator = this.getRoute(this.history.last());
       navigator.mount(props);
     }
 
@@ -103,7 +103,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   goBack() {
-    const navigator = this.getCurrentRoute();
+    const navigator = this.getRoute(this.history.last());
 
     try {
       navigator.goBack();
@@ -115,7 +115,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   dismissModal() {
-    const navigator = this.getCurrentRoute();
+    const navigator = this.getRoute(this.history.last());
 
     if (!(navigator instanceof ModalNavigator)) {
       throw new Error('No modal to dismiss');
@@ -127,7 +127,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   dismissAllModals() {
-    const navigator = this.getCurrentRoute();
+    const navigator = this.getRoute(this.history.last());
 
     if (navigator instanceof ModalNavigator) {
       Navigation.dismissAllModals();

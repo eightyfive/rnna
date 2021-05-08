@@ -3,7 +3,7 @@ export default class History {
     this.names = [];
   }
 
-  get current() {
+  last() {
     return Array.from(this.names).pop() || null;
   }
 
@@ -23,12 +23,16 @@ export default class History {
     return this.names.pop();
   }
 
+  popTo(index) {
+    this.names.splice(index + 1);
+  }
+
   has(name) {
     return this.findIndex(name) > -1;
   }
 
   isCurrent(name) {
-    return this.current === name;
+    return this.last() === name;
   }
 
   size(len = null) {
@@ -47,9 +51,5 @@ export default class History {
 
   findIndex(name) {
     return this.names.findIndex(val => val === name);
-  }
-
-  sliceTo(index) {
-    this.names.slice(0, index + 1);
   }
 }
