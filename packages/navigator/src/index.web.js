@@ -1,16 +1,10 @@
 import SwitchNavigator from './SwitchNavigator';
 
 export { default as Registry } from './Registry';
-export { createComponents } from './utils';
+export * as Utils from './utils';
 
-export function createSwitch(routes, config = {}) {
-  const switchNavigator = new SwitchNavigator(config);
+export function createSwitchNavigator(routes, config = {}) {
+  const components = Utils.createComponents(routes);
 
-  const components = createComponents(routes);
-
-  components.forEach(([name, navigator]) => {
-    switchNavigator.addRoute(name, navigator);
-  });
-
-  return switchNavigator;
+  return new SwitchNavigator(components, config);
 }
