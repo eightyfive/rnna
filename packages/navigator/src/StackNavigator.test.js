@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 test('mount', () => {
-  expect(app.history.get()).toEqual(['A']);
+  expect(app.history).toEqual(['A']);
 
   expect(Navigation.push).not.toHaveBeenCalled();
   expect(Navigation.setRoot).toHaveBeenCalledWith({
@@ -49,7 +49,7 @@ test('mount', () => {
 test('push', () => {
   app.push('B', props, 'A');
 
-  expect(app.history.get()).toEqual(['A', 'B']);
+  expect(app.history).toEqual(['A', 'B']);
 
   expect(Navigation.push).toHaveBeenCalledWith('A', {
     component: makeComponent(
@@ -70,7 +70,7 @@ test('popToRoot', () => {
   app.push('C', props, 'B');
   app.popToRoot('C');
 
-  expect(app.history.get()).toEqual(['A']);
+  expect(app.history).toEqual(['A']);
   expect(Navigation.popToRoot).toHaveBeenCalledWith('C');
 });
 
@@ -86,6 +86,6 @@ test('goBack', () => {
   app.render('C', props);
   app.goBack('C');
 
-  expect(app.history.get()).toEqual(['A', 'B']);
+  expect(app.history).toEqual(['A', 'B']);
   expect(Navigation.pop).toHaveBeenCalledWith('C');
 });

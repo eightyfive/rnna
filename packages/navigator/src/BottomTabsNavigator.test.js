@@ -41,7 +41,7 @@ beforeEach(() => {
 });
 
 test('mount', () => {
-  expect(app.history.get()).toEqual(['ab']);
+  expect(app.history).toEqual(['ab']);
 
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
