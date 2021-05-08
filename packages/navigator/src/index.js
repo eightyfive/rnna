@@ -1,7 +1,6 @@
-import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
+import { BottomTabs, Modal, Overlay, Stack, Widget } from './Layouts';
 import RootNavigator from './RootNavigator';
 import SwitchNavigator from './SwitchNavigator';
-import WidgetComponent from './WidgetComponent';
 import * as Utils from './utils';
 
 export { default as Registry } from './Registry';
@@ -42,8 +41,8 @@ export function createModal(routes, config = {}) {
   return new Modal(components, restConfig);
 }
 
-export function createWidget(name, Widget) {
-  return WidgetComponent.register(name, Widget);
+export function createWidget(name, ReactComponent) {
+  return Widget.register(name, ReactComponent);
 }
 
 export function createRootNavigator(routes, config = {}) {

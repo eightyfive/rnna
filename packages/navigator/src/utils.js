@@ -1,14 +1,12 @@
 import _isObject from 'lodash.isplainobject';
 
-import Component from './Component';
+import { Component } from './Layouts';
+import Registry from './Registry';
 
 export function createComponent(id, name, ReactComponent) {
-  return Component.register(
-    id,
-    name,
-    ReactComponent,
-    ReactComponent.options || {},
-  );
+  Registry.register(id, name, ReactComponent);
+
+  return new Component(id, name, ReactComponent.options || {});
 }
 
 export function createComponents(routes, parentId) {

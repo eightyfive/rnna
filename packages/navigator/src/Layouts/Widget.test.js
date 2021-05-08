@@ -1,7 +1,7 @@
-import WidgetComponent from './WidgetComponent';
+import Widget from './Widget';
 
 test('getLayout', () => {
-  const component = new WidgetComponent('NAME');
+  const component = new Widget('NAME');
 
   expect(component.getLayout()).toEqual({
     component: {

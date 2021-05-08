@@ -1,4 +1,4 @@
-import Emitter from './Emitter';
+import Emitter from '../Emitter';
 
 export default /** abstract */ class Layout extends Emitter {
   constructor(config = {}) {

@@ -4,3 +4,4 @@ export { default as Modal } from './Modal';
 export { default as Overlay } from './Overlay';
 // export { default as SideMenu } from './SideMenu';
 export { default as Stack } from './Stack';
+export { default as Widget } from './Widget';

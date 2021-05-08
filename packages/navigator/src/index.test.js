@@ -1,6 +1,5 @@
 import RootNavigator from './RootNavigator';
-import WidgetComponent from './WidgetComponent';
-import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
+import { BottomTabs, Modal, Overlay, Stack, Widget } from './Layouts';
 
 import {
   createBottomTabs,
@@ -8,22 +7,20 @@ import {
   createRootNavigator,
   createStack,
   createWidget,
-  getRouteType,
-  getObjDepth,
 } from './index';
 
 function A() {}
 function B() {}
 function C() {}
 function D() {}
-function Widget() {}
+function E() {}
 
 test('createWidget', () => {
-  const widget = createWidget('A', Widget);
+  const widget = createWidget('E', E);
 
-  expect(widget instanceof WidgetComponent).toBe(true);
-  expect(widget.id).toBe('widget-A');
-  expect(widget.name).toBe('A');
+  expect(widget instanceof Widget).toBe(true);
+  expect(widget.id).toBe('widget-E');
+  expect(widget.name).toBe('E');
 });
 
 // Bottom tabs
