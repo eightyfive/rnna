@@ -1,81 +1,69 @@
-import Component from './Component';
-import ModalNavigator from './ModalNavigator';
+import { Component, BottomTabs, Modal, Overlay, Stack } from './Layouts';
 import Navigator from './Navigator';
-import OverlayNavigator from './OverlayNavigator';
-import Route from './Route';
 
 export default class SwitchNavigator extends Navigator {
-  addRoute(name, route) {
-    if (!(route instanceof Route)) {
-      throw new Error('Switch route must implement `Route`');
+  constructor(layouts, config = {}) {
+    super(layouts, config);
+
+    const notAllowed = Array.from(this.layouts.values()).some(
+      layout => layout instanceof Modal || layout instanceof Overlay,
+    );
+
+    if (notAllowed.length) {
+      throw new TypeError('Invalid argument');
     }
 
-    if (route instanceof ModalNavigator) {
-      throw new Error('Switch route cannot be `ModalNavigator`');
-    }
-
-    if (route instanceof OverlayNavigator) {
-      throw new Error('Switch route cannot be `OverlayNavigator`');
-    }
-
-    if (route instanceof SwitchNavigator) {
-      throw new Error('Switch route cannot be `SwitchNavigator`');
-    }
-
-    super.addRoute(name, route);
+    this.addListener('AppLaunched', this.handleAppLaunched);
   }
 
-  getComponents() {
-    const components = [];
+  handleAppLaunched = () => this.remount();
 
-    for (const route of this.routes.values()) {
-      if (route instanceof Component) {
-        components.push(route);
-      } else {
-        components.push(...route.getComponents());
-      }
-    }
-
-    return components;
+  remount() {
+    this.history.forEach(name => this.layouts.get(name).mount());
   }
 
-  mount(initialProps) {
-    this.history = [this.initialRouteName];
+  render(componentId, props) {
+    const [name, childName] = this.readPath(componentId);
 
-    // Mount initial route
-    const route = this.getRoute(this.initialRouteName);
+    let layout;
 
-    route.mount(initialProps);
-  }
+    if (this.name !== name) {
+      // Unmount old layout
+      layout = this.layouts.get(this.name);
 
-  render(path, props) {
-    const [name, childPath] = this.readPath(path);
-
-    let route = this.getRoute();
-
-    if (this.routeName !== name) {
-      // Unmount old route
-      if (route) {
-        route.unmount();
+      if (layout) {
+        layout.unmount();
       }
 
-      // TODO ?
-      // history.push(...) + goBack() ?
-      this.history = [name];
+      this.history.push(name);
 
-      // Mount new route
-      route = this.getRoute();
-      route.mount(props);
-    } else if (route instanceof Component) {
-      route.render(props);
+      // Mount new layout
+      layout = this.layouts.get(this.name);
+      layout.mount(props);
+    } else if (layout instanceof Component) {
+      layout.update(props);
     }
 
-    if (route instanceof Navigator) {
-      route.render(childPath, props);
+    if (childName) {
+      if (layout instanceof BottomTabs) {
+        this.renderBottomTabs(layout, childName, props);
+      }
+
+      if (layout instanceof Stack) {
+        this.renderStack(layout, childName, props);
+      }
     }
   }
 
   goBack() {
-    // TODO ?
+    const layout = this.layouts.get(this.name);
+
+    if (layout instanceof BottomTabs) {
+      this.goBackBottomTabs(layout);
+    }
+
+    if (layout instanceof Stack) {
+      this.goBackStack(layout);
+    }
   }
 }

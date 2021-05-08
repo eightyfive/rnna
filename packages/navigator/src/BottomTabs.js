@@ -3,7 +3,7 @@ import { Navigation } from 'react-native-navigation';
 import Layout from './Layout';
 import Stack from './Stack';
 
-export default class BottomTabsNavigator extends Layout {
+export default class BottomTabs extends Layout {
   static layoutIndex = 0;
 
   constructor(stacks, config = {}) {

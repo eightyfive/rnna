@@ -29,7 +29,7 @@ export default class Stack extends Layout {
   }
 
   handleDidAppear = ({ componentId, componentName }) => {
-    // A pop() happened outside of the StackNavigator
+    // A pop() happened outside of the Stack
     // We need to sync history
 
     const component = this.components.get(componentName);

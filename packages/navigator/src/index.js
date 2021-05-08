@@ -1,122 +1,87 @@
 import _isObject from 'lodash.isplainobject';
 
-import BottomTabsNavigator from './BottomTabsNavigator';
-import Component from './Component';
-import ModalNavigator from './ModalNavigator';
 // import SideMenuNavigator from './SideMenuNavigator';
 import RootNavigator from './RootNavigator';
-import StackNavigator from './StackNavigator';
-import SwitchNavigator from './SwitchNavigator';
-import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
 import { createComponents } from './utils';
+import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
 
 export { default as Registry } from './Registry';
 
-export function createBottomTabs(tabs, config = {}) {
-  const bottomTabs = new BottomTabsNavigator(config);
-
-  Object.entries(tabs).forEach(([tabName, tabConfig]) => {
-    const { config: stackConfig = {}, ...nestedRoutes } = tabConfig;
-
-    stackConfig.parentId = tabName;
-
-    const stack = createStack(nestedRoutes, stackConfig);
-
-    bottomTabs.addRoute(tabName, stack);
-  });
-
-  return bottomTabs;
-}
-
-export function createOverlay(componentName, ReactComponent, config = {}) {
+export function createBottomTabs(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const overlay = new OverlayNavigator(restConfig);
+  const stacks = {};
 
-  const component = Component.register(
-    parentId ? `${parentId}/${componentName}` : componentName,
-    componentName,
-    ReactComponent,
-    config.options || {},
-  );
+  Object.entries(routes).forEach(([name, config]) => {
+    const { config: stackConfig = {}, ...components } = config;
 
-  overlay.addRoute(componentName, component);
+    stackConfig.parentId = parentId ? `${parentId}/${name}` : name;
 
-  return overlay;
-}
+    stacks[name] = createStack(components, stackConfig);
+  });
 
-export function createSideMenu(routes, config = {}) {
-  // TODO
+  return new BottomTabs(stacks, restConfig);
 }
 
 export function createStack(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const stack = new StackNavigator(restConfig);
-
   const components = createComponents(routes, parentId);
 
-  components.forEach(([name, component]) => {
-    stack.addRoute(name, component);
-  });
-
-  return stack;
+  return new Stack(components, restConfig);
 }
 
 export function createModal(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const modal = new ModalNavigator(restConfig);
-
   const components = createComponents(routes, parentId);
 
-  components.forEach(([name, component]) => {
-    modal.addRoute(name, component);
-  });
-
-  return modal;
-}
-
-export function createSwitch(navigators, config = {}) {
-  const switchNavigator = new SwitchNavigator(config);
-
-  Object.entries(navigators).forEach(([name, navigator]) => {
-    switchNavigator.addRoute(name, navigator);
-  });
-
-  return switchNavigator;
+  return new Modal(components, restConfig);
 }
 
 export function createWidget(name, Widget) {
   return WidgetComponent.register(name, Widget);
 }
 
-export function createRoot(routes, config = {}) {
-  const root = new RootNavigator(config);
+export function createRootNavigator(routes, config = {}) {
+  const layouts = {};
+
+  const modals = new Map();
+  const overlays = new Map();
 
   Object.entries(routes).forEach(([name, route]) => {
     const type = getRouteType(route);
 
     if (type === 'overlay') {
-      root.addOverlay(name, createOverlay(name, route));
+      overlays.set(name, new Overlay(name, name, route));
     } else {
-      const { config: navigatorConfig = {}, ...nestedRoutes } = route;
+      const { config: layoutConfig = {}, ...nestedRoutes } = route;
 
-      navigatorConfig.parentId = name;
+      layoutConfig.parentId = name;
 
       if (type === 'bottomTabs') {
-        root.addRoute(name, createBottomTabs(nestedRoutes, navigatorConfig));
+        layouts[name] = createBottomTabs(nestedRoutes, layoutConfig);
       } else if (type === 'stack') {
-        root.addRoute(name, createStack(nestedRoutes, navigatorConfig));
+        layouts[name] = createStack(nestedRoutes, layoutConfig);
       } else if (type === 'modal') {
-        root.addModal(name, createModal(nestedRoutes, navigatorConfig));
+        modals.set(name, createModal(nestedRoutes, layoutConfig));
       } else {
         throw new Error(
           `Invalid route (too deep): ${JSON.stringify(route, null, 2)}`,
         );
       }
     }
+  });
+
+  const root = new RootNavigator(layouts, config);
+
+  modals.forEach((modal, name) => {
+    root.addModal(name, modal);
+  });
+
+  overlays.forEach((overlay, name) => {
+    root.addOverlay(name, overlay);
   });
 
   return root;

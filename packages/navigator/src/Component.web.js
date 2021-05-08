@@ -23,12 +23,12 @@ export default class Component extends Route {
   mount(initialProps) {
     AppRegistry.unmountApplicationComponentAtRootTag(this.rootTag);
 
-    this.render(initialProps);
+    this.update(initialProps);
   }
 
   unmount() {}
 
-  render(props) {
+  update(props) {
     this.passProps = props;
 
     AppRegistry.runApplication(this.id, {

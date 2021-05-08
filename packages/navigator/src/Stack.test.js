@@ -11,17 +11,49 @@ export function makeStack(components, options = {}) {
   };
 }
 
-let app;
+export function createStack() {
+  const A = new Component('a', 'A', { topBar: { title: { text: 'Title A' } } });
+  const B = new Component('b', 'B', { topBar: { title: { text: 'Title B' } } });
+  const C = new Component('c', 'C', { topBar: { title: { text: 'Title C' } } });
 
-const A = new Component('A', 'A', { topBar: { title: { text: 'Title A' } } });
-const B = new Component('B', 'B', { topBar: { title: { text: 'Title B' } } });
-const C = new Component('C', 'C', { topBar: { title: { text: 'Title C' } } });
+  return new Stack({ A, B, C });
+}
+
+let app;
 
 const props = { foo: 'bar' };
 
 beforeEach(() => {
-  app = new Stack({ A, B, C });
+  app = createStack();
   app.mount();
+});
+
+test('access properties', () => {
+  expect(app.A).toBeDefined();
+  expect(app.B).toBeDefined();
+  expect(app.C).toBeDefined();
+
+  expect(app.A.id).toBe('a');
+  expect(app.A.name).toBe('A');
+
+  expect(app.B.id).toBe('b');
+  expect(app.B.name).toBe('B');
+
+  expect(app.C.id).toBe('c');
+  expect(app.C.name).toBe('C');
+
+  expect(Navigation.push).not.toHaveBeenCalled();
+  expect(Navigation.setRoot).toHaveBeenCalledWith({
+    root: {
+      stack: makeStack([
+        makeComponent('a', 'A', {
+          topBar: {
+            title: { text: 'Title A' },
+          },
+        }),
+      ]),
+    },
+  });
 });
 
 test('mount', () => {
@@ -31,7 +63,7 @@ test('mount', () => {
   expect(Navigation.setRoot).toHaveBeenCalledWith({
     root: {
       stack: makeStack([
-        makeComponent('A', 'A', {
+        makeComponent('a', 'A', {
           topBar: {
             title: { text: 'Title A' },
           },
@@ -46,9 +78,9 @@ test('push', () => {
 
   expect(app.history).toEqual(['A', 'B']);
 
-  expect(Navigation.push).toHaveBeenCalledWith('A', {
+  expect(Navigation.push).toHaveBeenCalledWith('a', {
     component: makeComponent(
-      'B',
+      'b',
       'B',
       {
         topBar: {
@@ -66,7 +98,7 @@ test('pop', () => {
   app.pop();
 
   expect(app.history).toEqual(['A', 'B']);
-  expect(Navigation.pop).toHaveBeenCalledWith('C');
+  expect(Navigation.pop).toHaveBeenCalledWith('c');
 });
 
 test('popToRoot', () => {
@@ -75,5 +107,5 @@ test('popToRoot', () => {
   app.popToRoot();
 
   expect(app.history).toEqual(['A']);
-  expect(Navigation.popToRoot).toHaveBeenCalledWith('C');
+  expect(Navigation.popToRoot).toHaveBeenCalledWith('c');
 });

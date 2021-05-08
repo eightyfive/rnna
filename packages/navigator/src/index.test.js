@@ -1,14 +1,11 @@
-import BottomTabsNavigator from './BottomTabsNavigator';
-import ModalNavigator from './ModalNavigator';
-import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
-import StackNavigator from './StackNavigator';
 import WidgetComponent from './WidgetComponent';
+import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
 
 import {
   createBottomTabs,
   createModal,
-  createRoot,
+  createRootNavigator,
   createStack,
   createWidget,
   getRouteType,
@@ -36,55 +33,44 @@ test('createBottomTabs', () => {
     cd: { C, D },
   });
 
-  expect(app).toBeInstanceOf(BottomTabsNavigator);
-
-  expect(app.routes.has('ab')).toBe(true);
-  expect(app.getRoute('ab').getRoute('A').id).toBe('ab/A');
-  expect(app.getRoute('ab').getRoute('A').name).toBe('A');
-  expect(app.getRoute('ab').getRoute('B').id).toBe('ab/B');
-  expect(app.getRoute('ab').getRoute('B').name).toBe('B');
-
-  expect(app.routes.has('cd')).toBe(true);
-  expect(app.getRoute('cd').getRoute('C').id).toBe('cd/C');
-  expect(app.getRoute('cd').getRoute('C').name).toBe('C');
-  expect(app.getRoute('cd').getRoute('D').id).toBe('cd/D');
-  expect(app.getRoute('cd').getRoute('D').name).toBe('D');
+  expect(app).toBeInstanceOf(BottomTabs);
+  expect(app.ab.A.id).toBe('ab/A');
+  expect(app.ab.A.name).toBe('A');
+  expect(app.ab.B.id).toBe('ab/B');
+  expect(app.ab.B.name).toBe('B');
+  expect(app.cd.C.id).toBe('cd/C');
+  expect(app.cd.C.name).toBe('C');
+  expect(app.cd.D.id).toBe('cd/D');
+  expect(app.cd.D.name).toBe('D');
 });
 
 // Modal
 test('createModal', () => {
   const app = createModal({ A, B });
 
-  expect(app).toBeInstanceOf(ModalNavigator);
-  expect(app.routes.has('A')).toBe(true);
-  expect(app.routes.has('B')).toBe(true);
-  expect(app.getRoute('A').id).toBe('A');
-  expect(app.getRoute('A').name).toBe('A');
-  expect(app.getRoute('B').id).toBe('B');
-  expect(app.getRoute('B').name).toBe('B');
+  expect(app).toBeInstanceOf(Modal);
+  expect(app.A.id).toBe('A');
+  expect(app.A.name).toBe('A');
+  expect(app.B.id).toBe('B');
+  expect(app.B.name).toBe('B');
 });
-
-// Overlay
-// TODO
 
 // Stack
 test('createStack', () => {
   const app = createStack({ A, B });
 
-  expect(app).toBeInstanceOf(StackNavigator);
+  expect(app).toBeInstanceOf(Stack);
 
-  expect(app.routes.has('A')).toBe(true);
-  expect(app.getRoute('A').id).toBe('A');
-  expect(app.getRoute('A').name).toBe('A');
+  expect(app.A.id).toBe('A');
+  expect(app.A.name).toBe('A');
 
-  expect(app.routes.has('B')).toBe(true);
-  expect(app.getRoute('B').id).toBe('B');
-  expect(app.getRoute('B').name).toBe('B');
+  expect(app.B.id).toBe('B');
+  expect(app.B.name).toBe('B');
 });
 
 // Root
-test('createRoot', () => {
-  const app = createRoot({
+test('createRootNavigator', () => {
+  const app = createRootNavigator({
     abcd: { ab: { A, B }, cd: { C, D } },
     ef: { A, D },
     gh: { B, C, config: { mode: 'modal' } },
@@ -92,18 +78,10 @@ test('createRoot', () => {
   });
 
   expect(app).toBeInstanceOf(RootNavigator);
-
-  expect(app.routes.has('abcd')).toBe(true);
-  expect(app.getRoute('abcd')).toBeInstanceOf(BottomTabsNavigator);
-
-  expect(app.routes.has('ef')).toBe(true);
-  expect(app.getRoute('ef')).toBeInstanceOf(StackNavigator);
-
-  expect(app.routes.has('gh')).toBe(true);
-  expect(app.getRoute('gh')).toBeInstanceOf(ModalNavigator);
-
-  expect(app.routes.has('C')).toBe(true);
-  expect(app.getRoute('C')).toBeInstanceOf(OverlayNavigator);
+  expect(app.abcd).toBeInstanceOf(BottomTabs);
+  expect(app.ef).toBeInstanceOf(Stack);
+  expect(app.gh).toBeInstanceOf(Modal);
+  expect(app.C).toBeInstanceOf(Overlay);
 });
 
 // Route types

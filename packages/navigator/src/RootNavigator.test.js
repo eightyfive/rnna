@@ -1,12 +1,12 @@
-import { Component, Stack, BottomTabs } from './Layouts';
-import RootRouter from './RootRouter';
+import { BottomTabs, Component, Stack } from './Layouts';
+import RootNavigator from './RootNavigator';
 
-const A = new Component('A', 'A', { topBar: { title: { text: 'Title A' } } });
-const B = new Component('B', 'B', { topBar: { title: { text: 'Title B' } } });
-const C = new Component('C', 'C', { topBar: { title: { text: 'Title C' } } });
-const D = new Component('D', 'D', { topBar: { title: { text: 'Title D' } } });
-const E = new Component('E', 'E', { topBar: { title: { text: 'Title E' } } });
-const F = new Component('F', 'F', { topBar: { title: { text: 'Title F' } } });
+const A = new Component('a', 'A', { topBar: { title: { text: 'Title A' } } });
+const B = new Component('b', 'B', { topBar: { title: { text: 'Title B' } } });
+const C = new Component('c', 'C', { topBar: { title: { text: 'Title C' } } });
+const D = new Component('d', 'D', { topBar: { title: { text: 'Title D' } } });
+const E = new Component('e', 'E', { topBar: { title: { text: 'Title E' } } });
+const F = new Component('f', 'F', { topBar: { title: { text: 'Title F' } } });
 
 let app;
 let abcdMount;
@@ -20,7 +20,7 @@ beforeEach(() => {
   const abcd = new BottomTabs({ ab, cd });
   const ef = new Stack({ E, F });
 
-  app = new RootRouter({ abcd, ef });
+  app = new RootNavigator({ abcd, ef });
 
   abcdMount = jest.spyOn(app.abcd, 'mount');
   app.abcd.cd.push = jest.fn();

@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import { makeComponent } from './Component.test';
-import { makeStack } from './StackNavigator.test';
+import { makeStack } from './Stack.test';
 import BottomTabs from './BottomTabs';
 import Component from './Component';
 import Stack from './Stack';
@@ -14,18 +14,22 @@ export function makeBottomTabs(index, stacks) {
   };
 }
 
-const A = new Component('A', 'A', { topBar: { title: { text: 'Title A' } } });
-const B = new Component('B', 'B', { topBar: { title: { text: 'Title B' } } });
-const C = new Component('C', 'C', { topBar: { title: { text: 'Title C' } } });
-const D = new Component('D', 'D', { topBar: { title: { text: 'Title D' } } });
+export function createBottomTabs() {
+  const A = new Component('A', 'A', { topBar: { title: { text: 'Title A' } } });
+  const B = new Component('B', 'B', { topBar: { title: { text: 'Title B' } } });
+  const C = new Component('C', 'C', { topBar: { title: { text: 'Title C' } } });
+  const D = new Component('D', 'D', { topBar: { title: { text: 'Title D' } } });
+
+  const ab = new Stack({ A, B });
+  const cd = new Stack({ C, D });
+
+  return new BottomTabs({ ab, cd });
+}
 
 let app;
 
 beforeEach(() => {
-  const ab = new Stack({ A, B });
-  const cd = new Stack({ C, D });
-
-  app = new BottomTabs({ ab, cd });
+  app = createBottomTabs();
   app.mount();
 });
 

@@ -1,7 +1,9 @@
 import Component from './Component';
 
 export function createComponents(routes, parentId) {
-  return Object.entries(routes).map(([componentName, ReactComponent]) => {
+  const components = {};
+
+  Object.entries(routes).forEach(([componentName, ReactComponent]) => {
     const component = Component.register(
       parentId ? `${parentId}/${componentName}` : componentName,
       componentName,
@@ -9,6 +11,8 @@ export function createComponents(routes, parentId) {
       ReactComponent.options || {},
     );
 
-    return [componentName, component];
+    components[componentName] = component;
   });
+
+  return components;
 }

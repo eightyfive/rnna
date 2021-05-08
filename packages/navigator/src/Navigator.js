@@ -1,23 +1,28 @@
 import Events from './Events';
-import Route from './Route';
 
-export default /** abstract */ class Navigator extends Route {
-  constructor(config = {}) {
-    super();
-
-    this.routes = new Map();
-    this.options = config.options || {};
-    this.initialRouteName = null;
-    this.history = [];
+export default /** abstract */ class Navigator {
+  constructor(layouts, config = {}) {
+    this.defined = new Map();
+    this.layouts = new Map(Object.entries(layouts));
+    this.config = config;
+    this.order = Array.from(this.layouts.keys());
     this.listeners = {};
+    this.history = [];
+
+    this.layouts.forEach((layout, name) => {
+      this.defineProperty(name, layout);
+    });
   }
 
-  addRoute(name, route) {
-    if (!this.routes.size) {
-      this.initialRouteName = name;
+  defineProperty(name, value) {
+    if (this.defined.has(name)) {
+      throw new Error(`${name} is already defined`);
     }
 
-    this.routes.set(name, route);
+    this.defined.set(name, true);
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#description
+    Object.defineProperty(this, name, { enumerable: true, value });
   }
 
   addListener(eventName, listener) {
@@ -44,51 +49,9 @@ export default /** abstract */ class Navigator extends Route {
     }
   }
 
-  getRoute(name) {
-    if (name) {
-      if (!this.routes.has(name)) {
-        throw new Error(`Route not found: ${name}`);
-      }
-
-      return this.routes.get(name);
-    }
-
-    if (this.routeName) {
-      return this.routes.get(this.routeName);
-    }
-
-    return null;
+  get name() {
+    return Array.from(this.history).pop();
   }
-
-  get routeName() {
-    return Array.from(this.history).pop() || null;
-  }
-
-  findComponentNameById(componentId) {
-    for (const [componentName, component] of this.routes) {
-      if (component.id === componentId) {
-        return componentName;
-      }
-    }
-
-    return null;
-  }
-
-  findRouteIndexByName(name) {
-    let index = 0;
-
-    for (const routeName of this.routes.keys()) {
-      if (routeName === name) {
-        return index;
-      }
-
-      index++;
-    }
-
-    return -1;
-  }
-
-  unmount() {}
 
   render(path, props) {
     throwAbstract('render(path, props)');
@@ -102,6 +65,39 @@ export default /** abstract */ class Navigator extends Route {
     const [name, ...childPath] = path.split('/');
 
     return [name, childPath.length ? childPath.join('/') : null];
+  }
+
+  renderBottomTabs(bottomTabs, childName, props) {
+    const [stackName, componentName] = this.readPath(childName);
+
+    if (bottomTabs.stackName !== stackName) {
+      bottomTabs.selectTab(stackName);
+    }
+
+    this.renderStack(bottomTabs[stackName], componentName, props);
+  }
+
+  renderStack(stack, componentName, props) {
+    const index = stack.history.findIndex(name => name === componentName);
+
+    if (stack.componentName === componentName) {
+      // Update current component
+      stack[componentName].update(props);
+    } else if (index === -1) {
+      // Push new screen
+      stack.push(componentName, props);
+    } else {
+      // Pop to previous screen
+      stack.popToIndex(index);
+    }
+  }
+
+  goBackBottomTabs(bottomTabs) {
+    // TODO ?
+  }
+
+  goBackStack(stack) {
+    stack.pop();
   }
 }
 
