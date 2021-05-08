@@ -12,10 +12,4 @@ export default class Router extends RouterBase {
 
     this.dispatch(path);
   };
-
-  onState() {
-    if (this.path) {
-      this.dispatch(this.path);
-    }
-  }
 }

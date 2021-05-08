@@ -80,7 +80,9 @@ export default class RouterBase {
   }
 
   onState() {
-    //
+    if (this.path) {
+      this.dispatch(this.path);
+    }
   }
 
   goBack() {

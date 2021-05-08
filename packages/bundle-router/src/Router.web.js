@@ -29,12 +29,6 @@ export default class Router extends RouterBase {
     this.listeners.map(listener => listener(path));
   }
 
-  onState() {
-    if (this.path) {
-      this.dispatch(this.path);
-    }
-  }
-
   subscribe(listener) {
     this.listeners.push(listener);
 
