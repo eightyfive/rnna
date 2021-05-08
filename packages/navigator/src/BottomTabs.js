@@ -16,7 +16,7 @@ export default class BottomTabsNavigator extends Layout {
     );
 
     if (notStack.length) {
-      throw new TypeError('Invalid argument', 'BottomTabs.js', 9);
+      throw new TypeError('Invalid argument');
     }
 
     this.order = Array.from(this.stacks.keys());

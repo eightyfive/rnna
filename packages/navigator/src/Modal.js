@@ -12,7 +12,7 @@ export default class Modal extends Stack {
   }
 
   dismiss() {
-    const component = this.components.get(this.name);
+    const component = this.components.get(this.componentName);
 
     Navigation.dismissModal(component.id);
   }

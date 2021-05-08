@@ -10,12 +10,20 @@ export default class SwitchRouter extends Router {
     );
 
     if (notAllowed.length) {
-      throw new TypeError('Invalid argument', 'SwitchRouter.js', 5);
+      throw new TypeError('Invalid argument');
     }
+
+    this.addListener('AppLaunched', this.handleAppLaunched);
+  }
+
+  handleAppLaunched = () => this.remount();
+
+  remount() {
+    this.history.forEach(name => this.layouts.get(name).mount());
   }
 
   render(componentId, props) {
-    const [name, path] = this.readPath(componentId);
+    const [name, childName] = this.readPath(componentId);
 
     let layout;
 
@@ -27,47 +35,23 @@ export default class SwitchRouter extends Router {
         layout.unmount();
       }
 
-      // TODO: SwitchRouter.history (??)
-      this.name = name;
+      this.history.push(name);
 
       // Mount new layout
       layout = this.layouts.get(this.name);
       layout.mount(props);
     } else if (layout instanceof Component) {
-      layout.render(props);
+      layout.update(props);
     }
 
-    if (layout instanceof BottomTabs) {
-      this.renderBottomTabs(layout, path, props);
-    }
+    if (childName) {
+      if (layout instanceof BottomTabs) {
+        this.renderBottomTabs(layout, childName, props);
+      }
 
-    if (layout instanceof Stack) {
-      this.renderStack(layout, path, props);
-    }
-  }
-
-  renderBottomTabs(bottomTabs, path, props) {
-    const [stackName, componentName] = this.readPath(path);
-
-    if (bottomTabs.stackName !== stackName) {
-      bottomTabs.selectTab(name);
-    }
-
-    bottomTabs[stackName][componentName].update(props);
-  }
-
-  renderStack(stack, componentName, props) {
-    const index = stack.history.findIndex(name => name === componentName);
-
-    if (stack.componentName === componentName) {
-      // Update current component
-      stack[componentName].update(props);
-    } else if (index === -1) {
-      // Push new screen
-      stack.push(componentName, props);
-    } else {
-      // Pop to previous screen
-      stack.popToIndex(index);
+      if (layout instanceof Stack) {
+        this.renderStack(layout, childName, props);
+      }
     }
   }
 
@@ -81,13 +65,5 @@ export default class SwitchRouter extends Router {
     if (layout instanceof Stack) {
       this.goBackStack(layout);
     }
-  }
-
-  goBackBottomTabs(bottomTabs) {
-    // TODO ?
-  }
-
-  goBackStack(stack) {
-    stack.pop();
   }
 }
