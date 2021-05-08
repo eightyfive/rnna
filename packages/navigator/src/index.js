@@ -28,16 +28,16 @@ export function createBottomTabs(tabs, config = {}) {
   return bottomTabs;
 }
 
-export function createOverlay(componentName, OverlayComponent, config = {}) {
+export function createOverlay(componentName, ReactComponent, config = {}) {
   const { parentId, ...restConfig } = config;
 
   const overlay = new OverlayNavigator(restConfig);
 
   const component = Component.register(
+    parentId ? `${parentId}/${componentName}` : componentName,
     componentName,
-    OverlayComponent,
+    ReactComponent,
     config.options || {},
-    parentId,
   );
 
   overlay.addRoute(componentName, component);
@@ -122,12 +122,12 @@ export function createRoot(routes, config = {}) {
 }
 
 function createComponents(routes, parentId) {
-  return Object.entries(routes).map(([componentName, ScreenComponent]) => {
+  return Object.entries(routes).map(([componentName, ReactComponent]) => {
     const component = Component.register(
+      parentId ? `${parentId}/${componentName}` : componentName,
       componentName,
-      ScreenComponent,
-      ScreenComponent.options || {},
-      parentId,
+      ReactComponent,
+      ReactComponent.options || {},
     );
 
     return [componentName, component];

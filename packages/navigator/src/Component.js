@@ -13,16 +13,7 @@ export default class Component extends Route {
     this.passProps = {};
   }
 
-  static register(
-    componentName,
-    ReactComponent,
-    options = {},
-    parentId = null,
-  ) {
-    const componentId = parentId
-      ? `${parentId}/${componentName}`
-      : componentName;
-
+  static register(componentId, componentName, ReactComponent, options = {}) {
     Registry.register(componentId, componentName, ReactComponent);
 
     return new Component(componentId, componentName, options);
