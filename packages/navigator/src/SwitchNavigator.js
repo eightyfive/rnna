@@ -32,8 +32,8 @@ export default class SwitchNavigator extends Navigator {
     this.layout.mount();
   }
 
-  render(componentId, props) {
-    const [name, childName] = this.readPath(componentId);
+  render(path, props) {
+    const [name, childPath] = this.readPath(path);
 
     if (this.layoutName !== name) {
       // Unmount old layout
@@ -49,13 +49,13 @@ export default class SwitchNavigator extends Navigator {
       this.layout.update(props);
     }
 
-    if (childName) {
+    if (childPath) {
       if (this.layout instanceof BottomTabs) {
-        this.renderBottomTabs(this.layout, childName, props);
+        this.renderBottomTabs(this.layout, childPath, props);
       }
 
       if (this.layout instanceof Stack) {
-        this.renderStack(this.layout, childName, props);
+        this.renderStack(this.layout, childPath, props);
       }
     }
   }

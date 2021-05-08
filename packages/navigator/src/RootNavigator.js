@@ -51,8 +51,8 @@ export default class RootNavigator extends SwitchNavigator {
     this.overlays.forEach(name => this.layouts.get(name).mount());
   }
 
-  render(componentId, props) {
-    const [name, childName] = this.readPath(componentId);
+  render(path, props) {
+    const [name, childPath] = this.readPath(path);
 
     const layout = this.layouts.get(name);
 
@@ -61,7 +61,7 @@ export default class RootNavigator extends SwitchNavigator {
     }
 
     if (layout instanceof Modal) {
-      this.renderModal(name, childName, props);
+      this.renderModal(name, childPath, props);
     } else if (layout instanceof Overlay) {
       this.renderOverlay(name, props);
     } else {
@@ -69,7 +69,7 @@ export default class RootNavigator extends SwitchNavigator {
         this.dismissModal();
       }
 
-      super.render(componentId, props);
+      super.render(path, props);
     }
   }
 

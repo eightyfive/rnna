@@ -27,8 +27,8 @@ export default /** abstract */ class Navigator extends Emitter {
     return [name, childPath.length ? childPath.join('/') : null];
   }
 
-  renderBottomTabs(bottomTabs, childName, props) {
-    const [stackName, componentName] = this.readPath(childName);
+  renderBottomTabs(bottomTabs, childPath, props) {
+    const [stackName, componentName] = this.readPath(childPath);
 
     if (bottomTabs.stackName !== stackName) {
       bottomTabs.selectTab(stackName);
