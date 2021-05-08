@@ -1,52 +1,17 @@
-import Events from './Events';
+import Emitter from './Emitter';
 
-export default /** abstract */ class Navigator {
+export default /** abstract */ class Navigator extends Emitter {
   constructor(layouts, config = {}) {
-    this.defined = new Map();
+    super();
+
     this.layouts = new Map(Object.entries(layouts));
     this.config = config;
     this.order = Array.from(this.layouts.keys());
-    this.listeners = {};
     this.history = [];
 
     this.layouts.forEach((layout, name) => {
       this.defineProperty(name, layout);
     });
-  }
-
-  defineProperty(name, value) {
-    if (this.defined.has(name)) {
-      throw new Error(`${name} is already defined`);
-    }
-
-    this.defined.set(name, true);
-
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#description
-    Object.defineProperty(this, name, { enumerable: true, value });
-  }
-
-  addListener(eventName, listener) {
-    const subscription = Events.addListener(eventName, listener);
-
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
-    }
-
-    this.listeners[eventName].push(subscription);
-
-    return subscription;
-  }
-
-  removeListener(eventName, listener) {
-    const subscription = this.listeners[eventName].find(cb => cb === listener);
-
-    if (subscription) {
-      Events.removeListener(subscription);
-
-      this.listeners[eventName] = this.listeners[eventName].filter(
-        cb => cb !== listener,
-      );
-    }
   }
 
   get name() {
