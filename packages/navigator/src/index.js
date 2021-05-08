@@ -11,6 +11,8 @@ import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
 import { createComponents } from './utils';
 
+// NONCE = 1
+
 export { default as Registry } from './Registry';
 
 export function createBottomTabs(tabs, config = {}) {
