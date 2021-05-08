@@ -1,3 +1,4 @@
+import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
 import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
 import StackNavigator from './StackNavigator';
@@ -5,7 +6,6 @@ import RootNavigator from './RootNavigator';
 import SwitchNavigator from './SwitchNavigator';
 import WidgetComponent from './WidgetComponent';
 import * as Utils from './utils';
-import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
 
 export { default as Registry } from './Registry';
 

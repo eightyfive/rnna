@@ -8,11 +8,11 @@ export default /** abstract */ class Layout extends Emitter {
   }
 
   mount(initialProps) {
-    throwAbstract('mount');
+    throwAbstract('mount(initialProps)');
   }
 
   getLayout(props) {
-    throwAbstract('getLayout');
+    throwAbstract('getLayout(props)');
   }
 
   unmount() {}
