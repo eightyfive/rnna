@@ -9,6 +9,7 @@ import StackNavigator from './StackNavigator';
 import SwitchNavigator from './SwitchNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import WidgetComponent from './WidgetComponent';
+import { createComponents } from './utils';
 
 export { default as Registry } from './Registry';
 
@@ -119,19 +120,6 @@ export function createRoot(routes, config = {}) {
   });
 
   return root;
-}
-
-function createComponents(routes, parentId) {
-  return Object.entries(routes).map(([componentName, ReactComponent]) => {
-    const component = Component.register(
-      parentId ? `${parentId}/${componentName}` : componentName,
-      componentName,
-      ReactComponent,
-      ReactComponent.options || {},
-    );
-
-    return [componentName, component];
-  });
 }
 
 // Traverse obj for depth

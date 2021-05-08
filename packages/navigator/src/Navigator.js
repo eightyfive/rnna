@@ -1,5 +1,4 @@
 import Events from './Events';
-
 import History from './History';
 import Route from './Route';
 
