@@ -77,7 +77,7 @@ export default class BottomTabsNavigator extends Navigator {
 
   goBack() {
     try {
-      const stack = this.getRoute(this.history.last());
+      const stack = this.getRoute(this.routeName);
 
       stack.goBack();
     } catch (err) {

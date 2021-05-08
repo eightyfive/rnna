@@ -14,7 +14,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   handleModalDismissed = () => {
-    const navigator = this.getRoute(this.history.last());
+    const navigator = this.getRoute(this.routeName);
 
     if (navigator instanceof ModalNavigator) {
       this.history.pop();
@@ -55,9 +55,9 @@ export default class RootNavigator extends SwitchNavigator {
     } else if (navigator instanceof OverlayNavigator) {
       this.renderOverlay(name, childPath, props);
     } else {
-      navigator = this.getRoute(this.history.last());
+      const modal = this.getModal();
 
-      if (navigator && navigator instanceof ModalNavigator) {
+      if (modal) {
         this.dismissModal();
       }
 
@@ -69,19 +69,19 @@ export default class RootNavigator extends SwitchNavigator {
     let navigator;
 
     if (this.history.isCurrent(name)) {
-      navigator = this.getRoute(this.history.last());
+      navigator = this.getRoute(this.routeName);
     } else {
       // Only one modal at a time
-      navigator = this.getRoute(this.history.last());
+      const modal = this.getModal();
 
-      if (navigator && navigator instanceof ModalNavigator) {
+      if (modal) {
         this.dismissModal();
       }
 
       this.history.push(name);
 
       // Mount modal
-      navigator = this.getRoute(this.history.last());
+      navigator = this.getRoute(this.routeName);
       navigator.mount(props);
     }
 
@@ -103,7 +103,7 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   goBack() {
-    const navigator = this.getRoute(this.history.last());
+    const navigator = this.getRoute(this.routeName);
 
     try {
       navigator.goBack();
@@ -114,24 +114,26 @@ export default class RootNavigator extends SwitchNavigator {
     }
   }
 
-  dismissModal() {
-    const navigator = this.getRoute(this.history.last());
+  getModal() {
+    const route = this.getRoute(this.routeName);
 
-    if (!(navigator instanceof ModalNavigator)) {
+    if (route instanceof ModalNavigator) {
+      return route;
+    }
+
+    return null;
+  }
+
+  dismissModal() {
+    const modal = this.getModal();
+
+    if (!(modal instanceof ModalNavigator)) {
       throw new Error('No modal to dismiss');
     }
 
-    navigator.unmount();
+    modal.dismiss();
 
     this.history.pop();
-  }
-
-  dismissAllModals() {
-    const navigator = this.getRoute(this.history.last());
-
-    if (navigator instanceof ModalNavigator) {
-      Navigation.dismissAllModals();
-    }
   }
 
   dismissOverlay(overlayName) {

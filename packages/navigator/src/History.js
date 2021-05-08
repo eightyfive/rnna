@@ -3,10 +3,6 @@ export default class History {
     this.names = [];
   }
 
-  last() {
-    return Array.from(this.names).pop() || null;
-  }
-
   get() {
     return this.names;
   }
@@ -32,7 +28,9 @@ export default class History {
   }
 
   isCurrent(name) {
-    return this.last() === name;
+    const last = Array.from(this.history).pop();
+
+    return last === name;
   }
 
   size(len = null) {

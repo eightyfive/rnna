@@ -53,6 +53,10 @@ export default /** abstract */ class Navigator extends Route {
     return this.routes.get(name);
   }
 
+  get routeName() {
+    return Array.from(this.history).pop() || null;
+  }
+
   findComponentNameById(componentId) {
     for (const [componentName, component] of this.routes) {
       if (component.id === componentId) {

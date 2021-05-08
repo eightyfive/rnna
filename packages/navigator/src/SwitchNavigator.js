@@ -5,24 +5,24 @@ import OverlayNavigator from './OverlayNavigator';
 import Route from './Route';
 
 export default class SwitchNavigator extends Navigator {
-  addRoute(name, navigator) {
-    if (!(navigator instanceof Route)) {
+  addRoute(name, route) {
+    if (!(route instanceof Route)) {
       throw new Error('Switch route must implement `Route`');
     }
 
-    if (navigator instanceof ModalNavigator) {
+    if (route instanceof ModalNavigator) {
       throw new Error('Switch route cannot be `ModalNavigator`');
     }
 
-    if (navigator instanceof OverlayNavigator) {
+    if (route instanceof OverlayNavigator) {
       throw new Error('Switch route cannot be `OverlayNavigator`');
     }
 
-    if (navigator instanceof SwitchNavigator) {
+    if (route instanceof SwitchNavigator) {
       throw new Error('Switch route cannot be `SwitchNavigator`');
     }
 
-    super.addRoute(name, navigator);
+    super.addRoute(name, route);
   }
 
   getComponents() {
@@ -42,16 +42,16 @@ export default class SwitchNavigator extends Navigator {
   mount(initialProps) {
     this.history.reset(this.initialRouteName);
 
-    // Mount initial navigator
-    const navigator = this.getRoute(this.history.last());
+    // Mount initial route
+    const route = this.getRoute(this.initialRouteName);
 
-    navigator.mount(initialProps);
+    route.mount(initialProps);
   }
 
   render(path, props) {
     const [name, childPath] = this.readPath(path);
 
-    let route = this.getRoute(this.history.last());
+    let route = this.getRoute(this.routeName);
 
     if (!this.history.isCurrent(name)) {
       // Unmount old route
@@ -64,7 +64,7 @@ export default class SwitchNavigator extends Navigator {
       this.history.reset(name);
 
       // Mount new route
-      route = this.getRoute(this.history.last());
+      route = this.getRoute(this.routeName);
       route.mount(props);
     } else if (route instanceof Component) {
       route.render(props);
