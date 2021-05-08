@@ -1,11 +1,11 @@
-import Navigator from './Navigator';
+import Route from './Route';
 import ModalNavigator from './ModalNavigator';
 import OverlayNavigator from './OverlayNavigator';
 
 export default class SwitchNavigator extends Navigator {
   addRoute(name, navigator) {
-    if (!(navigator instanceof Navigator)) {
-      throw new Error('Switch route must be of type `Navigator`');
+    if (!(navigator instanceof Route)) {
+      throw new Error('Switch route must implement `Route`');
     }
 
     if (navigator instanceof ModalNavigator) {
