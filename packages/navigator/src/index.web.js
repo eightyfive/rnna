@@ -1,7 +1,7 @@
 import SwitchNavigator from './SwitchNavigator';
-import { createComponents } from './utils';
 
 export { default as Registry } from './Registry';
+export { createComponents } from './index';
 
 export function createSwitch(routes, config = {}) {
   const switchNavigator = new SwitchNavigator(config);

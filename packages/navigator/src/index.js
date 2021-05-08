@@ -1,9 +1,10 @@
-import _isObject from 'lodash.isplainobject';
-
-// import SideMenuNavigator from './SideMenuNavigator';
+import BottomTabsNavigator from './BottomTabsNavigator';
+import ModalNavigator from './ModalNavigator';
+import StackNavigator from './StackNavigator';
 import RootNavigator from './RootNavigator';
+import SwitchNavigator from './SwitchNavigator';
 import WidgetComponent from './WidgetComponent';
-import { createComponents } from './utils';
+import * as Utils from './utils';
 import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
 
 export { default as Registry } from './Registry';
@@ -24,10 +25,14 @@ export function createBottomTabs(routes, config = {}) {
   return new BottomTabs(stacks, restConfig);
 }
 
+export function createComponent(id, name, ReactComponent) {
+  return Utils.createComponent(id, name, ReactComponent);
+}
+
 export function createStack(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const components = createComponents(routes, parentId);
+  const components = Utils.createComponents(routes, parentId);
 
   return new Stack(components, restConfig);
 }
@@ -35,13 +40,31 @@ export function createStack(routes, config = {}) {
 export function createModal(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const components = createComponents(routes, parentId);
+  const components = Utils.createComponents(routes, parentId);
 
   return new Modal(components, restConfig);
 }
 
 export function createWidget(name, Widget) {
   return WidgetComponent.register(name, Widget);
+}
+
+export function createBottomTabsNavigator(routes, config = {}) {
+  const bottomTabs = createBottomTabs(routes, config);
+
+  return new BottomTabsNavigator(bottomTabs);
+}
+
+export function createModalNavigator(routes, config = {}) {
+  const modal = createModal(routes, config);
+
+  return new ModalNavigator(modal);
+}
+
+export function createStackNavigator(routes, config = {}) {
+  const stack = createStack(routes, config);
+
+  return new StackNavigator(stack);
 }
 
 export function createRootNavigator(routes, config = {}) {
@@ -51,7 +74,7 @@ export function createRootNavigator(routes, config = {}) {
   const overlays = new Map();
 
   Object.entries(routes).forEach(([name, route]) => {
-    const type = getRouteType(route);
+    const type = Utils.getRouteType(route);
 
     if (type === 'overlay') {
       overlays.set(name, new Overlay(name, name, route));
@@ -87,49 +110,6 @@ export function createRootNavigator(routes, config = {}) {
   return root;
 }
 
-// Traverse obj for depth
-export function getRouteType(route) {
-  const depth = getObjDepth(route, 0, ['config']);
-
-  if (depth === 0) {
-    return 'overlay';
-  }
-
-  if (depth === 1) {
-    const { mode } = route.config || {};
-
-    return mode === 'modal' ? 'modal' : 'stack';
-  }
-
-  if (depth === 2) {
-    return 'bottomTabs';
-  }
-
-  return null;
-}
-
-export function getObjDepth(obj, depth = 0, blacklist = []) {
-  let isObj = _isObject(obj);
-
-  if (isObj) {
-    depth++;
-
-    const levelDepth = depth;
-    let maxDepth = depth;
-
-    for (const [key, nested] of Object.entries(obj)) {
-      isObj = _isObject(nested);
-
-      if (isObj && !blacklist.includes(key)) {
-        depth = getObjDepth(nested, depth, blacklist);
-      }
-
-      maxDepth = Math.max(maxDepth, depth);
-      depth = levelDepth;
-    }
-
-    depth = maxDepth;
-  }
-
-  return depth;
+export function createSwitchNavigator(layouts, config = {}) {
+  return new SwitchNavigator(layouts, config);
 }
