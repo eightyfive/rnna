@@ -84,7 +84,7 @@ test('createRootNavigator', () => {
   expect(app.C).toBeInstanceOf(Overlay);
 });
 
-// Route types
+// Layout types
 test('Detect bottomTabs', () => {
   expect(
     getRouteType({

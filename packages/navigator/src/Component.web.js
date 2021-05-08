@@ -1,9 +1,9 @@
 import { AppRegistry } from 'react-native';
 
 import Registry from './Registry';
-import Route from './Route';
+import Layout from './Layout';
 
-export default class Component extends Route {
+export default class Component extends Layout {
   constructor(id, options = {}) {
     super();
 
