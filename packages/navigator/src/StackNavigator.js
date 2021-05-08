@@ -19,9 +19,9 @@ export default class StackNavigator extends Navigator {
     if (componentName) {
       const componentIndex = this.findRouteIndexByName(componentName);
 
-      if (componentIndex > 1 && !this.history.isCurrent(componentName)) {
+      if (componentIndex > 1 && this.routeName !== componentName) {
         // Sync history
-        this.history.popTo(componentIndex);
+        this.history.splice(componentIndex + 1);
       }
     }
   };
@@ -42,7 +42,7 @@ export default class StackNavigator extends Navigator {
     // TOFIX:
     // Here because of BottomTabs.children.getInitialLayout()
     // Should be in Stack.mount
-    this.history.reset(this.initialRouteName);
+    this.history = [this.initialRouteName];
 
     return this.getLayout(props, this.initialRouteName);
   }
@@ -76,7 +76,7 @@ export default class StackNavigator extends Navigator {
   }
 
   pop(n = 1) {
-    const len = this.history.size();
+    const len = this.history.length;
     const newLen = len - n;
 
     if (n < 1 || newLen < 1) {
@@ -94,7 +94,7 @@ export default class StackNavigator extends Navigator {
   }
 
   popToIndex(index) {
-    const len = this.history.size();
+    const len = this.history.length;
 
     if (index < 0 || index > len - 1) {
       throw new Error(`Invalid pop index: ${index} (${len})`);
@@ -103,7 +103,7 @@ export default class StackNavigator extends Navigator {
     if (index === 0) {
       this.popToRoot();
     } else {
-      this.history.popTo(index);
+      this.history.splice(index + 1);
 
       const componentTo = this.getRoute(this.routeName);
 
@@ -119,24 +119,24 @@ export default class StackNavigator extends Navigator {
     const componentFrom = this.getRoute(this.routeName);
 
     // Reset history
-    this.history.reset(this.initialRouteName);
+    this.history = [this.initialRouteName];
 
     Navigation.popToRoot(componentFrom.id);
   }
 
   render(componentName, props) {
-    if (this.history.isCurrent(componentName)) {
+    const index = this.history.findIndex(name => name === componentName);
+
+    if (this.routeName === componentName) {
       // Update current component
       const component = this.getRoute(this.routeName);
 
       component.render(props);
-    } else if (!this.history.has(componentName)) {
+    } else if (index === -1) {
       // Push new screen
       this.push(componentName, props);
     } else {
       // Pop to previous screen
-      const index = this.history.findIndex(componentName);
-
       this.popToIndex(index);
     }
   }

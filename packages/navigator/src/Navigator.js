@@ -1,5 +1,4 @@
 import Events from './Events';
-import History from './History';
 import Route from './Route';
 
 export default /** abstract */ class Navigator extends Route {
@@ -9,7 +8,7 @@ export default /** abstract */ class Navigator extends Route {
     this.routes = new Map();
     this.options = config.options || {};
     this.initialRouteName = null;
-    this.history = new History();
+    this.history = [];
     this.listeners = {};
   }
 

@@ -1,4 +1,3 @@
-import { Navigation } from 'react-native-navigation';
 import ModalNavigator from './ModalNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import SwitchNavigator from './SwitchNavigator';
@@ -68,7 +67,7 @@ export default class RootNavigator extends SwitchNavigator {
   renderModal(name, childPath, props) {
     let navigator;
 
-    if (this.history.isCurrent(name)) {
+    if (this.routeName === name) {
       navigator = this.getRoute(this.routeName);
     } else {
       // Only one modal at a time

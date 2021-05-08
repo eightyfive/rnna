@@ -53,7 +53,7 @@ export default class BottomTabsNavigator extends Navigator {
   }
 
   mount(initialProps) {
-    this.history.reset(this.initialRouteName);
+    this.history = [this.initialRouteName];
 
     Navigation.setRoot({ root: this.getLayout(initialProps) });
   }
@@ -62,8 +62,8 @@ export default class BottomTabsNavigator extends Navigator {
     const [name, componentName] = this.readPath(path);
     const stack = this.getRoute(name);
 
-    if (!this.history.isCurrent(name)) {
-      this.history.reset(name);
+    if (this.routeName !== name) {
+      this.history = [name];
 
       const index = this.findRouteIndexByName(name);
 
