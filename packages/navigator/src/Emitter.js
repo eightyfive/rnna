@@ -1,7 +1,7 @@
-import Definer from './Definer';
+import Definable from './Definable';
 import Events from './Events';
 
-export default /** abstract */ class Emitter extends Definer {
+export default /** abstract */ class Emitter extends Definable {
   constructor() {
     super();
 

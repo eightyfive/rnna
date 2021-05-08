@@ -1,4 +1,4 @@
-export default /** abstract */ class Definer {
+export default /** abstract */ class Definable {
   constructor() {
     this.defined = new Map();
   }
