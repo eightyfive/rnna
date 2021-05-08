@@ -1,10 +1,10 @@
-import { BottomTabs, Modal, Overlay, Stack, Widget } from './Layouts';
 import RootNavigator from './RootNavigator';
 import Registry from './Registry';
 import SwitchNavigator from './SwitchNavigator';
+import * as Layouts from './Layouts';
 import * as Utils from './utils';
 
-export { Registry };
+export { Layouts, Registry, Utils };
 
 export function createBottomTabs(routes, config = {}) {
   const { parentId, ...restConfig } = config;
@@ -19,7 +19,7 @@ export function createBottomTabs(routes, config = {}) {
     stacks[name] = createStack(components, stackConfig);
   });
 
-  return new BottomTabs(stacks, restConfig);
+  return new Layouts.BottomTabs(stacks, restConfig);
 }
 
 export function createComponent(id, name, ReactComponent) {
@@ -31,7 +31,7 @@ export function createStack(routes, config = {}) {
 
   const components = Utils.createComponents(routes, parentId);
 
-  return new Stack(components, restConfig);
+  return new Layouts.Stack(components, restConfig);
 }
 
 export function createModal(routes, config = {}) {
@@ -39,11 +39,11 @@ export function createModal(routes, config = {}) {
 
   const components = Utils.createComponents(routes, parentId);
 
-  return new Modal(components, restConfig);
+  return new Layouts.Modal(components, restConfig);
 }
 
 export function createWidget(name, ReactComponent) {
-  const widget = new Widget(name);
+  const widget = new Layouts.Widget(name);
 
   Registry.register(widget.id, name, ReactComponent);
 
@@ -51,34 +51,7 @@ export function createWidget(name, ReactComponent) {
 }
 
 export function createRootNavigator(routes, config = {}) {
-  const layouts = {};
-
-  const modals = new Map();
-  const overlays = new Map();
-
-  Object.entries(routes).forEach(([name, route]) => {
-    const type = Utils.getRouteType(route);
-
-    if (type === 'overlay') {
-      overlays.set(name, new Overlay(name, name, route));
-    } else {
-      const { config: layoutConfig = {}, ...nestedRoutes } = route;
-
-      layoutConfig.parentId = name;
-
-      if (type === 'bottomTabs') {
-        layouts[name] = createBottomTabs(nestedRoutes, layoutConfig);
-      } else if (type === 'stack') {
-        layouts[name] = createStack(nestedRoutes, layoutConfig);
-      } else if (type === 'modal') {
-        modals.set(name, createModal(nestedRoutes, layoutConfig));
-      } else {
-        throw new Error(
-          `Invalid route (too deep): ${JSON.stringify(route, null, 2)}`,
-        );
-      }
-    }
-  });
+  const [layouts, modals, overlays] = Utils.createLayouts(routes);
 
   const root = new RootNavigator(layouts, config);
 

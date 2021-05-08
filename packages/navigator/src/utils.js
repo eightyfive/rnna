@@ -29,6 +29,39 @@ export function createComponents(routes, parentId) {
   return components;
 }
 
+export function createLayouts(routes) {
+  const layouts = {};
+
+  const modals = new Map();
+  const overlays = new Map();
+
+  Object.entries(routes).forEach(([name, route]) => {
+    const type = getRouteType(route);
+
+    if (type === 'overlay') {
+      overlays.set(name, new Overlay(name, name, route));
+    } else {
+      const { config: layoutConfig = {}, ...nestedRoutes } = route;
+
+      layoutConfig.parentId = name;
+
+      if (type === 'bottomTabs') {
+        layouts[name] = createBottomTabs(nestedRoutes, layoutConfig);
+      } else if (type === 'stack') {
+        layouts[name] = createStack(nestedRoutes, layoutConfig);
+      } else if (type === 'modal') {
+        modals.set(name, createModal(nestedRoutes, layoutConfig));
+      } else {
+        throw new Error(
+          `Invalid route (too deep): ${JSON.stringify(route, null, 2)}`,
+        );
+      }
+    }
+  });
+
+  return [layouts, modals, overlays];
+}
+
 // Traverse obj for depth
 export function getRouteType(route) {
   const depth = getObjDepth(route, 0, ['config']);

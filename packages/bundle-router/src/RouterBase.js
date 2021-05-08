@@ -1,8 +1,10 @@
-import { Registry } from '@rnna/navigator';
+import { Layouts, Registry } from '@rnna/navigator';
 
-export default class RouterBase {
-  constructor(root) {
-    this.root = root;
+import RouterNavigator from './RouterNavigator';
+
+export default class RouterBase extends RouterNavigator {
+  constructor(layouts, config = {}) {
+    super(layouts, config);
 
     this.path = null;
     this.paths = new Map();
@@ -23,8 +25,31 @@ export default class RouterBase {
     if (!this.components) {
       this.components = new Map();
 
-      this.root.getComponents().forEach(component => {
-        this.components.set(component.id, Registry.get(component.id));
+      this.layouts.forEach(layout => {
+        const isComponent =
+          layout instanceof Layouts.Component ||
+          layout instanceof Layouts.Overlay;
+
+        const isStack =
+          layout instanceof Layouts.Stack || layout instanceof Layouts.Modal;
+
+        if (isComponent) {
+          this.components.set(layout.id, Registry.get(layout.id));
+        }
+
+        if (isStack) {
+          layout.components.forEach(component => {
+            this.components.set(component.id, Registry.get(component.id));
+          });
+        }
+
+        if (layout instanceof Layouts.BottomTabs) {
+          layout.stacks.forEach(stack => {
+            stack.components.forEach(component => {
+              this.components.set(component.id, Registry.get(component.id));
+            });
+          });
+        }
       });
     }
 
@@ -76,28 +101,12 @@ export default class RouterBase {
       Object.assign(props, Component.passProps);
     }
 
-    this.root.render(componentId, props);
+    this.render(componentId, props);
   }
 
   onState() {
     if (this.path) {
       this.dispatch(this.path);
     }
-  }
-
-  goBack() {
-    this.root.goBack();
-  }
-
-  dismissModal() {
-    this.root.dismissModal();
-  }
-
-  dismissAllModals() {
-    this.root.dismissAllModals();
-  }
-
-  dismissOverlay(overlayName) {
-    this.root.dismissOverlay(overlayName);
   }
 }
