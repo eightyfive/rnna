@@ -21,6 +21,7 @@ export default class BottomTabsNavigator extends Layout {
 
     this.order = Array.from(this.stacks.keys());
     this.tabIndex = 0;
+    this.stackName = this.order[0];
 
     // Tab loading
     // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
@@ -72,6 +73,7 @@ export default class BottomTabsNavigator extends Layout {
 
     if (this.tabIndex !== index) {
       this.tabIndex = index;
+      this.stackName = this.order[index];
 
       Navigation.mergeOptions(this.layoutId, {
         bottomTabs: { currentTabIndex: index },

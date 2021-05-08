@@ -44,7 +44,7 @@ export default class Stack extends Layout {
     }
   };
 
-  get name() {
+  get componentName() {
     return Array.from(this.history).pop();
   }
 
@@ -71,7 +71,7 @@ export default class Stack extends Layout {
   }
 
   push(toName, props) {
-    const componentFrom = this.components.get(this.name);
+    const componentFrom = this.components.get(this.componentName);
     const componentTo = this.components.get(toName);
 
     this.history.push(toName);
@@ -109,7 +109,7 @@ export default class Stack extends Layout {
     } else {
       this.history.splice(index + 1);
 
-      const componentTo = this.components.get(this.name);
+      const componentTo = this.components.get(this.componentName);
 
       this.popTo(componentTo.id);
     }
@@ -120,7 +120,7 @@ export default class Stack extends Layout {
   }
 
   popToRoot() {
-    const componentFrom = this.components.get(this.name);
+    const componentFrom = this.components.get(this.componentName);
 
     // Reset history
     this.history = [this.initialName];

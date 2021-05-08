@@ -41,7 +41,7 @@ export default class Component extends Route {
     return { component: layout };
   }
 
-  render(props) {
+  update(props) {
     this.passProps = props;
 
     Navigation.updateProps(this.id, props);
