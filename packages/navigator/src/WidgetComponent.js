@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Component.native';
+import Component from './Component';
 
 export default class WidgetComponent extends Component {
   constructor(name) {

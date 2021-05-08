@@ -13,7 +13,7 @@ import {
   createWidget,
   getRouteType,
   getObjDepth,
-} from './index.native';
+} from './index';
 
 function A() {}
 function B() {}

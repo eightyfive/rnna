@@ -1,4 +1,4 @@
-import { createBottomTabs, createStack } from './index.native';
+import { createBottomTabs, createStack } from './index';
 
 import RootNavigator from './RootNavigator';
 

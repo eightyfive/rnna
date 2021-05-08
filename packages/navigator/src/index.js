@@ -1,7 +1,7 @@
 import _isObject from 'lodash.isplainobject';
 
 import BottomTabsNavigator from './BottomTabsNavigator';
-import Component from './Component.native';
+import Component from './Component';
 import ModalNavigator from './ModalNavigator';
 // import SideMenuNavigator from './SideMenuNavigator';
 import RootNavigator from './RootNavigator';

@@ -1,6 +1,6 @@
 import { AppRegistry } from 'react-native';
 
-import Component from './Component.native';
+import Component from './Component';
 
 export function createComponents(screens) {
   // TODO

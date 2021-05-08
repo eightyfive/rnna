@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import { makeComponent } from './Component.test';
-import { createStack } from './index.native';
+import { createStack } from './index';
 import { makeStack } from './StackNavigator.test';
 import BottomTabsNavigator from './BottomTabsNavigator';
 
