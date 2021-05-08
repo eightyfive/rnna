@@ -50,10 +50,10 @@ export default class RootNavigator extends SwitchNavigator {
 
     let navigator = this.getRoute(name);
 
-    if (navigator instanceof OverlayNavigator) {
-      this.renderOverlay(name, childPath, props);
-    } else if (navigator instanceof ModalNavigator) {
+    if (navigator instanceof ModalNavigator) {
       this.renderModal(name, childPath, props);
+    } else if (navigator instanceof OverlayNavigator) {
+      this.renderOverlay(name, childPath, props);
     } else {
       navigator = this.getCurrentRoute();
 
