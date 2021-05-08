@@ -13,57 +13,60 @@ export default class SwitchNavigator extends Navigator {
       throw new TypeError('Invalid argument');
     }
 
+    this.layoutName = null;
+
     this.addListener('AppLaunched', this.handleAppLaunched);
   }
 
   handleAppLaunched = () => this.remount();
 
+  get layout() {
+    if (this.layoutName) {
+      return this.layouts.get(this.layoutName);
+    }
+
+    return null;
+  }
+
   remount() {
-    this.history.forEach(name => this.layouts.get(name).mount());
+    this.layout.mount();
   }
 
   render(componentId, props) {
     const [name, childName] = this.readPath(componentId);
 
-    let layout;
-
-    if (this.name !== name) {
+    if (this.layoutName !== name) {
       // Unmount old layout
-      layout = this.layouts.get(this.name);
-
-      if (layout) {
-        layout.unmount();
+      if (this.layout) {
+        this.layout.unmount();
       }
 
-      this.history.push(name);
+      this.layoutName = name;
 
       // Mount new layout
-      layout = this.layouts.get(this.name);
-      layout.mount(props);
-    } else if (layout instanceof Component) {
-      layout.update(props);
+      this.layout.mount(props);
+    } else if (this.layout instanceof Component) {
+      this.layout.update(props);
     }
 
     if (childName) {
-      if (layout instanceof BottomTabs) {
-        this.renderBottomTabs(layout, childName, props);
+      if (this.layout instanceof BottomTabs) {
+        this.renderBottomTabs(this.layout, childName, props);
       }
 
-      if (layout instanceof Stack) {
-        this.renderStack(layout, childName, props);
+      if (this.layout instanceof Stack) {
+        this.renderStack(this.layout, childName, props);
       }
     }
   }
 
   goBack() {
-    const layout = this.layouts.get(this.name);
-
-    if (layout instanceof BottomTabs) {
-      this.goBackBottomTabs(layout);
+    if (this.layout instanceof BottomTabs) {
+      this.goBackBottomTabs(this.layout);
     }
 
-    if (layout instanceof Stack) {
-      this.goBackStack(layout);
+    if (this.layout instanceof Stack) {
+      this.goBackStack(this.layout);
     }
   }
 }

@@ -6,17 +6,24 @@ export default class RootNavigator extends SwitchNavigator {
     super(layouts, config);
 
     this.overlays = [];
+    this.modalName = null;
 
     this.addListener('ModalDismissed', this.handleModalDismissed);
   }
 
   handleModalDismissed = () => {
-    const layout = this.layouts.get(this.name);
-
-    if (layout instanceof Modal) {
-      this.history.pop();
+    if (this.modal) {
+      this.modalName = null;
     }
   };
+
+  get modal() {
+    if (this.modalName) {
+      return this.layouts.get(this.modalName);
+    }
+
+    return null;
+  }
 
   addModal(name, modal) {
     if (!(modal instanceof Modal)) {
@@ -58,7 +65,7 @@ export default class RootNavigator extends SwitchNavigator {
     } else if (layout instanceof Overlay) {
       this.renderOverlay(name, props);
     } else {
-      if (this.hasModal()) {
+      if (this.modal) {
         this.dismissModal();
       }
 
@@ -67,28 +74,25 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   renderModal(name, componentName, props) {
-    let modal = this.layouts.get(name);
-
-    if (this.name !== name) {
+    if (this.modalName !== name) {
       // One modal at a time
-      if (this.hasModal()) {
+      if (this.modal) {
         this.dismissModal();
       }
 
-      this.history.push(name);
+      this.modalName = name;
 
-      modal = this.layouts.get(this.name);
-      modal.mount(props);
+      this.modal.mount(props);
     }
 
-    super.renderStack(modal, componentName, props);
+    this.renderStack(this.modal, componentName, props);
   }
 
   renderOverlay(name, props) {
-    const found = this.overlays.find(val => val === name);
+    const mounted = this.overlays.find(val => val === name);
     const overlay = this.layouts.get(name);
 
-    if (found) {
+    if (mounted) {
       overlay.update(props);
     } else {
       this.overlays.push(name);
@@ -98,11 +102,9 @@ export default class RootNavigator extends SwitchNavigator {
   }
 
   goBack() {
-    const layout = this.layouts.get(this.name);
-
-    if (layout instanceof Modal) {
+    if (this.modal) {
       try {
-        this.goBackStack(layout);
+        this.goBackStack(this.modal);
       } catch (err) {
         this.dismissModal();
       }
@@ -111,22 +113,9 @@ export default class RootNavigator extends SwitchNavigator {
     }
   }
 
-  hasModal() {
-    const layout = this.layouts.get(this.name);
-
-    return layout instanceof Modal;
-  }
-
   dismissModal() {
-    const layout = this.layouts.get(this.name);
-
-    if (!(layout instanceof Modal)) {
-      throw new Error('No modal to dismiss');
-    }
-
-    layout.dismiss();
-
-    this.history.pop();
+    this.modal.dismiss();
+    this.modalName = null;
   }
 
   dismissOverlay(name) {

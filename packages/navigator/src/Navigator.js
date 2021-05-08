@@ -7,15 +7,10 @@ export default /** abstract */ class Navigator extends Emitter {
     this.layouts = new Map(Object.entries(layouts));
     this.config = config;
     this.order = Array.from(this.layouts.keys());
-    this.history = [];
 
     this.layouts.forEach((layout, name) => {
       this.defineProperty(name, layout);
     });
-  }
-
-  get name() {
-    return Array.from(this.history).pop();
   }
 
   render(path, props) {

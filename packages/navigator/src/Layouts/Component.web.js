@@ -3,11 +3,11 @@ import { AppRegistry } from 'react-native';
 import Layout from './Layout';
 
 export default class Component extends Layout {
-  constructor(id, options = {}) {
+  constructor(id, name, options = {}) {
     super();
 
     this.id = id;
-    this.name = id;
+    this.name = name;
     this.options = options;
     this.passProps = {};
     this.rootTag = options.rootTag || document.getElementById('root');
