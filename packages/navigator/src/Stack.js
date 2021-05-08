@@ -14,7 +14,7 @@ export default class Stack extends Layout {
     );
 
     if (notComponent.length) {
-      throw new Error('Stack: all children must be `Component`');
+      throw new TypeError('Invalid argument', 'Stack.js', 7);
     }
 
     this.order = Array.from(this.components.keys());
