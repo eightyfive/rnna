@@ -1,7 +1,4 @@
 import { BottomTabs, Modal, Overlay, Stack } from './Layouts';
-import BottomTabsNavigator from './BottomTabsNavigator';
-import ModalNavigator from './ModalNavigator';
-import StackNavigator from './StackNavigator';
 import RootNavigator from './RootNavigator';
 import SwitchNavigator from './SwitchNavigator';
 import WidgetComponent from './WidgetComponent';
@@ -47,24 +44,6 @@ export function createModal(routes, config = {}) {
 
 export function createWidget(name, Widget) {
   return WidgetComponent.register(name, Widget);
-}
-
-export function createBottomTabsNavigator(routes, config = {}) {
-  const bottomTabs = createBottomTabs(routes, config);
-
-  return new BottomTabsNavigator(bottomTabs);
-}
-
-export function createModalNavigator(routes, config = {}) {
-  const modal = createModal(routes, config);
-
-  return new ModalNavigator(modal);
-}
-
-export function createStackNavigator(routes, config = {}) {
-  const stack = createStack(routes, config);
-
-  return new StackNavigator(stack);
 }
 
 export function createRootNavigator(routes, config = {}) {
