@@ -6,7 +6,7 @@ import BottomTabs from './BottomTabs';
 import Component from './Component';
 import Stack from './Stack';
 
-export function makeBottomTabs(index, stacks) {
+function makeBottomTabs(index, stacks) {
   return {
     id: `BottomTabs${index}`,
     children: stacks.map(stack => ({ stack })),
@@ -14,7 +14,7 @@ export function makeBottomTabs(index, stacks) {
   };
 }
 
-export function createBottomTabs() {
+function createBottomTabs() {
   const A = new Component('A', 'A', { topBar: { title: { text: 'Title A' } } });
   const B = new Component('B', 'B', { topBar: { title: { text: 'Title B' } } });
   const C = new Component('C', 'C', { topBar: { title: { text: 'Title C' } } });

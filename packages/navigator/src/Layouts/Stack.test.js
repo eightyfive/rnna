@@ -11,7 +11,7 @@ export function makeStack(components, options = {}) {
   };
 }
 
-export function createStack() {
+function createStack() {
   const A = new Component('a', 'A', { topBar: { title: { text: 'Title A' } } });
   const B = new Component('b', 'B', { topBar: { title: { text: 'Title B' } } });
   const C = new Component('c', 'C', { topBar: { title: { text: 'Title C' } } });
