@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 
 test('mount', () => {
-  expect(app instanceof Stack).toBe(true);
+  expect(app).toBeInstanceOf(Stack);
 
   expect(Navigation.showModal).toHaveBeenCalledWith({
     stack: makeStack([makeComponent('A', 'A', {}, { foo: 'bar' })]),
