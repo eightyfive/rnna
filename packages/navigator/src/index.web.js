@@ -3,6 +3,8 @@ import SwitchNavigator from './SwitchNavigator';
 import * as Layouts from './Layouts';
 import * as Utils from './utils';
 
+// TA MERE LA PUTE
+
 export { Layouts, Registry, SwitchNavigator, Utils };
 
 export function createSwitchNavigator(routes, config = {}) {
