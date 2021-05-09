@@ -53,16 +53,26 @@ export function createWidget(name, ReactComponent) {
 }
 
 export function createRootNavigator(routes, config = {}) {
-  const [layouts, modals, overlays] = Utils.createLayouts(routes);
+  const [bottomTabs, modals, overlays, stacks] = Utils.resolveLayouts(routes);
+
+  const layouts = {};
+
+  bottomTabs.forEach((args, name) => {
+    layouts[name] = createBottomTabs(...args);
+  });
+
+  stacks.forEach((args, name) => {
+    layouts[name] = createStack(...args);
+  });
 
   const root = new RootNavigator(layouts, config);
 
-  modals.forEach((modal, name) => {
-    root.addModal(name, modal);
+  modals.forEach((args, name) => {
+    root.addModal(name, createModal(...args));
   });
 
-  overlays.forEach((overlay, name) => {
-    root.addOverlay(name, overlay);
+  overlays.forEach((args, name) => {
+    root.addOverlay(name, new Layouts.Overlay(...args));
   });
 
   return root;

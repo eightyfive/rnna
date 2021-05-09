@@ -1,10 +1,10 @@
 import RouterBase from './RouterBase';
 
 export default class Router extends RouterBase {
-  constructor(root) {
-    super(root);
+  constructor(layouts, config) {
+    super(layouts, config);
 
-    this.root.addListener('ComponentDidAppear', this.handleDidAppear);
+    this.addListener('ComponentDidAppear', this.handleDidAppear);
   }
 
   handleDidAppear = ({ componentId }) => {

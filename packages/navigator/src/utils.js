@@ -29,28 +29,28 @@ export function createComponents(routes, parentId) {
   return components;
 }
 
-export function createLayouts(routes) {
-  const layouts = {};
-
+export function resolveLayouts(routes) {
+  const bottomTabs = new Map();
   const modals = new Map();
   const overlays = new Map();
+  const stacks = new Map();
 
   Object.entries(routes).forEach(([name, route]) => {
     const type = getRouteType(route);
 
     if (type === 'overlay') {
-      overlays.set(name, new Overlay(name, name, route));
+      overlays.set(name, [name, name, route]);
     } else {
       const { config: layoutConfig = {}, ...nestedRoutes } = route;
 
       layoutConfig.parentId = name;
 
       if (type === 'bottomTabs') {
-        layouts[name] = createBottomTabs(nestedRoutes, layoutConfig);
+        bottomTabs.set(name, [nestedRoutes, layoutConfig]);
       } else if (type === 'stack') {
-        layouts[name] = createStack(nestedRoutes, layoutConfig);
+        stacks.set(name, [nestedRoutes, layoutConfig]);
       } else if (type === 'modal') {
-        modals.set(name, createModal(nestedRoutes, layoutConfig));
+        modals.set(name, [nestedRoutes, layoutConfig]);
       } else {
         throw new Error(
           `Invalid route (too deep): ${JSON.stringify(route, null, 2)}`,
@@ -59,7 +59,7 @@ export function createLayouts(routes) {
     }
   });
 
-  return [layouts, modals, overlays];
+  return [bottomTabs, modals, overlays, stacks];
 }
 
 // Traverse obj for depth
