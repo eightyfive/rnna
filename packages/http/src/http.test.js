@@ -2,7 +2,7 @@ import { merge } from 'rxjs';
 import { map, skip, tap } from 'rxjs/operators';
 import mock from 'xhr-mock';
 
-import Http from './index';
+import Http from './http';
 
 let api;
 
