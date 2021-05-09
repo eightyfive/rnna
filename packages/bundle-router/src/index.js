@@ -2,8 +2,6 @@ import { Bundle } from 'rnna';
 
 import createRouter from './factory';
 
-// NONCE
-
 export default class RouterProvider extends Bundle {
   register(container) {
     container.service('router', createRouter, 'router.routes');

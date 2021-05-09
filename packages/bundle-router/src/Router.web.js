@@ -1,8 +1,8 @@
 import RouterBase from './RouterBase';
 
 export default class Router extends RouterBase {
-  constructor(root) {
-    super(root);
+  constructor(layouts, config = {}) {
+    super(layouts, config);
 
     this.listeners = [];
 
