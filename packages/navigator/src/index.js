@@ -6,6 +6,8 @@ import * as Utils from './utils';
 
 export { Layouts, Registry, RootNavigator, SwitchNavigator, Utils };
 
+// NONCE
+
 export function createBottomTabs(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
