@@ -4,7 +4,7 @@ import SwitchNavigator from './SwitchNavigator';
 import * as Layouts from './Layouts';
 import * as Utils from './utils';
 
-export { Layouts, Registry, Utils };
+export { Layouts, Registry, RootNavigator, SwitchNavigator, Utils };
 
 export function createBottomTabs(routes, config = {}) {
   const { parentId, ...restConfig } = config;
