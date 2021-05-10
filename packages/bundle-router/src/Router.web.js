@@ -9,10 +9,14 @@ export default class Router extends RouterBase {
     window.addEventListener('popstate', () => this.handlePopstate());
   }
 
-  handlePopstate() {
+  getPath() {
     const { pathname } = new URL(document.location);
 
-    const path = pathname.substring(1);
+    return pathname.substring(1);
+  }
+
+  handlePopstate() {
+    const path = this.getPath();
 
     this.dispatch(path);
   }
@@ -20,9 +24,11 @@ export default class Router extends RouterBase {
   dispatch(path) {
     super.dispatch(path);
 
-    window.history.pushState({}, null, path);
+    if (path !== this.getPath()) {
+      window.history.pushState({}, null, path);
 
-    this.triggerChange(path);
+      this.triggerChange(path);
+    }
   }
 
   triggerChange(path) {
