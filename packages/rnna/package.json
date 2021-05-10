@@ -14,6 +14,7 @@
     "react-native-spacing": "0.x",
     "react-native-textography": "0.x",
     "redux": "4.x",
+    "redux-devtools-extension": "2.x",
     "redux-observable": "1.x",
     "redux-persist": "6.x",
     "rxjs": "6.x"

@@ -1,6 +1,7 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 function isHydrated(persistor) {
   const { bootstrapped } = persistor.getState();
@@ -58,7 +59,9 @@ export default function getStore(
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-  const store = createStore(persistedReducer, applyMiddleware(...middlewares));
+  const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
+
+  const store = createStore(persistedReducer, enhancer);
 
   // Persistor
   const persistor = persistStore(store);
