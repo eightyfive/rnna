@@ -81,12 +81,13 @@ export default function getStore(
   };
 
   store.persistor = persistor;
-  store.hydrate = () => whenHydrated;
 
   // Boot bundles
-  bundles.forEach(bundle => {
-    bundle.boot(container.services, store);
-  });
+  const whenBooted = Promise.all(
+    bundles.map(bundle => bundle.boot(container.services, store)),
+  );
+
+  store.boot = () => Promise.all(whenHydrated, whenBooted);
 
   // Run epics
   if (epicMiddleware) {
