@@ -32,8 +32,10 @@ export default class SwitchNavigator extends Navigator {
     this.layout.mount();
   }
 
-  render(path, props) {
-    const [name, childPath] = this.readPath(path);
+  render(componentId, props) {
+    const [name, childPath] = this.readPath(componentId);
+
+    Object.assign(props, this.props);
 
     if (this.layoutName !== name) {
       // Unmount old layout

@@ -51,14 +51,16 @@ export default class RootNavigator extends SwitchNavigator {
     this.overlays.forEach(name => this.layouts.get(name).mount());
   }
 
-  render(path, props) {
-    const [name, childPath] = this.readPath(path);
+  render(componentId, props) {
+    const [name, childPath] = this.readPath(componentId);
 
     const layout = this.layouts.get(name);
 
     if (!layout) {
       throw new Error(`Layout not found: ${name}`);
     }
+
+    Object.assign(props, this.props);
 
     if (layout instanceof Modal) {
       this.renderModal(name, childPath, props);
