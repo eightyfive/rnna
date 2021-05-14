@@ -1,4 +1,5 @@
 import { Navigation } from 'react-native-navigation';
+import shallowEqual from 'shallowequal';
 
 import Layout from './Layout';
 
@@ -9,7 +10,7 @@ export default class Component extends Layout {
     this.id = id;
     this.name = name;
     this.options = options;
-    this.passProps = {};
+    this.props = {};
   }
 
   mount(initialProps) {
@@ -26,17 +27,19 @@ export default class Component extends Layout {
     };
 
     if (props) {
-      this.passProps = props;
+      this.props = props;
     }
 
-    layout.passProps = { ...this.passProps };
+    layout.props = { ...this.props };
 
     return { component: layout };
   }
 
   update(props) {
-    this.passProps = props;
+    if (!shallowEqual(props, this.props)) {
+      this.props = props;
 
-    Navigation.updateProps(this.id, props);
+      Navigation.updateProps(this.id, props);
+    }
   }
 }

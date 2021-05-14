@@ -19,7 +19,8 @@
     "build": "npx babel src --out-dir dist"
   },
   "dependencies": {
-    "lodash.isplainobject": "4.x"
+    "lodash.isplainobject": "4.x",
+    "shallowequal": "1.x"
   },
   "peerDependencies": {
     "react-native": "0.x",
