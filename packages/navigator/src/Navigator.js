@@ -7,14 +7,19 @@ export default /** abstract */ class Navigator extends Emitter {
     this.layouts = new Map(Object.entries(layouts));
     this.config = config;
     this.order = Array.from(this.layouts.keys());
+    this.props = {};
 
     this.layouts.forEach((layout, name) => {
       this.defineProperty(name, layout);
     });
   }
 
-  render(path, props) {
-    throwAbstract('render(path, props)');
+  addGlobalProp(name, prop) {
+    this.props[name] = prop;
+  }
+
+  render(componentId, props) {
+    throwAbstract('render(componentId, props)');
   }
 
   goBack() {
