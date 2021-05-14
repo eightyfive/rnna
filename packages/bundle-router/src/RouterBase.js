@@ -1,112 +1,110 @@
-import { Layouts, Registry } from '@rnna/navigator';
-
-import RouterNavigator from './RouterNavigator';
-
-export default class RouterBase extends RouterNavigator {
-  constructor(layouts, config = {}) {
-    super(layouts, config);
-
-    this.path = null;
-    this.paths = new Map();
-    this.components = null;
-    this.services = {};
-    this.props = {};
-  }
-
-  setServices(services) {
+export default class RouterBase {
+  constructor(navigator, routes, services) {
+    this.navigator = navigator;
+    this.routes = Object.entries(routes);
     this.services = services;
+
+    this.controllers = new Map();
+    this.matchers = new Map();
+    this.uri = null;
   }
 
-  addGlobalProp(name, prop) {
-    this.props[name] = prop;
+  go(uri) {
+    return this.dispatch(uri);
   }
 
-  getComponents() {
-    if (!this.components) {
-      this.components = new Map();
-
-      this.layouts.forEach(layout => {
-        const isComponent =
-          layout instanceof Layouts.Component ||
-          layout instanceof Layouts.Overlay;
-
-        const isStack =
-          layout instanceof Layouts.Stack || layout instanceof Layouts.Modal;
-
-        if (isComponent) {
-          this.components.set(layout.id, Registry.get(layout.id));
-        }
-
-        if (isStack) {
-          layout.components.forEach(component => {
-            this.components.set(component.id, Registry.get(component.id));
-          });
-        }
-
-        if (layout instanceof Layouts.BottomTabs) {
-          layout.stacks.forEach(stack => {
-            stack.components.forEach(component => {
-              this.components.set(component.id, Registry.get(component.id));
-            });
-          });
-        }
-      });
-    }
-
-    return this.components;
+  goBack() {
+    return this.navigator.goBack();
   }
 
-  match(path) {
-    for (const [componentId, Component] of this.getComponents()) {
-      let params;
+  dispatch(uri) {
+    const [pathname, search = ''] = uri.split('?');
 
-      if (typeof Component.match === 'function') {
-        params = Component.match(path);
-      } else {
-        // Default match
-        params = componentId === path ? [] : false;
-      }
+    const path = pathname.substring(1);
+    const query = qs(search);
 
-      if (params !== false) {
-        return [componentId, Component, params];
-      }
-    }
+    const route = this.match(path);
 
-    return [];
-  }
-
-  go(path) {
-    return this.dispatch(path);
-  }
-
-  dispatch(path) {
-    const [componentId, Component, params] = this.match(path);
-
-    if (!componentId) {
+    if (!route) {
       throw new Error(`No matching route: ${path}`);
     }
 
-    // Save latest path
-    this.path = path;
-    this.paths.set(componentId, path);
+    // Save latest URI
+    this.uri = uri;
 
-    // Compute props
-    const props = Object.assign({}, this.props);
+    const [name, ctrl] = route;
+    const controller = this.getController(ctrl);
+    const args = this.getRouteParams(name, path);
 
-    if (typeof Component.controller === 'function') {
-      Object.assign(props, Component.controller(...params, this.services));
+    args.push(query);
+
+    const [componentId, props] = controller.apply(controller, args);
+
+    this.navigator.render(componentId, props);
+
+    return componentId;
+  }
+
+  match(path) {
+    return this.routes.find(([name]) => this.getMatcher(name).test(path));
+  }
+
+  getMatcher(name) {
+    if (!this.matchers.has(name)) {
+      this.matchers.set(
+        name,
+        new RegExp(`^${name.replace(/\{\w+\}/g, '([\\w-]+)')}$`),
+      );
     }
 
-    if (Component.passProps) {
-      Object.assign(props, Component.passProps);
+    return this.matchers.get(name);
+  }
+
+  getController(ctrl) {
+    const [name, method] = ctrl.split('.');
+
+    if (!this.controllers.has(name)) {
+      this.controllers.set(name, this.services[`${name}.controller`]);
     }
 
-    this.render(componentId, props);
+    const controller = this.controllers.get(name);
+
+    if (!controller) {
+      // TODO: This error should be part of container.services
+      throw new Error(`Controller not found: \`${name}.controller\``);
+    }
+
+    if (!controller[method]) {
+      throw new Error(
+        `Controller method not found: \`${name}.controller:${method}\``,
+      );
+    }
+
+    return controller[method];
+  }
+
+  getRouteParams(name, path) {
+    const [, ...params] = this.getMatcher(name).exec(path) || [];
+
+    return params;
   }
 
   onState() {
-    if (this.path) {
-      this.dispatch(this.path);
+    if (this.uri) {
+      this.dispatch(this.uri);
     }
   }
+}
+
+function qs(search) {
+  return new Map(
+    search
+      .split('&')
+      .filter(Boolean)
+      .map(param => {
+        const [name, value] = param.split('=');
+
+        return [name, value || true];
+      }),
+  );
 }

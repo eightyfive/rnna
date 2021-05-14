@@ -1,16 +1,19 @@
 import { Bundle } from 'rnna';
 
-import createRouter from './factory';
+import Router from './Router';
 
 export default class RouterProvider extends Bundle {
   register(container) {
-    container.service('router', createRouter, 'router.routes');
+    container.factory('router', services => {
+      return new Router(
+        services.navigator,
+        services['router.routes'],
+        services,
+      );
+    });
   }
 
   boot(services, store) {
-    services.router.addGlobalProp('dispatch', store.dispatch);
-    services.router.setServices(services);
-
     store.subscribe(() => services.router.onState());
   }
 }

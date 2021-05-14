@@ -1,38 +1,38 @@
 import RouterBase from './RouterBase';
 
 export default class Router extends RouterBase {
-  constructor(layouts, config = {}) {
-    super(layouts, config);
+  constructor(navigator, routes, services) {
+    super(navigator, routes, services);
 
     this.listeners = [];
 
     window.addEventListener('popstate', () => this.handlePopstate());
   }
 
-  getPath() {
-    const { pathname } = new URL(document.location);
+  getURI() {
+    const { pathname, search = '' } = new URL(document.location);
 
-    return pathname.substring(1);
+    return pathname + search;
   }
 
   handlePopstate() {
-    const path = this.getPath();
+    const uri = this.getURI();
 
-    this.dispatch(path);
+    this.dispatch(uri);
   }
 
-  dispatch(path) {
-    super.dispatch(path);
+  dispatch(uri) {
+    super.dispatch(uri);
 
-    if (path !== this.getPath()) {
-      window.history.pushState({}, null, path);
+    if (uri !== this.getURI()) {
+      window.history.pushState({}, null, uri);
 
-      this.triggerChange(path);
+      this.triggerChange(uri);
     }
   }
 
-  triggerChange(path) {
-    this.listeners.map(listener => listener(path));
+  triggerChange(uri) {
+    this.listeners.map(listener => listener(uri));
   }
 
   subscribe(listener) {
