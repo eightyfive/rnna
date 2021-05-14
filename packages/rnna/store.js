@@ -96,5 +96,5 @@ export default async function createStoreAsync(
     epicMiddleware.run(rootEpic);
   }
 
-  return whenHydrated;
+  return whenHydrated.then(() => store);
 }
