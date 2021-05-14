@@ -1,0 +1,36 @@
+{
+  "name": "@rnna/bundle-navigator",
+  "version": "0.0.0",
+  "description": "Navigator bundle (React Native Navigation App)",
+  "keywords": [
+    "rnna",
+    "rnna-bundle",
+    "react-native"
+  ],
+  "main": "src/index.js",
+  "browser": "dist/index.js",
+  "react-native": "src/index.js",
+  "files": [
+    "dist/**/*.js",
+    "src/**/*.js"
+  ],
+  "scripts": {
+    "build": "npx babel src --out-dir dist"
+  },
+  "dependencies": {
+    "@rnna/navigator": "latest"
+  },
+  "peerDependencies": {
+    "react-native-navigation": "*",
+    "rnna": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/bundle-navigator"
+  },
+  "author": "Benoit Sagols",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
