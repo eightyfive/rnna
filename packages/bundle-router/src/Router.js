@@ -16,10 +16,10 @@ export default class Router extends RouterBase {
   };
 
   dispatch(uri) {
-    const componentId = super.dispatch(uri);
+    const res = super.dispatch(uri);
 
-    this.uris.set(componentId, uri);
+    this.uris.set(res[0], uri);
 
-    return componentId;
+    return res;
   }
 }

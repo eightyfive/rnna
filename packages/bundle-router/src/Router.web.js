@@ -22,13 +22,15 @@ export default class Router extends RouterBase {
   }
 
   dispatch(uri) {
-    super.dispatch(uri);
+    const res = super.dispatch(uri);
 
     if (uri !== this.getURI()) {
       window.history.pushState({}, null, uri);
 
       this.triggerChange(uri);
     }
+
+    return res;
   }
 
   triggerChange(uri) {

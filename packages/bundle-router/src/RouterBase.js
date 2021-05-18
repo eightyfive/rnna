@@ -33,16 +33,15 @@ export default class RouterBase {
     this.uri = uri;
 
     const [name, ctrl] = route;
-    const controller = this.getController(ctrl);
-    const args = this.getRouteParams(name, path);
+    const [controller, method] = this.getController(ctrl);
+    const params = this.getRouteParams(name, path);
+    const args = [...params, query];
 
-    args.push(query);
-
-    const [componentId, props] = controller.apply(controller, args);
+    const [componentId, props] = controller[method].apply(controller, args);
 
     this.navigator.render(componentId, props);
 
-    return componentId;
+    return [componentId, params];
   }
 
   match(path) {
@@ -80,7 +79,7 @@ export default class RouterBase {
       );
     }
 
-    return controller[method];
+    return [controller, method];
   }
 
   getRouteParams(name, path) {
