@@ -18,9 +18,7 @@ export default class RouterBase {
   }
 
   dispatch(uri) {
-    const [pathname, search = ''] = uri.split('?');
-
-    const path = pathname.substring(1);
+    const [path, search = ''] = uri.split('?');
     const query = qs(search);
 
     const route = this.match(path);
@@ -39,9 +37,9 @@ export default class RouterBase {
 
     const [componentId, props] = controller[method].apply(controller, args);
 
-    this.navigator.render(componentId, props);
+    this.navigator.render(componentId, props || {});
 
-    return [componentId, params];
+    return [componentId, params, query];
   }
 
   match(path) {
@@ -96,14 +94,16 @@ export default class RouterBase {
 }
 
 function qs(search) {
-  return new Map(
-    search
-      .split('&')
-      .filter(Boolean)
-      .map(param => {
-        const [name, value] = param.split('=');
+  const query = {};
 
-        return [name, value || true];
-      }),
-  );
+  search
+    .split('&')
+    .filter(Boolean)
+    .forEach(param => {
+      const [name, value] = param.split('=');
+
+      query[name] = value;
+    });
+
+  return query;
 }
