@@ -12,7 +12,7 @@ export default class Router extends RouterBase {
   getURI() {
     const { pathname, search = '' } = new URL(document.location);
 
-    return pathname + search;
+    return pathname.substring(1) + search;
   }
 
   handlePopstate() {
@@ -24,25 +24,14 @@ export default class Router extends RouterBase {
   dispatch(uri) {
     const res = super.dispatch(uri);
 
-    if (uri !== this.getURI()) {
-      window.history.pushState({}, null, uri);
+    const current = this.getURI();
 
-      this.triggerChange(uri);
+    if (current !== uri) {
+      // console.log('pushState', current, uri);
+
+      window.history.pushState({}, null, `/${uri}`);
     }
 
     return res;
-  }
-
-  triggerChange(uri) {
-    this.listeners.map(listener => listener(uri));
-  }
-
-  subscribe(listener) {
-    this.listeners.push(listener);
-
-    return () => {
-      const index = this.listeners.indexOf(listener);
-      this.listeners.splice(index, 1);
-    };
   }
 }
