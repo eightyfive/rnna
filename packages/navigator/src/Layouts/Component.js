@@ -30,7 +30,7 @@ export default class Component extends Layout {
       this.props = props;
     }
 
-    layout.props = { ...this.props };
+    layout.passProps = { ...this.props };
 
     return { component: layout };
   }
