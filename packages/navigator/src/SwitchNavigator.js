@@ -29,7 +29,9 @@ export default class SwitchNavigator extends Navigator {
   }
 
   remount() {
-    this.layout.mount();
+    if (this.layout) {
+      this.layout.mount();
+    }
   }
 
   render(componentId, props) {
