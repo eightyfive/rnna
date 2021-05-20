@@ -1,8 +1,39 @@
+const reNamespace = /(\w+\.)\*/;
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+const handler = {
+  get(target, key) {
+    if (target.hasOwnProperty(key)) {
+      return target[key];
+    }
+
+    const [, namespace] = reNamespace.exec(key) || [];
+
+    if (!namespace) {
+      throw new Error(`Service not found: ${key}`);
+    }
+
+    const services = {};
+
+    Object.entries(target).forEach(([name, service]) => {
+      if (name.indexOf(namespace) === 0) {
+        services[name.replace(namespace, '')] = service;
+      }
+    });
+
+    if (!Object.keys(services).length) {
+      throw new Error(`Namespace not found: ${key}`);
+    }
+
+    return services;
+  },
+};
+
 export default class Container {
   constructor() {
     this.defined = new Map();
     this.instances = new Map();
-    this.services = {};
+    this.services = new Proxy({}, handler);
   }
 
   service(name, creator, ...deps) {
@@ -19,6 +50,23 @@ export default class Container {
 
   constant(name, value) {
     this.defineProperty(name, { value: value });
+  }
+
+  resolve(name) {
+    if (this.services.hasOwnProperty(name)) {
+      return this.services[name];
+    }
+
+    const services = {};
+    const namespace = `${name}.`;
+
+    this.defined.forEach(key => {
+      if (key.indexOf(namespace) === 0) {
+        services[key.replace(namespace, '')] = this.services[key];
+      }
+    });
+
+    return services;
   }
 
   defineSingleton(name, getInstance) {
