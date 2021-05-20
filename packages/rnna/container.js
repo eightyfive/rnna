@@ -14,11 +14,12 @@ const handler = {
     }
 
     const services = {};
+    const names = Object.keys(target).filter(
+      name => name.indexOf(namespace) === 0,
+    );
 
-    Object.entries(target).forEach(([name, service]) => {
-      if (name.indexOf(namespace) === 0) {
-        services[name.replace(namespace, '')] = service;
-      }
+    names.forEach(name => {
+      services[name.replace(namespace, '')] = target[name];
     });
 
     if (!Object.keys(services).length) {
@@ -50,23 +51,6 @@ export default class Container {
 
   constant(name, value) {
     this.defineProperty(name, { value: value });
-  }
-
-  resolve(name) {
-    if (this.services.hasOwnProperty(name)) {
-      return this.services[name];
-    }
-
-    const services = {};
-    const namespace = `${name}.`;
-
-    this.defined.forEach(key => {
-      if (key.indexOf(namespace) === 0) {
-        services[key.replace(namespace, '')] = this.services[key];
-      }
-    });
-
-    return services;
   }
 
   defineSingleton(name, getInstance) {
