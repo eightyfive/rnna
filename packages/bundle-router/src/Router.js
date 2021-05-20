@@ -1,8 +1,8 @@
 import RouterBase from './RouterBase';
 
 export default class Router extends RouterBase {
-  constructor(navigator, routes, services) {
-    super(navigator, routes, services);
+  constructor(navigator, controllers) {
+    super(navigator, controllers);
 
     this.uris = new Map();
 

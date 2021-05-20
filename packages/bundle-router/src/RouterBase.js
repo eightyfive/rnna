@@ -1,11 +1,7 @@
 export default class RouterBase {
-  constructor(navigator, routes, services) {
+  constructor(navigator, controllers) {
     this.navigator = navigator;
-    this.routes = Object.entries(routes);
-    this.services = services;
-
-    this.controllers = new Map();
-    this.matchers = new Map();
+    this.controllers = Object.values(controllers);
     this.uri = null;
   }
 
@@ -21,69 +17,20 @@ export default class RouterBase {
     const [path, search = ''] = uri.split('?');
     const query = qs(search);
 
-    const route = this.match(path);
+    for (const controller of this.controllers) {
+      const [componentId, props = {}] = controller.match(path, query) || [];
 
-    if (!route) {
-      throw new Error(`No matching route: ${path}`);
+      if (componentId) {
+        // Save latest URI
+        this.uri = uri;
+
+        this.navigator.render(componentId, props);
+
+        return [componentId, props];
+      }
     }
 
-    // Save latest URI
-    this.uri = uri;
-
-    const [name, ctrl] = route;
-    const [controller, method] = this.getController(ctrl);
-    const params = this.getRouteParams(name, path);
-    const args = [...params, query];
-
-    const [componentId, props] = controller[method].apply(controller, args);
-
-    this.navigator.render(componentId, props || {});
-
-    return [componentId, params, query];
-  }
-
-  match(path) {
-    return this.routes.find(([name]) => this.getMatcher(name).test(path));
-  }
-
-  getMatcher(name) {
-    if (!this.matchers.has(name)) {
-      this.matchers.set(
-        name,
-        new RegExp(`^${name.replace(/\{\w+\}/g, '([\\w-]+)')}$`),
-      );
-    }
-
-    return this.matchers.get(name);
-  }
-
-  getController(ctrl) {
-    const [name, method] = ctrl.split('.');
-
-    if (!this.controllers.has(name)) {
-      this.controllers.set(name, this.services[`${name}.controller`]);
-    }
-
-    const controller = this.controllers.get(name);
-
-    if (!controller) {
-      // TODO: This error should be part of container.services
-      throw new Error(`Controller not found: \`${name}.controller\``);
-    }
-
-    if (!controller[method]) {
-      throw new Error(
-        `Controller method not found: \`${name}.controller:${method}\``,
-      );
-    }
-
-    return [controller, method];
-  }
-
-  getRouteParams(name, path) {
-    const [, ...params] = this.getMatcher(name).exec(path) || [];
-
-    return params;
+    throw new Error(`No matching controller: ${path}`);
   }
 
   onState() {
