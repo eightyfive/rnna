@@ -17,3 +17,23 @@ export class Bundle {
     return [];
   }
 }
+
+export class Controller {
+  match(path, query = {}) {
+    throw new Error(
+      `Implement ${this.constructor.name}.match(path, query = {}) method`,
+    );
+  }
+}
+
+export class Listener {
+  listen(type) {
+    throw new Error(`Implement ${this.constructor.name}.listen(type) method`);
+  }
+
+  handle(payload) {
+    throw new Error(
+      `Implement ${this.constructor.name}.handle(payload) method`,
+    );
+  }
+}
