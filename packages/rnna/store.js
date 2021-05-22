@@ -25,19 +25,13 @@ function getHydratedAsync(persistor) {
 }
 
 export default async function createStoreAsync(
-  {
-    epics = [],
-    middlewares = [],
-    persist: persistConfig,
-    reducers = {},
-    bundles = [],
-  },
+  { epics = [], middlewares = [], persist: persistConfig, reducers = {} },
   container,
 ) {
-  let jobs;
+  const bundles = Object.values(container.services['bundles.*']);
 
   // Register bundles
-  jobs = bundles.map(bundle => {
+  const registered = bundles.map(bundle => {
     Object.assign(reducers, bundle.getReducers());
 
     epics.push(...bundle.getEpics());
@@ -45,7 +39,7 @@ export default async function createStoreAsync(
     return bundle.register(container);
   });
 
-  await Promise.all(jobs);
+  await Promise.all(registered);
 
   // Epics
   let rootEpic;
@@ -87,9 +81,9 @@ export default async function createStoreAsync(
   store.persistor = persistor;
 
   // Boot bundles
-  jobs = bundles.map(bundle => bundle.boot(container.services, store));
+  const booted = bundles.map(bundle => bundle.boot(container.services, store));
 
-  await Promise.all(jobs);
+  await Promise.all(booted);
 
   // Run epics
   if (epicMiddleware) {
