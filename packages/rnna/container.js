@@ -22,10 +22,6 @@ const handler = {
       services[name.replace(namespace, '')] = target[name];
     });
 
-    if (!Object.keys(services).length) {
-      throw new Error(`Namespace not found: ${key}`);
-    }
-
     return services;
   },
 };
