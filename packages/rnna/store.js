@@ -31,7 +31,7 @@ export default async function createStoreAsync(
   const bundles = Object.values(container.services['bundles.*']);
 
   // Register bundles
-  const registered = bundles.map(bundle => {
+  const whenRegistered = bundles.map(bundle => {
     Object.assign(reducers, bundle.getReducers());
 
     epics.push(...bundle.getEpics());
@@ -39,7 +39,7 @@ export default async function createStoreAsync(
     return bundle.register(container);
   });
 
-  await Promise.all(registered);
+  await Promise.all(whenRegistered);
 
   // Epics
   let rootEpic;
@@ -66,10 +66,9 @@ export default async function createStoreAsync(
 
   const whenHydrated = getHydratedAsync(persistor);
 
-  // "Enhance" store
+  // FSA dispatch
   const storeDispatch = store.dispatch;
 
-  // FSA dispatch
   store.dispatch = (action, payload) => {
     if (typeof action === 'string') {
       return storeDispatch({ type: action, payload });
@@ -81,9 +80,9 @@ export default async function createStoreAsync(
   store.persistor = persistor;
 
   // Boot bundles
-  const booted = bundles.map(bundle => bundle.boot(container.services, store));
+  const whenBooted = bundles.map(bundle => bundle.boot(container.services, store));
 
-  await Promise.all(booted);
+  await Promise.all(whenBooted);
 
   // Run epics
   if (epicMiddleware) {
