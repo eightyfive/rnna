@@ -3,6 +3,7 @@ export default class RouterBase {
     this.navigator = navigator;
     this.controllers = Object.values(controllers);
     this.uri = null;
+    this.state = null;
   }
 
   go(uri) {
@@ -33,8 +34,10 @@ export default class RouterBase {
     throw new Error(`No matching controller: ${path}`);
   }
 
-  onState() {
-    if (this.uri) {
+  onState(state) {
+    if (this.uri && this.state !== state) {
+      this.state = state;
+
       this.dispatch(this.uri);
     }
   }

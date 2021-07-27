@@ -8,6 +8,6 @@ export default class RouterProvider extends Bundle {
   }
 
   boot(services, store) {
-    store.subscribe(() => services.router.onState());
+    store.subscribe(() => services.router.onState(store.getState()));
   }
 }
