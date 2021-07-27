@@ -1,6 +1,6 @@
 {
   "name": "@rnna/bundle-events",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Events bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
@@ -17,7 +17,6 @@
   "scripts": {
     "build": "npx babel src --out-dir dist"
   },
-  "dependencies": {},
   "peerDependencies": {
     "rnna": "*"
   },

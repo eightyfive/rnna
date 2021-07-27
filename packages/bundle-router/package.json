@@ -1,6 +1,6 @@
 {
   "name": "@rnna/bundle-router",
-  "version": "0.0.1-alpha.16",
+  "version": "0.0.1",
   "description": "Router bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
@@ -17,7 +17,6 @@
   "scripts": {
     "build": "npx babel src --out-dir dist"
   },
-  "dependencies": {},
   "peerDependencies": {
     "react-native-navigation": "*",
     "rnna": "*"
