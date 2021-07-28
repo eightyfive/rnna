@@ -28,7 +28,7 @@ const actions = next => req$ => {
 
     map(([res, req]) => {
       const url = parseUrl(req.url);
-      const data = res.response.data || res.response;
+      const data = (res.response || {}).data || res.response;
 
       // Res action
       return {
