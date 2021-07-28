@@ -1,4 +1,3 @@
-import parseUrl from 'url-parse';
 import produce from 'immer';
 
 const initialState = {
@@ -7,7 +6,6 @@ const initialState = {
   PUT: {},
   DELETE: {},
   //
-  fetching: [],
   creating: [],
   reading: [],
   updating: [],
@@ -16,61 +14,53 @@ const initialState = {
 
 export default function createReducer() {
   return produce((draft, { meta = {} }) => {
-    const { req, res } = meta;
+    const { req, res, url } = meta;
 
-    if (req) {
-      const { pathname } = parseUrl(req.url);
+    if (req && res) {
+      // Response
+      draft[req.method][url.pathname] = res.status;
 
-      if (res) {
-        // Response
-        draft[req.method][pathname] = res.status;
+      // C
+      if (req.method === 'POST') {
+        draft.creating = draft.creating.filter(path => path !== url.pathname);
+      }
 
-        draft.fetching = draft.fetching.filter(path => path !== pathname);
+      // R
+      if (req.method === 'GET') {
+        draft.reading = draft.reading.filter(path => path !== url.pathname);
+      }
 
-        // C
-        if (req.method === 'POST') {
-          draft.creating = draft.creating.filter(path => path !== pathname);
-        }
+      // U
+      if (req.method === 'PUT') {
+        draft.updating = draft.updating.filter(path => path !== url.pathname);
+      }
 
-        // R
-        if (req.method === 'GET') {
-          draft.reading = draft.reading.filter(path => path !== pathname);
-        }
+      // D
+      if (req.method === 'DELETE') {
+        draft.deleting = draft.deleting.filter(path => path !== url.pathname);
+      }
+    } else if (req) {
+      // Request
+      draft[req.method][url.pathname] = 202;
 
-        // U
-        if (req.method === 'PUT') {
-          draft.updating = draft.updating.filter(path => path !== pathname);
-        }
+      // C
+      if (req.method === 'POST') {
+        draft.creating.push(url.pathname);
+      }
 
-        // D
-        if (req.method === 'DELETE') {
-          draft.deleting = draft.deleting.filter(path => path !== pathname);
-        }
-      } else {
-        // Request
-        draft[req.method][pathname] = 202;
+      // R
+      if (req.method === 'GET') {
+        draft.reading.push(url.pathname);
+      }
 
-        draft.fetching.push(pathname);
+      // U
+      if (req.method === 'PUT') {
+        draft.updating.push(url.pathname);
+      }
 
-        // C
-        if (req.method === 'POST') {
-          draft.creating.push(pathname);
-        }
-
-        // R
-        if (req.method === 'GET') {
-          draft.reading.push(pathname);
-        }
-
-        // U
-        if (req.method === 'PUT') {
-          draft.updating.push(pathname);
-        }
-
-        // D
-        if (req.method === 'DELETE') {
-          draft.deleting.push(pathname);
-        }
+      // D
+      if (req.method === 'DELETE') {
+        draft.deleting.push(url.pathname);
       }
     }
   }, initialState);

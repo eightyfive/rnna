@@ -20,8 +20,7 @@
   "dependencies": {
     "@rnna/http": "latest",
     "immer": "8.x",
-    "reselect": "4.x",
-    "url-parse": "1.5.x"
+    "reselect": "4.x"
   },
   "peerDependencies": {
     "rnna": "*"
