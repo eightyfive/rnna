@@ -9,7 +9,7 @@ export default class ApiBundle extends Bundle {
     container.service('api', createHttp, 'api.defaults');
   }
 
-  boot(services, store) {
+  boot(services) {
     if (services.db) {
       Object.assign(services.db, selectors);
     }
