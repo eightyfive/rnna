@@ -1,10 +1,10 @@
 import Http from '@rnna/http';
-import uses from '@rnna/http/use';
+import actions from '@rnna/http/use/actions';
 
 export default function createHttp(defaults) {
   const http = new Http(defaults);
 
-  http.use(uses.actions);
+  http.use(actions);
 
   return http;
 }
