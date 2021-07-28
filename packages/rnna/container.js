@@ -10,7 +10,7 @@ const handler = {
     const [, namespace] = reNamespace.exec(key) || [];
 
     if (!namespace) {
-      throw new Error(`Service not found: ${key}`);
+      return null; // Not Found
     }
 
     const services = {};
