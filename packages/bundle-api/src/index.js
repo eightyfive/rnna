@@ -10,7 +10,9 @@ export default class ApiBundle extends Bundle {
   }
 
   boot(services, store) {
-    Object.assign(services.db, selectors);
+    if (services.db) {
+      Object.assign(services.db, selectors);
+    }
   }
 
   getReducers() {
