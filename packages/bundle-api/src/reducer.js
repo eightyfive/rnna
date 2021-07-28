@@ -13,12 +13,12 @@ const initialState = {
 };
 
 export default function createReducer() {
-  return produce((draft, { meta = {} }) => {
+  return produce((draft, { error = false, meta = {} }) => {
     const { req, res, url } = meta;
 
-    if (req && res) {
+    if (error || (req && res)) {
       // Response
-      draft[req.method][url.pathname] = res.status;
+      draft[req.method][url.pathname] = (res || {}).status || 500;
 
       // C
       if (req.method === 'POST') {
