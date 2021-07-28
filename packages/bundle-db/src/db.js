@@ -5,6 +5,7 @@ export default function createDb(selectors = {}) {
     store = val;
   }
 
+  // Web Proxy
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
   const handler = {
     get(target, key) {
