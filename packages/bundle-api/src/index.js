@@ -2,6 +2,7 @@ import { Bundle } from 'rnna';
 
 import createHttp from './http';
 import createReducer from './reducer';
+import * as selectors from './selectors';
 
 export default class ApiBundle extends Bundle {
   register(container) {
@@ -16,9 +17,5 @@ export default class ApiBundle extends Bundle {
     return {
       api: createReducer(),
     };
-  }
-
-  getEpics() {
-    return [];
   }
 }
