@@ -6,7 +6,7 @@ import * as selectors from './selectors';
 
 export default class ApiBundle extends Bundle {
   register(container) {
-    container.service('api', createHttp, 'api.defaults');
+    container.service('api', createHttp, 'api.*');
   }
 
   boot(services) {
