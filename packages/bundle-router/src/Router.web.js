@@ -1,8 +1,8 @@
 import RouterBase from './RouterBase';
 
 export default class Router extends RouterBase {
-  constructor(navigator, controllers) {
-    super(navigator, controllers);
+  constructor(navigator, routes) {
+    super(navigator, routes);
 
     window.addEventListener('popstate', () => this.handlePopstate());
   }
