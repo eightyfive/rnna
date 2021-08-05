@@ -17,6 +17,9 @@
   "scripts": {
     "build": "npx babel src --out-dir dist"
   },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
   "peerDependencies": {
     "react-native-navigation": "*",
     "rnna": "*"
