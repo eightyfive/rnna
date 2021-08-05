@@ -1,15 +1,18 @@
 import { EMPTY } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs/operators';
 
 export { default as onAppState } from './app-state';
 export { default as onBoot } from './boot';
 export { default as onRegister } from './register';
 
-export function onAction(handler) {
+export function onAction(type, handler) {
+  const types = typeof type === 'string' ? [type] : type;
+
   return (action$, state$, services) =>
     action$.pipe(
-      mergeMap(action => {
-        const res = handler(action, services);
+      filter(({ type }) => types.includes(type)),
+      mergeMap(({ payload }) => {
+        const res = handler(payload, services);
 
         if (res === undefined) {
           return EMPTY;
