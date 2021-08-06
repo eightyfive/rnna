@@ -44,7 +44,7 @@ export default class RouterBase {
     return this.navigator.goBack();
   }
 
-  dispatch(uri) {
+  render(uri) {
     const [path, search = ''] = uri.split('?');
     const query = qs(search);
 
@@ -52,25 +52,29 @@ export default class RouterBase {
       if (route === uri) {
         const [componentId, props = {}] = controller(this.services, query);
 
-        // Save latest URI
-        this.uri = uri;
-
         this.navigator.render(componentId, props);
 
-        return this.fire('dispatch', { componentId, props, uri, path, query });
+        return [componentId, props];
       }
     }
 
     throw new Error(`No matching controller: ${path}`);
   }
 
+  dispatch(uri) {
+    const [componentId, props] = this.render(uri);
+
+    // Save latest URI
+    this.uri = uri;
+
+    this.fire('dispatch', { componentId, props });
+  }
+
   onState(state) {
     if (this.uri && this.state !== state) {
-      console.log('State diff', difference(this.state, state));
-
       this.state = state;
 
-      this.dispatch(this.uri);
+      this.render(this.uri);
     }
   }
 }
@@ -88,18 +92,4 @@ function qs(search) {
     });
 
   return query;
-}
-
-function difference(object, base) {
-  function changes(object, base) {
-    return _.transform(object, function(result, value, key) {
-      if (!_.isEqual(value, base[key])) {
-        result[key] =
-          _.isObject(value) && _.isObject(base[key])
-            ? changes(value, base[key])
-            : value;
-      }
-    });
-  }
-  return changes(object, base);
 }
