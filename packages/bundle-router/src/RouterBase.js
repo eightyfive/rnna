@@ -6,6 +6,7 @@ export default class RouterBase {
     this.state = null;
     this.services = {};
     this.listeners = {};
+    this.listeners = {};
   }
 
   setServices(services) {
@@ -49,8 +50,17 @@ export default class RouterBase {
     const query = qs(search);
 
     for (const [route, controller] of Object.entries(this.routes)) {
-      if (route === uri) {
-        const [componentId, props = {}] = controller(this.services, query);
+      const re = new RegExp(`^${route}$`);
+      const res = re.exec(uri);
+
+      if (res) {
+        const [, ...params] = res;
+
+        const [componentId, props = {}] = controller.apply(controller, [
+          ...params,
+          this.services,
+          query,
+        ]);
 
         this.navigator.render(componentId, props);
 
