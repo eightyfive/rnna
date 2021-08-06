@@ -8,17 +8,12 @@
     "react-native"
   ],
   "main": "src/index.js",
-  "browser": "dist/index.js",
-  "react-native": "src/index.js",
   "files": [
     "dist/**/*.js",
     "src/**/*.js"
   ],
   "scripts": {
     "build": "npx babel src --out-dir dist"
-  },
-  "dependencies": {
-    "lodash": "^4.17.21"
   },
   "peerDependencies": {
     "react-native-navigation": "*",
