@@ -1,7 +1,8 @@
 export default class RouterBase {
-  constructor(navigator, routes) {
+  constructor(navigator, routes, options) {
     this.navigator = navigator;
     this.routes = routes;
+    this.options = options || {};
     this.uri = null;
     this.state = null;
     this.services = {};

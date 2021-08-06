@@ -1,8 +1,8 @@
 import RouterBase from './RouterBase';
 
 export default class Router extends RouterBase {
-  constructor(navigator, routes) {
-    super(navigator, routes);
+  constructor(navigator, routes, options) {
+    super(navigator, routes, options);
 
     window.addEventListener('popstate', () => this.handlePopstate());
   }
@@ -24,7 +24,7 @@ export default class Router extends RouterBase {
 
     const current = this.getURI();
 
-    if (current !== uri) {
+    if (current !== uri && !(this.options.blacklist || []).includes(uri)) {
       // console.log('pushState', current, uri);
 
       window.history.pushState({}, null, `/${uri}`);
