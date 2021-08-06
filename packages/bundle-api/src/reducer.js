@@ -16,28 +16,36 @@ export default function createReducer() {
   return produce((draft, { error = false, meta = {} }) => {
     const { req, res, url } = meta;
 
+    let paths;
+
     if (error || (req && res)) {
       // Response
       draft[req.method][url.pathname] = (res || {}).status || 500;
 
       // C
       if (req.method === 'POST') {
-        draft.creating = draft.creating.filter(path => path !== url.pathname);
+        paths = draft.creating;
       }
 
       // R
       if (req.method === 'GET') {
-        draft.reading = draft.reading.filter(path => path !== url.pathname);
+        paths = draft.reading;
       }
 
       // U
       if (req.method === 'PUT') {
-        draft.updating = draft.updating.filter(path => path !== url.pathname);
+        paths = draft.updating;
       }
 
       // D
       if (req.method === 'DELETE') {
-        draft.deleting = draft.deleting.filter(path => path !== url.pathname);
+        paths = draft.deleting;
+      }
+
+      const index = paths.indexOf(url.pathname);
+
+      if (index !== -1) {
+        paths.splice(index, 1);
       }
     } else if (req) {
       // Request
@@ -45,23 +53,25 @@ export default function createReducer() {
 
       // C
       if (req.method === 'POST') {
-        draft.creating.push(url.pathname);
+        paths = draft.creating;
       }
 
       // R
       if (req.method === 'GET') {
-        draft.reading.push(url.pathname);
+        paths = draft.reading;
       }
 
       // U
       if (req.method === 'PUT') {
-        draft.updating.push(url.pathname);
+        paths = draft.updating;
       }
 
       // D
       if (req.method === 'DELETE') {
-        draft.deleting.push(url.pathname);
+        paths = draft.deleting;
       }
+
+      paths.push(url.pathname);
     }
   }, initialState);
 }
