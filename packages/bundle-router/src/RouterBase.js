@@ -7,7 +7,6 @@ export default class RouterBase {
     this.state = null;
     this.services = {};
     this.listeners = {};
-    this.listeners = {};
   }
 
   setServices(services) {
