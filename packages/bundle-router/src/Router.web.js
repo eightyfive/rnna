@@ -8,8 +8,7 @@ export default class Router extends RouterBase {
   }
 
   handlePopstate() {
-    const { pathname, search = '' } = new URL(document.location);
-    const uri = pathname.substring(1) + search;
+    const uri = this.getLocationUri();
 
     this.dispatch(uri);
   }
@@ -31,5 +30,11 @@ export default class Router extends RouterBase {
       // https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
       window.history.pushState({}, null, `/${uri}`);
     }
+  }
+
+  getLocationUri() {
+    const { pathname, search = '' } = new URL(document.location);
+
+    return pathname.substring(1) + search;
   }
 }
