@@ -16,7 +16,7 @@ export default class Router extends RouterBase {
 
   dispatch(uri) {
     const redirect = this.options.redirects[uri];
-    const redirection = redirect ? redirect(this.services) : false;
+    const redirection = redirect ? redirect(this.services) : undefined;
 
     if (typeof redirection === 'string') {
       super.dispatch(redirection);
