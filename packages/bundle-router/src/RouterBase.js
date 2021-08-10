@@ -2,7 +2,7 @@ export default class RouterBase {
   constructor(navigator, routes, options) {
     this.navigator = navigator;
     this.routes = routes;
-    this.options = options || {};
+    this.options = Object.assign({ redirects: {} }, options || {});
     this.uri = null;
     this.state = null;
     this.services = {};
@@ -78,7 +78,7 @@ export default class RouterBase {
     // Save latest URI
     this.uri = uri;
 
-    this.fire('dispatch', { componentId, props });
+    this.fire('dispatch', { componentId, props, uri });
   }
 
   onState(state) {

@@ -7,19 +7,17 @@ export default class Router extends RouterBase {
     this.uris = new Map();
 
     this.navigator.addListener('ComponentDidAppear', this.handleDidAppear);
+
+    this.addListener('dispatch', this.handleDispatch);
   }
 
   handleDidAppear = ({ componentId }) => {
     const uri = this.uris.get(componentId);
 
-    this.dispatch(uri);
+    this.render(uri);
   };
 
-  dispatch(uri) {
-    const res = super.dispatch(uri);
-
-    this.uris.set(res[0], uri);
-
-    return res;
-  }
+  handleDispatch = ({ componentId, uri }) => {
+    this.uris.set(componentId, uri);
+  };
 }

@@ -4,32 +4,32 @@ export default class Router extends RouterBase {
   constructor(navigator, routes, options) {
     super(navigator, routes, options);
 
-    window.addEventListener('popstate', () => this.handlePopstate());
-  }
-
-  getURI() {
-    const { pathname, search = '' } = new URL(document.location);
-
-    return pathname.substring(1) + search;
+    window.addEventListener('popstate', this.handlePopstate.bind(this));
   }
 
   handlePopstate() {
-    const uri = this.getURI();
+    const { pathname, search = '' } = new URL(document.location);
+    const uri = pathname.substring(1) + search;
 
     this.dispatch(uri);
   }
 
   dispatch(uri) {
-    const res = super.dispatch(uri);
+    const redirect = this.options.redirects[uri];
+    const redirection = redirect ? redirect(this.services) : false;
 
-    const current = this.getURI();
+    if (typeof redirection === 'string') {
+      super.dispatch(redirection);
 
-    if (current !== uri && !(this.options.blacklist || []).includes(uri)) {
-      // console.log('pushState', current, uri);
+      // Replace
+      // https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
+      window.history.replaceState({}, null, `/${redirection}`);
+    } else {
+      super.dispatch(uri);
 
+      // Push
+      // https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
       window.history.pushState({}, null, `/${uri}`);
     }
-
-    return res;
   }
 }
