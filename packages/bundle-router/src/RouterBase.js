@@ -51,7 +51,7 @@ export default class RouterBase {
 
     for (const [route, controller] of Object.entries(this.routes)) {
       const re = new RegExp(`^${route}$`);
-      const res = re.exec(uri);
+      const res = re.exec(path);
 
       if (res) {
         const [, ...params] = res;
