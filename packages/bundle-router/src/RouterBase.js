@@ -7,6 +7,12 @@ export default class RouterBase {
     this.state = null;
     this.services = {};
     this.listeners = {};
+
+    this.notFound = this.routes['_404'] || null;
+
+    if (this.notFound) {
+      delete this.routes['_404'];
+    }
   }
 
   setServices(services) {
@@ -49,26 +55,43 @@ export default class RouterBase {
     const [path, search = ''] = uri.split('?');
     const query = qs(search);
 
+    let componentId;
+    let props;
+    let params;
+
     for (const [route, controller] of Object.entries(this.routes)) {
       const re = new RegExp(`^${route}$`);
       const res = re.exec(path);
 
       if (res) {
-        const [, ...params] = res;
+        [, ...params] = res;
 
-        const [componentId, props = {}] = controller.apply(controller, [
+        [componentId, props = {}] = controller.apply(controller, [
           ...params,
           this.services,
           query,
         ]);
-
-        this.navigator.render(componentId, props);
-
-        return [componentId, path, query, params];
+        break;
       }
     }
 
-    throw new Error(`No matching controller: ${path}`);
+    if (!componentId && this.notFound) {
+      [componentId, props = {}] = this.notFound.apply(this.notFound, [
+        this.services,
+      ]);
+    }
+
+    if (componentId) {
+      this.navigator.render(componentId, props);
+
+      return [componentId, path, query, params || []];
+    }
+
+    const err = new Error(`No matching controller: ${path}`);
+
+    Object.assign(err, { name: 'RouteNotFound', path, uri });
+
+    throw err;
   }
 
   dispatch(uri) {
