@@ -64,7 +64,7 @@ export default class RouterBase {
 
         this.navigator.render(componentId, props);
 
-        return [componentId, props];
+        return [componentId, path, query, params];
       }
     }
 
@@ -72,12 +72,12 @@ export default class RouterBase {
   }
 
   dispatch(uri) {
-    const [componentId, props] = this.render(uri);
+    const [componentId, path, query, params] = this.render(uri);
 
     // Save latest URI
     this.uri = uri;
 
-    this.emit('dispatch', { componentId, props, uri });
+    this.emit('dispatch', { componentId, uri, path, query, params });
   }
 
   onState(state) {
