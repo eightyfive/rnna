@@ -8,13 +8,6 @@
     "rx"
   ],
   "main": "src/index.js",
-  "files": [
-    "dist/**/*.js",
-    "src/**/*.js"
-  ],
-  "scripts": {
-    "build": "npx babel src --out-dir dist"
-  },
   "dependencies": {
     "url-parse": "1.5.x"
   },
