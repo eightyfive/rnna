@@ -1,6 +1,6 @@
 import { ajax } from 'rxjs/ajax';
 import { of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
 import Endpoint from './endpoint';
 
@@ -11,8 +11,13 @@ export default class Http {
 
     this.stack = req$ =>
       req$.pipe(
-        switchMap(req =>
-          ajax(req).pipe(
+        switchMap(req => {
+          this.emit('req', req);
+
+          return ajax(req).pipe(
+            tap(res => {
+              this.emit('res', res);
+            }),
             catchError(err => {
               if (err.name === 'AjaxError') {
                 this.emit('error', err);
@@ -20,8 +25,8 @@ export default class Http {
 
               throw err;
             }),
-          ),
-        ),
+          );
+        }),
       );
   }
 
