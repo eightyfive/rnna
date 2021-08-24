@@ -1,13 +1,52 @@
 import { ajax } from 'rxjs/ajax';
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
+
 import Endpoint from './endpoint';
 
 export default class Http {
   constructor(defaults = {}) {
     this.defaults = defaults;
+    this.listeners = {};
 
-    this.stack = req$ => req$.pipe(switchMap(req => ajax(req)));
+    this.stack = req$ =>
+      req$.pipe(
+        switchMap(req =>
+          ajax(req).pipe(
+            catchError(err => {
+              if (err.name === 'AjaxError') {
+                this.emit('error', err);
+              }
+
+              throw err;
+            }),
+          ),
+        ),
+      );
+  }
+
+  addListener(eventName, listener) {
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = [];
+    }
+
+    this.listeners[eventName].push(listener);
+  }
+
+  removeListener(eventName, listener) {
+    if (this.listeners[eventName]) {
+      this.listeners[eventName] = this.listeners[eventName].filter(
+        handler => handler !== listener,
+      );
+    }
+  }
+
+  emit(eventName, ...args) {
+    if (this.listeners[eventName]) {
+      for (const listener of this.listeners[eventName]) {
+        listener(...args);
+      }
+    }
   }
 
   create(defaults) {
