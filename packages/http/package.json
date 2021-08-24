@@ -8,8 +8,6 @@
     "rx"
   ],
   "main": "src/index.js",
-  "browser": "dist/index.js",
-  "react-native": "src/index.js",
   "files": [
     "dist/**/*.js",
     "src/**/*.js"
