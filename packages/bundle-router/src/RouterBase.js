@@ -29,10 +29,10 @@ export default class RouterBase {
     }
   }
 
-  fire(eventName, data) {
+  emit(eventName, ...args) {
     if (this.listeners[eventName]) {
       for (const listener of this.listeners[eventName]) {
-        listener(data);
+        listener(...args);
       }
     }
   }
@@ -77,7 +77,7 @@ export default class RouterBase {
     // Save latest URI
     this.uri = uri;
 
-    this.fire('dispatch', { componentId, props, uri });
+    this.emit('dispatch', { componentId, props, uri });
   }
 
   onState(state) {
