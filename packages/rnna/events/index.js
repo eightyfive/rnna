@@ -12,7 +12,7 @@ export function onAction(type, handler) {
     action$.pipe(
       filter(({ type }) => types.includes(type)),
       mergeMap(({ payload }) => {
-        const res = handler(payload, services);
+        const res = handler(services, payload);
 
         if (res === undefined) {
           return EMPTY;
