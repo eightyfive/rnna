@@ -26,9 +26,13 @@ export default class Router extends RouterBase {
     } else {
       super.dispatch(uri);
 
-      // Push
-      // https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
-      window.history.pushState({}, null, `/${uri}`);
+      const location = this.getLocationUri();
+
+      if (uri !== location) {
+        // Push
+        // https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
+        window.history.pushState({}, null, `/${uri}`);
+      }
     }
   }
 
