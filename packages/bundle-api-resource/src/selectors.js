@@ -1,33 +1,17 @@
-const createSelectTable = key => state => state[key].table;
+import { denormalize } from 'normalizr';
+import { createSelector } from 'reselect';
+import { createCachedSelector } from 're-reselect';
 
-const createSelectOrder = key => state => state[key].order;
+export const createFind = schema =>
+  createCachedSelector(
+    (state, id) => id,
+    state => state.db.tables,
+    (id, entities) => denormalize(id, schema, entities),
+  )((state, id) => id);
 
-const createSelectRelations = relations => state => {
-  const tables = {};
-
-  relations.forEach(key => {
-    tables[key] = state[key].table;
-  });
-
-  return tables;
-};
-
-export const createFind = (schema, relations) =>
+export const createGet = schema =>
   createSelector(
-    createSelectTable(schema.key),
-    createSelectRelations(relations),
-    (table, id, tables) => {
-      return table[id] ? denormalize(table[id], schema, tables) : null;
-    },
-  );
-
-export const createGet = (schema, relations) =>
-  createSelector(
-    createSelectTable(schema.key),
-    createSelectOrder(schema.key),
-    createSelectRelations(relations),
-    (table, order, tables) =>
-      order.map(id => {
-        return table[id] ? denormalize(table[id], schema, tables) : null;
-      }),
+    state => state.db.orders[schema.key],
+    state => state.db.tables,
+    (result, entities) => denormalize(result || [], [schema], entities),
   );

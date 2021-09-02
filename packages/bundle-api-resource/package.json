@@ -8,17 +8,11 @@
     "react-native"
   ],
   "main": "src/index.js",
-  "browser": "dist/index.js",
-  "react-native": "src/index.js",
-  "files": [
-    "dist/**/*.js",
-    "src/**/*.js"
-  ],
-  "scripts": {
-    "build": "npx babel src --out-dir dist"
-  },
   "dependencies": {
-    "immer": "8.x"
+    "immer": "8.x",
+    "normalizr": "3.6.x",
+    "re-reselect": "4.0.x",
+    "reselect": "4.0.x"
   },
   "peerDependencies": {
     "rnna": "*"
