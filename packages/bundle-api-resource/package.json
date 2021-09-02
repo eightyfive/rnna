@@ -1,6 +1,6 @@
 {
   "name": "@rnna/bundle-api-resource",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1",
   "description": "API Resource Bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
