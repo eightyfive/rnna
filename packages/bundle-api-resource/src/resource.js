@@ -1,103 +1,147 @@
-import { ofAction } from 'rnna/rx';
+import { denormalize, normalize } from 'normalizr';
+import { singular } from 'pluralize';
+import { createSelector } from 'reselect';
+import { createCachedSelector } from 're-reselect';
 
 export default class Resource {
   constructor(endpoint, schema) {
     this.endpoint = endpoint;
     this.schema = schema;
+
+    const pluralName = capitalize(schema.key); // Ex: Users
+    const singularName = singular(pluralName); // Ex: User
+
+    this.dictionary = {
+      setResource: `set${singularName}`,
+      setResources: `set${pluralName}`,
+      getResource: `get${singularName}`,
+      getResources: `get${pluralName}`,
+    };
   }
 
-  store(data) {
+  create(data) {
     return this.endpoint.create(data).pipe(
-      map(action => {
-        const { req, res } = action.meta;
+      map(res => {
+        const data = getData(res);
+        const normalized = Boolean(data.entities && data.result);
 
-        if (req && !res) {
-          return { ...action, type: `${this.schema.key}/storing` };
-        }
-
-        if (req && res && res.status === 200) {
-          return { ...action, type: `${this.schema.key}/stored` };
-        }
-
-        // Error action
-        return action;
+        return createAction(
+          `http/${this.dictionary.setResource}`,
+          normalized ? data : normalize(data, this.schema),
+          this.schema,
+          'create',
+        );
       }),
     );
   }
 
-  find(id) {
+  read(id) {
     return this.endpoint.read(id).pipe(
-      map(action => {
-        const { req, res } = action.meta;
+      map(res => {
+        const data = getData(res);
+        const normalized = Boolean(data.entities && data.result);
 
-        if (req && !res) {
-          return { ...action, type: `${this.schema.key}/finding` };
-        }
-
-        if (req && res && res.status === 200) {
-          return { ...action, type: `${this.schema.key}/found` };
-        }
-
-        // Error action
-        return action;
+        return createAction(
+          `http/${this.dictionary.setResource}`,
+          normalized ? data : normalize(data, this.schema),
+          this.schema,
+          'read',
+        );
       }),
     );
   }
 
   update(id, data) {
     return this.endpoint.update(id, data).pipe(
-      map(action => {
-        const { req, res } = action.meta;
+      map(res => {
+        const data = getData(res);
+        const normalized = Boolean(data.entities && data.result);
 
-        if (req && !res) {
-          return { ...action, type: `${this.schema.key}/updating` };
-        }
-
-        if (req && res && res.status === 200) {
-          return { ...action, type: `${this.schema.key}/updated` };
-        }
-
-        // Error action
-        return action;
+        return createAction(
+          `http/${this.dictionary.setResource}`,
+          normalized ? data : normalize(data, this.schema),
+          this.schema,
+          'update',
+        );
       }),
     );
   }
 
   delete(id) {
     return this.endpoint.delete(id).pipe(
-      map(action => {
-        const { req, res } = action.meta;
+      map(res => {
+        const data = getData(res);
+        const normalized = Boolean(data.entities && data.result);
 
-        if (req && !res) {
-          return { ...action, type: `${this.schema.key}/deleting` };
-        }
-
-        if (req && res && res.status === 200) {
-          return { ...action, type: `${this.schema.key}/deleted` };
-        }
-
-        // Error action
-        return action;
+        return createAction(
+          `http/${this.dictionary.setResource}`,
+          normalized ? data : normalize(data, this.schema),
+          this.schema,
+          'delete',
+        );
       }),
     );
   }
 
-  list(filters) {
-    return this.endpoint.list(filters).pipe(
-      map(action => {
-        const { req, res } = action.meta;
+  list(query) {
+    return this.endpoint.list(query).pipe(
+      map(res => {
+        const data = getData(res);
+        const normalized = Boolean(data.entities && data.result);
 
-        if (req && !res) {
-          return { ...action, type: `${this.schema.key}/listing` };
-        }
-
-        if (req && res && res.status === 200) {
-          return { ...action, type: `${this.schema.key}/listed` };
-        }
-
-        // Error action
-        return action;
+        return createAction(
+          `http/${this.dictionary.setResources}`,
+          normalized ? data : normalize(data, [this.schema]),
+          this.schema,
+          'list',
+        );
       }),
     );
   }
+
+  getSelectors() {
+    return {
+      [this.dictionary.getResource]: createSelectResource(this.schema),
+      [this.dictionary.getResources]: createSelectResources(this.schema),
+    };
+  }
+}
+
+function getData(res) {
+  return res.response
+    ? res.response.data
+      ? res.response.data
+      : res.response
+    : res;
+}
+
+function createAction(type, payload, schema, verb) {
+  return {
+    type,
+    payload,
+    meta: {
+      resource: schema.key,
+      verb,
+    },
+  };
+}
+
+function createSelectResource(schema) {
+  return createCachedSelector(
+    (state, id) => id,
+    state => state.db.tables,
+    (id, entities) => denormalize(id, schema, entities),
+  )((state, id) => id);
+}
+
+function createSelectResources(schema) {
+  return createSelector(
+    state => state.db.orders[schema.key],
+    state => state.db.tables,
+    (result, entities) => denormalize(result || [], [schema], entities),
+  );
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }

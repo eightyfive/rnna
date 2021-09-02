@@ -1,7 +1,6 @@
 import { Bundle } from 'rnna';
 
 import Resource from './resource';
-import { createFind, createGet } from './selectors';
 
 export default class ResourceBundle extends Bundle {
   constructor(schema) {
@@ -18,14 +17,8 @@ export default class ResourceBundle extends Bundle {
   }
 
   boot(services, store) {
-    // Selectors
-    // TODO: plural, singular for: getUsers, findUser.
-    const Name = this.schema.key;
-    const Names = this.schema.key;
+    const resource = services[this.schema.key];
 
-    Object.assign(services.db, {
-      [`find${Name}`]: createFind(this.schema),
-      [`get${Names}`]: createGet(this.schema),
-    });
+    Object.assign(services.db, resource.getSelectors());
   }
 }
