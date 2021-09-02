@@ -11,8 +11,8 @@ export function onAction(type, handler) {
   return (action$, state$, services) =>
     action$.pipe(
       filter(({ type }) => types.includes(type)),
-      mergeMap(({ payload }) => {
-        const res = handler(services, payload);
+      mergeMap(({ payload, meta }) => {
+        const res = handler(services, payload, meta);
 
         if (res === undefined) {
           return EMPTY;
