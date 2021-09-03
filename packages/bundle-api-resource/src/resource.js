@@ -137,13 +137,30 @@ function createSelectResource(schema) {
 }
 
 function createSelectResources(schema) {
-  return createSelector(
-    state => state.db.orders[schema.key],
+  return createCachedSelector(
+    (state, query = {}) => query,
+    state => state.db.orders,
     state => state.db.tables,
-    (result, entities) => denormalize(result || [], [schema], entities),
-  );
+    (query, results, entities) => {
+      const result = results[getOrderName(schema, query)] || [];
+
+      return denormalize(result, [schema], entities);
+    },
+  )((state, query = {}) => getOrderName(schema, query));
 }
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function qs(obj) {
+  return Object.entries(obj)
+    .map(
+      ([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`,
+    )
+    .join('&');
+}
+
+function getOrderName(schema, query) {
+  return `${schema.key}?${qs(query)}`;
 }
