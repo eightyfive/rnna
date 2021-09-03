@@ -14,7 +14,7 @@ export default class Resource {
     this.dictionary = {
       setResource: `set${singularName}`,
       setResources: `set${pluralName}`,
-      getResource: `get${singularName}`,
+      getResource: `find${singularName}`,
       getResources: `get${pluralName}`,
     };
   }
