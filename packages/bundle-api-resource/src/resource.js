@@ -94,6 +94,7 @@ export default class Resource {
           normalized ? data : normalize(data, [this.schema]),
           this.schema,
           'list',
+          query,
         );
       }),
     );
@@ -115,11 +116,12 @@ function getData(res) {
     : res;
 }
 
-function createAction(type, payload, schema, verb) {
+function createAction(type, payload, schema, verb, meta = {}) {
   return {
     type,
     payload,
     meta: {
+      ...meta,
       resource: schema.key,
       verb,
     },
