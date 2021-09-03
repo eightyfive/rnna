@@ -1,6 +1,5 @@
 import { denormalize, normalize } from 'normalizr';
 import { singular } from 'pluralize';
-import { createSelector } from 'reselect';
 import { createCachedSelector } from 're-reselect';
 
 export default class Resource {

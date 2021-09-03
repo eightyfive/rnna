@@ -12,8 +12,7 @@
     "immer": "8.x",
     "normalizr": "3.6.x",
     "pluralize": "8.0.x",
-    "re-reselect": "4.0.x",
-    "reselect": "4.0.x"
+    "re-reselect": "4.0.x"
   },
   "peerDependencies": {
     "rnna": "*"
