@@ -31,10 +31,6 @@ export default function createDb(selectors = {}) {
         throw new Error(`Use \`setStore\` method`);
       }
 
-      if (typeof target[key] !== 'undefined') {
-        throw new Error(`Selector \`${key}\` already exists`);
-      }
-
       target[key] = val;
 
       return true;
