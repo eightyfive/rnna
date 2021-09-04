@@ -8,8 +8,9 @@
     "react-native"
   ],
   "main": "src/index.js",
-  "devDependencies": {
-    "reselect": "4.x"
+  "dependencies": {
+    "@rnna/db": "0.0.x",
+    "immer": "8.x"
   },
   "peerDependencies": {
     "rnna": "*"
