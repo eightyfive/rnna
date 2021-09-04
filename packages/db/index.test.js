@@ -1,87 +1,85 @@
-import db from './index';
-import { schema } from 'normalizr';
+import { createSelector } from 'reselect';
+import Db from './';
 
-const postSchema = new schema.Entity('posts');
-const profileSchema = new schema.Entity('profiles');
+const db = new Db();
 
-const userSchema = new schema.Entity('users', {
-  posts: [postSchema],
-  profile: profileSchema,
-});
+const initialState = {
+  byId: { 1: 'A', 2: 'B', 3: 'C' },
+  result: [1, 2],
+};
 
-beforeEach(() => {
-  db.addEntity('users', userSchema);
-});
+let state = { ...initialState };
 
-const user1 = { id: 1, name: 'Ben', posts: [1, 2], profile: 1 };
-const user2 = { id: 2, name: 'Carl' };
-const user3 = { id: 3, name: 'David' };
-
-const post1 = { id: 1, title: 'ONE' };
-const post2 = { id: 2, title: 'TWO' };
-
-const profile1 = { id: 1, address: 'Tidy' };
-
-const state = {
-  db: {
-    tables: {
-      users: {
-        '1': user1,
-        '2': user2,
-        '3': user3,
-      },
-      posts: {
-        '1': post1,
-        '2': post2,
-      },
-      profiles: {
-        '1': profile1,
-      },
-    },
-    orders: {
-      users: [1, 2, 3],
-      reverse: [3, 2, 1],
-    },
+const store = {
+  getState() {
+    return state;
   },
 };
 
-const user1Denormalized = {
-  id: 1,
-  name: 'Ben',
-  posts: [post1, post2],
-  profile: profile1,
-};
+db.setStore(store);
 
-test('creates Find (one)', () => {
-  expect(db.findUser).toBeDefined();
+describe('DB', () => {
+  it('sets state', () => {
+    expect(db.getState()).toEqual(initialState);
+    expect(db.getState()).not.toBe(initialState);
+  });
 
-  const user = db.findUser(state, 1);
+  it('selects result', () => {
+    db.getResult = createSelector(
+      state => state.byId,
+      state => state.result,
+      (byId, result) => result.map(id => byId[id]),
+    );
 
-  expect(user.name).toBe('Ben');
-  expect(user.posts).toEqual([post1, post2]);
-  expect(user.profile).toEqual(profile1);
-});
+    expect(db.getResult()).toEqual(['A', 'B']);
+  });
 
-test('creates Get (many)', () => {
-  expect(db.getUsers).toBeDefined();
+  it('changes state & selects result', () => {
+    // Change array VALUE in order to trigger selector change
+    state = {
+      ...initialState,
+      result: [1, 2, 3],
+    };
 
-  // "default" order by default
-  expect(db.getUsers(state)).toEqual([user1Denormalized, user2, user3]);
+    expect(db.getState()).toEqual(state);
+    expect(db.getResult()).toEqual(['A', 'B', 'C']);
+  });
 
-  // "reverse" order
-  const reversed = db.getUsers(state, 'reverse');
-  expect(reversed).toEqual([user3, user2, user1Denormalized]);
+  it('throws when selector exists', () => {
+    expect(() => {
+      db.getResult = () => {};
+    }).toThrow();
+  });
 
-  // Verify result is cached
-  let newReversed = db.getUsers(state, 'reverse');
-  expect(newReversed).toBe(reversed);
+  it('assigns selectors', () => {
+    const selectors = {
+      barbar() {},
+      foo() {},
+      bar() {},
+    };
 
-  // Clear cache
-  const newState = { ...state };
-  state.db.orders.reverse = [3, 1, 2];
+    Object.assign(db, selectors);
 
-  newReversed = db.getUsers(newState, 'reverse');
+    expect(db.barbar).toBeDefined();
+    expect(db.foo).toBeDefined();
+    expect(db.bar).toBeDefined();
+  });
 
-  expect(newReversed).not.toBe(reversed);
-  expect(newReversed).toEqual([user3, user1Denormalized, user2]);
+  it('throws when assigning existing', () => {
+    expect(() => {
+      const selectors = {
+        newSelector() {},
+        barbar() {},
+        selectorNotSet() {},
+      };
+
+      Object.assign(db, selectors);
+    }).toThrow();
+
+    expect(db.newSelector).toBeDefined();
+
+    expect(() => {
+      db.selectorNotSet();
+    }).toThrow();
+  });
 });
