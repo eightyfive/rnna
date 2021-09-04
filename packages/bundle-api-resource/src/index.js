@@ -18,9 +18,7 @@ export default class ResourceBundle extends Bundle {
 
   boot(services, store) {
     if (services.db) {
-      const resource = services[this.schema.key];
-
-      Object.assign(services.db, resource.getSelectors());
+      services.db.addTable(this.schema);
     }
   }
 }
