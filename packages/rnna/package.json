@@ -7,9 +7,7 @@
     "react-native"
   ],
   "dependencies": {
-    "lodash.get": "4.x",
     "lodash.memoize": "4.x",
-    "lodash.mergewith": "4.x",
     "react-native-col": "1.x",
     "react-native-spacing": "0.x",
     "react-native-textography": "0.x",
