@@ -60,8 +60,6 @@ export default class RootNavigator extends SwitchNavigator {
       throw new Error(`Layout not found: ${name}`);
     }
 
-    Object.assign(props, this.props);
-
     if (layout instanceof Modal) {
       this.renderModal(name, childPath, props);
     } else if (layout instanceof Overlay) {

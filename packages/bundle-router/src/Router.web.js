@@ -4,6 +4,8 @@ export default class Router extends RouterAbstract {
   constructor(navigator, routes, options) {
     super(navigator, routes, options);
 
+    this.options.redirects = options.redirects || {};
+
     window.addEventListener('popstate', this.handlePopstate.bind(this));
   }
 

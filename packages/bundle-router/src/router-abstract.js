@@ -1,8 +1,13 @@
+const defaultOptions = {
+  globalProps: {},
+  getGlobalProps: () => ({}),
+};
+
 export default class RouterAbstract {
   constructor(navigator, routes, options) {
     this.navigator = navigator;
     this.routes = routes;
-    this.options = Object.assign({ redirects: {} }, options || {});
+    this.options = Object.assign({}, defaultOptions, options || {});
     this.uri = null;
     this.state = null;
     this.services = {};
@@ -17,6 +22,10 @@ export default class RouterAbstract {
 
   setServices(services) {
     this.services = services;
+  }
+
+  setGlobalProp(name, value) {
+    this.options.globalProps[name] = value;
   }
 
   addListener(eventName, listener) {
@@ -82,6 +91,15 @@ export default class RouterAbstract {
     }
 
     if (componentId) {
+      const { globalProps, getGlobalProps } = this.options;
+
+      props = Object.assign(
+        {},
+        globalProps,
+        getGlobalProps(this.services),
+        props,
+      );
+
       this.navigator.render(componentId, props);
 
       return [componentId, path, query, params || []];
