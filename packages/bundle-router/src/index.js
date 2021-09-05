@@ -1,16 +1,10 @@
 import { Bundle } from 'rnna';
 
-import Router from './Router';
+import Router from './router';
 
 export default class RouterProvider extends Bundle {
   register(container) {
-    container.service(
-      'router',
-      Router,
-      'navigator',
-      'router.routes',
-      'router.options',
-    );
+    container.service('router', createRouter, 'router.*');
   }
 
   boot(services, store) {
@@ -18,4 +12,8 @@ export default class RouterProvider extends Bundle {
 
     store.subscribe(() => services.router.onState(store.getState()));
   }
+}
+
+function createRouter({ navigator, routes, options }) {
+  return new Router(navigator, routes, options);
 }
