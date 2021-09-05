@@ -8,15 +8,6 @@
     "react-native"
   ],
   "main": "src/index.js",
-  "browser": "dist/index.js",
-  "react-native": "src/index.js",
-  "files": [
-    "dist/**/*.js",
-    "src/**/*.js"
-  ],
-  "scripts": {
-    "build": "npx babel src --out-dir dist"
-  },
   "peerDependencies": {
     "rnna": "*"
   },
