@@ -1,4 +1,4 @@
-export default class RouterBase {
+export default class RouterAbstract {
   constructor(navigator, routes, options) {
     this.navigator = navigator;
     this.routes = routes;
