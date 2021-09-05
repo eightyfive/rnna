@@ -91,7 +91,7 @@ export default class Resource {
           normalized ? data : normalize(data, [this.schema]),
           this.schema,
           'list',
-          query,
+          { query },
         );
       }),
     );
