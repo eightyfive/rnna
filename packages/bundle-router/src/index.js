@@ -16,7 +16,7 @@ export default class RouterProvider extends Bundle {
   }
 }
 
-function createRouter(navigator, { options, routes, screens }) {
+function createRouter({ options, routes, screens }) {
   const navigator = createNavigator(screens);
 
   const router = new Router(navigator, routes, options);
