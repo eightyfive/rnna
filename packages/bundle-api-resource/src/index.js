@@ -3,22 +3,29 @@ import { Bundle } from 'rnna';
 import Resource from './resource';
 
 export default class ResourceBundle extends Bundle {
-  constructor(schema) {
+  constructor(schemas) {
     super();
 
-    this.schema = schema;
+    this.schemas = schemas;
   }
 
   register(container) {
-    container.factory(
-      this.schema.key,
-      ({ api }) => new Resource(api.endpoint(this.schema.key), this.schema),
-    );
+    container.factory('resources', ({ api }) => {
+      const resources = {};
+
+      for (const schema of this.schemas) {
+        resources[schema.key] = new Resource(api.endpoint(schema.key), schema);
+      }
+
+      return resources;
+    });
   }
 
   boot(services, store) {
     if (services.db) {
-      services.db.addTable(this.schema);
+      for (const schema of this.schemas) {
+        services.db.addTable(schema);
+      }
     }
   }
 }
