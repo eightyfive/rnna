@@ -28,7 +28,7 @@ const proxyHandler = {
     if (setters.includes(key)) {
       target[key] = val;
 
-      return;
+      return true;
     }
 
     if (typeof target.selectors[key] !== 'undefined') {
