@@ -7,7 +7,7 @@ const log = next => req$ => {
     filter(({ responseType: type }) => type === 'json'),
     tap(({ request: req, response: res, status }) => {
       console.groupCollapsed(
-        ...parse(`{grey}${req.method} {white}${req.url} {grey}${status}`),
+        ...parse(`{white}${req.method} {grey}${req.url} {white}${status}`),
       );
       if (req.body) {
         console.log(JSON.parse(req.body));
