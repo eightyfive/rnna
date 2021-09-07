@@ -1,6 +1,6 @@
 {
   "name": "@rnna/http",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "HTTP client (React Native Navigation App)",
   "keywords": [
     "rnna",
@@ -9,8 +9,8 @@
   ],
   "main": "src/index.js",
   "dependencies": {
-    "url-parse": "1.5.x",
-    "console.unicorn": "0.1.x"
+    "console.unicorn": "0.1.x",
+    "url-parse": "1.5.x"
   },
   "devDependencies": {
     "xhr-mock": "^2.5.1"
