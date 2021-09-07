@@ -6,13 +6,18 @@ const log = next => req$ => {
   return next(req$).pipe(
     filter(({ responseType: type }) => type === 'json'),
     tap(({ request: req, response: res, status }) => {
-      console.groupCollapsed(
-        ...parse(`{white}${req.method} {grey}${req.url} {white}${status}`),
+      const label = parse(
+        `{white}${req.method} {grey}${req.url} {white}${status}`,
       );
+
+      console.groupCollapsed(...label);
+
       if (req.body) {
         console.log(JSON.parse(req.body));
       }
+
       console.log(res);
+
       console.groupEnd();
     }),
   );
