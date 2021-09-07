@@ -9,7 +9,8 @@
   ],
   "main": "src/index.js",
   "dependencies": {
-    "url-parse": "1.5.x"
+    "url-parse": "1.5.x",
+    "console.unicorn": "0.1.x"
   },
   "devDependencies": {
     "xhr-mock": "^2.5.1"
