@@ -16,7 +16,9 @@ export default class Router extends RouterAbstract {
   }
 
   dispatch(uri) {
-    const redirect = this.options.redirects[uri];
+    const [path] = uri.split('?');
+
+    const redirect = this.options.redirects[path];
     const redirection = redirect ? redirect(this.services) : undefined;
 
     if (typeof redirection === 'string') {
