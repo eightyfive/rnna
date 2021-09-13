@@ -2,7 +2,7 @@ import _get from 'lodash.get';
 import { denormalize } from 'normalizr';
 import { singular } from 'pluralize';
 import { createSelector as createReselector } from 'reselect';
-import { createCachedSelector } from 're-reselect';
+import { createCachedSelector as createRereselector } from 're-reselect';
 
 const getters = ['addTable', 'getState', 'setStore', 'store'];
 const setters = ['store'];
@@ -79,7 +79,7 @@ export default class Db {
 }
 
 function createIdSelector(schema) {
-  return createCachedSelector(
+  return createRereselector(
     (state, id) => id,
     state => state.db.tables,
     (id, entities) => denormalize(id, schema, entities),
@@ -87,7 +87,7 @@ function createIdSelector(schema) {
 }
 
 function createQuerySelector(schema) {
-  return createCachedSelector(
+  return createRereselector(
     (state, query = {}) => query,
     state => state.db.queries,
     state => state.db.tables,
@@ -145,4 +145,21 @@ export function createSelector(...paths) {
   );
 
   return createReselector(...slices, selector);
+}
+
+// createCachedSelector
+export function createCachedSelector(...paths) {
+  const selector = paths.pop();
+
+  if (!paths.length) {
+    // `selector` is path
+    // Ex: `createCachedSelector('session.token')` => (state) => state.session.token;
+    return getSlice(selector);
+  }
+
+  const slices = paths.map(path =>
+    typeof path === 'string' || Array.isArray(path) ? getSlice(path) : path,
+  );
+
+  return createRereselector(...slices, selector);
 }
