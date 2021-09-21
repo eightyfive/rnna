@@ -122,7 +122,7 @@ export default class RouterAbstract {
   }
 
   onState(state) {
-    if (this.uri && this.state !== state) {
+    if (this.uri !== null && this.state !== state) {
       this.state = state;
 
       this.render(this.uri);
