@@ -75,11 +75,18 @@ export default class RouterAbstract {
       if (res) {
         [, ...params] = res;
 
-        [componentId, props = {}] = controller.apply(controller, [
+        const data = controller.apply(controller, [
           ...params,
           this.services,
           query,
         ]);
+
+        if (Array.isArray(data)) {
+          [componentId, props = {}] = data;
+        } else {
+          componentId = route;
+          props = data;
+        }
         break;
       }
     }
