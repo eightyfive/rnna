@@ -1,4 +1,4 @@
-import { EMPTY } from 'rxjs';
+import { EMPTY, merge } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { REHYDRATE } from 'redux-persist';
 
@@ -9,6 +9,10 @@ export default function createOnBoot(handler) {
       take(1),
       switchMap(() => {
         const res = handler(services);
+
+        if (Array.isArray(res)) {
+          return res.length ? merge(...res) : EMPTY;
+        }
 
         if (res === undefined) {
           return EMPTY;
