@@ -4,7 +4,7 @@ import { singular } from 'pluralize';
 import { createSelector as createReselector } from 'reselect';
 import { createCachedSelector as createRereselector } from 're-reselect';
 
-const getters = ['addTable', 'getState', 'setStore', 'store'];
+const getters = ['addTable', 'getState', 'setStore', 'store', '$'];
 const setters = ['store'];
 
 // Web Proxy
@@ -47,6 +47,22 @@ export default class Db {
     this.store = null;
 
     return new Proxy(this, proxyHandler);
+  }
+
+  $(...slices) {
+    const props = {};
+
+    slices.forEach(path => {
+      if (typeof path !== 'string') {
+        throw new Error('State slice name must be a string');
+      }
+
+      const name = path.split('.').pop();
+
+      props[name] = getSlice(path)(this.getState());
+    });
+
+    return props;
   }
 
   setStore(store) {
