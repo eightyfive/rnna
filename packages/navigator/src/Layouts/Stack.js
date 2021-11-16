@@ -39,7 +39,7 @@ export default class Stack extends Layout {
 
       if (index > -1 && index < this.history.length - 1) {
         // Sync history
-        this.history.splice(componentIndex + 1);
+        this.history.splice(index + 1);
       }
     }
   };
