@@ -18,10 +18,14 @@ export default class DbProvider extends Bundle {
   }
 }
 
-function createDb({ selectors }) {
+function createDb({ schemas, selectors }) {
   const db = new Db();
 
   Object.assign(db, selectors);
+
+  Object.values(schemas).forEach(schema => {
+    db.addTable(schema);
+  });
 
   return db;
 }
