@@ -18,7 +18,7 @@ export default class DbProvider extends Bundle {
   }
 }
 
-function createDb({ schemas, selectors }) {
+function createDb({ schemas = {}, selectors = {} }) {
   const db = new Db();
 
   Object.assign(db, selectors);
