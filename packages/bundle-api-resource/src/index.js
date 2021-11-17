@@ -2,11 +2,11 @@ import { Bundle } from 'rnna';
 
 import Resource from './resource';
 
-export default class ResourceBundle extends Bundle {
+export default class ResourcesBundle extends Bundle {
   constructor(schemas) {
     super();
 
-    this.schemas = schemas;
+    this.schemas = Object.values(schemas);
   }
 
   register(container) {
