@@ -1,4 +1,4 @@
-import { EMPTY, of } from 'rxjs';
+import { EMPTY, of, merge } from 'rxjs';
 import { filter, map, mapTo, mergeMap, startWith } from 'rxjs/operators';
 
 export { default as onAppState } from './app-state';
@@ -13,6 +13,10 @@ export function onAction(type, handler) {
       filter(({ type }) => types.includes(type)),
       mergeMap(({ payload, meta }) => {
         const res = handler(services, payload, meta);
+
+        if (Array.isArray(res)) {
+          return res.length ? merge(...res) : EMPTY;
+        }
 
         if (res === undefined) {
           return EMPTY;
