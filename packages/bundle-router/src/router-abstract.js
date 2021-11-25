@@ -8,6 +8,8 @@ export default class RouterAbstract {
     this.navigator = navigator;
     this.routes = routes;
     this.options = Object.assign({}, defaultOptions, options || {});
+    this.history = [];
+    this.uris = new Map();
     this.uri = null;
     this.state = null;
     this.services = {};
@@ -18,7 +20,30 @@ export default class RouterAbstract {
     if (this.notFound) {
       delete this.routes['_404'];
     }
+
+    this.navigator.addListener(
+      'ComponentDidAppear',
+      this.handleComponentDidAppear,
+    );
+    this.navigator.addListener(
+      'ComponentDidDisappear',
+      this.handleComponentDidDisappear,
+    );
   }
+
+  handleComponentDidAppear = ({ componentId }) => {
+    if (!this.history.includes(componentId)) {
+      this.history.push(componentId);
+    }
+  };
+
+  handleComponentDidDisappear = ({ componentId }) => {
+    this.history = this.history.filter(id => id !== componentId);
+
+    const currentId = Array.from(this.history).pop();
+
+    this.uri = this.uris.get(currentId);
+  };
 
   setServices(services) {
     this.services = services;
@@ -124,6 +149,7 @@ export default class RouterAbstract {
 
     // Save latest URI
     this.uri = uri;
+    this.uris.set(componentId, uri);
 
     this.emit('dispatch', { componentId, uri, path, query, params });
   }
