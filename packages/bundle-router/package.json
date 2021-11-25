@@ -1,6 +1,6 @@
 {
   "name": "@rnna/bundle-router",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Router bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
