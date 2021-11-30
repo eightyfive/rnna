@@ -8,9 +8,8 @@ export default class RouterAbstract {
     this.navigator = navigator;
     this.routes = routes;
     this.options = Object.assign({}, defaultOptions, options || {});
-    this.history = [];
+    this.componentIds = [];
     this.uris = new Map();
-    this.uri = null;
     this.state = null;
     this.services = {};
     this.listeners = {};
@@ -31,22 +30,12 @@ export default class RouterAbstract {
     );
   }
 
-  handleComponentDidAppear = ({ componentId }) => {
-    if (!this.history.includes(componentId)) {
-      this.history.push(componentId);
-    }
+  handleComponentDidAppear = ({ componentId: id }) => {
+    this.componentIds.push(id);
   };
 
   handleComponentDidDisappear = ({ componentId }) => {
-    this.history = this.history.filter(id => id !== componentId);
-
-    const currentId = Array.from(this.history).pop();
-
-    if (currentId) {
-      // `currentId` appeared
-      this.uri = this.uris.get(currentId);
-      this.render(this.uri);
-    }
+    this.componentIds = this.componentIds.filter(id => id !== componentId);
   };
 
   setServices(services) {
@@ -151,18 +140,19 @@ export default class RouterAbstract {
   dispatch(uri) {
     const [componentId, path, query, params] = this.render(uri);
 
-    // Save latest URI
-    this.uri = uri;
+    // Save URI
     this.uris.set(componentId, uri);
 
     this.emit('dispatch', { componentId, uri, path, query, params });
   }
 
   onState(state) {
-    if (this.uri !== null && this.state !== state) {
+    if (this.state !== state) {
       this.state = state;
 
-      this.render(this.uri);
+      for (let componentId of this.componentIds) {
+        this.render(this.uris.get(componentId));
+      }
     }
   }
 }
