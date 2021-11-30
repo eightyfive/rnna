@@ -42,7 +42,11 @@ export default class RouterAbstract {
 
     const currentId = Array.from(this.history).pop();
 
-    this.uri = this.uris.get(currentId);
+    if (currentId) {
+      // `currentId` appeared
+      this.uri = this.uris.get(currentId);
+      this.render(this.uri);
+    }
   };
 
   setServices(services) {
