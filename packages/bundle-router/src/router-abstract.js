@@ -30,12 +30,28 @@ export default class RouterAbstract {
     );
   }
 
+  get uri() {
+    const componentId = Array.from(this.componentIds).pop();
+
+    if (componentId) {
+      return this.uris.get(componentId);
+    }
+
+    return undefined;
+  }
+
   handleComponentDidAppear = ({ componentId: id }) => {
-    this.componentIds.push(id);
+    if (!this.componentIds.includes(id)) {
+      this.componentIds.push(id);
+    }
   };
 
   handleComponentDidDisappear = ({ componentId }) => {
     this.componentIds = this.componentIds.filter(id => id !== componentId);
+
+    if (this.uri) {
+      this.render(this.uri);
+    }
   };
 
   setServices(services) {
@@ -141,6 +157,7 @@ export default class RouterAbstract {
     const [componentId, path, query, params] = this.render(uri);
 
     // Save URI
+    this.componentIds.push(componentId);
     this.uris.set(componentId, uri);
 
     this.emit('dispatch', { componentId, uri, path, query, params });
@@ -150,8 +167,8 @@ export default class RouterAbstract {
     if (this.state !== state) {
       this.state = state;
 
-      for (let componentId of this.componentIds) {
-        this.render(this.uris.get(componentId));
+      if (this.uri) {
+        this.render(this.uri);
       }
     }
   }
