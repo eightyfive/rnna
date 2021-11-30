@@ -30,7 +30,9 @@ function logGroup(req, res, status, error = false) {
   console.groupCollapsed(...label);
 
   if (req.body) {
-    console.log(JSON.parse(req.body));
+    try {
+      console.log(JSON.parse(req.body));
+    } catch (err) {}
   }
 
   console.log(res);
