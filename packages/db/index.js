@@ -120,7 +120,7 @@ function capitalize(str) {
 }
 
 function getQueryName(schema, query) {
-  return `${schema.key}?${qs(query)}`;
+  return `${schema.key}?${typeof query === 'string' ? query : qs(query)}`;
 }
 
 function qs(obj) {

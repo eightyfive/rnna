@@ -80,7 +80,7 @@ export default class Resource {
     );
   }
 
-  list(query) {
+  list(query, queryId) {
     return this.endpoint.list(query).pipe(
       map(res => {
         const data = getData(res);
@@ -91,7 +91,7 @@ export default class Resource {
           normalized ? data : normalize(data, [this.schema]),
           this.schema,
           'list',
-          { query },
+          { query, queryId },
         );
       }),
     );
