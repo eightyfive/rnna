@@ -14,7 +14,12 @@ export default produce((draft, { payload = {}, meta = {} }) => {
   }
 
   if (Array.isArray(result) && meta.resource) {
-    produceQuery(draft.queries, meta.resource, result, meta.query);
+    produceQuery(
+      draft.queries,
+      meta.resource,
+      result,
+      meta.queryId || meta.query,
+    );
 
     const { page, ...rest } = meta.query || {};
 
@@ -85,7 +90,7 @@ function qs(obj) {
 }
 
 function getQueryKey(resource, query) {
-  return `${resource}?${qs(query)}`;
+  return `${resource}?${typeof query === 'string' ? query : qs(query)}`;
 }
 
 function compareArrays(a, b) {
