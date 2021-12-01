@@ -65,9 +65,12 @@ export default class RootNavigator extends SwitchNavigator {
     } else if (layout instanceof Overlay) {
       this.renderOverlay(name, props);
     } else {
-      if (this.modal) {
-        this.dismissModal();
-      }
+      // TODO
+      // `this.modal` is out of sync when modal dismissed manually (swipe)
+      // Idea: Force to dismiss modal explicitely by design ?
+      // if (this.modal) {
+      //   this.dismissModal();
+      // }
 
       super.render(componentId, props);
     }
