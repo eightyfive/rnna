@@ -1,6 +1,6 @@
-import RouterAbstract from './router-abstract';
+import RouterBase from './router';
 
-export default class Router extends RouterAbstract {
+export default class Router extends RouterBase {
   constructor(navigator, routes, options) {
     super(navigator, routes, options);
 
