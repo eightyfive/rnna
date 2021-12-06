@@ -25,10 +25,6 @@ export default class BottomTabs extends Layout {
     this.options.tabsAttachMode =
       this.options.tabsAttachMode || 'onSwitchToTab';
     this.layoutId = `BottomTabs${this.constructor.layoutIndex++}`;
-
-    this.stacks.forEach((stack, name) => {
-      this.defineProperty(name, stack);
-    });
   }
 
   mount(initialProps) {

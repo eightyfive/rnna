@@ -31,8 +31,6 @@ export default class RootNavigator extends SwitchNavigator {
     }
 
     this.layouts.set(name, modal);
-
-    this.defineProperty(name, modal);
   }
 
   addOverlay(name, overlay) {
@@ -41,8 +39,6 @@ export default class RootNavigator extends SwitchNavigator {
     }
 
     this.layouts.set(name, overlay);
-
-    this.defineProperty(name, overlay);
   }
 
   remount() {
