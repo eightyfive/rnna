@@ -83,8 +83,6 @@ export default class Stack extends Layout {
   }
 
   popToRoot() {
-    const componentFrom = this.components.get(this.componentName);
-
-    Navigation.popToRoot(componentFrom.id);
+    Navigation.popToRoot(this.component.id);
   }
 }
