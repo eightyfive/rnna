@@ -13,11 +13,7 @@ export default class Component extends Layout {
     this.props = {};
   }
 
-  mount(initialProps) {
-    Navigation.setRoot({ root: this.getLayout(initialProps) });
-  }
-
-  getLayout(props) {
+  getRoot(props) {
     const layout = {
       id: this.id,
       name: this.name,

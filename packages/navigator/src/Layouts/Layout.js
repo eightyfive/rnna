@@ -1,18 +1,12 @@
-import Emitter from '../Emitter';
-
-export default /** abstract */ class Layout extends Emitter {
+export default /** abstract */ class Layout {
   constructor(config = {}) {
     super();
 
     this.options = config.options || {};
   }
 
-  mount(initialProps) {
-    throwAbstract('mount(initialProps)');
-  }
-
-  getLayout(props) {
-    throwAbstract('getLayout(props)');
+  getRoot() {
+    throwAbstract('getRoot()');
   }
 }
 

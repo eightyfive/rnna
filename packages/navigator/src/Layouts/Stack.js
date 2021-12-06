@@ -29,37 +29,15 @@ export default class Stack extends Layout {
     return this.components.get(this.name);
   }
 
-  mount(props) {
-    Navigation.setRoot({ root: this.getInitialLayout(props) });
+  getRoot(props) {
+    const component = this.components.get(this.initialName);
 
-    this.name = this.initialName;
-  }
-
-  getInitialLayout(props) {
-    return this.getLayout(props, this.initialName);
-  }
-
-  getLayout(props, name) {
     const layout = {
-      children: this.slice(name, props),
+      children: [component.getRoot(props)],
       options: { ...this.options },
     };
 
     return { stack: layout };
-  }
-
-  slice(name, props) {
-    const children = [];
-
-    for (const [key, component] of this.components) {
-      children.push(component.getLayout(key === name ? props : {}));
-
-      if (key === name) {
-        break;
-      }
-    }
-
-    return children;
   }
 
   push(name, props) {

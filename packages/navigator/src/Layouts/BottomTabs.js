@@ -27,17 +27,11 @@ export default class BottomTabs extends Layout {
     this.layoutId = `BottomTabs${this.constructor.layoutIndex++}`;
   }
 
-  mount(initialProps) {
-    Navigation.setRoot({ root: this.getLayout(initialProps) });
-  }
-
-  getLayout(props) {
+  getRoot(props) {
     const children = [];
 
     for (const stack of this.stacks.values()) {
-      children.push(
-        stack.getInitialLayout(index === this.tabIndex ? props : undefined),
-      );
+      children.push(stack.getInitialLayout(index === 0 ? props : undefined));
     }
 
     const layout = {

@@ -24,13 +24,9 @@ export default class SideMenu extends Stack {
     this.side = this.left && this.right ? 'both' : this.left ? 'left' : 'right';
   }
 
-  mount(initialProps) {
-    Navigation.setRoot({ root: this.getInitialLayout(initialProps) });
-  }
-
-  getLayout(props, componentName) {
+  getRoot(props) {
     const layout = {
-      center: super.getLayout(props, componentName),
+      center: super.getLayout(props, this.initialName),
       options: { ...this.options },
     };
 
