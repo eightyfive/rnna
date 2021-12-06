@@ -24,11 +24,11 @@ export default class Switch extends Navigable {
     this.name = name;
   }
 
-  push(name, props) {
-    this.navigator.push(name, props);
+  go(name, props) {
+    this.navigator.go(name, props);
   }
 
-  pop() {
-    this.navigator.pop();
+  goBack() {
+    this.navigator.goBack();
   }
 }

@@ -1,12 +1,12 @@
 import Emitter from './Emitter';
 
 export default class Navigable extends Emitter {
-  push(name, props) {
+  go(name, props) {
     throwAbstract('push(name, props)');
   }
 
-  pop() {
-    throwAbstract('pop()');
+  goBack() {
+    throwAbstract('goBack()');
   }
 }
 

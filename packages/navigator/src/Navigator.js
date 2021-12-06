@@ -13,11 +13,11 @@ export default class Navigator extends Navigable {
     this.layout.mount(props);
   }
 
-  push(name, props) {
+  go(name, props) {
     this.getStack().push(name, props);
   }
 
-  pop() {
+  goBack() {
     this.getStack().pop();
   }
 }
