@@ -17,37 +17,15 @@ export default class Stack extends Layout {
 
     this.order = Array.from(this.components.keys());
     this.initialName = this.order[0];
-    this.history = [this.initialName];
-
-    this.addListener('ComponentDidAppear', this.handleDidAppear);
+    this.name = null;
   }
 
-  handleDidAppear = ({ componentId, componentName }) => {
-    // A pop() happened outside of the Stack
-    // We need to sync history
-
-    const component = this.components.get(componentName);
-
-    if (component && component.id === componentId) {
-      const index = this.history.findIndex(name => name === componentName);
-
-      if (index > -1 && index < this.history.length - 1) {
-        // Sync history
-        this.history.splice(index + 1);
-      }
-    }
-  };
-
-  get componentName() {
-    return Array.from(this.history).pop();
+  mount(props) {
+    Navigation.setRoot({ root: this.getInitialLayout(props) });
   }
 
-  mount(initialProps) {
-    Navigation.setRoot({ root: this.getInitialLayout(initialProps) });
-  }
-
-  getInitialLayout(initialProps) {
-    return this.getLayout(initialProps, this.initialName);
+  getInitialLayout(props) {
+    return this.getLayout(props, this.initialName);
   }
 
   getLayout(props, componentName) {
@@ -64,60 +42,31 @@ export default class Stack extends Layout {
     return { stack: layout };
   }
 
-  push(toName, props) {
-    const componentFrom = this.components.get(this.componentName);
-    const componentTo = this.components.get(toName);
+  push(name, props) {
+    if (!this.components.has(name)) {
+      throw new Error(`Component not found: ${name}`);
+    }
 
-    this.history.push(toName);
+    const componentFrom = this.components.get(this.name);
+    const componentTo = this.components.get(name);
 
     Navigation.push(componentFrom.id, componentTo.getLayout(props));
+
+    this.name = name;
   }
 
-  pop(n = 1) {
-    const len = this.history.length;
-    const newLen = len - n;
+  pop() {
+    const componentFrom = this.components.get(this.name);
 
-    if (n < 1 || newLen < 1) {
-      throw new Error(`Invalid pop number: ${n} (${len})`);
-    }
-
-    if (n === 1) {
-      const name = this.history.pop();
-      const componentFrom = this.components.get(name);
-
-      Navigation.pop(componentFrom.id);
-    } else {
-      this.popToIndex(newLen - 1);
-    }
+    Navigation.pop(componentFrom.id);
   }
 
-  popToIndex(index) {
-    const len = this.history.length;
-
-    if (index < 0 || index > len - 1) {
-      throw new Error(`Invalid pop index: ${index} (${len})`);
-    }
-
-    if (index === 0) {
-      this.popToRoot();
-    } else {
-      this.history.splice(index + 1);
-
-      const componentTo = this.components.get(this.componentName);
-
-      this.popTo(componentTo.id);
-    }
-  }
-
-  popTo(toId) {
-    Navigation.popTo(toId);
+  popTo(id) {
+    Navigation.popTo(id);
   }
 
   popToRoot() {
     const componentFrom = this.components.get(this.componentName);
-
-    // Reset history
-    this.history = [this.initialName];
 
     Navigation.popToRoot(componentFrom.id);
   }
