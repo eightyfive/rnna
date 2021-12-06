@@ -7,10 +7,6 @@ export default class Overlay extends Component {
     Navigation.showOverlay(this.getLayout(initialProps));
   }
 
-  unmount() {
-    this.dismiss();
-  }
-
   dismiss() {
     Navigation.dismissOverlay(this.id);
   }

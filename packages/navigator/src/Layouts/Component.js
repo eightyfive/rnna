@@ -17,8 +17,6 @@ export default class Component extends Layout {
     Navigation.setRoot({ root: this.getLayout(initialProps) });
   }
 
-  unmount() {}
-
   getLayout(props) {
     const layout = {
       id: this.id,

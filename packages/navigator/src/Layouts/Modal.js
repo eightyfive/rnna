@@ -7,10 +7,6 @@ export default class Modal extends Stack {
     Navigation.showModal(this.getInitialLayout(initialProps));
   }
 
-  unmount() {
-    this.dismiss();
-  }
-
   dismiss() {
     const component = this.components.get(this.componentName);
 

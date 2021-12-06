@@ -19,8 +19,6 @@ export default class Component extends Layout {
     this.update(initialProps);
   }
 
-  unmount() {}
-
   update(props) {
     this.passProps = props;
 

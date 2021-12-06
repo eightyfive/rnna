@@ -14,8 +14,6 @@ export default /** abstract */ class Layout extends Emitter {
   getLayout(props) {
     throwAbstract('getLayout(props)');
   }
-
-  unmount() {}
 }
 
 function throwAbstract(method) {

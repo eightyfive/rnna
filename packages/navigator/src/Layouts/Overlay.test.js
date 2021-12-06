@@ -17,8 +17,8 @@ test('mount', () => {
   });
 });
 
-test('unmount (dismiss)', () => {
-  app.unmount();
+test('dismiss', () => {
+  app.dismiss();
 
   expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
 });
