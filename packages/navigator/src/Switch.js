@@ -1,4 +1,6 @@
-export default class Switch {
+import Navigable from './Navigable';
+
+export default class Switch extends Navigable {
   constructor(navigators) {
     this.navigators = new Map(Object.entries(navigators));
     this.name = null;
@@ -22,11 +24,11 @@ export default class Switch {
     this.name = name;
   }
 
-  go(name, props) {
-    this.navigator.go(name, props);
+  push(name, props) {
+    this.navigator.push(name, props);
   }
 
-  goBack() {
-    this.navigator.goBack();
+  pop() {
+    this.navigator.pop();
   }
 }

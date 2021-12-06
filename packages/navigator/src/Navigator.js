@@ -1,6 +1,6 @@
-import Emitter from './Emitter';
+import Navigable from './Navigable';
 
-export default class Navigator extends Emitter {
+export default class Navigator extends Navigable {
   constructor(layout) {
     this.layout = layout;
   }
@@ -13,11 +13,11 @@ export default class Navigator extends Emitter {
     this.layout.mount(props);
   }
 
-  go(name, props) {
+  push(name, props) {
     this.getStack().push(name, props);
   }
 
-  goBack() {
+  pop() {
     this.getStack().pop();
   }
 }
