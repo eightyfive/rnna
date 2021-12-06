@@ -1,63 +1,32 @@
 import Emitter from './Emitter';
 
-export default /** abstract */ class Navigator extends Emitter {
-  constructor(layouts, config = {}) {
-    super();
-
-    this.layouts = new Map(Object.entries(layouts));
-    this.config = config;
-    this.order = Array.from(this.layouts.keys());
-
-    this.layouts.forEach((layout, name) => {
-      this.defineProperty(name, layout);
-    });
+export default class Navigator extends Emitter {
+  getLayout() {
+    throwAbstract('getLayout()');
   }
 
-  render(componentId, props) {
-    throwAbstract('render(componentId, props)');
+  getStack() {
+    throwAbstract('getStack()');
   }
 
-  goBack() {
-    throwAbstract('goBack()');
+  mount(initialProps) {
+    this.getLayout().mount(initialProps);
   }
 
-  readPath(path) {
-    const [name, ...childPath] = path.split('/');
-
-    return [name, childPath.length ? childPath.join('/') : null];
+  push(toName, props) {
+    this.getStack().push(toName, props);
   }
 
-  renderBottomTabs(bottomTabs, childPath, props) {
-    const [stackName, componentName] = this.readPath(childPath);
-
-    if (bottomTabs.stackName !== stackName) {
-      bottomTabs.selectTab(stackName);
-    }
-
-    this.renderStack(bottomTabs[stackName], componentName, props);
+  pop() {
+    this.getStack().pop();
   }
 
-  renderStack(stack, componentName, props) {
-    const index = stack.history.findIndex(name => name === componentName);
-
-    if (stack.componentName === componentName) {
-      // Update current component
-      stack[componentName].update(props);
-    } else if (index === -1) {
-      // Push new screen
-      stack.push(componentName, props);
-    } else {
-      // Pop to previous screen
-      stack.popToIndex(index);
-    }
+  popTo(toId) {
+    this.getStack().popTo(toId);
   }
 
-  goBackBottomTabs(bottomTabs) {
-    // TODO ?
-  }
-
-  goBackStack(stack) {
-    stack.pop();
+  popToRoot() {
+    this.getStack().popToRoot();
   }
 }
 

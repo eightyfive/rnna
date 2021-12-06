@@ -52,7 +52,7 @@ export default class BottomTabs extends Layout {
     return { bottomTabs: layout };
   }
 
-  selectTab(indexOrName) {
+  findIndex(indexOrName) {
     let index;
 
     if (typeof indexOrName === 'string') {
@@ -70,6 +70,24 @@ export default class BottomTabs extends Layout {
         );
       }
     }
+
+    return index;
+  }
+
+  getTab() {
+    return this.findTab(this.tabIndex);
+  }
+
+  findTab(indexOrName) {
+    const index = this.findIndex(indexOrName);
+
+    const name = this.order[index];
+
+    return this.stacks.get(name);
+  }
+
+  selectTab(indexOrName) {
+    const index = this.findIndex(indexOrName);
 
     if (this.tabIndex !== index) {
       this.tabIndex = index;
