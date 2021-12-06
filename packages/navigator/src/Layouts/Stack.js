@@ -15,31 +15,51 @@ export default class Stack extends Layout {
       }
     }
 
-    this.order = Array.from(this.components.keys());
-    this.initialName = this.order[0];
+    const order = Array.from(this.components.keys());
+
+    this.initialName = order[0];
     this.name = null;
+  }
+
+  get component() {
+    if (!this.name) {
+      throw new Error('Stack not mounted');
+    }
+
+    return this.components.get(this.name);
   }
 
   mount(props) {
     Navigation.setRoot({ root: this.getInitialLayout(props) });
+
+    this.name = this.initialName;
   }
 
   getInitialLayout(props) {
     return this.getLayout(props, this.initialName);
   }
 
-  getLayout(props, componentName) {
-    const index = this.order.findIndex(name => name === componentName);
-    const componentNames = this.order.slice(0, index + 1);
-
+  getLayout(props, name) {
     const layout = {
-      children: componentNames.map(name =>
-        this.components.get(name).getLayout(props),
-      ),
+      children: this.slice(name, props),
       options: { ...this.options },
     };
 
     return { stack: layout };
+  }
+
+  slice(name, props) {
+    const children = [];
+
+    for (const [key, component] of this.components) {
+      children.push(component.getLayout(key === name ? props : {}));
+
+      if (key === name) {
+        break;
+      }
+    }
+
+    return children;
   }
 
   push(name, props) {
@@ -47,18 +67,15 @@ export default class Stack extends Layout {
       throw new Error(`Component not found: ${name}`);
     }
 
-    const componentFrom = this.components.get(this.name);
     const componentTo = this.components.get(name);
 
-    Navigation.push(componentFrom.id, componentTo.getLayout(props));
+    Navigation.push(this.component.id, componentTo.getLayout(props));
 
     this.name = name;
   }
 
   pop() {
-    const componentFrom = this.components.get(this.name);
-
-    Navigation.pop(componentFrom.id);
+    Navigation.pop(this.component.id);
   }
 
   popTo(id) {
