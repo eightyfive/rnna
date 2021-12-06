@@ -11,17 +11,14 @@ export default class BottomTabs extends Layout {
 
     this.stacks = new Map(Object.entries(stacks));
 
-    const notStack = Array.from(this.stacks.values()).some(
-      stack => !(stack instanceof Stack),
-    );
-
-    if (notStack.length) {
-      throw new TypeError('Invalid argument');
+    // Validation
+    for (const stack of this.stacks.values()) {
+      if (!(stack instanceof Stack)) {
+        throw new TypeError('Invalid argument: Only stacks allowed');
+      }
     }
 
-    this.order = Array.from(this.stacks.keys());
     this.tabIndex = 0;
-    this.stackName = this.order[0];
 
     // Tab loading
     // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
@@ -39,63 +36,46 @@ export default class BottomTabs extends Layout {
   }
 
   getLayout(props) {
+    const children = [];
+
+    for (const stack of this.stacks.values()) {
+      children.push(
+        stack.getInitialLayout(index === this.tabIndex ? props : undefined),
+      );
+    }
+
     const layout = {
       id: this.layoutId,
-      children: this.order.map((name, index) =>
-        this.stacks
-          .get(name)
-          .getInitialLayout(index === this.tabIndex ? props : undefined),
-      ),
+      children,
       options: { ...this.options },
     };
 
     return { bottomTabs: layout };
   }
 
-  findIndex(indexOrName) {
-    let index;
-
-    if (typeof indexOrName === 'string') {
-      index = this.order.findIndex(name => name === indexOrName);
-
-      if (index === -1) {
-        throw new Error(`Tab name not found: ${indexOrName}`);
-      }
-    } else {
-      index = indexOrName;
-
-      if (indexOrName > this.order.length - 1) {
-        throw new Error(
-          `Tab index out of range: ${indexOrName} (${this.order.length})`,
-        );
-      }
-    }
-
-    return index;
-  }
-
   getTab() {
     return this.findTab(this.tabIndex);
   }
 
-  findTab(indexOrName) {
-    const index = this.findIndex(indexOrName);
+  findTab(index) {
+    let loop = 0;
 
-    const name = this.order[index];
+    for (const stack of this.stacks.values()) {
+      if (loop === index) {
+        return stack;
+      }
 
-    return this.stacks.get(name);
+      loop++;
+    }
+
+    throw new Error(`Tab index not found: ${index}`);
   }
 
-  selectTab(indexOrName) {
-    const index = this.findIndex(indexOrName);
+  selectTab(index) {
+    this.tabIndex = index;
 
-    if (this.tabIndex !== index) {
-      this.tabIndex = index;
-      this.stackName = this.order[index];
-
-      Navigation.mergeOptions(this.layoutId, {
-        bottomTabs: { currentTabIndex: index },
-      });
-    }
+    Navigation.mergeOptions(this.layoutId, {
+      bottomTabs: { currentTabIndex: index },
+    });
   }
 }
