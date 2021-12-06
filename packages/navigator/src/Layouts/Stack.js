@@ -9,21 +9,15 @@ export default class Stack extends Layout {
 
     this.components = new Map(Object.entries(components));
 
-    const notComponent = Array.from(this.components.values()).some(
-      component => !(component instanceof Component),
-    );
-
-    if (notComponent.length) {
-      throw new TypeError('Invalid argument');
+    for (const component of this.components.values()) {
+      if (!(component instanceof Component)) {
+        throw new TypeError('Invalid argument: Only components allowed');
+      }
     }
 
     this.order = Array.from(this.components.keys());
     this.initialName = this.order[0];
     this.history = [this.initialName];
-
-    this.components.forEach((component, name) => {
-      this.defineProperty(name, component);
-    });
 
     this.addListener('ComponentDidAppear', this.handleDidAppear);
   }
