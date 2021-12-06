@@ -1,17 +1,16 @@
 import Navigator from './Navigator';
+import BottomTabs from './Layouts/BottomTabs';
 
 export default class BottomTabsNavigator extends Navigator {
-  constructor(bottomTabs) {
-    super();
+  constructor(layout) {
+    if (!(layout instanceof BottomTabs)) {
+      throw new TypeError('Layout must be bottomTabs');
+    }
 
-    this.bottomTabs = bottomTabs;
-  }
-
-  getLayout() {
-    return this.bottomTabs;
+    super(layout);
   }
 
   getStack() {
-    return this.bottomTabs.getTab();
+    return this.layout.getTab();
   }
 }

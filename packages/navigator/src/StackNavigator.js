@@ -1,17 +1,16 @@
 import Navigator from './Navigator';
+import Stack from './Layouts/Stack';
 
 export default class StackNavigator extends Navigator {
-  constructor(stack) {
-    super();
+  constructor(layout) {
+    if (!(layout instanceof Stack)) {
+      throw new TypeError('Layout must be stack');
+    }
 
-    this.stack = stack;
-  }
-
-  getLayout() {
-    return this.stack;
+    super(layout);
   }
 
   getStack() {
-    return this.stack;
+    return this.layout;
   }
 }

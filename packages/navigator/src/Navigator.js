@@ -1,8 +1,8 @@
 import Emitter from './Emitter';
 
 export default class Navigator extends Emitter {
-  getLayout() {
-    throwAbstract('getLayout()');
+  constructor(layout) {
+    this.layout = layout;
   }
 
   getStack() {
@@ -10,23 +10,15 @@ export default class Navigator extends Emitter {
   }
 
   mount(props) {
-    this.getLayout().mount(props);
+    this.layout.mount(props);
   }
 
-  push(name, props) {
+  go(name, props) {
     this.getStack().push(name, props);
   }
 
-  pop() {
+  goBack() {
     this.getStack().pop();
-  }
-
-  popTo(id) {
-    this.getStack().popTo(id);
-  }
-
-  popToRoot() {
-    this.getStack().popToRoot();
   }
 }
 
