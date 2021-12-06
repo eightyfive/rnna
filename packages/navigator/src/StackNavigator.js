@@ -1,8 +1,8 @@
 import Navigator from './Navigator';
 
 export default class StackNavigator extends Navigator {
-  constructor(stack, config = {}) {
-    super(config);
+  constructor(stack) {
+    super();
 
     this.stack = stack;
   }

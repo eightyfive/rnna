@@ -3,8 +3,17 @@ import Registry from './Registry';
 import SwitchNavigator from './SwitchNavigator';
 import * as Layouts from './Layouts';
 import * as Utils from './utils';
+import BottomTabsNavigator from './BottomTabsNavigator';
+import ModalNavigator from './ModalNavigator';
+import StackNavigator from './StackNavigator';
 
 export { Layouts, Registry, RootNavigator, SwitchNavigator, Utils };
+
+export function createBottomTabsNavigator(routes, config = {}) {
+  const bottomTabs = createBottomTabs(routes, config);
+
+  return new BottomTabsNavigator(bottomTabs);
+}
 
 export function createBottomTabs(routes, config = {}) {
   const { parentId, ...restConfig } = config;
@@ -26,12 +35,24 @@ export function createComponent(id, name, ReactComponent) {
   return Utils.createComponent(id, name, ReactComponent);
 }
 
+export function createStackNavigator(routes, config = {}) {
+  const stack = createStack(routes, config);
+
+  return new StackNavigator(stack);
+}
+
 export function createStack(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
   const components = Utils.createComponents(routes, parentId);
 
   return new Layouts.Stack(components, restConfig);
+}
+
+export function createModalNavigator(routes, config = {}) {
+  const stack = createModal(routes, config);
+
+  return new ModalNavigator(stack);
 }
 
 export function createModal(routes, config = {}) {

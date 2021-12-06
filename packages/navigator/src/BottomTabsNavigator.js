@@ -1,8 +1,8 @@
 import Navigator from './Navigator';
 
 export default class BottomTabsNavigator extends Navigator {
-  constructor(bottomTabs, config = {}) {
-    super(config);
+  constructor(bottomTabs) {
+    super();
 
     this.bottomTabs = bottomTabs;
   }

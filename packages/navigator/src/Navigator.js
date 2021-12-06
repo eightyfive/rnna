@@ -9,20 +9,20 @@ export default class Navigator extends Emitter {
     throwAbstract('getStack()');
   }
 
-  mount(initialProps) {
-    this.getLayout().mount(initialProps);
+  mount(props) {
+    this.getLayout().mount(props);
   }
 
-  push(toName, props) {
-    this.getStack().push(toName, props);
+  push(name, props) {
+    this.getStack().push(name, props);
   }
 
   pop() {
     this.getStack().pop();
   }
 
-  popTo(toId) {
-    this.getStack().popTo(toId);
+  popTo(id) {
+    this.getStack().popTo(id);
   }
 
   popToRoot() {
