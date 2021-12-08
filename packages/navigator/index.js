@@ -1,6 +1,5 @@
 import { Component, Widget } from './Layouts';
 import { createComponents, getRouteType } from './utils';
-import Registry from './Registry';
 import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
 import OverlayNavigator from './OverlayNavigator';
@@ -23,10 +22,8 @@ export function createBottomTabsNavigator(routes, config = {}) {
   return new BottomTabsNavigator(stacks, restConfig);
 }
 
-export function createComponent(id, name, ReactComponent) {
-  Registry.register(id, name, ReactComponent);
-
-  return new Component(id, name, ReactComponent.options || {});
+export function createComponent(id, name, ReactComponent, options = {}) {
+  return new Component(id, name, ReactComponent, options);
 }
 
 export function createStackNavigator(routes, config = {}) {
@@ -46,17 +43,11 @@ export function createModalNavigator(routes, config = {}) {
 }
 
 export function createOverlayNavigator(id, name, ReactComponent, options) {
-  Registry.register(id, name, ReactComponent);
-
-  return new OverlayNavigator(id, name, options);
+  return new OverlayNavigator(id, name, ReactComponent, options);
 }
 
-export function createWidget(name, ReactComponent) {
-  const widget = new Widget(name);
-
-  Registry.register(widget.id, name, ReactComponent);
-
-  return widget;
+export function createWidget(name, ReactComponent, options) {
+  return new Widget(name, ReactComponent, options);
 }
 
 export function createRootNavigator(rootRoutes) {

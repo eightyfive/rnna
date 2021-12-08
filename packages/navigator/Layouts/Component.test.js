@@ -3,13 +3,17 @@ import { Navigation } from 'react-native-navigation';
 import { createComponentLayout } from '../test-utils';
 import Component from './Component';
 
+function ComponentA1() {}
+function ComponentA2() {}
+function ComponentA3() {}
+
 describe('Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   test('mount', () => {
-    const component = new Component('a1', 'A1');
+    const component = new Component('a1', 'A1', ComponentA1);
 
     component.mount();
 
@@ -21,7 +25,7 @@ describe('Component', () => {
   });
 
   test('mount (options)', () => {
-    const component = new Component('a2', 'A2', {
+    const component = new Component('a2', 'A2', ComponentA2, {
       topBar: { title: { text: 'Title A2' } },
     });
 
@@ -37,7 +41,7 @@ describe('Component', () => {
   });
 
   test('mount (props)', () => {
-    const component = new Component('a3', 'A3');
+    const component = new Component('a3', 'A3', ComponentA3);
 
     component.mount({ foo: 'bar' });
 

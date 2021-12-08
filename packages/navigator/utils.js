@@ -1,7 +1,6 @@
 import _isObject from 'lodash.isplainobject';
 
 import { Component } from './Layouts';
-import Registry from './Registry';
 
 export function createComponents(routes, parentId) {
   const components = {};
@@ -11,15 +10,11 @@ export function createComponents(routes, parentId) {
       ? `${parentId}/${componentName}`
       : componentName;
 
-    const component = new Component(
+    components[componentName] = new Component(
       componentId,
       componentName,
-      ReactComponent.options || {},
+      ReactComponent,
     );
-
-    Registry.register(componentId, componentName, ReactComponent);
-
-    components[componentName] = component;
   });
 
   return components;
