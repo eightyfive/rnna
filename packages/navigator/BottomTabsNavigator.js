@@ -17,6 +17,10 @@ export default class BottomTabsNavigator extends BottomTabs {
     });
   }
 
+  getComponent() {
+    return this.getTab().getComponent();
+  }
+
   getTab() {
     return this.getTabAt(this.tabIndex);
   }

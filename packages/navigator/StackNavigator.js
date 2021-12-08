@@ -17,6 +17,10 @@ export default class StackNavigator extends Stack {
     return this.components.get(this.componentName) || null;
   }
 
+  getComponent() {
+    return this.component || this.getComponentAt(0);
+  }
+
   mount(props) {
     super.mount(props);
 

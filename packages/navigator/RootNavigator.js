@@ -92,7 +92,7 @@ export default class RootNavigator extends Emitter {
       return this.navigator.getTab();
     }
 
-    return null;
+    throw new Error(`Navigator does not have Stack: ${this.navigatorName}`);
   }
 
   // Root
@@ -106,43 +106,19 @@ export default class RootNavigator extends Emitter {
 
   // Stack
   push(name, props) {
-    const stack = this.getStack();
-
-    if (!stack) {
-      throw new Error(`Cannot push on navigator: ${this.navigatorName}`);
-    }
-
-    stack.push(name, props);
+    this.getStack().push(name, props);
   }
 
   pop() {
-    const stack = this.getStack();
-
-    if (!stack) {
-      throw new Error(`Cannot pop on navigator: ${this.navigatorName}`);
-    }
-
-    stack.pop();
+    this.getStack().pop();
   }
 
   popTo(id) {
-    const stack = this.getStack();
-
-    if (!stack) {
-      throw new Error(`Cannot pop on navigator: ${this.navigatorName}`);
-    }
-
-    stack.popTo(id);
+    this.getStack().popTo(id);
   }
 
   popToRoot() {
-    const stack = this.getStack();
-
-    if (!stack) {
-      throw new Error(`Cannot pop on navigator: ${this.navigatorName}`);
-    }
-
-    stack.popToRoot();
+    this.getStack().popToRoot();
   }
 
   // BottomTabs

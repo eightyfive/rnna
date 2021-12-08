@@ -1,58 +1,18 @@
+import RootNavigator from '@rnna/navigator/RootNavigator';
+
 const defaultOptions = {
   globalProps: {},
   getGlobalProps: () => ({}),
 };
 
-export default class RouterAbstract {
-  constructor(navigator, routes, options) {
-    this.navigator = navigator;
-    this.routes = routes;
+export default class Router extends RootNavigator {
+  constructor(navigators, options) {
+    super(navigators);
+
     this.options = Object.assign({}, defaultOptions, options || {});
-    this.componentIds = [];
-    this.uris = new Map();
     this.state = null;
     this.services = {};
-    this.listeners = {};
-
-    this.notFound = this.routes['_404'] || null;
-
-    if (this.notFound) {
-      delete this.routes['_404'];
-    }
-
-    this.navigator.addListener(
-      'ComponentDidAppear',
-      this.handleComponentDidAppear,
-    );
-    this.navigator.addListener(
-      'ComponentDidDisappear',
-      this.handleComponentDidDisappear,
-    );
   }
-
-  get uri() {
-    const componentId = Array.from(this.componentIds).pop();
-
-    if (componentId) {
-      return this.uris.get(componentId);
-    }
-
-    return undefined;
-  }
-
-  handleComponentDidAppear = ({ componentId: id }) => {
-    if (!this.componentIds.includes(id)) {
-      this.componentIds.push(id);
-    }
-  };
-
-  handleComponentDidDisappear = ({ componentId }) => {
-    this.componentIds = this.componentIds.filter(id => id !== componentId);
-
-    if (this.uri) {
-      this.render(this.uri);
-    }
-  };
 
   setServices(services) {
     this.services = services;
@@ -62,114 +22,127 @@ export default class RouterAbstract {
     this.options.globalProps[name] = value;
   }
 
-  addListener(eventName, listener) {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
-    }
+  getProps(navigator, params = []) {
+    const { ReactComponent } = navigator.getComponent();
 
-    this.listeners[eventName].push(listener);
+    const { globalProps, getGlobalProps } = this.options;
+
+    return Object.assign(
+      {},
+      globalProps,
+      getGlobalProps(this.services),
+      ReactComponent.controller(...params, this.services),
+    );
   }
 
-  removeListener(eventName, listener) {
-    if (this.listeners[eventName]) {
-      this.listeners[eventName] = this.listeners[eventName].filter(
-        handler => handler !== listener,
-      );
-    }
+  // Root
+  mount(name) {
+    const root = this.getRoot(name);
+
+    const props = this.getProps(root);
+
+    super.mount(name, props);
   }
 
-  emit(eventName, ...args) {
-    if (this.listeners[eventName]) {
-      for (const listener of this.listeners[eventName]) {
-        listener(...args);
-      }
-    }
+  // Stack
+  push(name) {
+    const stack = this.getStack();
+
+    const props = this.getProps(stack);
+
+    super.push(name, props);
   }
 
-  go(uri) {
-    return this.dispatch(uri);
+  pop() {
+    super.pop();
+
+    this.update();
   }
 
-  goBack() {
-    return this.navigator.goBack();
+  popTo(id) {
+    super.popTo(id);
+
+    this.update();
   }
 
-  render(uri) {
-    const [path, search = ''] = uri.split('?');
-    const query = qs(search);
+  popToRoot() {
+    super.popToRoot();
 
-    let componentId;
-    let props;
-    let params;
-
-    for (const [route, controller] of Object.entries(this.routes)) {
-      const re = new RegExp(`^${route}$`);
-      const res = re.exec(path);
-
-      if (res) {
-        [, ...params] = res;
-
-        const data = controller.apply(controller, [
-          ...params,
-          this.services,
-          query,
-        ]);
-
-        if (Array.isArray(data)) {
-          [componentId, props = {}] = data;
-        } else {
-          componentId = route;
-          props = data;
-        }
-        break;
-      }
-    }
-
-    if (!componentId && this.notFound) {
-      [componentId, props = {}] = this.notFound.apply(this.notFound, [
-        this.services,
-      ]);
-    }
-
-    if (componentId) {
-      const { globalProps, getGlobalProps } = this.options;
-
-      props = Object.assign(
-        {},
-        globalProps,
-        getGlobalProps(this.services),
-        props,
-      );
-
-      this.navigator.render(componentId, props);
-
-      return [componentId, path, query, params || []];
-    }
-
-    const err = new Error(`No matching controller: ${path}`);
-
-    Object.assign(err, { name: 'RouteNotFound', path, uri });
-
-    throw err;
+    this.update();
   }
 
-  dispatch(uri) {
-    const [componentId, path, query, params] = this.render(uri);
+  // BottomTabs
+  selectTab(index) {
+    super.selectTab(index);
 
-    // Save URI
-    this.componentIds.push(componentId);
-    this.uris.set(componentId, uri);
+    this.update();
+  }
 
-    this.emit('dispatch', { componentId, uri, path, query, params });
+  // Modal
+  showModal(name) {
+    const modal = this.getModal(name);
+
+    const props = this.getProps(modal);
+
+    super.showModal(name, props);
+  }
+
+  dismissModal(name) {
+    super.dismissModal(name);
+
+    this.update();
+  }
+
+  // Overlay
+  showOverlay(name) {
+    const overlay = this.getOverlay(name);
+
+    const props = this.getProps(overlay);
+
+    super.showOverlay(name, props);
+  }
+
+  dismissOverlay(name) {
+    super.dismissOverlay(name);
+
+    this.update();
   }
 
   onState(state) {
     if (this.state !== state) {
       this.state = state;
 
-      if (this.uri) {
-        this.render(this.uri);
+      // If mounted
+      if (this.navigator) {
+        this.update();
       }
+    }
+  }
+
+  update() {
+    const navigators = [];
+
+    if (this.root) {
+      navigators.push(this.root);
+    }
+
+    if (this.modalNames.length) {
+      for (const name of this.modalNames) {
+        navigators.push(this.getModal(name));
+      }
+    }
+
+    if (this.overlayNames.length) {
+      for (const name of this.overlayNames) {
+        navigators.push(this.getOverlay(name));
+      }
+    }
+
+    for (const navigator of navigators) {
+      const component = navigator.getComponent();
+      const props = this.getProps(navigator);
+
+      component.update(props);
     }
   }
 }
