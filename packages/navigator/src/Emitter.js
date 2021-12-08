@@ -2,8 +2,6 @@ import Events from './Events';
 
 export default /** abstract */ class Emitter {
   constructor() {
-    super();
-
     this.listeners = {};
   }
 

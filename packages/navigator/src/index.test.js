@@ -1,11 +1,14 @@
 import RootNavigator from './RootNavigator';
-import { BottomTabs, Modal, Overlay, Stack, Widget } from './Layouts';
+import { BottomTabs, Component, Widget } from './Layouts';
 
+import BottomTabsNavigator from './BottomTabsNavigator';
+import ModalNavigator from './ModalNavigator';
+import StackNavigator from './StackNavigator';
 import {
-  createBottomTabs,
-  createModal,
+  createBottomTabsNavigator,
+  createModalNavigator,
   createRootNavigator,
-  createStack,
+  createStackNavigator,
   createWidget,
 } from './index';
 
@@ -24,45 +27,38 @@ test('createWidget', () => {
 });
 
 // Bottom tabs
-test('createBottomTabs', () => {
-  const app = createBottomTabs({
+test('createBottomTabsNavigator', () => {
+  const app = createBottomTabsNavigator({
     ab: { A, B },
     cd: { C, D },
   });
 
-  expect(app).toBeInstanceOf(BottomTabs);
-  expect(app.ab.A.id).toBe('ab/A');
-  expect(app.ab.A.name).toBe('A');
-  expect(app.ab.B.id).toBe('ab/B');
-  expect(app.ab.B.name).toBe('B');
-  expect(app.cd.C.id).toBe('cd/C');
-  expect(app.cd.C.name).toBe('C');
-  expect(app.cd.D.id).toBe('cd/D');
-  expect(app.cd.D.name).toBe('D');
+  app.mount();
+
+  expect(app).toBeInstanceOf(BottomTabsNavigator);
+
+  const stack = app.getTab();
+  expect(stack).toBeInstanceOf(StackNavigator);
+
+  const component = Array.from(stack.components.values())[0];
+
+  expect(component).toBeInstanceOf(Component);
+  expect(component.id).toBe('ab/A');
+  expect(component.name).toBe('A');
 });
 
 // Modal
-test('createModal', () => {
-  const app = createModal({ A, B });
+test('createModalNavigator', () => {
+  const app = createModalNavigator({ A, B });
 
-  expect(app).toBeInstanceOf(Modal);
-  expect(app.A.id).toBe('A');
-  expect(app.A.name).toBe('A');
-  expect(app.B.id).toBe('B');
-  expect(app.B.name).toBe('B');
+  expect(app).toBeInstanceOf(ModalNavigator);
 });
 
 // Stack
-test('createStack', () => {
-  const app = createStack({ A, B });
+test('createStackNavigator', () => {
+  const app = createStackNavigator({ A, B });
 
-  expect(app).toBeInstanceOf(Stack);
-
-  expect(app.A.id).toBe('A');
-  expect(app.A.name).toBe('A');
-
-  expect(app.B.id).toBe('B');
-  expect(app.B.name).toBe('B');
+  expect(app).toBeInstanceOf(StackNavigator);
 });
 
 // Root
@@ -75,8 +71,20 @@ test('createRootNavigator', () => {
   });
 
   expect(app).toBeInstanceOf(RootNavigator);
-  expect(app.abcd).toBeInstanceOf(BottomTabs);
-  expect(app.ef).toBeInstanceOf(Stack);
-  expect(app.gh).toBeInstanceOf(Modal);
-  expect(app.C).toBeInstanceOf(Overlay);
+
+  app.mount('abcd');
+  expect(app.navigator).toBeInstanceOf(BottomTabs);
+
+  app.mount('ef');
+  expect(app.navigator).toBeInstanceOf(StackNavigator);
+
+  app.showModal('gh');
+  expect(app.navigator).toBeInstanceOf(ModalNavigator);
+
+  app.dismissModal('gh');
+  // ef...
+  expect(app.navigator).toBeInstanceOf(StackNavigator);
+
+  // TODO
+  // app.showOverlay('C');
 });

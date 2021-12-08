@@ -1,9 +1,9 @@
-import { Navigation } from 'react-native-navigation';
-
 import Component from './Component';
 import Layout from './Layout';
 
 export default class Stack extends Layout {
+  static layoutIndex = 0;
+
   constructor(components, config = {}) {
     super(config);
 
@@ -15,52 +15,30 @@ export default class Stack extends Layout {
       }
     }
 
-    const order = Array.from(this.components.keys());
-
-    this.initialName = order[0];
-    this.name = null;
+    this.id = `Stack${Stack.layoutIndex++}`;
+    this.order = Object.keys(components);
+    this.initialName = this.order[0];
   }
 
-  get component() {
-    if (!this.name) {
-      throw new Error('Stack not mounted');
+  getComponentById(id) {
+    for (const component of this.components) {
+      if (component.id === id) {
+        return component;
+      }
     }
 
-    return this.components.get(this.name);
+    throw new Error(`Component ID not found: ${id}`);
   }
 
   getRoot(props) {
-    const component = this.components.get(this.initialName);
+    const component = this.components.get(this.order[0]);
 
     const layout = {
+      id: this.id,
       children: [component.getRoot(props)],
       options: { ...this.options },
     };
 
     return { stack: layout };
-  }
-
-  push(name, props) {
-    if (!this.components.has(name)) {
-      throw new Error(`Component not found: ${name}`);
-    }
-
-    const componentTo = this.components.get(name);
-
-    Navigation.push(this.component.id, componentTo.getLayout(props));
-
-    this.name = name;
-  }
-
-  pop() {
-    Navigation.pop(this.component.id);
-  }
-
-  popTo(id) {
-    Navigation.popTo(id);
-  }
-
-  popToRoot() {
-    Navigation.popToRoot(this.component.id);
   }
 }

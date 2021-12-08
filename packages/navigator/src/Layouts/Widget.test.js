@@ -1,9 +1,9 @@
 import Widget from './Widget';
 
-test('getLayout', () => {
+test('getRoot', () => {
   const component = new Widget('NAME');
 
-  expect(component.getLayout()).toEqual({
+  expect(component.getRoot()).toEqual({
     component: {
       id: 'widget-NAME',
       name: 'NAME',

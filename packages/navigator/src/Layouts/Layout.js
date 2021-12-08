@@ -1,12 +1,16 @@
+import { Navigation } from 'react-native-navigation';
+
 export default /** abstract */ class Layout {
   constructor(config = {}) {
-    super();
-
     this.options = config.options || {};
   }
 
-  getRoot() {
-    throwAbstract('getRoot()');
+  mount(props) {
+    Navigation.setRoot({ root: this.getRoot(props) });
+  }
+
+  getRoot(props) {
+    throwAbstract('getRoot(props)');
   }
 }
 

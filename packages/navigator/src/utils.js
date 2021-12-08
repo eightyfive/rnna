@@ -3,12 +3,6 @@ import _isObject from 'lodash.isplainobject';
 import { Component } from './Layouts';
 import Registry from './Registry';
 
-export function createComponent(id, name, ReactComponent) {
-  Registry.register(id, name, ReactComponent);
-
-  return new Component(id, name, ReactComponent.options || {});
-}
-
 export function createComponents(routes, parentId) {
   const components = {};
 
@@ -17,49 +11,18 @@ export function createComponents(routes, parentId) {
       ? `${parentId}/${componentName}`
       : componentName;
 
-    const component = createComponent(
+    const component = new Component(
       componentId,
       componentName,
-      ReactComponent,
+      ReactComponent.options || {},
     );
+
+    Registry.register(componentId, componentName, ReactComponent);
 
     components[componentName] = component;
   });
 
   return components;
-}
-
-export function resolveLayouts(routes) {
-  const bottomTabs = new Map();
-  const modals = new Map();
-  const overlays = new Map();
-  const stacks = new Map();
-
-  Object.entries(routes).forEach(([name, route]) => {
-    const type = getRouteType(route);
-
-    if (type === 'overlay') {
-      overlays.set(name, [name, name, route]);
-    } else {
-      const { config: layoutConfig = {}, ...nestedRoutes } = route;
-
-      layoutConfig.parentId = name;
-
-      if (type === 'bottomTabs') {
-        bottomTabs.set(name, [nestedRoutes, layoutConfig]);
-      } else if (type === 'stack') {
-        stacks.set(name, [nestedRoutes, layoutConfig]);
-      } else if (type === 'modal') {
-        modals.set(name, [nestedRoutes, layoutConfig]);
-      } else {
-        throw new Error(
-          `Invalid route (too deep): ${JSON.stringify(route, null, 2)}`,
-        );
-      }
-    }
-  });
-
-  return [bottomTabs, modals, overlays, stacks];
 }
 
 // Traverse obj for depth

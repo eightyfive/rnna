@@ -1,48 +1,50 @@
 import { Navigation } from 'react-native-navigation';
 
+import { createComponentLayout } from '../test-utils';
 import Component from './Component';
 
-export function makeComponent(id, name, options = {}, props = {}) {
-  return {
-    id,
-    name,
-    options,
-    passProps: props,
-  };
-}
-
-test('mount', () => {
-  const component = new Component('A', 'A');
-
-  component.mount();
-
-  expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: {
-      component: makeComponent('A', 'A'),
-    },
+describe('Component', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
-});
 
-test('mount (options)', () => {
-  const component = new Component('A', 'A', { topBar: { title: 'A Title' } });
+  test('mount', () => {
+    const component = new Component('a1', 'A1');
 
-  component.mount();
+    component.mount();
 
-  expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: {
-      component: makeComponent('A', 'A', { topBar: { title: 'A Title' } }),
-    },
+    expect(Navigation.setRoot).toHaveBeenCalledWith({
+      root: {
+        component: createComponentLayout('a1', 'A1'),
+      },
+    });
   });
-});
 
-test('mount (props)', () => {
-  const component = new Component('A', 'A');
+  test('mount (options)', () => {
+    const component = new Component('a2', 'A2', {
+      topBar: { title: { text: 'Title A2' } },
+    });
 
-  component.mount({ foo: 'bar' });
+    component.mount();
 
-  expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: {
-      component: makeComponent('A', 'A', {}, { foo: 'bar' }),
-    },
+    expect(Navigation.setRoot).toHaveBeenCalledWith({
+      root: {
+        component: createComponentLayout('a2', 'A2', {
+          topBar: { title: { text: 'Title A2' } },
+        }),
+      },
+    });
+  });
+
+  test('mount (props)', () => {
+    const component = new Component('a3', 'A3');
+
+    component.mount({ foo: 'bar' });
+
+    expect(Navigation.setRoot).toHaveBeenCalledWith({
+      root: {
+        component: createComponentLayout('a3', 'A3', {}, { foo: 'bar' }),
+      },
+    });
   });
 });

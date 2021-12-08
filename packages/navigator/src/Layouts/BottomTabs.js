@@ -18,54 +18,30 @@ export default class BottomTabs extends Layout {
       }
     }
 
-    this.tabIndex = 0;
-
     // Tab loading
     // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
     this.options.tabsAttachMode =
       this.options.tabsAttachMode || 'onSwitchToTab';
-    this.layoutId = `BottomTabs${this.constructor.layoutIndex++}`;
+    this.id = `BottomTabs${BottomTabs.layoutIndex++}`;
   }
 
   getRoot(props) {
     const children = [];
 
+    let loop = 0;
+
     for (const stack of this.stacks.values()) {
-      children.push(stack.getInitialLayout(index === 0 ? props : undefined));
+      children.push(stack.getRoot(loop === 0 ? props : undefined));
+
+      loop++;
     }
 
     const layout = {
-      id: this.layoutId,
+      id: this.id,
       children,
       options: { ...this.options },
     };
 
     return { bottomTabs: layout };
-  }
-
-  getTab() {
-    return this.findTab(this.tabIndex);
-  }
-
-  findTab(index) {
-    let loop = 0;
-
-    for (const stack of this.stacks.values()) {
-      if (loop === index) {
-        return stack;
-      }
-
-      loop++;
-    }
-
-    throw new Error(`Tab index not found: ${index}`);
-  }
-
-  selectTab(index) {
-    this.tabIndex = index;
-
-    Navigation.mergeOptions(this.layoutId, {
-      bottomTabs: { currentTabIndex: index },
-    });
   }
 }

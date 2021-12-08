@@ -1,9 +1,11 @@
 import { Navigation } from 'react-native-navigation';
 
-import { makeComponent } from './Component.test';
-import { makeStack } from './Stack.test';
+import {
+  createStacks,
+  createComponentLayout,
+  createStackLayout,
+} from '../test-utils';
 import BottomTabs from './BottomTabs';
-import Component from './Component';
 import Stack from './Stack';
 
 function makeBottomTabs(index, stacks) {
@@ -14,47 +16,39 @@ function makeBottomTabs(index, stacks) {
   };
 }
 
-function createBottomTabs() {
-  const A = new Component('A', 'A', { topBar: { title: { text: 'Title A' } } });
-  const B = new Component('B', 'B', { topBar: { title: { text: 'Title B' } } });
-  const C = new Component('C', 'C', { topBar: { title: { text: 'Title C' } } });
-  const D = new Component('D', 'D', { topBar: { title: { text: 'Title D' } } });
+let layout;
 
-  const ab = new Stack({ A, B });
-  const cd = new Stack({ C, D });
+describe('BottomTabs', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
 
-  return new BottomTabs({ ab, cd });
-}
+    BottomTabs.layoutIndex = 0;
+    Stack.layoutIndex = 0;
 
-let app;
+    const stacks = createStacks();
 
-beforeEach(() => {
-  app = createBottomTabs();
-  app.mount();
-});
-
-test('mount', () => {
-  expect(app.ab).toBeInstanceOf(Stack);
-  expect(app.cd).toBeInstanceOf(Stack);
-
-  expect(Navigation.setRoot).toHaveBeenCalledWith({
-    root: {
-      bottomTabs: makeBottomTabs(0, [
-        makeStack([
-          makeComponent('A', 'A', { topBar: { title: { text: 'Title A' } } }),
-        ]),
-        makeStack([
-          makeComponent('C', 'C', { topBar: { title: { text: 'Title C' } } }),
-        ]),
-      ]),
-    },
+    layout = new BottomTabs(stacks);
+    layout.mount();
   });
-});
 
-test('select tab', () => {
-  app.selectTab(1);
+  test('mount', () => {
+    expect(layout.id).toBe('BottomTabs0');
 
-  expect(Navigation.mergeOptions).toHaveBeenCalledWith('BottomTabs9', {
-    bottomTabs: { currentTabIndex: 1 },
+    expect(Navigation.setRoot).toHaveBeenCalledWith({
+      root: {
+        bottomTabs: makeBottomTabs(0, [
+          createStackLayout(0, [
+            createComponentLayout('a', 'A', {
+              topBar: { title: { text: 'Title A' } },
+            }),
+          ]),
+          createStackLayout(1, [
+            createComponentLayout('c', 'C', {
+              topBar: { title: { text: 'Title C' } },
+            }),
+          ]),
+        ]),
+      },
+    });
   });
 });

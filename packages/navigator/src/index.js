@@ -1,21 +1,13 @@
-import RootNavigator from './RootNavigator';
+import { Component, Widget } from './Layouts';
+import { createComponents, getRouteType } from './utils';
 import Registry from './Registry';
-import SwitchNavigator from './SwitchNavigator';
-import * as Layouts from './Layouts';
-import * as Utils from './utils';
 import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
+import OverlayNavigator from './OverlayNavigator';
+import RootNavigator from './RootNavigator';
 import StackNavigator from './StackNavigator';
 
-export { Layouts, Registry, RootNavigator, SwitchNavigator, Utils };
-
 export function createBottomTabsNavigator(routes, config = {}) {
-  const bottomTabs = createBottomTabs(routes, config);
-
-  return new BottomTabsNavigator(bottomTabs);
-}
-
-export function createBottomTabs(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
   const stacks = {};
@@ -25,78 +17,81 @@ export function createBottomTabs(routes, config = {}) {
 
     stackConfig.parentId = parentId ? `${parentId}/${name}` : name;
 
-    stacks[name] = createStack(components, stackConfig);
+    stacks[name] = createStackNavigator(components, stackConfig);
   });
 
-  return new Layouts.BottomTabs(stacks, restConfig);
+  return new BottomTabsNavigator(stacks, restConfig);
 }
 
 export function createComponent(id, name, ReactComponent) {
-  return Utils.createComponent(id, name, ReactComponent);
+  Registry.register(id, name, ReactComponent);
+
+  return new Component(id, name, ReactComponent.options || {});
 }
 
 export function createStackNavigator(routes, config = {}) {
-  const stack = createStack(routes, config);
-
-  return new StackNavigator(stack);
-}
-
-export function createStack(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const components = Utils.createComponents(routes, parentId);
+  const components = createComponents(routes, parentId);
 
-  return new Layouts.Stack(components, restConfig);
+  return new StackNavigator(components, restConfig);
 }
 
 export function createModalNavigator(routes, config = {}) {
-  const stack = createModal(routes, config);
-
-  return new ModalNavigator(stack);
-}
-
-export function createModal(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const components = Utils.createComponents(routes, parentId);
+  const components = createComponents(routes, parentId);
 
-  return new Layouts.Modal(components, restConfig);
+  return new ModalNavigator(components, restConfig);
+}
+
+export function createOverlayNavigator(id, name, ReactComponent, options) {
+  Registry.register(id, name, ReactComponent);
+
+  return new OverlayNavigator(id, name, options);
 }
 
 export function createWidget(name, ReactComponent) {
-  const widget = new Layouts.Widget(name);
+  const widget = new Widget(name);
 
   Registry.register(widget.id, name, ReactComponent);
 
   return widget;
 }
 
-export function createRootNavigator(routes, config = {}) {
-  const [bottomTabs, modals, overlays, stacks] = Utils.resolveLayouts(routes);
+export function createRootNavigator(rootRoutes) {
+  const navigators = {};
 
-  const layouts = {};
+  Object.entries(rootRoutes).forEach(([name, route]) => {
+    const type = getRouteType(route);
 
-  bottomTabs.forEach((args, name) => {
-    layouts[name] = createBottomTabs(...args);
+    if (type === 'overlay') {
+      navigators[name] = createOverlayNavigator(name, name, route);
+    } else {
+      const { config = {}, ...routes } = route;
+
+      config.parentId = name;
+
+      switch (type) {
+        case 'bottomTabs':
+          navigators[name] = createBottomTabsNavigator(routes, config);
+          break;
+
+        case 'modal':
+          navigators[name] = createModalNavigator(routes, config);
+          break;
+
+        case 'stack':
+          navigators[name] = createStackNavigator(routes, config);
+          break;
+
+        default:
+          throw new Error(
+            `Invalid route (too deep): ${JSON.stringify(route, null, 2)}`,
+          );
+      }
+    }
   });
 
-  stacks.forEach((args, name) => {
-    layouts[name] = createStack(...args);
-  });
-
-  const root = new RootNavigator(layouts, config);
-
-  modals.forEach((args, name) => {
-    root.addModal(name, createModal(...args));
-  });
-
-  overlays.forEach((args, name) => {
-    root.addOverlay(name, new Layouts.Overlay(...args));
-  });
-
-  return root;
-}
-
-export function createSwitchNavigator(layouts, config = {}) {
-  return new SwitchNavigator(layouts, config);
+  return new RootNavigator(navigators);
 }
