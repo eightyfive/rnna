@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 import shallowEqual from 'shallowequal';
 
-import Registry from '../Registry';
+import Registry from './Registry';
 import Layout from './Layout';
 
 export default class Component extends Layout {
