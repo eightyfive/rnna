@@ -146,18 +146,3 @@ export default class Router extends RootNavigator {
     }
   }
 }
-
-function qs(search) {
-  const query = {};
-
-  search
-    .split('&')
-    .filter(Boolean)
-    .forEach(param => {
-      const [name, value] = param.split('=');
-
-      query[name] = value;
-    });
-
-  return query;
-}
