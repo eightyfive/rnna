@@ -15,6 +15,8 @@ export default class BottomTabsNavigator extends BottomTabs {
     Navigation.mergeOptions(this.id, {
       bottomTabs: { currentTabIndex: index },
     });
+
+    this.getTab().init();
   }
 
   getComponent() {

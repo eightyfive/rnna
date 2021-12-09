@@ -29,10 +29,14 @@ export default class StackNavigator extends Stack {
     return this.component || this.getComponentAt(0);
   }
 
+  init() {
+    this.history.push(this.initialName);
+  }
+
   mount(props) {
     super.mount(props);
 
-    this.history.push(this.initialName);
+    this.init();
   }
 
   push(name, props) {
