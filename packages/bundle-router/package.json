@@ -9,7 +9,7 @@
   ],
   "main": "src/index.js",
   "dependencies": {
-    "@rnna/navigator": "next"
+    "@rnna/navigator": "^0.4.0"
   },
   "peerDependencies": {
     "react-native-navigation": "*",
