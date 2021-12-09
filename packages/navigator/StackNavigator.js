@@ -7,6 +7,8 @@ export default class StackNavigator extends Stack {
     super(components, config);
 
     this.history = [];
+
+    this.addListener('ScreenPopped', this.handleScreenPopped);
   }
 
   get componentName() {
@@ -16,6 +18,12 @@ export default class StackNavigator extends Stack {
   get component() {
     return this.components.get(this.componentName) || null;
   }
+
+  handleScreenPopped = ({ componentId: id }) => {
+    if (this.hasComponent(id)) {
+      this.history.pop();
+    }
+  };
 
   getComponent() {
     return this.component || this.getComponentAt(0);
@@ -66,7 +74,7 @@ export default class StackNavigator extends Stack {
       throw new Error('Nothing to pop');
     }
 
-    const component = getComponentById(id);
+    const component = this.getComponentById(id);
 
     if (!this.history.includes(component.name)) {
       throw new Error(`Component not in stack: ${component.id}`);
