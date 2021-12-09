@@ -12,6 +12,7 @@ export default class Router extends RootNavigator {
     this.options = Object.assign({}, defaultOptions, options || {});
     this.state = null;
     this.services = {};
+    this.params = new Map();
 
     this.appLaunched = new Promise(this.launchApp);
   }
@@ -35,7 +36,10 @@ export default class Router extends RootNavigator {
   }
 
   getProps(navigator, params = []) {
-    const { ReactComponent } = navigator.getComponent();
+    const component = navigator.getComponent();
+
+    // Remember params
+    this.params.set(component.id, params);
 
     const { globalProps, getGlobalProps } = this.options;
 
@@ -43,24 +47,24 @@ export default class Router extends RootNavigator {
       {},
       globalProps,
       getGlobalProps(this.services),
-      ReactComponent.controller(...params, this.services),
+      component.ReactComponent.controller(...params, this.services),
     );
   }
 
   // Root
-  mount(name) {
+  mount(name, ...params) {
     const root = this.getRoot(name);
 
-    const props = this.getProps(root);
+    const props = this.getProps(root, params);
 
     super.mount(name, props);
   }
 
   // Stack
-  push(name) {
+  push(name, ...params) {
     const stack = this.getStack();
 
-    const props = this.getProps(stack);
+    const props = this.getProps(stack, params);
 
     super.push(name, props);
   }
@@ -91,10 +95,10 @@ export default class Router extends RootNavigator {
   }
 
   // Modal
-  showModal(name) {
+  showModal(name, ...params) {
     const modal = this.getModal(name);
 
-    const props = this.getProps(modal);
+    const props = this.getProps(modal, params);
 
     super.showModal(name, props);
   }
@@ -106,10 +110,10 @@ export default class Router extends RootNavigator {
   }
 
   // Overlay
-  showOverlay(name) {
+  showOverlay(name, ...params) {
     const overlay = this.getOverlay(name);
 
-    const props = this.getProps(overlay);
+    const props = this.getProps(overlay, params);
 
     super.showOverlay(name, props);
   }
@@ -152,7 +156,10 @@ export default class Router extends RootNavigator {
 
     for (const navigator of navigators) {
       const component = navigator.getComponent();
-      const props = this.getProps(navigator);
+
+      const params = this.params.get(component.id);
+
+      const props = this.getProps(navigator, params);
 
       component.update(props);
     }
