@@ -30,7 +30,7 @@ export default class StackNavigator extends Stack {
   }
 
   init() {
-    this.history.push(this.initialName);
+    this.history = [this.initialName];
   }
 
   mount(props) {
