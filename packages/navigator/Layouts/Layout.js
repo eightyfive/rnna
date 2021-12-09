@@ -1,7 +1,11 @@
 import { Navigation } from 'react-native-navigation';
 
-export default /** abstract */ class Layout {
+import Emitter from '../Emitter';
+
+export default /** abstract */ class Layout extends Emitter {
   constructor(config = {}) {
+    super();
+
     this.options = config.options || {};
   }
 
