@@ -33,13 +33,23 @@ export default class Stack extends Layout {
   }
 
   getComponentById(id) {
-    for (const component of this.components) {
+    for (const component of this.components.values()) {
       if (component.id === id) {
         return component;
       }
     }
 
     throw new Error(`Component ID not found: ${id}`);
+  }
+
+  hasComponent(id) {
+    try {
+      this.getComponentById(id);
+
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   getRoot(props) {
