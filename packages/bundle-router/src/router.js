@@ -12,7 +12,19 @@ export default class Router extends RootNavigator {
     this.options = Object.assign({}, defaultOptions, options || {});
     this.state = null;
     this.services = {};
+
+    this.appLaunched = new Promise(this.launchApp);
   }
+
+  launchApp = resolve => {
+    const handleAppLaunched = () => {
+      resolve();
+
+      this.removeListener('AppLaunched', handleAppLaunched);
+    };
+
+    this.addListener('AppLaunched', handleAppLaunched);
+  };
 
   setServices(services) {
     this.services = services;
