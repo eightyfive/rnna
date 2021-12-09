@@ -50,10 +50,16 @@ export function createWidget(name, ReactComponent, options) {
   return new Widget(name, ReactComponent, options);
 }
 
-export function createRootNavigator(rootRoutes) {
+export function createRootNavigator(routes) {
+  const navigators = createNavigatorsFromRoutes(routes);
+
+  return new RootNavigator(navigators);
+}
+
+export function createNavigatorsFromRoutes(obj) {
   const navigators = {};
 
-  Object.entries(rootRoutes).forEach(([name, route]) => {
+  Object.entries(obj).forEach(([name, route]) => {
     const type = getRouteType(route);
 
     if (type === 'overlay') {
@@ -84,5 +90,5 @@ export function createRootNavigator(rootRoutes) {
     }
   });
 
-  return new RootNavigator(navigators);
+  return navigators;
 }

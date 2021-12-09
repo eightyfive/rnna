@@ -1,6 +1,6 @@
 import { Bundle } from 'rnna';
+import { createNavigatorsFromRoutes } from '@rnna/navigator';
 
-import createNavigator from './navigator';
 import Router from './router';
 
 export default class RouterProvider extends Bundle {
@@ -16,10 +16,8 @@ export default class RouterProvider extends Bundle {
   }
 }
 
-function createRouter({ options, routes, screens }) {
-  const navigator = createNavigator(screens);
+function createRouter({ options, routes }) {
+  const navigators = createNavigatorsFromRoutes(routes);
 
-  const router = new Router(navigator, routes, options);
-
-  return router;
+  return new Router(navigators, options);
 }
