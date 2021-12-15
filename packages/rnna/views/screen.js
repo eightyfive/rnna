@@ -1,4 +1,5 @@
 import { PureComponent } from 'react';
+import { Navigation } from 'react-native-navigation';
 import _memoize from 'lodash.memoize';
 
 const memoKey = (a, b) => String(a) + JSON.stringify(b);
@@ -39,5 +40,21 @@ export default class Screen extends PureComponent {
 
   set(key, val) {
     return this.setState({ [key]: val });
+  }
+
+  mergeOptions(options) {
+    const { componentId } = this.props;
+
+    Navigation.mergeOptions(componentId, options);
+  }
+
+  mergeTitle(title) {
+    this.mergeOptions({
+      topBar: {
+        title: {
+          text: title,
+        },
+      },
+    });
   }
 }
