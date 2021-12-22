@@ -138,8 +138,8 @@ export default class Router extends RootNavigator {
   update() {
     const navigators = [];
 
-    if (this.root) {
-      navigators.push(this.root);
+    if (this.rootName) {
+      navigators.push(this.getRoot(this.rootName));
     }
 
     if (this.modalNames.length) {

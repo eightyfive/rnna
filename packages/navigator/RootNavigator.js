@@ -12,27 +12,34 @@ export default class RootNavigator extends Emitter {
     this.rootName = null;
     this.modalNames = [];
     this.overlayNames = [];
-  }
 
-  get root() {
-    return this.rootName ? this.getRoot(this.rootName) : null;
-  }
-
-  get modalName() {
-    return this.modalNames[0] || null;
-  }
-
-  get modal() {
-    return this.modalName ? this.getModal(this.modalName) : null;
-  }
-
-  get navigatorName() {
-    return this.modalName || this.rootName || null;
+    this.addListener('ModalDismissed', this.handleModalDismissed);
   }
 
   get navigator() {
-    return this.modal || this.root || null;
+    const modalName = Array.from(this.modalNames).pop();
+
+    if (modalName) {
+      return this.getModal(modalName);
+    }
+
+    if (this.rootName) {
+      return this.getRoot(this.rootName);
+    }
+
+    return null;
   }
+
+  handleModalDismissed = ({ componentId: id }) => {
+    for (const name of this.modalNames) {
+      const modal = this.getModal(name);
+
+      if (modal.id === id) {
+        this.modalNames = this.modalNames.filter(n => n !== name);
+        break;
+      }
+    }
+  };
 
   get(name) {
     if (!this.navigators.has(name)) {
@@ -92,7 +99,7 @@ export default class RootNavigator extends Emitter {
       return this.navigator.getTab();
     }
 
-    throw new Error(`Navigator does not have Stack: ${this.navigatorName}`);
+    throw new Error('Stack not found');
   }
 
   // Root
@@ -126,7 +133,7 @@ export default class RootNavigator extends Emitter {
     const isBottomTabs = this.navigator instanceof BottomTabsNavigator;
 
     if (!isBottomTabs) {
-      throw new Error(`Navigator is not BottomTabs: ${this.navigatorName}`);
+      throw new Error('BottomTabs not found');
     }
 
     this.navigator.selectTab(index);
@@ -154,7 +161,7 @@ export default class RootNavigator extends Emitter {
 
     modal.dismiss();
 
-    this.modalNames = this.modalNames.filter(n => n === name);
+    this.modalNames = this.modalNames.filter(n => n !== name);
   }
 
   // Overlay
