@@ -25,8 +25,12 @@ export default class StackNavigator extends Stack {
     }
   };
 
-  getComponent() {
-    return this.component || this.getComponentAt(0);
+  getInitialComponent() {
+    return this.getComponent(this.initialName);
+  }
+
+  getComponents() {
+    return this.history.map(name => this.components.get(name));
   }
 
   init() {

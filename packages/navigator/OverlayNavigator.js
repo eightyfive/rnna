@@ -3,8 +3,12 @@ import { Navigation } from 'react-native-navigation';
 import { Component } from './Layouts';
 
 export default class OverlayNavigator extends Component {
-  getComponent() {
+  getInitialComponent() {
     return this;
+  }
+
+  getComponents() {
+    return [this];
   }
 
   mount(props) {

@@ -20,16 +20,12 @@ export default class Stack extends Layout {
     this.initialName = this.order[0];
   }
 
-  getComponentAt(index) {
-    let loop = 0;
-
-    for (const component of this.components.values()) {
-      if (loop === index) {
-        return component;
-      }
+  getComponent(name) {
+    if (!this.components.has(name)) {
+      throw new Error(`Component not found: ${name}`);
     }
 
-    throw new Error(`Component index not found: ${index}`);
+    return this.components.get(name);
   }
 
   getComponentById(id) {

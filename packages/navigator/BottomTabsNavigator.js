@@ -9,18 +9,30 @@ export default class BottomTabsNavigator extends BottomTabs {
     this.tabIndex = 0;
   }
 
+  mount(props) {
+    super.mount(props);
+
+    for (const stack of this.stacks.values()) {
+      stack.init();
+    }
+  }
+
   selectTab(index) {
     this.tabIndex = index;
 
     Navigation.mergeOptions(this.id, {
       bottomTabs: { currentTabIndex: index },
     });
-
-    this.getTab().init();
   }
 
-  getComponent() {
-    return this.getTab().getComponent();
+  getInitialComponent() {
+    return this.getTab().getInitialComponent();
+  }
+
+  getComponents() {
+    return this.stacks
+      .values()
+      .reduce((acc, stack) => acc.concat(stack.getComponents()));
   }
 
   getTab() {

@@ -53,16 +53,16 @@ export default class Router extends RootNavigator {
   setRoot(name, ...params) {
     const root = this.getRoot(name);
 
-    const props = this.getComponentProps(root.getComponent(), params);
+    const props = this.getComponentProps(root.getInitialComponent(), params);
 
-    super.mount(name, props);
+    super.setRoot(name, props);
   }
 
   // Stack
   push(name, ...params) {
     const stack = this.getStack();
 
-    const props = this.getComponentProps(stack.getComponent(), params);
+    const props = this.getComponentProps(stack.getComponent(name), params);
 
     super.push(name, props);
   }
@@ -96,7 +96,7 @@ export default class Router extends RootNavigator {
   showModal(name, ...params) {
     const modal = this.getModal(name);
 
-    const props = this.getComponentProps(modal.getComponent(), params);
+    const props = this.getComponentProps(modal.getInitialComponent(), params);
 
     super.showModal(name, props);
   }
@@ -111,7 +111,7 @@ export default class Router extends RootNavigator {
   showOverlay(name, ...params) {
     const overlay = this.getOverlay(name);
 
-    const props = this.getComponentProps(overlay.getComponent(), params);
+    const props = this.getComponentProps(overlay.getInitialComponent(), params);
 
     super.showOverlay(name, props);
   }
@@ -134,32 +134,21 @@ export default class Router extends RootNavigator {
   }
 
   update() {
-    const navigators = [];
-
     if (this.rootName) {
-      navigators.push(this.getRoot(this.rootName));
-    }
+      const components = [this.rootName]
+        .concat(this.modalNames)
+        .concat(this.overlayNames)
+        .map(name => this.navigators.get(name))
+        .reduce((acc, navigator) => {
+          return acc.concat(navigator.getComponents());
+        }, []);
 
-    if (this.modalNames.length) {
-      for (const name of this.modalNames) {
-        navigators.push(this.getModal(name));
-      }
-    }
+      components.forEach(component => {
+        const params = this.params.get(component.id);
+        const props = this.getComponentProps(component, params);
 
-    if (this.overlayNames.length) {
-      for (const name of this.overlayNames) {
-        navigators.push(this.getOverlay(name));
-      }
-    }
-
-    for (const navigator of navigators) {
-      const component = navigator.getComponent();
-
-      const params = this.params.get(component.id);
-
-      const props = this.getComponentProps(navigator.getComponent(), params);
-
-      component.update(props);
+        component.update(props);
+      });
     }
   }
 }
