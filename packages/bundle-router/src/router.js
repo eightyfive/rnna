@@ -52,7 +52,7 @@ export default class Router extends RootNavigator {
   }
 
   // Root
-  mount(name, ...params) {
+  setRoot(name, ...params) {
     const root = this.getRoot(name);
 
     const props = this.getProps(root, params);
