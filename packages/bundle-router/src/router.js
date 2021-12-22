@@ -35,9 +35,7 @@ export default class Router extends RootNavigator {
     this.options.globalProps[name] = value;
   }
 
-  getComponentProps(navigator, params = []) {
-    const component = navigator.getComponent();
-
+  getComponentProps(component, params = []) {
     // Remember params
     this.params.set(component.id, params);
 
@@ -55,7 +53,7 @@ export default class Router extends RootNavigator {
   setRoot(name, ...params) {
     const root = this.getRoot(name);
 
-    const props = this.getComponentProps(root, params);
+    const props = this.getComponentProps(root.getComponent(), params);
 
     super.mount(name, props);
   }
@@ -64,7 +62,7 @@ export default class Router extends RootNavigator {
   push(name, ...params) {
     const stack = this.getStack();
 
-    const props = this.getComponentProps(stack, params);
+    const props = this.getComponentProps(stack.getComponent(), params);
 
     super.push(name, props);
   }
@@ -98,7 +96,7 @@ export default class Router extends RootNavigator {
   showModal(name, ...params) {
     const modal = this.getModal(name);
 
-    const props = this.getComponentProps(modal, params);
+    const props = this.getComponentProps(modal.getComponent(), params);
 
     super.showModal(name, props);
   }
@@ -113,7 +111,7 @@ export default class Router extends RootNavigator {
   showOverlay(name, ...params) {
     const overlay = this.getOverlay(name);
 
-    const props = this.getComponentProps(overlay, params);
+    const props = this.getComponentProps(overlay.getComponent(), params);
 
     super.showOverlay(name, props);
   }
@@ -159,7 +157,7 @@ export default class Router extends RootNavigator {
 
       const params = this.params.get(component.id);
 
-      const props = this.getComponentProps(navigator, params);
+      const props = this.getComponentProps(navigator.getComponent(), params);
 
       component.update(props);
     }
