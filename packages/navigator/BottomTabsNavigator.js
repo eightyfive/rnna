@@ -30,9 +30,10 @@ export default class BottomTabsNavigator extends BottomTabs {
   }
 
   getComponents() {
-    return this.stacks
-      .values()
-      .reduce((acc, stack) => acc.concat(stack.getComponents()));
+    return Array.from(this.stacks.values()).reduce(
+      (acc, stack) => acc.concat(stack.getComponents()),
+      [],
+    );
   }
 
   getTab() {
