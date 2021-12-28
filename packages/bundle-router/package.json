@@ -1,6 +1,6 @@
 {
   "name": "@rnna/bundle-router",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Router bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
@@ -9,7 +9,7 @@
   ],
   "main": "src/index.js",
   "dependencies": {
-    "@rnna/navigator": "^0.4.2"
+    "@rnna/navigator": "^0.4.3"
   },
   "peerDependencies": {
     "react-native-navigation": "*",
