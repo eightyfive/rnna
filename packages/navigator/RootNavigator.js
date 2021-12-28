@@ -103,7 +103,7 @@ export default class RootNavigator extends Emitter {
   }
 
   // Root
-  mount(name, props) {
+  setRoot(name, props) {
     const root = this.getRoot(name);
 
     root.mount(props);
