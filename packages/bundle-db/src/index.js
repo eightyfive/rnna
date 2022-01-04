@@ -4,6 +4,8 @@ import createReducer from '@rnna/db/reducer';
 
 export default class DbProvider extends Bundle {
   constructor(options = {}) {
+    super();
+
     this.reducer = options.reducer === false ? false : true;
   }
 
