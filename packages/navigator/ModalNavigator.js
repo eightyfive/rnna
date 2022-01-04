@@ -4,11 +4,13 @@ import StackNavigator from './StackNavigator';
 
 export default class ModalNavigator extends StackNavigator {
   mount(props) {
-    this.show(props);
+    Navigation.showModal(this.getRoot(props));
+
+    this.init();
   }
 
   show(props) {
-    Navigation.showModal(this.getRoot(props));
+    this.mount(props);
   }
 
   dismiss() {
