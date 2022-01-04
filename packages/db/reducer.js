@@ -6,28 +6,33 @@ const initialState = {
   pages: {},
 };
 
-export default produce((draft, { payload = {}, meta = {} }) => {
-  const { result, entities } = payload;
+export default function createReducer(reduce = () => {}) {
+  return produce((draft, action) => {
+    const { payload = {}, meta = {} } = action;
+    const { result, entities } = payload;
 
-  if (entities) {
-    produceTables(draft.tables, entities);
-  }
-
-  if (Array.isArray(result) && meta.resource) {
-    produceQuery(
-      draft.queries,
-      meta.resource,
-      result,
-      meta.queryId || meta.query,
-    );
-
-    const { page, ...rest } = meta.query || {};
-
-    if (page) {
-      producePage(draft.pages, meta.resource, result, rest, page);
+    if (entities) {
+      produceTables(draft.tables, entities);
     }
-  }
-}, initialState);
+
+    if (Array.isArray(result) && meta.resource) {
+      produceQuery(
+        draft.queries,
+        meta.resource,
+        result,
+        meta.queryId || meta.query,
+      );
+
+      const { page, ...rest } = meta.query || {};
+
+      if (page) {
+        producePage(draft.pages, meta.resource, result, rest, page);
+      }
+    }
+
+    return reduce(draft, action);
+  }, initialState);
+}
 
 function produceTables(tables, entities) {
   for (const [name, byId] of Object.entries(entities)) {

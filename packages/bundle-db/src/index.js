@@ -1,8 +1,12 @@
 import { Bundle } from 'rnna';
 import Db from '@rnna/db';
-import reducer from '@rnna/db/reducer';
+import createReducer from '@rnna/db/reducer';
 
 export default class DbProvider extends Bundle {
+  constructor(options = {}) {
+    this.reducer = options.reducer === false ? false : true;
+  }
+
   register(container) {
     container.service('db', createDb, 'db.*');
   }
@@ -12,9 +16,13 @@ export default class DbProvider extends Bundle {
   }
 
   getReducers() {
-    return {
-      db: reducer,
-    };
+    if (this.reducer) {
+      return {
+        db: createReducer(),
+      };
+    }
+
+    return {};
   }
 }
 
