@@ -20,8 +20,14 @@ export default class StackNavigator extends Stack {
   }
 
   handleScreenPopped = ({ componentId: id }) => {
-    if (this.hasComponent(id)) {
-      this.history.pop();
+    try {
+      const component = this.getComponentById(id);
+
+      if (this.componentName === component.name) {
+        this.history.pop();
+      }
+    } catch (err) {
+      // Ignore
     }
   };
 
