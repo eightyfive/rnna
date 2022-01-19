@@ -19,6 +19,10 @@ export default class Router extends RootNavigator {
 
   launchApp = resolve => {
     const handleAppLaunched = () => {
+      try {
+        this.setRoot('splash');
+      } catch (err) {}
+
       resolve();
 
       this.removeListener('AppLaunched', handleAppLaunched);
