@@ -23,10 +23,16 @@ export default function createReducer(reduce = () => {}) {
         meta.queryId || meta.query,
       );
 
-      const { page, ...rest } = meta.query || {};
+      const { page } = meta.query || {};
 
       if (page) {
-        producePage(draft.pages, meta.resource, result, rest, page);
+        producePage(
+          draft.pages,
+          meta.resource,
+          result,
+          meta.queryId || meta.query,
+          page,
+        );
       }
     }
 
