@@ -1,6 +1,6 @@
 {
   "name": "@rnna/bundle-db",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "DB bundle (React Native Navigation App)",
   "keywords": [
     "rnna",
@@ -9,7 +9,7 @@
   ],
   "main": "src/index.js",
   "dependencies": {
-    "@rnna/db": "^0.0.16",
+    "@rnna/db": "^0.0.17",
     "immer": "8.x"
   },
   "peerDependencies": {
