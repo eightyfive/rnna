@@ -1,7 +1,13 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import {
+  applyMiddleware,
+  combineReducers,
+  createStore as createReduxStore,
+} from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
+
+export const BOOT = 'app/boot';
 
 function isHydrated(persistor) {
   const { bootstrapped } = persistor.getState();
@@ -24,22 +30,20 @@ function getHydratedAsync(persistor) {
   });
 }
 
-export default async function createStoreAsync(
+export default function createStore(
   { epics = [], middlewares = [], persist: persistConfig, reducers = {} },
   container,
 ) {
   const bundles = Object.values(container.services['bundles.*']);
 
   // Register bundles
-  const whenRegistered = bundles.map(bundle => {
+  bundles.map(bundle => {
     Object.assign(reducers, bundle.getReducers());
 
     epics.push(...bundle.getEpics());
 
-    return bundle.register(container);
+    bundle.register(container);
   });
-
-  await Promise.all(whenRegistered);
 
   // Epics
   let rootEpic;
@@ -59,35 +63,25 @@ export default async function createStoreAsync(
 
   const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
 
-  const store = createStore(persistedReducer, enhancer);
+  const store = createReduxStore(persistedReducer, enhancer);
 
   // Persistor
-  const persistor = persistStore(store);
+  store.persistor = persistStore(store);
 
-  const whenHydrated = getHydratedAsync(persistor);
+  const hydrated = getHydratedAsync(store.persistor);
 
-  // FSA dispatch
-  const storeDispatch = store.dispatch;
-
-  store.dispatch = (action, payload) => {
-    if (typeof action === 'string') {
-      return storeDispatch({ type: action, payload });
-    }
-
-    return storeDispatch(action);
-  };
-
-  store.persistor = persistor;
+  // Boot
+  store.boot = () => hydrated.then(() => store.dispatch({ type: BOOT }));
 
   // Boot bundles
-  const whenBooted = bundles.map(bundle => bundle.boot(container.services, store));
-
-  await Promise.all(whenBooted);
+  bundles.map(bundle => {
+    bundle.boot(container.services, store);
+  });
 
   // Run epics
   if (epicMiddleware) {
     epicMiddleware.run(rootEpic);
   }
 
-  return whenHydrated.then(() => store);
+  return store;
 }
