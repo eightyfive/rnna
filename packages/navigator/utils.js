@@ -1,19 +1,37 @@
+import React from 'react';
+import { Navigation } from 'react-native-navigation';
 import _isObject from 'lodash.isplainobject';
 
 import { Component } from './Layouts';
 
-export function createComponents(routes, parentId) {
+export function registerScreen(name, ScreenComponent, Provider) {
+  if (Provider) {
+    Navigation.registerComponent(
+      name,
+      () => props => (
+        <Provider>
+          <ScreenComponent {...props} />
+        </Provider>
+      ),
+      () => ScreenComponent,
+    );
+  } else {
+    Navigation.registerComponent(name, () => ScreenComponent);
+  }
+}
+
+export function createComponents(routes, parentId, Provider) {
   const components = {};
 
-  Object.entries(routes).forEach(([componentName, ReactComponent]) => {
-    const componentId = parentId
-      ? `${parentId}/${componentName}`
-      : componentName;
+  Object.entries(routes).forEach(([name, ScreenComponent]) => {
+    const id = parentId ? `${parentId}/${name}` : name;
 
-    components[componentName] = new Component(
-      componentId,
-      componentName,
-      ReactComponent,
+    registerScreen(name, ScreenComponent, Provider);
+
+    components[name] = new Component(
+      id,
+      name,
+      Object.assign({}, ScreenComponent.options),
     );
   });
 
@@ -53,7 +71,7 @@ export function getObjDepth(obj, depth = 0, blacklist = []) {
     for (const [key, nested] of Object.entries(obj)) {
       isObj = _isObject(nested);
 
-      if (isObj && !blacklist.includes(key)) {
+      if (isObj && !nested.WrappedComponent && !blacklist.includes(key)) {
         depth = getObjDepth(nested, depth, blacklist);
       }
 

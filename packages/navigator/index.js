@@ -1,12 +1,12 @@
-import { Component, Widget } from './Layouts';
-import { createComponents, getRouteType } from './utils';
+import { Widget } from './Layouts';
+import { createComponents, getRouteType, registerScreen } from './utils';
 import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
 import StackNavigator from './StackNavigator';
 
-export function createBottomTabsNavigator(routes, config = {}) {
+export function createBottomTabsNavigator(routes, config = {}, Provider) {
   const { parentId, ...restConfig } = config;
 
   const stacks = {};
@@ -16,79 +16,87 @@ export function createBottomTabsNavigator(routes, config = {}) {
 
     stackConfig.parentId = parentId ? `${parentId}/${name}` : name;
 
-    stacks[name] = createStackNavigator(components, stackConfig);
+    stacks[name] = createStackNavigator(components, stackConfig, Provider);
   });
 
   return new BottomTabsNavigator(stacks, restConfig);
 }
 
-export function createComponent(id, name, ReactComponent, options = {}) {
-  return new Component(id, name, ReactComponent, options);
-}
-
-export function createStackNavigator(routes, config = {}) {
+export function createStackNavigator(routes, config = {}, Provider) {
   const { parentId, ...restConfig } = config;
 
-  const components = createComponents(routes, parentId);
+  const components = createComponents(routes, parentId, Provider);
 
   return new StackNavigator(components, restConfig);
 }
 
-export function createModalNavigator(routes, config = {}) {
+export function createModalNavigator(routes, config = {}, Provider) {
   const { parentId, ...restConfig } = config;
 
-  const components = createComponents(routes, parentId);
+  const components = createComponents(routes, parentId, Provider);
 
   return new ModalNavigator(components, restConfig);
 }
 
-export function createOverlayNavigator(id, name, ReactComponent, options) {
-  return new OverlayNavigator(id, name, ReactComponent, options);
+export function createOverlayNavigator(
+  id,
+  name,
+  ScreenComponent,
+  options,
+  Provider,
+) {
+  registerScreen(name, ScreenComponent, Provider);
+
+  return new OverlayNavigator(
+    id,
+    name,
+    Object.assign({}, ScreenComponent.options, options),
+  );
 }
 
-export function createWidget(name, ReactComponent, options) {
-  return new Widget(name, ReactComponent, options);
+export function createWidget(name, ScreenComponent, options, Provider) {
+  registerScreen(name, ScreenComponent, Provider);
+
+  return new Widget(name, options);
 }
 
-export function createRootNavigator(routes) {
-  const navigators = createNavigatorsFromRoutes(routes);
-
-  return new RootNavigator(navigators);
-}
-
-export function createNavigatorsFromRoutes(obj) {
+export function createRootNavigator(defs, Provider) {
   const navigators = {};
 
-  Object.entries(obj).forEach(([name, route]) => {
-    const type = getRouteType(route);
+  Object.entries(defs).forEach(([name, def]) => {
+    const type = getRouteType(def);
 
     if (type === 'overlay') {
-      navigators[name] = createOverlayNavigator(name, name, route);
+      navigators[name] = createOverlayNavigator(name, name, def, Provider);
     } else {
-      const { config = {}, ...routes } = route;
+      const { config = {}, ...routes } = def;
 
       config.parentId = name;
 
       switch (type) {
         case 'bottomTabs':
-          navigators[name] = createBottomTabsNavigator(routes, config);
+          navigators[name] = createBottomTabsNavigator(
+            routes,
+            config,
+            Provider,
+          );
           break;
 
         case 'modal':
-          navigators[name] = createModalNavigator(routes, config);
+          navigators[name] = createModalNavigator(routes, config, Provider);
           break;
 
         case 'stack':
-          navigators[name] = createStackNavigator(routes, config);
+          navigators[name] = createStackNavigator(routes, config, Provider);
           break;
 
         default:
           throw new Error(
-            `Invalid route (too deep): ${JSON.stringify(route, null, 2)}`,
+            `Invalid route (too deep): ${JSON.stringify(def, null, 2)}`,
           );
       }
     }
   });
 
-  return navigators;
+  return new RootNavigator(navigators);
 }
