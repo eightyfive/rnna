@@ -31,14 +31,6 @@ export default class StackNavigator extends Stack {
     }
   };
 
-  getInitialComponent() {
-    return this.getComponent(this.initialName);
-  }
-
-  getComponents() {
-    return this.history.map(name => this.components.get(name));
-  }
-
   init() {
     this.history = [this.initialName];
   }

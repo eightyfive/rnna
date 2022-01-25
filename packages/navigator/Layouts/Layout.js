@@ -16,14 +16,6 @@ export default /** abstract */ class Layout extends Emitter {
   getRoot(props) {
     throwAbstract('getRoot(props)');
   }
-
-  getInitialComponent() {
-    throwAbstract('getInitialComponent()');
-  }
-
-  getComponents() {
-    throwAbstract('getComponents()');
-  }
 }
 
 function throwAbstract(method) {

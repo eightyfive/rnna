@@ -25,17 +25,6 @@ export default class BottomTabsNavigator extends BottomTabs {
     });
   }
 
-  getInitialComponent() {
-    return this.getTab().getInitialComponent();
-  }
-
-  getComponents() {
-    return Array.from(this.stacks.values()).reduce(
-      (acc, stack) => acc.concat(stack.getComponents()),
-      [],
-    );
-  }
-
   getTab() {
     return this.getTabAt(this.tabIndex);
   }
