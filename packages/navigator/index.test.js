@@ -37,7 +37,7 @@ test('createBottomTabsNavigator', () => {
 
   expect(app).toBeInstanceOf(BottomTabsNavigator);
 
-  const stack = app.getTab();
+  const stack = app.getStackAt(0);
   expect(stack).toBeInstanceOf(StackNavigator);
 
   const component = Array.from(stack.components.values())[0];

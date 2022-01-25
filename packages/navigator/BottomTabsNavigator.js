@@ -25,11 +25,7 @@ export default class BottomTabsNavigator extends BottomTabs {
     });
   }
 
-  getTab() {
-    return this.getTabAt(this.tabIndex);
-  }
-
-  getTabAt(index) {
+  getStackAt(index) {
     let loop = 0;
 
     for (const stack of this.stacks.values()) {
