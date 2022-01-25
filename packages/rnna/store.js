@@ -1,8 +1,4 @@
-import {
-  applyMiddleware,
-  combineReducers,
-  createStore as createReduxStore,
-} from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -30,7 +26,7 @@ function getHydratedAsync(persistor) {
   });
 }
 
-export default function createStore(
+export default function configureStore(
   { epics = [], middlewares = [], persist: persistConfig, reducers = {} },
   container,
 ) {
@@ -63,7 +59,7 @@ export default function createStore(
 
   const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
 
-  const store = createReduxStore(persistedReducer, enhancer);
+  const store = createStore(persistedReducer, enhancer);
 
   // Persistor
   store.persistor = persistStore(store);
