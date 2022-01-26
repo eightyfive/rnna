@@ -20,13 +20,11 @@ export function registerScreen(name, ScreenComponent, Provider) {
   }
 }
 
-export function createComponents(routes, parentId, Provider) {
+export function createComponents(routes, parentId) {
   const components = {};
 
   Object.entries(routes).forEach(([name, ScreenComponent]) => {
     const id = parentId ? `${parentId}/${name}` : name;
-
-    registerScreen(name, ScreenComponent, Provider);
 
     components[name] = new Component(
       id,

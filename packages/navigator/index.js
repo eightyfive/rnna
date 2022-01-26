@@ -1,3 +1,5 @@
+import flatten from 'flat';
+
 import { Widget } from './Layouts';
 import { createComponents, getRouteType, registerScreen } from './utils';
 import BottomTabsNavigator from './BottomTabsNavigator';
@@ -6,7 +8,7 @@ import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
 import StackNavigator from './StackNavigator';
 
-export function createBottomTabsNavigator(routes, config = {}, Provider) {
+export function createBottomTabsNavigator(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
   const stacks = {};
@@ -16,37 +18,29 @@ export function createBottomTabsNavigator(routes, config = {}, Provider) {
 
     stackConfig.parentId = parentId ? `${parentId}/${name}` : name;
 
-    stacks[name] = createStackNavigator(components, stackConfig, Provider);
+    stacks[name] = createStackNavigator(components, stackConfig);
   });
 
   return new BottomTabsNavigator(stacks, restConfig);
 }
 
-export function createStackNavigator(routes, config = {}, Provider) {
+export function createStackNavigator(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const components = createComponents(routes, parentId, Provider);
+  const components = createComponents(routes, parentId);
 
   return new StackNavigator(components, restConfig);
 }
 
-export function createModalNavigator(routes, config = {}, Provider) {
+export function createModalNavigator(routes, config = {}) {
   const { parentId, ...restConfig } = config;
 
-  const components = createComponents(routes, parentId, Provider);
+  const components = createComponents(routes, parentId);
 
   return new ModalNavigator(components, restConfig);
 }
 
-export function createOverlayNavigator(
-  id,
-  name,
-  ScreenComponent,
-  options,
-  Provider,
-) {
-  registerScreen(name, ScreenComponent, Provider);
-
+export function createOverlayNavigator(id, name, ScreenComponent, options) {
   return new OverlayNavigator(
     id,
     name,
@@ -54,20 +48,18 @@ export function createOverlayNavigator(
   );
 }
 
-export function createWidget(name, ScreenComponent, options, Provider) {
-  registerScreen(name, ScreenComponent, Provider);
-
+export function createWidget(name, ScreenComponent, options) {
   return new Widget(name, options);
 }
 
-export function createRootNavigator(defs, Provider) {
+export function createRootNavigator(defs) {
   const navigators = {};
 
   Object.entries(defs).forEach(([name, def]) => {
     const type = getRouteType(def);
 
     if (type === 'overlay') {
-      navigators[name] = createOverlayNavigator(name, name, def, Provider);
+      navigators[name] = createOverlayNavigator(name, name, def);
     } else {
       const { config = {}, ...routes } = def;
 
@@ -75,19 +67,15 @@ export function createRootNavigator(defs, Provider) {
 
       switch (type) {
         case 'bottomTabs':
-          navigators[name] = createBottomTabsNavigator(
-            routes,
-            config,
-            Provider,
-          );
+          navigators[name] = createBottomTabsNavigator(routes, config);
           break;
 
         case 'modal':
-          navigators[name] = createModalNavigator(routes, config, Provider);
+          navigators[name] = createModalNavigator(routes, config);
           break;
 
         case 'stack':
-          navigators[name] = createStackNavigator(routes, config, Provider);
+          navigators[name] = createStackNavigator(routes, config);
           break;
 
         default:
@@ -99,4 +87,18 @@ export function createRootNavigator(defs, Provider) {
   });
 
   return new RootNavigator(navigators);
+}
+
+export { registerScreen };
+
+export function registerRoutes(routes, Provider) {
+  const screens = flatten(routes, { delimiter: '/' });
+
+  for (const [id, ScreenComponent] of Object.entries(screens)) {
+    const name = id.split('/').pop();
+
+    if (name !== 'config') {
+      registerScreen(name, ScreenComponent, Provider);
+    }
+  }
 }
