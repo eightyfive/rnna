@@ -74,5 +74,8 @@ export default function createStoreAsync(
     epicMiddleware.run(rootEpic);
   }
 
+  store.boot = () =>
+    store.hydrated.then(() => store.dispatch({ type: 'app/boot' }));
+
   return store;
 }
