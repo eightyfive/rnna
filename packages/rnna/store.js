@@ -3,8 +3,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-export const BOOT = 'app/boot';
-
 function isHydrated(persistor) {
   const { bootstrapped } = persistor.getState();
 
@@ -26,11 +24,11 @@ function getHydratedAsync(persistor) {
   });
 }
 
-export default function configureStore(
+export default function createStoreAsync(
   { epics = [], middlewares = [], persist: persistConfig, reducers = {} },
   container,
 ) {
-  const bundles = Object.values(container.services['bundles.*']);
+  const bundles = container.getBundles();
 
   // Register bundles
   bundles.map(bundle => {
@@ -64,10 +62,7 @@ export default function configureStore(
   // Persistor
   store.persistor = persistStore(store);
 
-  const hydrated = getHydratedAsync(store.persistor);
-
-  // Boot
-  store.boot = () => hydrated.then(() => store.dispatch({ type: BOOT }));
+  store.hydrated = getHydratedAsync(store.persistor);
 
   // Boot bundles
   bundles.map(bundle => {

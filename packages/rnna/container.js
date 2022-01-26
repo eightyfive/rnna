@@ -49,6 +49,14 @@ export default class Container {
     this.defineProperty(name, { value: value });
   }
 
+  bundle(name, value) {
+    this.constant(`bundles.${name}`, value);
+  }
+
+  getBundles() {
+    return Object.values(this.services['bundles.*']);
+  }
+
   defineSingleton(name, getInstance) {
     this.defineProperty(name, {
       get: () => {
