@@ -1,6 +1,6 @@
 import flatten from 'flat';
 
-import { Widget } from './Layouts';
+import { Component, Widget } from './Layouts';
 import { createComponents, getRouteType, registerScreen } from './utils';
 import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
@@ -48,7 +48,11 @@ export function createOverlayNavigator(id, name, ScreenComponent, options) {
   );
 }
 
-export function createWidget(name, ScreenComponent, options) {
+export function createComponent(id, name, options) {
+  return new Component(id, name || id, options);
+}
+
+export function createWidget(name, options) {
   return new Widget(name, options);
 }
 
@@ -98,7 +102,7 @@ export function registerRoutes(routes, Provider) {
     const isConfig = id.indexOf('.config.') !== -1;
 
     if (!isConfig) {
-      const name = id.split('/').pop();
+      const name = id.split('.').pop();
 
       registerScreen(name, ScreenComponent, Provider);
     }
