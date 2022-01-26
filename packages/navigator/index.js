@@ -92,12 +92,14 @@ export function createRootNavigator(defs) {
 export { registerScreen };
 
 export function registerRoutes(routes, Provider) {
-  const screens = flatten(routes, { delimiter: '/' });
+  const screens = flatten(routes);
 
   for (const [id, ScreenComponent] of Object.entries(screens)) {
-    const name = id.split('/').pop();
+    const isConfig = id.indexOf('.config.') !== -1;
 
-    if (name !== 'config') {
+    if (!isConfig) {
+      const name = id.split('/').pop();
+
       registerScreen(name, ScreenComponent, Provider);
     }
   }
