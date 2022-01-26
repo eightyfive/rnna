@@ -3,10 +3,10 @@ import { Bundle } from 'rnna';
 import Resource from './resource';
 
 export default class ResourcesBundle extends Bundle {
-  constructor(schemas) {
-    super();
+  constructor(options) {
+    super(options);
 
-    this.schemas = Object.values(schemas);
+    this.schemas = Object.values(this.options.schemas);
   }
 
   register(container) {
