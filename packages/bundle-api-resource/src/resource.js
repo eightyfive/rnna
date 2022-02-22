@@ -1,3 +1,4 @@
+import { of } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
 import { normalize } from 'normalizr';
 
@@ -20,7 +21,9 @@ export default class Resource {
         );
       }),
       catchError(err =>
-        createAction(`${this.schema.key}/create/rejected`, err, this.schema),
+        of(
+          createAction(`${this.schema.key}/create/rejected`, err, this.schema),
+        ),
       ),
       startWith(
         createAction(
@@ -45,7 +48,7 @@ export default class Resource {
         );
       }),
       catchError(err =>
-        createAction(`${this.schema.key}/read/rejected`, err, this.schema),
+        of(createAction(`${this.schema.key}/read/rejected`, err, this.schema)),
       ),
       startWith(
         createAction(`${this.schema.key}/read/pending`, undefined, this.schema),
@@ -66,7 +69,9 @@ export default class Resource {
         );
       }),
       catchError(err =>
-        createAction(`${this.schema.key}/update/rejected`, err, this.schema),
+        of(
+          createAction(`${this.schema.key}/update/rejected`, err, this.schema),
+        ),
       ),
       startWith(
         createAction(
@@ -91,7 +96,9 @@ export default class Resource {
         );
       }),
       catchError(err =>
-        createAction(`${this.schema.key}/delete/rejected`, err, this.schema),
+        of(
+          createAction(`${this.schema.key}/delete/rejected`, err, this.schema),
+        ),
       ),
       startWith(
         createAction(
@@ -117,7 +124,7 @@ export default class Resource {
         );
       }),
       catchError(err =>
-        createAction(`${this.schema.key}/list/rejected`, err, this.schema),
+        of(createAction(`${this.schema.key}/list/rejected`, err, this.schema)),
       ),
       startWith(
         createAction(`${this.schema.key}/list/pending`, undefined, this.schema),
