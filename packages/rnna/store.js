@@ -24,7 +24,7 @@ function getHydratedAsync(persistor) {
   });
 }
 
-export default function createStoreAsync(
+export default function configureStore(
   { epics = [], middlewares = [], persist: persistConfig, reducers = {} },
   container,
 ) {
