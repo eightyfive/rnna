@@ -1,19 +1,10 @@
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { normalize } from 'normalizr';
-import { singular } from 'pluralize';
 
 export default class Resource {
   constructor(endpoint, schema) {
     this.endpoint = endpoint;
     this.schema = schema;
-
-    const pluralName = capitalize(schema.key); // Ex: Users
-    const singularName = singular(pluralName); // Ex: User
-
-    this.dictionary = {
-      setResource: `set${singularName}`,
-      setResources: `set${pluralName}`,
-    };
   }
 
   create(data) {
@@ -23,12 +14,21 @@ export default class Resource {
         const normalized = Boolean(data.entities && data.result);
 
         return createAction(
-          `http/${this.dictionary.setResource}`,
+          `${this.schema.key}/create/fulfilled`,
           normalized ? data : normalize(data, this.schema),
           this.schema,
-          'create',
         );
       }),
+      catchError(err =>
+        createAction(`${this.schema.key}/create/rejected`, err, this.schema),
+      ),
+      startWith(
+        createAction(
+          `${this.schema.key}/create/pending`,
+          undefined,
+          this.schema,
+        ),
+      ),
     );
   }
 
@@ -39,12 +39,17 @@ export default class Resource {
         const normalized = Boolean(data.entities && data.result);
 
         return createAction(
-          `http/${this.dictionary.setResource}`,
+          `${this.schema.key}/read/fulfilled`,
           normalized ? data : normalize(data, this.schema),
           this.schema,
-          'read',
         );
       }),
+      catchError(err =>
+        createAction(`${this.schema.key}/read/rejected`, err, this.schema),
+      ),
+      startWith(
+        createAction(`${this.schema.key}/read/pending`, undefined, this.schema),
+      ),
     );
   }
 
@@ -55,12 +60,21 @@ export default class Resource {
         const normalized = Boolean(data.entities && data.result);
 
         return createAction(
-          `http/${this.dictionary.setResource}`,
+          `${this.schema.key}/update/fulfilled`,
           normalized ? data : normalize(data, this.schema),
           this.schema,
-          'update',
         );
       }),
+      catchError(err =>
+        createAction(`${this.schema.key}/update/rejected`, err, this.schema),
+      ),
+      startWith(
+        createAction(
+          `${this.schema.key}/update/pending`,
+          undefined,
+          this.schema,
+        ),
+      ),
     );
   }
 
@@ -71,12 +85,21 @@ export default class Resource {
         const normalized = Boolean(data.entities && data.result);
 
         return createAction(
-          `http/${this.dictionary.setResource}`,
+          `${this.schema.key}/delete/fulfilled`,
           normalized ? data : normalize(data, this.schema),
           this.schema,
-          'delete',
         );
       }),
+      catchError(err =>
+        createAction(`${this.schema.key}/delete/rejected`, err, this.schema),
+      ),
+      startWith(
+        createAction(
+          `${this.schema.key}/delete/pending`,
+          undefined,
+          this.schema,
+        ),
+      ),
     );
   }
 
@@ -87,13 +110,18 @@ export default class Resource {
         const normalized = Boolean(data.entities && data.result);
 
         return createAction(
-          `http/${this.dictionary.setResources}`,
+          `${this.schema.key}/list/fulfilled`,
           normalized ? data : normalize(data, [this.schema]),
           this.schema,
-          'list',
           { query, queryId },
         );
       }),
+      catchError(err =>
+        createAction(`${this.schema.key}/list/rejected`, err, this.schema),
+      ),
+      startWith(
+        createAction(`${this.schema.key}/list/pending`, undefined, this.schema),
+      ),
     );
   }
 }
@@ -106,18 +134,13 @@ function getData(res) {
     : res;
 }
 
-function createAction(type, payload, schema, verb, meta = {}) {
+function createAction(type, payload, schema, meta = {}) {
   return {
     type,
     payload,
     meta: {
       ...meta,
       resource: schema.key,
-      verb,
     },
   };
-}
-
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }

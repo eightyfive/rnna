@@ -23,7 +23,11 @@ export default class Resource {
         createAction(`${this.schema.key}/create/rejected`, err, this.schema),
       ),
       startWith(
-        createAction(`${this.schema.key}/create/pending`, err, this.schema),
+        createAction(
+          `${this.schema.key}/create/pending`,
+          undefined,
+          this.schema,
+        ),
       ),
     );
   }
@@ -44,7 +48,7 @@ export default class Resource {
         createAction(`${this.schema.key}/read/rejected`, err, this.schema),
       ),
       startWith(
-        createAction(`${this.schema.key}/read/pending`, err, this.schema),
+        createAction(`${this.schema.key}/read/pending`, undefined, this.schema),
       ),
     );
   }
@@ -65,7 +69,11 @@ export default class Resource {
         createAction(`${this.schema.key}/update/rejected`, err, this.schema),
       ),
       startWith(
-        createAction(`${this.schema.key}/update/pending`, err, this.schema),
+        createAction(
+          `${this.schema.key}/update/pending`,
+          undefined,
+          this.schema,
+        ),
       ),
     );
   }
@@ -86,7 +94,11 @@ export default class Resource {
         createAction(`${this.schema.key}/delete/rejected`, err, this.schema),
       ),
       startWith(
-        createAction(`${this.schema.key}/delete/pending`, err, this.schema),
+        createAction(
+          `${this.schema.key}/delete/pending`,
+          undefined,
+          this.schema,
+        ),
       ),
     );
   }
@@ -108,7 +120,7 @@ export default class Resource {
         createAction(`${this.schema.key}/list/rejected`, err, this.schema),
       ),
       startWith(
-        createAction(`${this.schema.key}/list/pending`, err, this.schema),
+        createAction(`${this.schema.key}/list/pending`, undefined, this.schema),
       ),
     );
   }
