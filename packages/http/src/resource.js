@@ -1,4 +1,4 @@
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, startWith } from 'rxjs/operators';
 import { normalize } from 'normalizr';
 
 export default class Resource {
