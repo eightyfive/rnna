@@ -1,31 +1,9 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { persistReducer, persistStore } from 'redux-persist';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-function isHydrated(persistor) {
-  const { bootstrapped } = persistor.getState();
-
-  return bootstrapped;
-}
-
-function getHydratedAsync(persistor) {
-  if (isHydrated(persistor)) {
-    return Promise.resolve();
-  }
-
-  return new Promise(resolve => {
-    const unsubscribe = persistor.subscribe(function handlePersistorState() {
-      if (isHydrated(persistor)) {
-        resolve();
-        unsubscribe();
-      }
-    });
-  });
-}
-
 export default function configureStore(
-  { epics = [], middlewares = [], persist: persistConfig, reducers = {} },
+  { epics = [], middlewares = [], reducers = {} },
   container,
 ) {
   const bundles = container.getBundles();
@@ -53,16 +31,9 @@ export default function configureStore(
   // Store
   const rootReducer = combineReducers(reducers);
 
-  const persistedReducer = persistReducer(persistConfig, rootReducer);
-
   const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
 
-  const store = createStore(persistedReducer, enhancer);
-
-  // Persistor
-  store.persistor = persistStore(store);
-
-  store.hydrated = getHydratedAsync(store.persistor);
+  const store = createStore(rootReducer, enhancer);
 
   // Boot bundles
   bundles.map(bundle => {
@@ -74,8 +45,7 @@ export default function configureStore(
     epicMiddleware.run(rootEpic);
   }
 
-  store.boot = () =>
-    store.hydrated.then(() => store.dispatch({ type: 'app/boot' }));
+  store.boot = () => store.dispatch({ type: 'app/boot' });
 
   return store;
 }

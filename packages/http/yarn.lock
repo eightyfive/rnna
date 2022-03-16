@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+console.unicorn@0.1.x:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/console.unicorn/-/console.unicorn-0.1.2.tgz#e8fafbb996510ca7d37f6a0bfd7a31268cd2c52a"
+  integrity sha512-5qNVI4mvyLpmJMETbzq81/x4aUtbrS8hyxrMVxC44pd8VplC8ian+/uYEqzfH3XhTXj6QCrfpYlCiC19JteDxw==
+
 dom-walk@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
