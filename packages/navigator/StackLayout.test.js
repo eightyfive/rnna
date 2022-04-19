@@ -5,19 +5,19 @@ import {
   createComponentLayout,
   createStackLayout,
 } from '../test-utils';
-import { Stack } from './Stack';
+import { StackLayout } from './StackLayout';
 
 let layout;
 
-describe('Stack', () => {
+describe('StackLayout', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    Stack.layoutIndex = 0;
+    StackLayout.layoutIndex = 0;
 
     const components = createComponents();
 
-    layout = new Stack(components);
+    layout = new StackLayout(components);
     layout.mount();
   });
 

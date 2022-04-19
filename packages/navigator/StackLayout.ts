@@ -1,23 +1,30 @@
-import { Component } from './Component';
-import { Layout, LayoutType, Props } from './Layout';
+import { Options } from 'react-native-navigation';
+import { ComponentLayout, ComponentLayoutType } from './ComponentLayout';
+import { Layout, Props } from './Layout';
 
-type StackLayout = LayoutType;
+type StackChildLayoutType = {
+  component: ComponentLayoutType;
+};
 
-type StackRoot = { stack: StackLayout };
+type StackLayoutType = {
+  id: string;
+  children: StackChildLayoutType[];
+  options?: Options;
+};
 
-export class Stack extends Layout<StackRoot> {
+export class StackLayout extends Layout<StackLayoutType, 'stack'> {
   static layoutIndex = 0;
 
-  components: Map<string, Component>;
+  components: Map<string, ComponentLayout>;
   id: string;
   order: string[];
   initialName: string;
 
-  constructor(components: Record<string, Component>, config = {}) {
+  constructor(components: Record<string, ComponentLayout>, config = {}) {
     super(config);
 
     this.components = new Map(Object.entries(components));
-    this.id = `Stack${Stack.layoutIndex++}`;
+    this.id = `Stack${StackLayout.layoutIndex++}`;
     this.order = Object.keys(components);
     this.initialName = this.order[0];
   }
@@ -50,15 +57,24 @@ export class Stack extends Layout<StackRoot> {
     }
   }
 
-  getRoot(props: Props) {
+  getLayout(props: Props) {
     const component = this.components.get(this.initialName);
 
-    const layout = {
+    const layout: StackLayoutType = {
       id: this.id,
       children: [component!.getRoot(props)],
-      options: { ...this.options },
     };
 
-    return { stack: layout };
+    if (this.hasOptions()) {
+      layout.options = { ...this.options };
+    }
+
+    return layout;
+  }
+
+  getRoot(props: Props) {
+    return {
+      stack: this.getLayout(props),
+    };
   }
 }

@@ -1,20 +1,15 @@
 import { Options } from 'react-native-navigation';
 
-import { Layout, Props } from './Layouts/Layout';
+import { Layout, Props } from './Layout';
 
-type ComponentLayoutType = {
+export type ComponentLayoutType = {
   id: string;
   name: string;
   options?: Options;
   passProps?: object;
 };
 
-type ComponentOptionsType = object;
-
-export class ComponentLayout extends Layout<
-  ComponentLayoutType,
-  ComponentOptionsType
-> {
+export class ComponentLayout extends Layout<ComponentLayoutType, 'component'> {
   id: string;
   name: string;
   props: Props;
@@ -27,13 +22,17 @@ export class ComponentLayout extends Layout<
     this.props = {};
   }
 
+  hasProps() {
+    return Object.keys(this.props).length > 0;
+  }
+
   getLayout(props: Props) {
     const layout: ComponentLayoutType = {
       id: this.id,
       name: this.name,
     };
 
-    if (Object.keys(this.options).length > 0) {
+    if (this.hasOptions()) {
       layout.options = { ...this.options };
     }
 
@@ -41,10 +40,16 @@ export class ComponentLayout extends Layout<
       this.props = props;
     }
 
-    if (Object.keys(this.props).length > 0) {
+    if (this.hasProps()) {
       layout.passProps = { ...this.props };
     }
 
     return layout;
+  }
+
+  getRoot(props: Props) {
+    return {
+      component: this.getLayout(props),
+    };
   }
 }
