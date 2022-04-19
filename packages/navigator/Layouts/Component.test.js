@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import { createComponentLayout } from '../test-utils';
-import Component from './Component';
+import { Component } from './Component';
 
 function ComponentA1() {}
 function ComponentA2() {}

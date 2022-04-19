@@ -5,7 +5,7 @@ import {
   createComponentLayout,
   createStackLayout,
 } from '../test-utils';
-import Stack from './Stack';
+import { Stack } from './Stack';
 
 let layout;
 

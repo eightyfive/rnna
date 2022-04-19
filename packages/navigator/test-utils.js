@@ -1,5 +1,5 @@
-import Component from './Layouts/Component';
-import Stack from './Layouts/Stack';
+import { Component } from './Layouts/Component';
+import { Stack } from './Layouts/Stack';
 
 function ComponentA() {}
 function ComponentB() {}

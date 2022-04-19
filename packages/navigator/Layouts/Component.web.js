@@ -1,6 +1,6 @@
 import { AppRegistry } from 'react-native';
 
-import Layout from './Layout';
+import { Layout } from './Layout';
 
 export default class Component extends Layout {
   constructor(id, name, options = {}) {

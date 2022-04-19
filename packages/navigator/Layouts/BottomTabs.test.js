@@ -5,8 +5,8 @@ import {
   createComponentLayout,
   createStackLayout,
 } from '../test-utils';
-import BottomTabs from './BottomTabs';
-import Stack from './Stack';
+import { BottomTabs } from './BottomTabs';
+import { Stack } from './Stack';
 
 function makeBottomTabs(index, stacks) {
   return {

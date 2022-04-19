@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import { createStacks } from './test-utils.js';
-import BottomTabs from './Layouts/BottomTabs';
+import { BottomTabs } from './Layouts/BottomTabs';
 import BottomTabsNavigator from './BottomTabsNavigator';
 
 let app;

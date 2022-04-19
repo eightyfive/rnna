@@ -5,7 +5,7 @@ import {
   createComponentLayout,
   createStackLayout,
 } from './test-utils';
-import Stack from './Layouts/Stack';
+import { Stack } from './Layouts/Stack';
 import ModalNavigator from './ModalNavigator';
 
 let app;
