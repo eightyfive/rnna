@@ -14,8 +14,7 @@
   },
   "dependencies": {
     "flat": "5.x",
-    "lodash.isplainobject": "4.x",
-    "shallowequal": "1.x"
+    "lodash.isplainobject": "4.x"
   },
   "devDependencies": {
     "react-native": "0.x",
