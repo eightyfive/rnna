@@ -1,19 +1,19 @@
 import { Navigation } from 'react-native-navigation';
 
-import { Component } from './Component';
-import { Stack } from './Stack';
+import { ComponentLayout } from './ComponentLayout';
+import { StackLayout } from './StackLayout';
 
-export class SideMenu extends Stack {
+export class SideMenuLayout extends StackLayout {
   constructor(components, config = {}) {
     if (!config.left && !config.right) {
       throw new Error('config.left or config.right menu is required');
     }
 
-    if (config.left && !(config.left instanceof Component)) {
+    if (config.left && !(config.left instanceof ComponentLayout)) {
       throw new TypeError('Invalid config.left');
     }
 
-    if (config.right && !(config.right instanceof Component)) {
+    if (config.right && !(config.right instanceof ComponentLayout)) {
       throw new TypeError('Invalid config.right');
     }
 
