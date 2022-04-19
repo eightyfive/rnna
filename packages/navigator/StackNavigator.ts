@@ -1,14 +1,24 @@
-import { Navigation } from 'react-native-navigation';
+import { Navigation, ScreenPoppedEvent } from 'react-native-navigation';
+import { Props } from './Layout';
 
-import { Stack } from './Layouts';
+import { Navigator } from './Navigator';
+import { StackLayout } from './StackLayout';
 
-export default class StackNavigator extends Stack {
-  constructor(components, config = {}) {
-    super(components, config);
+type ScreenPoppedListener = (ev: ScreenPoppedEvent) => void;
+
+export default class StackNavigator extends Navigator<StackLayout> {
+  history: string[];
+
+  constructor(stack: StackLayout, config = {}) {
+    super(stack, config);
 
     this.history = [];
 
-    this.addListener('ScreenPopped', this.handleScreenPopped);
+    this.onScreenPopped(this.handleScreenPopped);
+  }
+
+  onScreenPopped(listener: ScreenPoppedListener) {
+    Navigation.events().registerScreenPoppedListener(listener);
   }
 
   get componentName() {
@@ -16,12 +26,16 @@ export default class StackNavigator extends Stack {
   }
 
   get component() {
-    return this.components.get(this.componentName) || null;
+    if (this.componentName) {
+      return this.layout.components.get(this.componentName);
+    }
+
+    return null;
   }
 
-  handleScreenPopped = ({ componentId: id }) => {
+  handleScreenPopped = (ev: ScreenPoppedEvent) => {
     try {
-      const component = this.getComponentById(id);
+      const component = this.layout.getComponentById(ev.componentId);
 
       if (this.componentName === component.name) {
         this.history.pop();
@@ -32,25 +46,27 @@ export default class StackNavigator extends Stack {
   };
 
   init() {
-    this.history = [this.initialName];
+    this.history = [this.layout.initialName];
   }
 
-  mount(props) {
-    super.mount(props);
+  mount(props: Props) {
+    Navigation.setRoot({
+      root: this.layout.getRoot(props),
+    });
 
     this.init();
   }
 
-  push(name, props) {
-    if (!this.history.length) {
+  push(name: string, props: Props) {
+    if (!this.component) {
       throw new Error('Stack not mounted');
     }
 
-    if (!this.components.has(name)) {
+    const componentTo = this.layout.components.get(name);
+
+    if (!componentTo) {
       throw new Error(`Component not found: ${name}`);
     }
-
-    const componentTo = this.components.get(name);
 
     Navigation.push(this.component.id, componentTo.getRoot(props));
 
@@ -58,7 +74,7 @@ export default class StackNavigator extends Stack {
   }
 
   pop() {
-    if (!this.history.length) {
+    if (!this.component) {
       throw new Error('Stack not mounted');
     }
 
@@ -71,7 +87,7 @@ export default class StackNavigator extends Stack {
     this.history.pop();
   }
 
-  popTo(id) {
+  popTo(id: string) {
     if (!this.history.length) {
       throw new Error('Stack not mounted');
     }
@@ -80,7 +96,7 @@ export default class StackNavigator extends Stack {
       throw new Error('Nothing to pop');
     }
 
-    const component = this.getComponentById(id);
+    const component = this.layout.getComponentById(id);
 
     if (!this.history.includes(component.name)) {
       throw new Error(`Component not in stack: ${component.id}`);
@@ -94,7 +110,7 @@ export default class StackNavigator extends Stack {
   }
 
   popToRoot() {
-    if (!this.history.length) {
+    if (!this.component) {
       throw new Error('Stack not mounted');
     }
 
@@ -104,6 +120,6 @@ export default class StackNavigator extends Stack {
 
     Navigation.popToRoot(this.component.id);
 
-    this.history = [this.initialName];
+    this.history = [this.layout.initialName];
   }
 }
