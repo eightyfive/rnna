@@ -35,10 +35,7 @@ export default class Screen extends PureComponent {
       type = label;
     }
 
-    // TOFIX
-    if (dispatch) {
-      return dispatch({ type, payload });
-    }
+    return dispatch({ type, payload });
   }
 
   set(key, val) {
