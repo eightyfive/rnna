@@ -1,32 +1,11 @@
-import { Navigation, Options } from 'react-native-navigation';
+export type Props = object;
 
-import Emitter from '../Emitter';
+export abstract class Layout<LayoutType, OptionsType> {
+  options: OptionsType | object;
 
-export type Config = {
-  options?: Options;
-};
-
-export type Props = Record<string, any>;
-
-export type LayoutType = {
-  id?: string;
-  options?: Options;
-  name?: string;
-  passProps?: Props;
-};
-
-export abstract class Layout<RootType> extends Emitter {
-  options: Options;
-
-  constructor(config: Config = {}) {
-    super();
-
-    this.options = config.options || {};
+  constructor(options?: OptionsType) {
+    this.options = options || {};
   }
 
-  mount(props: Props) {
-    Navigation.setRoot({ root: this.getRoot(props) });
-  }
-
-  abstract getRoot(props: Props): RootType;
+  abstract getLayout(props: Props): LayoutType;
 }
