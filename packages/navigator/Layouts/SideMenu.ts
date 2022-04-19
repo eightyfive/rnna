@@ -1,9 +1,9 @@
 import { Navigation } from 'react-native-navigation';
 
-import Component from './Component';
-import Stack from './Stack';
+import { Component } from './Component';
+import { Stack } from './Stack';
 
-export default class SideMenu extends Stack {
+export class SideMenu extends Stack {
   constructor(components, config = {}) {
     if (!config.left && !config.right) {
       throw new Error('config.left or config.right menu is required');

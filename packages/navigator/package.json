@@ -9,11 +9,18 @@
     "Navigation"
   ],
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "flat": "5.x",
     "lodash.isplainobject": "4.x",
     "shallowequal": "1.x"
+  },
+  "devDependencies": {
+    "react-native": "0.x",
+    "react-native-navigation": "6.x",
+    "typescript": "^4.6.3"
   },
   "peerDependencies": {
     "react-native": "0.x",

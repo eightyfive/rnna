@@ -1,10 +1,19 @@
-import { Navigation } from 'react-native-navigation';
+import { Navigation, Options } from 'react-native-navigation';
 import shallowEqual from 'shallowequal';
 
-import Layout from './Layout';
+import { Layout, LayoutType, Props } from './Layout';
 
-export default class Component extends Layout {
-  constructor(id, name, options = {}) {
+type ComponentLayout = LayoutType;
+
+type ComponentRoot = { component: ComponentLayout };
+
+export class Component extends Layout<ComponentRoot> {
+  id: string;
+  name: string;
+  options: Options;
+  props: Props;
+
+  constructor(id: string, name: string, options: Options = {}) {
     super();
 
     this.id = id;
@@ -13,8 +22,8 @@ export default class Component extends Layout {
     this.props = {};
   }
 
-  getRoot(props) {
-    const layout = {
+  getRoot(props: Props) {
+    const layout: ComponentLayout = {
       id: this.id,
       name: this.name,
       options: { ...this.options },
@@ -29,7 +38,7 @@ export default class Component extends Layout {
     return { component: layout };
   }
 
-  update(props) {
+  update(props: Props) {
     if (!shallowEqual(props, this.props)) {
       this.props = props;
 

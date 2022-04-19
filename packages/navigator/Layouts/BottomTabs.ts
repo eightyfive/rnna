@@ -1,20 +1,20 @@
-import Layout from './Layout';
-import Stack from './Stack';
+import { Layout, LayoutType, Props } from './Layout';
+import { Stack } from './Stack';
 
-export default class BottomTabs extends Layout {
+type BottomTabsLayout = LayoutType;
+
+type BottomTabsRoot = { bottomTabs: BottomTabsLayout };
+
+export class BottomTabs extends Layout<BottomTabsRoot> {
   static layoutIndex = 0;
 
-  constructor(stacks, config = {}) {
+  id: string;
+  stacks: Map<string, Stack>;
+
+  constructor(stacks: Record<string, Stack>, config = {}) {
     super(config);
 
     this.stacks = new Map(Object.entries(stacks));
-
-    // Validation
-    for (const stack of this.stacks.values()) {
-      if (!(stack instanceof Stack)) {
-        throw new TypeError('Invalid argument: Only stacks allowed');
-      }
-    }
 
     // Tab loading
     // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
@@ -23,13 +23,13 @@ export default class BottomTabs extends Layout {
     this.id = `BottomTabs${BottomTabs.layoutIndex++}`;
   }
 
-  getRoot(props) {
+  getRoot(props: Props) {
     const children = [];
 
     let loop = 0;
 
     for (const stack of this.stacks.values()) {
-      children.push(stack.getRoot(loop === 0 ? props : undefined));
+      children.push(stack.getRoot(loop === 0 ? props : {}));
 
       loop++;
     }

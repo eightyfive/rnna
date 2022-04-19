@@ -1,26 +1,28 @@
-import Component from './Component';
-import Layout from './Layout';
+import { Component } from './Component';
+import { Layout, LayoutType, Props } from './Layout';
 
-export default class Stack extends Layout {
+type StackLayout = LayoutType;
+
+type StackRoot = { stack: StackLayout };
+
+export class Stack extends Layout<StackRoot> {
   static layoutIndex = 0;
 
-  constructor(components, config = {}) {
+  components: Map<string, Component>;
+  id: string;
+  order: string[];
+  initialName: string;
+
+  constructor(components: Record<string, Component>, config = {}) {
     super(config);
 
     this.components = new Map(Object.entries(components));
-
-    for (const component of this.components.values()) {
-      if (!(component instanceof Component)) {
-        throw new TypeError('Invalid argument: Only components allowed');
-      }
-    }
-
     this.id = `Stack${Stack.layoutIndex++}`;
     this.order = Object.keys(components);
     this.initialName = this.order[0];
   }
 
-  getComponent(name) {
+  getComponent(name: string) {
     if (!this.components.has(name)) {
       throw new Error(`Component not found: ${name}`);
     }
@@ -28,7 +30,7 @@ export default class Stack extends Layout {
     return this.components.get(name);
   }
 
-  getComponentById(id) {
+  getComponentById(id: string) {
     for (const component of this.components.values()) {
       if (component.id === id) {
         return component;
@@ -38,7 +40,7 @@ export default class Stack extends Layout {
     throw new Error(`Component ID not found: ${id}`);
   }
 
-  hasComponent(id) {
+  hasComponent(id: string) {
     try {
       this.getComponentById(id);
 
@@ -48,12 +50,12 @@ export default class Stack extends Layout {
     }
   }
 
-  getRoot(props) {
-    const component = this.components.get(this.order[0]);
+  getRoot(props: Props) {
+    const component = this.components.get(this.initialName);
 
     const layout = {
       id: this.id,
-      children: [component.getRoot(props)],
+      children: [component!.getRoot(props)],
       options: { ...this.options },
     };
 
