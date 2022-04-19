@@ -1,18 +1,40 @@
-import { Navigation, ScreenPoppedEvent } from 'react-native-navigation';
-import { Props } from './Layout';
+import {
+  Navigation,
+  Options,
+  ScreenPoppedEvent,
+} from 'react-native-navigation';
 
-import { Navigator } from './Navigator';
-import { StackLayout } from './StackLayout';
+import { Props } from './Layout';
+import { ComponentLayout, Component } from './Component';
+import { Layout } from './Layout';
+
+type StackChildLayout = {
+  component: ComponentLayout;
+};
+
+export type StackLayout = {
+  id: string;
+  children: StackChildLayout[];
+  options?: Options;
+};
 
 type ScreenPoppedListener = (ev: ScreenPoppedEvent) => void;
 
-export class StackNavigator extends Navigator<StackLayout> {
+export class StackNavigator extends Layout<StackLayout> {
+  static layoutIndex = 0;
+
+  components: Map<string, Component>;
+  order: string[];
+  initialName: string;
   history: string[];
 
-  constructor(stack: StackLayout, config = {}) {
-    super(stack, config);
+  constructor(components: Record<string, Component>, options = {}) {
+    super(`Stack${StackNavigator.layoutIndex++}`, options);
 
+    this.components = new Map(Object.entries(components));
     this.history = [];
+    this.order = Object.keys(components);
+    this.initialName = this.order[0];
 
     this.onScreenPopped(this.handleScreenPopped);
   }
@@ -27,7 +49,7 @@ export class StackNavigator extends Navigator<StackLayout> {
 
   get component() {
     if (this.componentName) {
-      return this.layout.components.get(this.componentName);
+      return this.components.get(this.componentName);
     }
 
     return null;
@@ -35,7 +57,7 @@ export class StackNavigator extends Navigator<StackLayout> {
 
   handleScreenPopped = (ev: ScreenPoppedEvent) => {
     try {
-      const component = this.layout.getComponentById(ev.componentId);
+      const component = this.getComponentById(ev.componentId);
 
       if (this.componentName === component.name) {
         this.history.pop();
@@ -45,13 +67,62 @@ export class StackNavigator extends Navigator<StackLayout> {
     }
   };
 
+  getComponent(name: string) {
+    if (!this.components.has(name)) {
+      throw new Error(`Component not found: ${name}`);
+    }
+
+    return this.components.get(name);
+  }
+
+  getComponentById(id: string) {
+    for (const component of this.components.values()) {
+      if (component.id === id) {
+        return component;
+      }
+    }
+
+    throw new Error(`Component ID not found: ${id}`);
+  }
+
+  hasComponent(id: string) {
+    try {
+      this.getComponentById(id);
+
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  getLayout(props?: Props) {
+    const component = this.components.get(this.initialName);
+
+    const layout: StackLayout = {
+      id: this.id,
+      children: [component!.getRoot(props)],
+    };
+
+    if (this.options) {
+      layout.options = { ...this.options };
+    }
+
+    return layout;
+  }
+
+  getRoot(props?: Props) {
+    return {
+      stack: this.getLayout(props),
+    };
+  }
+
   init() {
-    this.history = [this.layout.initialName];
+    this.history = [this.initialName];
   }
 
   mount(props: Props) {
     Navigation.setRoot({
-      root: this.layout.getRoot(props),
+      root: this.getRoot(props),
     });
 
     this.init();
@@ -62,7 +133,7 @@ export class StackNavigator extends Navigator<StackLayout> {
       throw new Error('Stack not mounted');
     }
 
-    const componentTo = this.layout.components.get(name);
+    const componentTo = this.components.get(name);
 
     if (!componentTo) {
       throw new Error(`Component not found: ${name}`);
@@ -96,7 +167,7 @@ export class StackNavigator extends Navigator<StackLayout> {
       throw new Error('Nothing to pop');
     }
 
-    const component = this.layout.getComponentById(id);
+    const component = this.getComponentById(id);
 
     if (!this.history.includes(component.name)) {
       throw new Error(`Component not in stack: ${component.id}`);
@@ -120,6 +191,6 @@ export class StackNavigator extends Navigator<StackLayout> {
 
     Navigation.popToRoot(this.component.id);
 
-    this.history = [this.layout.initialName];
+    this.init();
   }
 }

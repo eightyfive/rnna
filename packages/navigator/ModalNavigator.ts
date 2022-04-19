@@ -5,16 +5,16 @@ import { StackNavigator } from './StackNavigator';
 
 export class ModalNavigator extends StackNavigator {
   mount(props: Props) {
-    Navigation.showModal(this.layout.getRoot(props));
+    this.show(props);
+  }
+
+  show(props: Props) {
+    Navigation.showModal(this.getRoot(props));
 
     this.init();
   }
 
-  show(props: Props) {
-    this.mount(props);
-  }
-
   dismiss() {
-    Navigation.dismissModal(this.layout.id);
+    Navigation.dismissModal(this.id);
   }
 }

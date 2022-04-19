@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { Component } from './Layouts';
+import { Component } from './Component';
 
 export default class OverlayNavigator extends Component {
   mount(props) {
