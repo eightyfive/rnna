@@ -6,7 +6,7 @@ import { StackLayout } from './StackLayout';
 
 type ScreenPoppedListener = (ev: ScreenPoppedEvent) => void;
 
-export default class StackNavigator extends Navigator<StackLayout> {
+export class StackNavigator extends Navigator<StackLayout> {
   history: string[];
 
   constructor(stack: StackLayout, config = {}) {

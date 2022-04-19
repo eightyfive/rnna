@@ -1,6 +1,6 @@
 import { Options } from 'react-native-navigation';
 
-export type Props = object;
+export type Props = Record<string, string | number | boolean>;
 
 export abstract class Layout<LayoutType, RootKey extends string> {
   options: Options;
