@@ -3,7 +3,7 @@ import { Options } from 'react-native-navigation';
 export type Props = object;
 
 export abstract class Layout<LayoutType, RootKey extends string> {
-  options: Options | object;
+  options: Options;
 
   constructor(options?: Options) {
     this.options = options || {};

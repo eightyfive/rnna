@@ -5,8 +5,8 @@ import {
   createComponentLayout,
   createStackLayout,
 } from '../test-utils';
-import { BottomTabs } from './BottomTabs';
-import { Stack } from './Stack';
+import { BottomTabsLayout } from './BottomTabsLayout';
+import { StackLayout } from './StackLayout';
 
 function makeBottomTabs(index, stacks) {
   return {
@@ -23,7 +23,7 @@ describe('BottomTabs', () => {
     jest.clearAllMocks();
 
     BottomTabs.layoutIndex = 0;
-    Stack.layoutIndex = 0;
+    StackLayout.layoutIndex = 0;
 
     const stacks = createStacks();
 

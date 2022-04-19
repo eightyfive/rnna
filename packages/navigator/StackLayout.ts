@@ -6,7 +6,7 @@ type StackChildLayoutType = {
   component: ComponentLayoutType;
 };
 
-type StackLayoutType = {
+export type StackLayoutType = {
   id: string;
   children: StackChildLayoutType[];
   options?: Options;
@@ -20,8 +20,8 @@ export class StackLayout extends Layout<StackLayoutType, 'stack'> {
   order: string[];
   initialName: string;
 
-  constructor(components: Record<string, ComponentLayout>, config = {}) {
-    super(config);
+  constructor(components: Record<string, ComponentLayout>, options = {}) {
+    super(options);
 
     this.components = new Map(Object.entries(components));
     this.id = `Stack${StackLayout.layoutIndex++}`;
