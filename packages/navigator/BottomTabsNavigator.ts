@@ -63,7 +63,7 @@ export class BottomTabsNavigator extends Layout<BottomTabsLayout> {
     };
   }
 
-  mount(props: Props) {
+  mount(props?: Props) {
     Navigation.setRoot({
       root: this.getRoot(props),
     });

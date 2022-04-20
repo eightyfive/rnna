@@ -8,10 +8,10 @@ export type ComponentLayout = {
   passProps?: object;
 };
 
-export abstract class Component extends Layout<ComponentLayout> {
+export class Component extends Layout<ComponentLayout> {
   name: string;
 
-  constructor(id: string, name: string, options = {}) {
+  constructor(id: string, name: string, options?: Options) {
     super(id, options);
 
     this.name = name;
@@ -40,7 +40,7 @@ export abstract class Component extends Layout<ComponentLayout> {
     };
   }
 
-  mount(props: Props) {
+  mount(props?: Props) {
     Navigation.setRoot({
       root: this.getRoot(props),
     });

@@ -120,7 +120,7 @@ export class StackNavigator extends Layout<StackLayout> {
     this.history = [this.initialName];
   }
 
-  mount(props: Props) {
+  mount(props?: Props) {
     Navigation.setRoot({
       root: this.getRoot(props),
     });

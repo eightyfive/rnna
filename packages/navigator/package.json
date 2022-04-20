@@ -18,8 +18,7 @@
   },
   "devDependencies": {
     "react-native": "0.x",
-    "react-native-navigation": "6.x",
-    "typescript": "^4.6.3"
+    "react-native-navigation": "6.x"
   },
   "peerDependencies": {
     "react-native": "0.x",
