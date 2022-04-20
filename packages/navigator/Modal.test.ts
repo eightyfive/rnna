@@ -5,10 +5,10 @@ import {
   createComponentLayout,
   createStackLayout,
 } from './test-utils';
-import { Stack } from './Layouts/Stack';
-import Modal from './Modal';
+import { Stack } from './Stack';
+import { Modal } from './Modal';
 
-let app;
+let app: Modal;
 
 const props = { foo: 'bar' };
 
