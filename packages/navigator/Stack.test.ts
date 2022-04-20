@@ -1,15 +1,21 @@
 import { Navigation } from 'react-native-navigation';
 
-import { createComponents, createComponentLayout } from './test-utils';
-import Stack from './Stack';
+import {
+  createComponents,
+  createComponentLayout,
+  createStackLayout,
+} from './test-utils';
+import { Stack } from './Stack';
 
-let app;
+let app: Stack;
 
 const props = { foo: 'bar' };
 
 describe('Stack', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    Stack.layoutIndex = 0;
 
     const components = createComponents();
 
@@ -18,6 +24,22 @@ describe('Stack', () => {
   });
 
   test('mount', () => {
+    expect(app.id).toBe('Stack0');
+
+    expect(Navigation.push).not.toHaveBeenCalled();
+
+    expect(Navigation.setRoot).toHaveBeenCalledWith({
+      root: {
+        stack: createStackLayout(0, [
+          createComponentLayout('a', 'A', {
+            topBar: {
+              title: { text: 'Title A' },
+            },
+          }),
+        ]),
+      },
+    });
+
     expect(app.history).toEqual(['A']);
   });
 
