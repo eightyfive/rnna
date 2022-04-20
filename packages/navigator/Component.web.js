@@ -2,7 +2,7 @@ import { AppRegistry } from 'react-native';
 
 import { Layout } from './Layout';
 
-export default class Component extends Layout {
+export class Component extends Layout {
   constructor(id, name, options = {}) {
     super();
 
