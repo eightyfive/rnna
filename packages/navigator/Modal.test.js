@@ -6,13 +6,13 @@ import {
   createStackLayout,
 } from './test-utils';
 import { Stack } from './Layouts/Stack';
-import ModalNavigator from './ModalNavigator';
+import Modal from './Modal';
 
 let app;
 
 const props = { foo: 'bar' };
 
-describe('ModalNavigator', () => {
+describe('Modal', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -20,7 +20,7 @@ describe('ModalNavigator', () => {
 
     const components = createComponents();
 
-    app = new ModalNavigator(components);
+    app = new Modal(components);
     app.mount();
   });
 

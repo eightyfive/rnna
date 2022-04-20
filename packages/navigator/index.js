@@ -3,7 +3,7 @@ import flatten from 'flat';
 import { Component, Widget } from './Layouts';
 import { createComponents, getRouteType, registerScreen } from './utils';
 import BottomTabsNavigator from './BottomTabsNavigator';
-import ModalNavigator from './ModalNavigator';
+import Modal from './Modal';
 import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
 import Stack from './Stack';
@@ -37,7 +37,7 @@ export function createModalNavigator(routes, config = {}) {
 
   const components = createComponents(routes, parentId);
 
-  return new ModalNavigator(components, restConfig);
+  return new Modal(components, restConfig);
 }
 
 export function createOverlayNavigator(id, name, ScreenComponent, options) {

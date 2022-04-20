@@ -2,7 +2,7 @@ import RootNavigator from './RootNavigator';
 import { BottomTabs, Component, Widget } from './Layouts';
 
 import BottomTabsNavigator from './BottomTabsNavigator';
-import ModalNavigator from './ModalNavigator';
+import Modal from './Modal';
 import Stack from './Stack';
 import {
   createBottomTabsNavigator,
@@ -51,7 +51,7 @@ test('createBottomTabsNavigator', () => {
 test('createModalNavigator', () => {
   const app = createModalNavigator({ A, B });
 
-  expect(app).toBeInstanceOf(ModalNavigator);
+  expect(app).toBeInstanceOf(Modal);
 });
 
 // Stack
@@ -79,7 +79,7 @@ test('createRootNavigator', () => {
   expect(app.navigator).toBeInstanceOf(Stack);
 
   app.showModal('gh');
-  expect(app.navigator).toBeInstanceOf(ModalNavigator);
+  expect(app.navigator).toBeInstanceOf(Modal);
 
   app.dismissModal('gh');
   // ef...
