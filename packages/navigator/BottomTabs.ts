@@ -13,7 +13,7 @@ export type BottomTabsLayout = {
   options?: Options;
 };
 
-export class BottomTabsNavigator extends Layout<BottomTabsLayout> {
+export class BottomTabs extends Layout<BottomTabsLayout> {
   static layoutIndex = 0;
 
   stacks: Map<string, Stack>;
@@ -21,7 +21,7 @@ export class BottomTabsNavigator extends Layout<BottomTabsLayout> {
   order: string[];
 
   constructor(stacks: Record<string, Stack>, options = {}) {
-    super(`BottomTabs${BottomTabsNavigator.layoutIndex++}`, options);
+    super(`BottomTabs${BottomTabs.layoutIndex++}`, options);
 
     this.stacks = new Map(Object.entries(stacks));
 

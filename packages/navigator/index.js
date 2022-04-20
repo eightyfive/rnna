@@ -2,7 +2,7 @@ import flatten from 'flat';
 
 import { Component, Widget } from './Layouts';
 import { createComponents, getRouteType, registerScreen } from './utils';
-import BottomTabsNavigator from './BottomTabsNavigator';
+import BottomTabs from './BottomTabs';
 import Modal from './Modal';
 import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
@@ -21,7 +21,7 @@ export function createBottomTabsNavigator(routes, config = {}) {
     stacks[name] = createStackNavigator(components, stackConfig);
   });
 
-  return new BottomTabsNavigator(stacks, restConfig);
+  return new BottomTabs(stacks, restConfig);
 }
 
 export function createStackNavigator(routes, config = {}) {

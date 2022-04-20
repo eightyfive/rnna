@@ -2,11 +2,11 @@ import { Navigation } from 'react-native-navigation';
 
 import { createStacks } from './test-utils.js';
 import { BottomTabs } from './Layouts/BottomTabs';
-import BottomTabsNavigator from './BottomTabsNavigator';
+import BottomTabs from './BottomTabs';
 
 let app;
 
-describe('BottomTabsNavigator', () => {
+describe('BottomTabs', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -14,7 +14,7 @@ describe('BottomTabsNavigator', () => {
 
     const stacks = createStacks();
 
-    app = new BottomTabsNavigator(stacks);
+    app = new BottomTabs(stacks);
     app.mount();
   });
 

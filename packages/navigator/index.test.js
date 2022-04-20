@@ -1,7 +1,7 @@
 import RootNavigator from './RootNavigator';
 import { BottomTabs, Component, Widget } from './Layouts';
 
-import BottomTabsNavigator from './BottomTabsNavigator';
+import BottomTabs from './BottomTabs';
 import Modal from './Modal';
 import Stack from './Stack';
 import {
@@ -35,7 +35,7 @@ test('createBottomTabsNavigator', () => {
 
   app.mount();
 
-  expect(app).toBeInstanceOf(BottomTabsNavigator);
+  expect(app).toBeInstanceOf(BottomTabs);
 
   const stack = app.getStackAt(0);
   expect(stack).toBeInstanceOf(Stack);
