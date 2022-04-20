@@ -1,19 +1,19 @@
 import { Navigation } from 'react-native-navigation';
 
 import { createComponents, createComponentLayout } from './test-utils';
-import StackNavigator from './StackNavigator';
+import Stack from './Stack';
 
 let app;
 
 const props = { foo: 'bar' };
 
-describe('StackNavigator', () => {
+describe('Stack', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
     const components = createComponents();
 
-    app = new StackNavigator(components);
+    app = new Stack(components);
     app.mount();
   });
 

@@ -1,9 +1,9 @@
 import { Navigation } from 'react-native-navigation';
 
 import { Props } from './Layout';
-import { StackNavigator } from './StackNavigator';
+import { Stack } from './Stack';
 
-export class ModalNavigator extends StackNavigator {
+export class ModalNavigator extends Stack {
   mount(props?: Props) {
     this.show(props);
   }

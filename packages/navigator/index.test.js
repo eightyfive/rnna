@@ -3,7 +3,7 @@ import { BottomTabs, Component, Widget } from './Layouts';
 
 import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
-import StackNavigator from './StackNavigator';
+import Stack from './Stack';
 import {
   createBottomTabsNavigator,
   createModalNavigator,
@@ -38,7 +38,7 @@ test('createBottomTabsNavigator', () => {
   expect(app).toBeInstanceOf(BottomTabsNavigator);
 
   const stack = app.getStackAt(0);
-  expect(stack).toBeInstanceOf(StackNavigator);
+  expect(stack).toBeInstanceOf(Stack);
 
   const component = Array.from(stack.components.values())[0];
 
@@ -58,7 +58,7 @@ test('createModalNavigator', () => {
 test('createStackNavigator', () => {
   const app = createStackNavigator({ A, B });
 
-  expect(app).toBeInstanceOf(StackNavigator);
+  expect(app).toBeInstanceOf(Stack);
 });
 
 // Root
@@ -76,14 +76,14 @@ test('createRootNavigator', () => {
   expect(app.navigator).toBeInstanceOf(BottomTabs);
 
   app.mount('ef');
-  expect(app.navigator).toBeInstanceOf(StackNavigator);
+  expect(app.navigator).toBeInstanceOf(Stack);
 
   app.showModal('gh');
   expect(app.navigator).toBeInstanceOf(ModalNavigator);
 
   app.dismissModal('gh');
   // ef...
-  expect(app.navigator).toBeInstanceOf(StackNavigator);
+  expect(app.navigator).toBeInstanceOf(Stack);
 
   // TODO
   // app.showOverlay('C');

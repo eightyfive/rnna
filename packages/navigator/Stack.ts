@@ -20,7 +20,7 @@ export type StackLayout = {
 
 type ScreenPoppedListener = (ev: ScreenPoppedEvent) => void;
 
-export class StackNavigator extends Layout<StackLayout> {
+export class Stack extends Layout<StackLayout> {
   static layoutIndex = 0;
 
   components: Map<string, Component>;
@@ -29,7 +29,7 @@ export class StackNavigator extends Layout<StackLayout> {
   history: string[];
 
   constructor(components: Record<string, Component>, options = {}) {
-    super(`Stack${StackNavigator.layoutIndex++}`, options);
+    super(`Stack${Stack.layoutIndex++}`, options);
 
     this.components = new Map(Object.entries(components));
     this.history = [];

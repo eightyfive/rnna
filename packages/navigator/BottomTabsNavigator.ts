@@ -1,7 +1,7 @@
 import { Navigation, Options } from 'react-native-navigation';
 
 import { Layout, Props } from './Layout';
-import { StackLayout, StackNavigator } from './StackNavigator';
+import { StackLayout, Stack } from './Stack';
 
 type BottomTabsChildLayout = {
   stack: StackLayout;
@@ -16,11 +16,11 @@ export type BottomTabsLayout = {
 export class BottomTabsNavigator extends Layout<BottomTabsLayout> {
   static layoutIndex = 0;
 
-  stacks: Map<string, StackNavigator>;
+  stacks: Map<string, Stack>;
   tabIndex: number;
   order: string[];
 
-  constructor(stacks: Record<string, StackNavigator>, options = {}) {
+  constructor(stacks: Record<string, Stack>, options = {}) {
     super(`BottomTabs${BottomTabsNavigator.layoutIndex++}`, options);
 
     this.stacks = new Map(Object.entries(stacks));

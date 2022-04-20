@@ -1,7 +1,7 @@
 import { Options } from 'react-native-navigation';
 import { Component, ComponentLayout } from './Component';
 import { Props } from './Layout';
-import { StackNavigator } from './StackNavigator';
+import { Stack } from './Stack';
 
 export function createComponents() {
   const A = new Component('a', 'A', {
@@ -23,8 +23,8 @@ export function createComponents() {
 export function createStacks() {
   const { A, B, C, D } = createComponents();
 
-  const ab = new StackNavigator({ A, B });
-  const cd = new StackNavigator({ C, D });
+  const ab = new Stack({ A, B });
+  const cd = new Stack({ C, D });
 
   return { ab, cd };
 }

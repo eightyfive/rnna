@@ -6,7 +6,7 @@ import BottomTabsNavigator from './BottomTabsNavigator';
 import ModalNavigator from './ModalNavigator';
 import OverlayNavigator from './OverlayNavigator';
 import RootNavigator from './RootNavigator';
-import StackNavigator from './StackNavigator';
+import Stack from './Stack';
 
 export function createBottomTabsNavigator(routes, config = {}) {
   const { parentId, ...restConfig } = config;
@@ -29,7 +29,7 @@ export function createStackNavigator(routes, config = {}) {
 
   const components = createComponents(routes, parentId);
 
-  return new StackNavigator(components, restConfig);
+  return new Stack(components, restConfig);
 }
 
 export function createModalNavigator(routes, config = {}) {
