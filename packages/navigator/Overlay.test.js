@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import { createComponentLayout } from './test-utils';
-import OverlayNavigator from './OverlayNavigator';
+import Overlay from './Overlay';
 
 function OverlayComponent() {}
 
@@ -9,11 +9,11 @@ let app;
 
 const props = { foo: 'bar' };
 
-describe('OverlayNavigator', () => {
+describe('Overlay', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    app = new OverlayNavigator('a', 'A', OverlayComponent);
+    app = new Overlay('a', 'A', OverlayComponent);
     app.mount();
   });
 

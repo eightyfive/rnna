@@ -4,7 +4,7 @@ import { Component, Widget } from './Layouts';
 import { createComponents, getRouteType, registerScreen } from './utils';
 import BottomTabs from './BottomTabs';
 import Modal from './Modal';
-import OverlayNavigator from './OverlayNavigator';
+import Overlay from './Overlay';
 import RootNavigator from './RootNavigator';
 import Stack from './Stack';
 
@@ -41,7 +41,7 @@ export function createModalNavigator(routes, config = {}) {
 }
 
 export function createOverlayNavigator(id, name, ScreenComponent, options) {
-  return new OverlayNavigator(
+  return new Overlay(
     id,
     name,
     Object.assign({}, ScreenComponent.options, options),

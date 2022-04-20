@@ -2,7 +2,7 @@ import { Navigation } from 'react-native-navigation';
 
 import { Component } from './Component';
 
-export default class OverlayNavigator extends Component {
+export default class Overlay extends Component {
   mount(props) {
     this.show(props);
   }
