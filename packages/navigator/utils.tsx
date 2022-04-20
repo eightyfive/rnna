@@ -1,18 +1,14 @@
-import React, { ReactElement } from 'react';
-import { Navigation, Options } from 'react-native-navigation';
-import _isObject from 'lodash.isplainobject';
+import React from 'react';
+import { Navigation } from 'react-native-navigation';
 
 import { Component } from './Component';
 import { Props } from './Layout';
-
-type ScreenElement = ReactElement & {
-  options: Options;
-};
+import { ReactComponent, ScreenElement } from './types';
 
 export function registerScreen(
   name: string,
   ScreenComponent: ScreenElement,
-  Provider: ReactElement,
+  Provider: ReactComponent,
 ) {
   if (Provider) {
     Navigation.registerComponent(

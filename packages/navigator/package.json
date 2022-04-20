@@ -12,11 +12,8 @@
   "scripts": {
     "build": "tsc"
   },
-  "dependencies": {
-    "flat": "5.x",
-    "lodash.isplainobject": "4.x"
-  },
   "devDependencies": {
+    "@types/react": "^18.0.5",
     "react-native": "0.x",
     "react-native-navigation": "6.x"
   },
