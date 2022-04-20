@@ -1,7 +1,7 @@
 import { Options } from 'react-native-navigation';
 import { Component, ComponentLayout } from './Component';
 import { Props } from './Layout';
-import { Stack } from './Stack';
+import { Stack, StackLayout } from './Stack';
 
 export function createComponents() {
   const A = new Component('a', 'A', {
@@ -63,5 +63,18 @@ export function createStackLayout(
     id: `Stack${index}`,
     children: components.map(component => ({ component })),
     options,
+  };
+}
+
+export function createBottomTabsLayout(
+  index: number,
+  stacks: StackLayout[],
+  options?: Options,
+) {
+  return {
+    id: `BottomTabs${index}`,
+    children: stacks.map(stack => ({ stack })),
+    options,
+    // options: { tabsAttachMode: 'onSwitchToTab' },
   };
 }

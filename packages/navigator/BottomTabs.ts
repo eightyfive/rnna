@@ -20,7 +20,7 @@ export class BottomTabs extends Layout<BottomTabsLayout> {
   tabIndex: number;
   order: string[];
 
-  constructor(stacks: Record<string, Stack>, options = {}) {
+  constructor(stacks: Record<string, Stack>, options?: Options) {
     super(`BottomTabs${BottomTabs.layoutIndex++}`, options);
 
     this.stacks = new Map(Object.entries(stacks));

@@ -1,42 +1,35 @@
 import { Navigation } from 'react-native-navigation';
 
 import {
-  createStacks,
   createComponentLayout,
+  createStacks,
+  createBottomTabsLayout,
   createStackLayout,
-} from '../test-utils';
-import { BottomTabsLayout } from './BottomTabsLayout';
-import { StackLayout } from './StackLayout';
+} from './test-utils';
+import { BottomTabs } from './BottomTabs';
+import { Stack } from './Stack';
 
-function makeBottomTabs(index, stacks) {
-  return {
-    id: `BottomTabs${index}`,
-    children: stacks.map(stack => ({ stack })),
-    options: { tabsAttachMode: 'onSwitchToTab' },
-  };
-}
-
-let layout;
+let app: BottomTabs;
 
 describe('BottomTabs', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
     BottomTabs.layoutIndex = 0;
-    StackLayout.layoutIndex = 0;
+    Stack.layoutIndex = 0;
 
     const stacks = createStacks();
 
-    layout = new BottomTabs(stacks);
-    layout.mount();
+    app = new BottomTabs(stacks);
+    app.mount();
   });
 
   test('mount', () => {
-    expect(layout.id).toBe('BottomTabs0');
+    expect(app.id).toBe('BottomTabs0');
 
     expect(Navigation.setRoot).toHaveBeenCalledWith({
       root: {
-        bottomTabs: makeBottomTabs(0, [
+        bottomTabs: createBottomTabsLayout(0, [
           createStackLayout(0, [
             createComponentLayout('a', 'A', {
               topBar: { title: { text: 'Title A' } },
@@ -49,6 +42,16 @@ describe('BottomTabs', () => {
           ]),
         ]),
       },
+    });
+
+    expect(app.tabIndex).toBe(0);
+  });
+
+  test('select tab', () => {
+    app.selectTab(1);
+
+    expect(Navigation.mergeOptions).toHaveBeenCalledWith('BottomTabs0', {
+      bottomTabs: { currentTabIndex: 1 },
     });
   });
 });
