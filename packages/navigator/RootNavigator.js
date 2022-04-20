@@ -1,6 +1,4 @@
-import Emitter from './Emitter';
-
-export default class RootNavigator extends Emitter {
+export default class RootNavigator {
   constructor(navigators) {
     super();
 
