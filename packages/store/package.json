@@ -1,0 +1,33 @@
+{
+  "name": "@rnna/store",
+  "version": "0.0.1",
+  "description": "Store configuration (RNNA)",
+  "keywords": [
+    "rnna",
+    "react-native",
+    "redux",
+    "redux-observable"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "dependencies": {
+    "redux": "4.x",
+    "redux-devtools-extension": "2.x",
+    "redux-observable": "1.x",
+    "typed-inject": "3.0.1"
+  },
+  "peerDependencies": {
+    "react-native": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eightyfive/rnna/tree/master/packages/rnna"
+  },
+  "author": "Benoit Sagols",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
