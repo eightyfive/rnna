@@ -1,9 +1,9 @@
 import { ComponentClass, FunctionComponent, PropsWithChildren } from 'react';
 import { Options } from 'react-native-navigation';
 
-export type ReactComponent =
-  | FunctionComponent<PropsWithChildren<{}>>
-  | ComponentClass<PropsWithChildren<{}>>;
+export type ReactComponent<P = {}> =
+  | FunctionComponent<PropsWithChildren<P>>
+  | ComponentClass<PropsWithChildren<P>>;
 
 export type ScreenElement = (FunctionComponent | ComponentClass) & {
   options?: Options;

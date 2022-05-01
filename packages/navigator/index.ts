@@ -63,7 +63,7 @@ export function createOverlay(
   );
 }
 
-export function createComponent(id: string, name: string, options?: Options) {
+export function createComponent(id: string, name?: string, options?: Options) {
   return new Component(id, name || id, options);
 }
 

@@ -8,7 +8,7 @@ import { ReactComponent, ScreenElement } from './types';
 export function registerScreen(
   name: string,
   ScreenComponent: ScreenElement,
-  Provider: ReactComponent,
+  Provider?: ReactComponent,
 ) {
   if (Provider) {
     Navigation.registerComponent(
