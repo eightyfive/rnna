@@ -4,7 +4,7 @@ import { Navigation } from 'react-native-navigation';
 import { ScreenElement, ReactComponent } from './types';
 import { Props } from './Layout';
 
-export function registerScreen(
+export function registerComponent(
   name: string,
   ScreenComponent: ScreenElement,
   Provider?: ReactComponent,

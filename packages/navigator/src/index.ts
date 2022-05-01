@@ -14,7 +14,7 @@ import {
   ScreenElement,
   ReactComponent,
 } from './types';
-import { registerScreen } from './registerScreen';
+import { registerComponent } from './registerComponent';
 
 export function createBottomTabs(
   routes: BottomTabsRoutes,
@@ -65,12 +65,15 @@ export function createOverlay(
   );
 }
 
-function createComponent(id: string, name?: string, options?: Options) {
-  return new Component(id, name || id, options);
-}
+export function createComponent(
+  id: string,
+  name: string,
+  ScreenComponent: ScreenElement,
+  Provider?: ReactComponent,
+) {
+  registerComponent(name, ScreenComponent, Provider);
 
-function createWidget(name: string, options?: Options) {
-  return new Widget(name, options);
+  return new Component(id, name, ScreenComponent.options);
 }
 
 function createComponents(
@@ -83,13 +86,7 @@ function createComponents(
   Object.entries(routes).forEach(([name, ScreenComponent]) => {
     const id = parentId ? `${parentId}/${name}` : name;
 
-    registerScreen(name, ScreenComponent, Provider);
-
-    components[name] = createComponent(
-      id,
-      name,
-      Object.assign({}, ScreenComponent.options),
-    );
+    components[name] = createComponent(id, name, ScreenComponent, Provider);
   });
 
   return components;
