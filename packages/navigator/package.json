@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc --project tsconfig.build.json"
   },
   "devDependencies": {
     "@types/react": "^18.0.5",
