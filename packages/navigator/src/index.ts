@@ -65,15 +65,15 @@ export function createOverlay(
   );
 }
 
-export function createComponent(id: string, name?: string, options?: Options) {
+function createComponent(id: string, name?: string, options?: Options) {
   return new Component(id, name || id, options);
 }
 
-export function createWidget(name: string, options?: Options) {
+function createWidget(name: string, options?: Options) {
   return new Widget(name, options);
 }
 
-export function createComponents(
+function createComponents(
   routes: Record<string, ScreenElement>,
   parentId?: string,
   Provider?: ReactComponent,
@@ -85,7 +85,7 @@ export function createComponents(
 
     registerScreen(name, ScreenComponent, Provider);
 
-    components[name] = new Component(
+    components[name] = createComponent(
       id,
       name,
       Object.assign({}, ScreenComponent.options),
