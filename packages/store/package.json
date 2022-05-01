@@ -9,7 +9,7 @@
     "redux-observable"
   ],
   "scripts": {
-    "build": "tsc"
+    "__build__": "tsc"
   },
   "main": "dist/index.js",
   "dependencies": {

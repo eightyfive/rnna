@@ -1,13 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es2016",
     "module": "commonjs",
     "declaration": true,
+    // "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "sourceMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "outDir": "./dist",
     "strict": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+    "lib": ["es6"]
+  },
+  "exclude": ["./packages/store", "./__mocks__"]
 }

@@ -1,4 +1,11 @@
+# App
 .DS_Store
+
+packages/*/dist
+packages/*/coverage
+
+lerna-debug.log
+.vscode/
 
 # Logs
 logs
