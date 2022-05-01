@@ -1,35 +1,61 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+import React, { ReactElement } from 'react';
+import { Navigation } from 'react-native-navigation';
+import { Provider as StoreProvider } from 'react-redux';
+import { Bundle } from 'rnna';
+
+import { createComponent, registerScreen, registerRoutes } from './index';
+import { BottomTabs } from './BottomTabs';
+import { Component } from './Component';
+import { Modal } from './Modal';
+import { Overlay } from './Overlay';
+import { Stack } from './Stack';
+import { Widget } from './Widget';
+import { ReactComponent } from './types';
+
+type LayoutType = BottomTabs | Component | Modal | Overlay | Stack | Widget;
+
+type NavigatorType = Record<string, LayoutType>;
+
+type NavigatorOptions = {
+  Provider: ReactComponent;
+  routes: NavigatorType;
+  SplashScreen: ReactElement;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NavigatorBundle = void 0;
-const react_1 = __importDefault(require("react"));
-const react_native_navigation_1 = require("react-native-navigation");
-const react_redux_1 = require("react-redux");
-const rnna_1 = require("rnna");
-const index_1 = require("./index");
-class NavigatorBundle extends rnna_1.Bundle {
-    register(container) {
-        container.constant('navigator', this.options.routes);
-        if (this.options.SplashScreen) {
-            const splash = (0, index_1.createComponent)('Splash');
-            (0, index_1.registerScreen)(splash.name, this.options.SplashScreen);
-            react_native_navigation_1.Navigation.events().registerAppLaunchedListener(() => {
-                splash.mount();
-            });
-        }
+
+type PartialServices = Record<string, any> & {
+  navigator: NavigatorType;
+};
+
+export class NavigatorBundle extends Bundle<NavigatorOptions> {
+  register(container) {
+    container.constant('navigator', this.options.routes);
+
+    if (this.options.SplashScreen) {
+      const splash = createComponent('Splash');
+
+      registerScreen(splash.name, this.options.SplashScreen);
+
+      Navigation.events().registerAppLaunchedListener(() => {
+        splash.mount();
+      });
     }
-    boot(services, store) {
-        services.navigator;
-        (0, index_1.registerRoutes)(screens, createProvider(store, this.options.Provider));
-    }
+  }
+
+  boot<StoreT>(services: PartialServices, store: StoreT) {
+    services.navigator;
+    registerRoutes(
+      screens,
+      createProvider<StoreT>(store, this.options.Provider),
+    );
+  }
 }
-exports.NavigatorBundle = NavigatorBundle;
-function createProvider(store, Provider) {
-    const AppProvider = ({ children }) => {
-        const content = Provider ? react_1.default.createElement(Provider, null, children) : children;
-        return react_1.default.createElement(react_redux_1.Provider, { store: store }, content);
-    };
-    return AppProvider;
+
+function createProvider<StoreT>(store: StoreT, Provider: ReactComponent) {
+  const AppProvider: ReactComponent = ({ children }) => {
+    const content = Provider ? <Provider>{children}</Provider> : children;
+
+    return <StoreProvider store={store}>{content}</StoreProvider>;
+  };
+
+  return AppProvider;
 }
