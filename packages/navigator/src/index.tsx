@@ -1,8 +1,7 @@
-import { Options } from 'react-native-navigation';
+import { Navigation, Options } from 'react-native-navigation';
 
 import { Component } from './Component';
 import { Widget } from './Widget';
-import { createComponents, registerScreen } from './utils';
 import { BottomTabs } from './BottomTabs';
 import { Modal } from './Modal';
 import { Overlay } from './Overlay';
@@ -13,7 +12,9 @@ import {
   StackRoutes,
   StackConfig,
   ScreenElement,
+  ReactComponent,
 } from './types';
+import { Props } from './Layout';
 
 export function createBottomTabs(
   routes: BottomTabsRoutes,
@@ -71,18 +72,41 @@ export function createWidget(name: string, options?: Options) {
   return new Widget(name, options);
 }
 
-export { registerScreen };
+export function registerScreen(
+  name: string,
+  ScreenComponent: ScreenElement,
+  Provider?: ReactComponent,
+) {
+  if (Provider) {
+    Navigation.registerComponent(
+      name,
+      () => (props: Props = {}) => (
+        <Provider>
+          <ScreenComponent {...props} />
+        </Provider>
+      ),
+      () => ScreenComponent,
+    );
+  } else {
+    Navigation.registerComponent(name, () => ScreenComponent);
+  }
+}
 
-// export function registerRoutes(routes, Provider) {
-//   const screens = flatten(routes);
+export function createComponents(
+  routes: Record<string, ScreenElement>,
+  parentId?: string,
+) {
+  const components: Record<string, Component> = {};
 
-//   for (const [id, ScreenComponent] of Object.entries(screens)) {
-//     const isConfig = id.indexOf('.config.') !== -1;
+  Object.entries(routes).forEach(([name, ScreenComponent]) => {
+    const id = parentId ? `${parentId}/${name}` : name;
 
-//     if (!isConfig) {
-//       const name = id.split('.').pop();
+    components[name] = new Component(
+      id,
+      name,
+      Object.assign({}, ScreenComponent.options),
+    );
+  });
 
-//       registerScreen(name, ScreenComponent, Provider);
-//     }
-//   }
-// }
+  return components;
+}
