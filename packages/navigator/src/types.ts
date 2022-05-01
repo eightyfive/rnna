@@ -13,6 +13,7 @@ export type StackRoutes = Record<string, ScreenElement>;
 
 export type StackConfig = Options & {
   parentId?: string;
+  Provider?: ReactComponent;
 };
 
 export type BottomTabsRoutes = Record<
@@ -24,4 +25,5 @@ export type BottomTabsRoutes = Record<
 
 export type BottomTabsConfig = Options & {
   parentId?: string;
+  Provider?: ReactComponent;
 };

@@ -20,7 +20,7 @@ export function createBottomTabs(
   routes: BottomTabsRoutes,
   config: BottomTabsConfig = {},
 ) {
-  const { parentId, ...options } = config;
+  const { parentId, Provider, ...options } = config;
 
   const stacks: Record<string, Stack> = {};
 
@@ -28,6 +28,7 @@ export function createBottomTabs(
     const { config: stackConfig = {}, ...components } = config;
 
     stackConfig.parentId = parentId ? `${parentId}/${name}` : name;
+    stackConfig.Provider = Provider;
 
     stacks[name] = createStack(components, stackConfig);
   });
@@ -36,17 +37,17 @@ export function createBottomTabs(
 }
 
 export function createStack(routes: StackRoutes, config: StackConfig = {}) {
-  const { parentId, ...options } = config;
+  const { parentId, Provider, ...options } = config;
 
-  const components = createComponents(routes, parentId);
+  const components = createComponents(routes, parentId, Provider);
 
   return new Stack(components, options);
 }
 
 export function createModal(routes: StackRoutes, config: StackConfig = {}) {
-  const { parentId, ...options } = config;
+  const { parentId, Provider, ...options } = config;
 
-  const components = createComponents(routes, parentId);
+  const components = createComponents(routes, parentId, Provider);
 
   return new Modal(components, options);
 }
@@ -95,11 +96,14 @@ export function registerScreen(
 export function createComponents(
   routes: Record<string, ScreenElement>,
   parentId?: string,
+  Provider?: ReactComponent,
 ) {
   const components: Record<string, Component> = {};
 
   Object.entries(routes).forEach(([name, ScreenComponent]) => {
     const id = parentId ? `${parentId}/${name}` : name;
+
+    registerScreen(name, ScreenComponent, Provider);
 
     components[name] = new Component(
       id,
