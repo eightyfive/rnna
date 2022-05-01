@@ -1,4 +1,4 @@
-import { Navigation, Options } from 'react-native-navigation';
+import { Options } from 'react-native-navigation';
 
 import { Component } from './Component';
 import { Widget } from './Widget';
@@ -14,7 +14,7 @@ import {
   ScreenElement,
   ReactComponent,
 } from './types';
-import { Props } from './Layout';
+import { registerScreen } from './registerScreen';
 
 export function createBottomTabs(
   routes: BottomTabsRoutes,
@@ -71,26 +71,6 @@ export function createComponent(id: string, name?: string, options?: Options) {
 
 export function createWidget(name: string, options?: Options) {
   return new Widget(name, options);
-}
-
-export function registerScreen(
-  name: string,
-  ScreenComponent: ScreenElement,
-  Provider?: ReactComponent,
-) {
-  if (Provider) {
-    Navigation.registerComponent(
-      name,
-      () => (props: Props = {}) => (
-        <Provider>
-          <ScreenComponent {...props} />
-        </Provider>
-      ),
-      () => ScreenComponent,
-    );
-  } else {
-    Navigation.registerComponent(name, () => ScreenComponent);
-  }
 }
 
 export function createComponents(
