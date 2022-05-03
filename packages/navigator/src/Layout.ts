@@ -1,6 +1,5 @@
 import { Options } from 'react-native-navigation';
-
-export type Props = Record<string, string | number | boolean>;
+import { Props, ReactComponent } from './types';
 
 export abstract class Layout<LayoutT, LayoutOptions = Options> {
   id: string;
@@ -16,4 +15,6 @@ export abstract class Layout<LayoutT, LayoutOptions = Options> {
   abstract getLayout(props?: Props): LayoutT;
 
   abstract getRoot(props?: Props): Record<string, LayoutT>;
+
+  abstract register(Provider?: ReactComponent): void;
 }

@@ -1,6 +1,8 @@
 import { ComponentClass, FunctionComponent, PropsWithChildren } from 'react';
 import { Options } from 'react-native-navigation';
 
+export type Props = Record<string, string | number | boolean>;
+
 export type ReactComponent<P = {}> =
   | FunctionComponent<PropsWithChildren<P>>
   | ComponentClass<PropsWithChildren<P>>;
@@ -32,7 +34,6 @@ export type StackRoutes = Record<string, ScreenElement>;
 
 export type StackConfig = Options & {
   parentId?: string;
-  Provider?: ReactComponent;
 };
 
 // BottomTabs
@@ -55,5 +56,4 @@ export type BottomTabsRoutes = Record<
 
 export type BottomTabsConfig = Options & {
   parentId?: string;
-  Provider?: ReactComponent;
 };

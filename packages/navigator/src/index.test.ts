@@ -1,15 +1,16 @@
+import { FC } from 'react';
+
 import { BottomTabs } from './BottomTabs';
 import { Component } from './Component';
 import { Modal } from './Modal';
 import { Stack } from './Stack';
-import { Widget } from './Widget';
 import {
   createBottomTabs,
   createModal,
   createOverlay,
   createStack,
-  createWidget,
 } from './index';
+import { Overlay } from './Overlay';
 
 function A() {
   return null;
@@ -26,14 +27,6 @@ function C() {
 function D() {
   return null;
 }
-
-test('createWidget', () => {
-  const widget = createWidget('E');
-
-  expect(widget instanceof Widget).toBe(true);
-  expect(widget.id).toBe('widget-E');
-  expect(widget.name).toBe('E');
-});
 
 // Bottom tabs
 test('createBottomTabs', () => {
@@ -68,4 +61,13 @@ test('createStack', () => {
   const app = createStack({ A, B });
 
   expect(app).toBeInstanceOf(Stack);
+});
+
+// Overlay
+const Dialog: FC = () => null;
+
+test('createOverlay', () => {
+  const app = createOverlay('dialog1', 'Dialog', Dialog);
+
+  expect(app).toBeInstanceOf(Overlay);
 });

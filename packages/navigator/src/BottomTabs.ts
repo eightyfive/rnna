@@ -1,8 +1,8 @@
 import { Navigation, Options } from 'react-native-navigation';
 
-import { Layout, Props } from './Layout';
+import { Layout } from './Layout';
 import { Stack } from './Stack';
-import type { BottomTabsLayout } from './types';
+import type { BottomTabsLayout, Props, ReactComponent } from './types';
 
 export class BottomTabs extends Layout<BottomTabsLayout> {
   static layoutIndex = 0;
@@ -81,5 +81,11 @@ export class BottomTabs extends Layout<BottomTabsLayout> {
     }
 
     return stack;
+  }
+
+  register(Provider?: ReactComponent) {
+    this.stacks.forEach((stack) => {
+      stack.register(Provider);
+    })
   }
 }

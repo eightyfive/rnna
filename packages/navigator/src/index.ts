@@ -13,13 +13,12 @@ import {
   ScreenElement,
   ReactComponent,
 } from './types';
-import { registerComponent } from './registerComponent';
 
 export function createBottomTabs(
   routes: BottomTabsRoutes,
   config: BottomTabsConfig = {},
 ) {
-  const { parentId, Provider, ...options } = config;
+  const { parentId, ...options } = config;
 
   const stacks: Record<string, Stack> = {};
 
@@ -27,7 +26,6 @@ export function createBottomTabs(
     const { config: stackConfig = {}, ...components } = config;
 
     stackConfig.parentId = parentId ? `${parentId}/${name}` : name;
-    stackConfig.Provider = Provider;
 
     stacks[name] = createStack(components, stackConfig);
   });
@@ -36,17 +34,17 @@ export function createBottomTabs(
 }
 
 export function createStack(routes: StackRoutes, config: StackConfig = {}) {
-  const { parentId, Provider, ...options } = config;
+  const { parentId, ...options } = config;
 
-  const components = createComponents(routes, parentId, Provider);
+  const components = createComponents(routes, parentId);
 
   return new Stack(components, options);
 }
 
 export function createModal(routes: StackRoutes, config: StackConfig = {}) {
-  const { parentId, Provider, ...options } = config;
+  const { parentId, ...options } = config;
 
-  const components = createComponents(routes, parentId, Provider);
+  const components = createComponents(routes, parentId);
 
   return new Modal(components, options);
 }
@@ -60,6 +58,7 @@ export function createOverlay(
   return new Overlay(
     id,
     name,
+    ScreenComponent,
     Object.assign({}, ScreenComponent.options, options),
   );
 }
@@ -68,41 +67,32 @@ export function createComponent(
   id: string,
   name: string,
   ScreenComponent: ScreenElement,
-  Provider?: ReactComponent,
 ) {
-  registerComponent(name, ScreenComponent, Provider);
-
-  return new Component(id, name, ScreenComponent.options);
+  return new Component(id, name, ScreenComponent, ScreenComponent.options);
 }
 
 function createComponents(
   routes: Record<string, ScreenElement>,
   parentId?: string,
-  Provider?: ReactComponent,
 ) {
   const components: Record<string, Component> = {};
 
   Object.entries(routes).forEach(([name, ScreenComponent]) => {
     const id = parentId ? `${parentId}/${name}` : name;
 
-    components[name] = createComponent(id, name, ScreenComponent, Provider);
+    components[name] = createComponent(id, name, ScreenComponent);
   });
 
   return components;
 }
 
-export function createNavigator(
-  routes: Record<string, ScreenElement>,
-  parentId?: string,
+type Layouts = Stack | BottomTabs | Component | Overlay | Modal;
+
+export function registerNavigator<T>(
+  navigator: Record<string, Layouts>,
   Provider?: ReactComponent,
 ) {
-  const components: Record<string, Component> = {};
-
-  Object.entries(routes).forEach(([name, ScreenComponent]) => {
-    const id = parentId ? `${parentId}/${name}` : name;
-
-    components[name] = createComponent(id, name, ScreenComponent, Provider);
+  Object.values(navigator).forEach(layout => {
+    layout.register(Provider);
   });
-
-  return components;
 }

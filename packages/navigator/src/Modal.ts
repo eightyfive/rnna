@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { Props } from './Layout';
+import { Props } from './types';
 import { Stack } from './Stack';
 
 export class Modal extends Stack {

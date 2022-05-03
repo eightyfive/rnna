@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { Navigation } from 'react-native-navigation';
 
 import { createComponentLayout } from './test-utils';
@@ -5,13 +6,15 @@ import { Overlay } from './Overlay';
 
 let app: Overlay;
 
+const Dialog: FC = () => null;
+
 const props = { foo: 'bar' };
 
 describe('Overlay', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    app = new Overlay('a', 'A');
+    app = new Overlay('a', 'A', Dialog);
     app.mount();
   });
 

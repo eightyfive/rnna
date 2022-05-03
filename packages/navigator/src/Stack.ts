@@ -1,13 +1,11 @@
 import {
   Navigation,
-  Options,
   ScreenPoppedEvent,
 } from 'react-native-navigation';
 
-import { Props } from './Layout';
 import { Component } from './Component';
 import { Layout } from './Layout';
-import type { StackLayout } from './types';
+import type { Props, ReactComponent, StackLayout } from './types';
 
 type ScreenPoppedListener = (ev: ScreenPoppedEvent) => void;
 
@@ -183,5 +181,11 @@ export class Stack extends Layout<StackLayout> {
     Navigation.popToRoot(this.component.id);
 
     this.init();
+  }
+
+  register(Provider?: ReactComponent) {
+    this.components.forEach((component) => {
+      component.register(Provider);
+    })
   }
 }

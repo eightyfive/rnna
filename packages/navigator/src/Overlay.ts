@@ -1,7 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 
 import { Component } from './Component';
-import { Props } from './Layout';
+import { Props } from './types';
 
 export class Overlay extends Component {
   mount(props?: Props) {

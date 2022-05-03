@@ -1,8 +1,7 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
 
-import { ScreenElement, ReactComponent } from './types';
-import { Props } from './Layout';
+import { Props, ReactComponent, ScreenElement } from './types';
 
 export function registerComponent(
   name: string,

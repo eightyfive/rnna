@@ -1,22 +1,28 @@
+import { FC } from 'react';
 import { Options } from 'react-native-navigation';
-import { Component, ComponentLayout } from './Component';
-import { Props } from './Layout';
-import { Stack, StackLayout } from './Stack';
+import { Component } from './Component';
+import { ComponentLayout, Props, StackLayout } from './types';
+import { Stack } from './Stack';
+
+const ScreenA: FC = () => null;
+const ScreenB: FC = () => null;
+const ScreenC: FC = () => null;
+const ScreenD: FC = () => null;
 
 export function createComponents() {
-  const A = new Component('a', 'A', {
+  const A = new Component('a', 'A', ScreenA, {
     topBar: { title: { text: 'Title A' } },
   });
 
-  const B = new Component('b', 'B', {
+  const B = new Component('b', 'B', ScreenB, {
     topBar: { title: { text: 'Title B' } },
   });
 
-  const C = new Component('c', 'C', {
+  const C = new Component('c', 'C', ScreenC, {
     topBar: { title: { text: 'Title C' } },
   });
 
-  const D = new Component('d', 'D', {
+  const D = new Component('d', 'D', ScreenD, {
     topBar: { title: { text: 'Title D' } },
   });
 

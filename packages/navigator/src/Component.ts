@@ -1,14 +1,17 @@
 import { Navigation, Options } from 'react-native-navigation';
-import { Layout, Props } from './Layout';
-import type { ComponentLayout } from './types';
+import { Layout } from './Layout';
+import { registerComponent } from './registerComponent';
+import type { ComponentLayout, Props, ReactComponent, ScreenElement } from './types';
 
 export class Component extends Layout<ComponentLayout> {
   name: string;
+  ScreenComponent: ScreenElement;
 
-  constructor(id: string, name: string, options?: Options) {
+  constructor(id: string, name: string, ScreenComponent: ScreenElement, options?: Options) {
     super(id, options);
 
     this.name = name;
+    this.ScreenComponent = ScreenComponent;
   }
 
   getLayout(props?: Props) {
@@ -38,5 +41,9 @@ export class Component extends Layout<ComponentLayout> {
     Navigation.setRoot({
       root: this.getRoot(props),
     });
+  }
+
+  register(Provider?: ReactComponent) {
+    registerComponent(this.name, this.ScreenComponent, Provider);
   }
 }
