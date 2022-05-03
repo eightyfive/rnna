@@ -13,6 +13,9 @@ import {
   ScreenElement,
   ReactComponent,
 } from './types';
+import type { NavigatorType } from './Navigator';
+export { NavigatorProvider } from './NavigatorContext'
+export { useNavigator } from './useNavigator'
 
 export function createBottomTabs(
   routes: BottomTabsRoutes,
@@ -87,7 +90,7 @@ function createComponents(
 }
 
 export function registerNavigator<T>(
-  navigator: Record<string, BottomTabs | Component | Modal | Overlay | Stack>,
+  navigator: NavigatorType,
   Provider?: ReactComponent,
 ) {
   Object.values(navigator).forEach(layout => {
