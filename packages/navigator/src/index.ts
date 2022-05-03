@@ -1,7 +1,6 @@
 import { Options } from 'react-native-navigation';
 
 import { Component } from './Component';
-import { Widget } from './Widget';
 import { BottomTabs } from './BottomTabs';
 import { Modal } from './Modal';
 import { Overlay } from './Overlay';
@@ -77,6 +76,22 @@ export function createComponent(
 }
 
 function createComponents(
+  routes: Record<string, ScreenElement>,
+  parentId?: string,
+  Provider?: ReactComponent,
+) {
+  const components: Record<string, Component> = {};
+
+  Object.entries(routes).forEach(([name, ScreenComponent]) => {
+    const id = parentId ? `${parentId}/${name}` : name;
+
+    components[name] = createComponent(id, name, ScreenComponent, Provider);
+  });
+
+  return components;
+}
+
+export function createNavigator(
   routes: Record<string, ScreenElement>,
   parentId?: string,
   Provider?: ReactComponent,
