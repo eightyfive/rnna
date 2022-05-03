@@ -1,10 +1,10 @@
 
 import { createContext } from 'react'
 
-import type { NavigatorType } from './Navigator';
+import type { Navigator } from './Navigator';
 
 export type NavigatorContext = {
-  navigator?: NavigatorType
+  navigator?: Navigator
 }
 
 export const NavigatorContext = createContext<NavigatorContext>({})

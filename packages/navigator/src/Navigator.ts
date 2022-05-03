@@ -4,7 +4,7 @@ import { Modal } from './Modal';
 import { Overlay } from './Overlay';
 import { Stack } from './Stack';
 
-export type NavigatorType = Record<
+export type Navigator = Record<
   string,
   BottomTabs | Component | Modal | Overlay | Stack
 >;

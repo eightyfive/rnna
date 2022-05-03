@@ -13,7 +13,7 @@ import {
   ScreenElement,
   ReactComponent,
 } from './types';
-import type { NavigatorType } from './Navigator';
+import type { Navigator } from './Navigator';
 export { NavigatorProvider } from './NavigatorContext'
 export { useNavigator } from './useNavigator'
 
@@ -90,7 +90,7 @@ function createComponents(
 }
 
 export function registerNavigator<T>(
-  navigator: NavigatorType,
+  navigator: Navigator,
   Provider?: ReactComponent,
 ) {
   Object.values(navigator).forEach(layout => {
