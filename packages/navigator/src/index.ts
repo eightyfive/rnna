@@ -86,10 +86,8 @@ function createComponents(
   return components;
 }
 
-type Layouts = Stack | BottomTabs | Component | Overlay | Modal;
-
 export function registerNavigator<T>(
-  navigator: Record<string, Layouts>,
+  navigator: Record<string, BottomTabs | Component | Modal | Overlay | Stack>,
   Provider?: ReactComponent,
 ) {
   Object.values(navigator).forEach(layout => {
