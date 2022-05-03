@@ -1,12 +1,6 @@
 import { Navigation, Options } from 'react-native-navigation';
 import { Layout, Props } from './Layout';
-
-export type ComponentLayout = {
-  id: string;
-  name: string;
-  options?: Options;
-  passProps?: object;
-};
+import type { ComponentLayout } from './types';
 
 export class Component extends Layout<ComponentLayout> {
   name: string;

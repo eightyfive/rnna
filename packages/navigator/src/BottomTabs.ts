@@ -1,17 +1,8 @@
 import { Navigation, Options } from 'react-native-navigation';
 
 import { Layout, Props } from './Layout';
-import { StackLayout, Stack } from './Stack';
-
-type BottomTabsChildLayout = {
-  stack: StackLayout;
-};
-
-export type BottomTabsLayout = {
-  id: string;
-  children: BottomTabsChildLayout[];
-  options?: Options;
-};
+import { Stack } from './Stack';
+import type { BottomTabsLayout } from './types';
 
 export class BottomTabs extends Layout<BottomTabsLayout> {
   static layoutIndex = 0;

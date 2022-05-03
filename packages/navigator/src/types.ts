@@ -1,6 +1,32 @@
 import { ComponentClass, FunctionComponent, PropsWithChildren } from 'react';
 import { Options } from 'react-native-navigation';
 
+export type ComponentLayout = {
+  id: string;
+  name: string;
+  options?: Options;
+  passProps?: object;
+};
+
+type StackChildLayout = {
+  component: ComponentLayout;
+};
+
+export type StackLayout = {
+  id: string;
+  children: StackChildLayout[];
+  options?: Options;
+};
+
+type BottomTabsChildLayout = {
+  stack: StackLayout;
+};
+
+export type BottomTabsLayout = {
+  id: string;
+  children: BottomTabsChildLayout[];
+  options?: Options;
+};
 export type ReactComponent<P = {}> =
   | FunctionComponent<PropsWithChildren<P>>
   | ComponentClass<PropsWithChildren<P>>;

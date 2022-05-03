@@ -5,18 +5,9 @@ import {
 } from 'react-native-navigation';
 
 import { Props } from './Layout';
-import { ComponentLayout, Component } from './Component';
+import { Component } from './Component';
 import { Layout } from './Layout';
-
-type StackChildLayout = {
-  component: ComponentLayout;
-};
-
-export type StackLayout = {
-  id: string;
-  children: StackChildLayout[];
-  options?: Options;
-};
+import type { StackLayout } from './types';
 
 type ScreenPoppedListener = (ev: ScreenPoppedEvent) => void;
 
