@@ -8,11 +8,7 @@
     "wix",
     "Navigation"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc --project tsconfig.build.json"
   },
