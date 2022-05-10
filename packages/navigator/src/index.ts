@@ -13,9 +13,9 @@ import {
   ScreenElement,
   ReactComponent,
 } from './types';
-import type { Navigator } from './Navigator';
-export { NavigatorProvider } from './NavigatorContext'
-export { useNavigator } from './useNavigator'
+import { Navigator } from './Navigator';
+export { NavigatorProvider } from './NavigatorContext';
+export { useNavigator } from './useNavigator';
 
 export function createBottomTabs(
   routes: BottomTabsRoutes,
@@ -70,8 +70,14 @@ export function createComponent(
   id: string,
   name: string,
   ScreenComponent: ScreenElement,
+  options?: Options,
 ) {
-  return new Component(id, name, ScreenComponent, ScreenComponent.options);
+  return new Component(
+    id,
+    name,
+    ScreenComponent,
+    Object.assign({}, ScreenComponent.options, options),
+  );
 }
 
 function createComponents(
