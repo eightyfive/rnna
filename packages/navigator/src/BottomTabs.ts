@@ -2,38 +2,33 @@ import { Navigation, Options } from 'react-native-navigation';
 
 import { Layout } from './Layout';
 import { Stack } from './Stack';
-import type { BottomTabsLayout, Props, ReactComponent } from './types';
+import { BottomTabsLayout, Props, ReactComponent } from './types';
 
 export class BottomTabs extends Layout<BottomTabsLayout> {
   static layoutIndex = 0;
 
-  stacks: Map<string, Stack>;
-  tabIndex: number;
+  stacks: Stack[];
   order: string[];
 
   constructor(stacks: Record<string, Stack>, options?: Options) {
     super(`BottomTabs${BottomTabs.layoutIndex++}`, options);
 
-    this.stacks = new Map(Object.entries(stacks));
+    this.stacks = Object.values(stacks);
+    this.order = Object.keys(stacks);
 
     // Tab loading
     // // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
     // this.options.bottomTabs?.tabsAttachMode =
     //   this.options.bottomTabs?.tabsAttachMode || 'onSwitchToTab';
-
-    this.order = Object.keys(stacks);
-    this.tabIndex = 0;
   }
 
   getLayout(props?: Props) {
-    const children = this.order.map((name, index) => {
-      const stack = this.stacks.get(name);
-
+    const children = this.stacks.map((stack, index) => {
       if (index === 0) {
-        return stack!.getRoot(props);
+        return stack.getRoot(props);
       }
 
-      return stack!.getRoot();
+      return stack.getRoot();
     });
 
     const layout: BottomTabsLayout = {
@@ -58,34 +53,29 @@ export class BottomTabs extends Layout<BottomTabsLayout> {
     Navigation.setRoot({
       root: this.getRoot(props),
     });
-
-    for (const stack of this.stacks.values()) {
-      stack.init();
-    }
   }
 
-  selectTab(index: number) {
-    this.tabIndex = index;
+  selectTab(indexOrName: string | number) {
+    let index;
+
+    if (typeof indexOrName === 'string') {
+      index = this.order.indexOf(indexOrName);
+
+      if (index === -1) {
+        throw new Error(`Tab not found: ${indexOrName}`);
+      }
+    } else {
+      index = indexOrName;
+    }
 
     Navigation.mergeOptions(this.id, {
       bottomTabs: { currentTabIndex: index },
     });
   }
 
-  getStackAt(index: number) {
-    const name = this.order[index];
-    const stack = this.stacks.get(name);
-
-    if (!stack) {
-      throw new Error(`Stack not found at index: ${index}`);
-    }
-
-    return stack;
-  }
-
   register(Provider?: ReactComponent) {
-    this.stacks.forEach((stack) => {
+    this.stacks.forEach(stack => {
       stack.register(Provider);
-    })
+    });
   }
 }

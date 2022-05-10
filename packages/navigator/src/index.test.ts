@@ -39,7 +39,7 @@ test('createBottomTabs', () => {
 
   expect(app).toBeInstanceOf(BottomTabs);
 
-  const stack = app.getStackAt(0);
+  const stack = app.stacks[0];
   expect(stack).toBeInstanceOf(Stack);
 
   const component = Array.from(stack.components.values())[0];

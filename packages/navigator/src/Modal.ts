@@ -10,8 +10,6 @@ export class Modal extends Stack {
 
   show(props?: Props) {
     Navigation.showModal(this.getRoot(props));
-
-    this.init();
   }
 
   dismiss() {
