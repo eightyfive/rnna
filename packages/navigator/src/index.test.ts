@@ -45,7 +45,7 @@ test('createBottomTabs', () => {
   const component = Array.from(stack.components.values())[0];
 
   expect(component).toBeInstanceOf(Component);
-  expect(component.id).toBe('ab/A');
+  expect(component.id).toBe('Component1');
   expect(component.name).toBe('A');
 });
 

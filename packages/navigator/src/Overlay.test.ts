@@ -14,7 +14,7 @@ describe('Overlay', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    app = new Overlay('a', 'A', Dialog);
+    app = new Overlay('A', Dialog);
     app.mount();
   });
 
@@ -22,7 +22,7 @@ describe('Overlay', () => {
     app.show(props);
 
     expect(Navigation.showOverlay).toHaveBeenCalledWith({
-      component: createComponentLayout('a', 'A'),
+      component: createComponentLayout('Overlay1', 'A'),
     });
   });
 

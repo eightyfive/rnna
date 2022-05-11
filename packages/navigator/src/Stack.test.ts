@@ -5,6 +5,7 @@ import {
   createComponentLayout,
   createStackLayout,
 } from './test-utils';
+import { Layout } from './Layout';
 import { Stack } from './Stack';
 
 let app: Stack;
@@ -15,7 +16,7 @@ describe('Stack', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    Stack.layoutIndex = 0;
+    Layout.layoutIndex = 0;
 
     const components = createComponents();
 
@@ -24,14 +25,14 @@ describe('Stack', () => {
   });
 
   test('mount', () => {
-    expect(app.id).toBe('Stack0');
+    expect(app.id).toBe('Stack5');
 
     expect(Navigation.push).not.toHaveBeenCalled();
 
     expect(Navigation.setRoot).toHaveBeenCalledWith({
       root: {
-        stack: createStackLayout(0, [
-          createComponentLayout('a', 'A', {
+        stack: createStackLayout('Stack5', [
+          createComponentLayout('Component1', 'A', {
             topBar: {
               title: { text: 'Title A' },
             },
@@ -39,18 +40,14 @@ describe('Stack', () => {
         ]),
       },
     });
-
-    expect(app.history).toEqual(['A']);
   });
 
   test('push', () => {
     app.push('B', props);
 
-    expect(app.history).toEqual(['A', 'B']);
-
-    expect(Navigation.push).toHaveBeenCalledWith('a', {
+    expect(Navigation.push).toHaveBeenCalledWith('Stack5', {
       component: createComponentLayout(
-        'b',
+        'Component2',
         'B',
         {
           topBar: {
@@ -67,8 +64,7 @@ describe('Stack', () => {
     app.push('C', props);
     app.pop();
 
-    expect(app.history).toEqual(['A', 'B']);
-    expect(Navigation.pop).toHaveBeenCalledWith('c');
+    expect(Navigation.pop).toHaveBeenCalledWith('Stack5');
   });
 
   test('popToRoot', () => {
@@ -76,7 +72,6 @@ describe('Stack', () => {
     app.push('C', props);
     app.popToRoot();
 
-    expect(app.history).toEqual(['A']);
-    expect(Navigation.popToRoot).toHaveBeenCalledWith('c');
+    expect(Navigation.popToRoot).toHaveBeenCalledWith('Stack5');
   });
 });

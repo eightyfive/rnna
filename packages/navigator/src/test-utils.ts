@@ -10,19 +10,19 @@ const ScreenC: FC = () => null;
 const ScreenD: FC = () => null;
 
 export function createComponents() {
-  const A = new Component('a', 'A', ScreenA, {
+  const A = new Component('A', ScreenA, {
     topBar: { title: { text: 'Title A' } },
   });
 
-  const B = new Component('b', 'B', ScreenB, {
+  const B = new Component('B', ScreenB, {
     topBar: { title: { text: 'Title B' } },
   });
 
-  const C = new Component('c', 'C', ScreenC, {
+  const C = new Component('C', ScreenC, {
     topBar: { title: { text: 'Title C' } },
   });
 
-  const D = new Component('d', 'D', ScreenD, {
+  const D = new Component('D', ScreenD, {
     topBar: { title: { text: 'Title D' } },
   });
 
@@ -61,24 +61,24 @@ export function createComponentLayout(
 }
 
 export function createStackLayout(
-  index: number,
+  id: string,
   components: ComponentLayout[],
   options = {},
 ) {
   return {
-    id: `Stack${index}`,
+    id,
     children: components.map(component => ({ component })),
     options,
   };
 }
 
 export function createBottomTabsLayout(
-  index: number,
+  id: string,
   stacks: StackLayout[],
   options?: Options,
 ) {
   return {
-    id: `BottomTabs${index}`,
+    id,
     children: stacks.map(stack => ({ stack })),
     options,
     // options: { tabsAttachMode: 'onSwitchToTab' },

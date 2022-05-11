@@ -5,13 +5,11 @@ import { Stack } from './Stack';
 import { BottomTabsLayout, Props, ReactComponent } from './types';
 
 export class BottomTabs extends Layout<BottomTabsLayout> {
-  static layoutIndex = 0;
-
   stacks: Stack[];
   order: string[];
 
   constructor(stacks: Record<string, Stack>, options?: Options) {
-    super(`BottomTabs${BottomTabs.layoutIndex++}`, options);
+    super(options);
 
     this.stacks = Object.values(stacks);
     this.order = Object.keys(stacks);

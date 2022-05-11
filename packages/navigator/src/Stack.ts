@@ -5,12 +5,10 @@ import { Layout } from './Layout';
 import { Props, ReactComponent, StackLayout } from './types';
 
 export class Stack extends Layout<StackLayout> {
-  static layoutIndex = 0;
-
   components: Component[];
 
   constructor(components: Record<string, Component>, options = {}) {
-    super(`Stack${Stack.layoutIndex++}`, options);
+    super(options);
 
     this.components = Object.values(components);
   }

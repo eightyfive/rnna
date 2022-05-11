@@ -59,7 +59,6 @@ export function createOverlay(
   options?: Options,
 ) {
   return new Overlay(
-    id,
     name,
     ScreenComponent,
     Object.assign({}, ScreenComponent.options, options),
@@ -67,13 +66,11 @@ export function createOverlay(
 }
 
 export function createComponent(
-  id: string,
   name: string,
   ScreenComponent: ScreenElement,
   options?: Options,
 ) {
   return new Component(
-    id,
     name,
     ScreenComponent,
     Object.assign({}, ScreenComponent.options, options),
@@ -87,9 +84,7 @@ function createComponents(
   const components: Record<string, Component> = {};
 
   Object.entries(routes).forEach(([name, ScreenComponent]) => {
-    const id = parentId ? `${parentId}/${name}` : name;
-
-    components[name] = createComponent(id, name, ScreenComponent);
+    components[name] = createComponent(name, ScreenComponent);
   });
 
   return components;

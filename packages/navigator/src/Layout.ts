@@ -2,11 +2,13 @@ import { Options } from 'react-native-navigation';
 import { Props, ReactComponent } from './types';
 
 export abstract class Layout<LayoutT, LayoutOptions = Options> {
+  static layoutIndex = 0;
+
   id: string;
   options: LayoutOptions | undefined;
 
-  constructor(id: string, options?: LayoutOptions) {
-    this.id = id;
+  constructor(options?: LayoutOptions) {
+    this.id = `${this.constructor.name}${++Layout.layoutIndex}`;
     this.options = options;
   }
 
