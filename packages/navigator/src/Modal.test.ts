@@ -35,6 +35,6 @@ describe('Modal', () => {
   test('dismiss', () => {
     app.dismiss();
 
-    expect(Navigation.dismissModal).toHaveBeenCalledWith(app.id);
+    expect(Navigation.dismissModal).toHaveBeenCalledWith('A-B-C-D');
   });
 });

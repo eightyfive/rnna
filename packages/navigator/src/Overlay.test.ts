@@ -26,6 +26,6 @@ describe('Overlay', () => {
   test('dismiss', () => {
     app.dismiss();
 
-    expect(Navigation.dismissOverlay).toHaveBeenCalledWith(app.id);
+    expect(Navigation.dismissOverlay).toHaveBeenCalledWith('A');
   });
 });
