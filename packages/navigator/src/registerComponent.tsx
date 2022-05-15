@@ -1,11 +1,11 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
 
-import { Props, ReactComponent, ScreenElement } from './types';
+import { Props, ReactComponent, ScreenComponent } from './types';
 
 export function registerComponent(
   name: string,
-  ScreenComponent: ScreenElement,
+  ScreenComponent: ScreenComponent,
   Provider?: ReactComponent,
 ) {
   if (Provider) {

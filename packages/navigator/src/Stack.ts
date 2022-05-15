@@ -1,16 +1,35 @@
-import { Navigation } from 'react-native-navigation';
+import { Navigation, Options, OptionsBottomTab } from 'react-native-navigation';
 
-import { Component } from './Component';
+import { Component, ComponentLayout } from './Component';
 import { Layout } from './Layout';
-import { Props, ReactComponent, StackLayout } from './types';
+import { Props } from './types';
 
-export class Stack extends Layout<StackLayout> {
+// Layout
+type StackChildLayout = {
+  component: ComponentLayout;
+};
+
+export type StackLayout = {
+  id: string;
+  children: StackChildLayout[];
+  options?: Options;
+};
+
+// Options
+export type StackOptions = OptionsBottomTab;
+
+export class Stack<OptionsT = StackOptions> extends Layout<
+  StackLayout,
+  OptionsT
+> {
   components: Component[];
 
-  constructor(components: Record<string, Component>, options = {}) {
-    super(options);
+  constructor(components: Component[], options?: OptionsT) {
+    const id = components.map(component => component.name).join('-');
 
-    this.components = Object.values(components);
+    super(id, options);
+
+    this.components = components;
   }
 
   getLayout(props?: Props) {
@@ -22,10 +41,16 @@ export class Stack extends Layout<StackLayout> {
     };
 
     if (this.options) {
-      layout.options = { ...this.options };
+      layout.options = this.getOptions(this.options);
     }
 
     return layout;
+  }
+
+  getOptions(options: OptionsT): Options {
+    return {
+      bottomTab: options,
+    };
   }
 
   getRoot(props?: Props) {
@@ -56,11 +81,13 @@ export class Stack extends Layout<StackLayout> {
     Navigation.pop(this.id);
   }
 
-  popTo(id: string) {
-    const componentTo = this.components.find(component => component.id === id);
+  popTo(name: string) {
+    const componentTo = this.components.find(
+      component => component.name === name,
+    );
 
     if (!componentTo) {
-      throw new Error(`Component not found (popTo): ${id}`);
+      throw new Error(`Component not found (popTo): ${name}`);
     }
 
     Navigation.popTo(componentTo.id);
@@ -68,11 +95,5 @@ export class Stack extends Layout<StackLayout> {
 
   popToRoot() {
     Navigation.popToRoot(this.id);
-  }
-
-  register(Provider?: ReactComponent) {
-    this.components.forEach(component => {
-      component.register(Provider);
-    });
   }
 }

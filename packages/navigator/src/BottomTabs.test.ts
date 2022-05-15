@@ -7,39 +7,40 @@ import {
   createStackLayout,
 } from './test-utils';
 import { BottomTabs } from './BottomTabs';
-import { Layout } from './Layout';
 
 let app: BottomTabs;
+
+const options = {
+  animate: true,
+  backgroundColor: 'red',
+};
 
 describe('BottomTabs', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    Layout.layoutIndex = 0;
-
     const stacks = createStacks();
 
-    app = new BottomTabs(stacks);
+    app = new BottomTabs(stacks, options);
+
     app.mount();
   });
 
   test('mount', () => {
-    expect(app.id).toBe('BottomTabs7');
+    expect(app.id).toBe('ab-cd');
 
     expect(Navigation.setRoot).toHaveBeenCalledWith({
       root: {
-        bottomTabs: createBottomTabsLayout('BottomTabs7', [
-          createStackLayout('Stack5', [
-            createComponentLayout('Component1', 'A', {
-              topBar: { title: { text: 'Title A' } },
-            }),
-          ]),
-          createStackLayout('Stack6', [
-            createComponentLayout('Component3', 'C', {
-              topBar: { title: { text: 'Title C' } },
-            }),
-          ]),
-        ]),
+        bottomTabs: createBottomTabsLayout(
+          'ab-cd',
+          [
+            createStackLayout('A-B', [createComponentLayout('A')]),
+            createStackLayout('C-D', [createComponentLayout('C')]),
+          ],
+          {
+            bottomTabs: options,
+          },
+        ),
       },
     });
   });
@@ -47,7 +48,7 @@ describe('BottomTabs', () => {
   test('select tab', () => {
     app.selectTab(1);
 
-    expect(Navigation.mergeOptions).toHaveBeenCalledWith('BottomTabs7', {
+    expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-cd', {
       bottomTabs: { currentTabIndex: 1 },
     });
   });

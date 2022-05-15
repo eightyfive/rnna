@@ -1,5 +1,3 @@
-import { FC } from 'react';
-
 import { BottomTabs } from './BottomTabs';
 import { Component } from './Component';
 import { Modal } from './Modal';
@@ -12,27 +10,11 @@ import {
 } from './index';
 import { Overlay } from './Overlay';
 
-function A() {
-  return null;
-}
-
-function B() {
-  return null;
-}
-
-function C() {
-  return null;
-}
-
-function D() {
-  return null;
-}
-
 // Bottom tabs
 test('createBottomTabs', () => {
   const app = createBottomTabs({
-    ab: { A, B },
-    cd: { C, D },
+    ab: createStack(['A', 'B']),
+    cd: createStack(['C', 'D']),
   });
 
   app.mount();
@@ -45,29 +27,27 @@ test('createBottomTabs', () => {
   const component = Array.from(stack.components.values())[0];
 
   expect(component).toBeInstanceOf(Component);
-  expect(component.id).toBe('Component1');
+  expect(component.id).toBe('A');
   expect(component.name).toBe('A');
 });
 
 // Modal
 test('createModal', () => {
-  const app = createModal({ A, B });
+  const app = createModal(['A', 'B']);
 
   expect(app).toBeInstanceOf(Modal);
 });
 
 // Stack
 test('createStack', () => {
-  const app = createStack({ A, B });
+  const app = createStack(['A', 'B']);
 
   expect(app).toBeInstanceOf(Stack);
 });
 
 // Overlay
-const Dialog: FC = () => null;
-
 test('createOverlay', () => {
-  const app = createOverlay('dialog1', 'Dialog', Dialog);
+  const app = createOverlay('A');
 
   expect(app).toBeInstanceOf(Overlay);
 });

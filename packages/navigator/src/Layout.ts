@@ -1,14 +1,12 @@
-import { Options } from 'react-native-navigation';
-import { Props, ReactComponent } from './types';
+import { Navigation, Options } from 'react-native-navigation';
+import { Props } from './types';
 
-export abstract class Layout<LayoutT, LayoutOptions = Options> {
-  static layoutIndex = 0;
-
+export abstract class Layout<LayoutT, OptionsT = Options> {
   id: string;
-  options: LayoutOptions | undefined;
+  options: OptionsT | undefined;
 
-  constructor(options?: LayoutOptions) {
-    this.id = `${this.constructor.name}${++Layout.layoutIndex}`;
+  constructor(id: string, options?: OptionsT) {
+    this.id = id;
     this.options = options;
   }
 
@@ -18,5 +16,9 @@ export abstract class Layout<LayoutT, LayoutOptions = Options> {
 
   abstract getRoot(props?: Props): Record<string, LayoutT>;
 
-  abstract register(Provider?: ReactComponent): void;
+  abstract getOptions(options: OptionsT): Options;
+
+  setOptions(options: OptionsT) {
+    Navigation.mergeOptions(this.id, this.getOptions(options));
+  }
 }

@@ -16,8 +16,6 @@ describe('Modal', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    Layout.layoutIndex = 0;
-
     const components = createComponents();
 
     app = new Modal(components);
@@ -25,16 +23,12 @@ describe('Modal', () => {
   });
 
   test('show', () => {
+    expect(app.id).toBe('A-B-C-D');
+
     app.show(props);
 
     expect(Navigation.showModal).toHaveBeenCalledWith({
-      stack: createStackLayout('Modal5', [
-        createComponentLayout('Component1', 'A', {
-          topBar: {
-            title: { text: 'Title A' },
-          },
-        }),
-      ]),
+      stack: createStackLayout('A-B-C-D', [createComponentLayout('A')]),
     });
   });
 

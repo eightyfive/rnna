@@ -1,17 +1,25 @@
 import { Navigation, Options } from 'react-native-navigation';
 import { Layout } from './Layout';
-import { registerComponent } from './registerComponent';
-import type { ComponentLayout, Props, ReactComponent, ScreenElement } from './types';
+import type { Props } from './types';
 
-export class Component extends Layout<ComponentLayout> {
+// Layout
+export type ComponentLayout = {
+  id: string;
   name: string;
-  ScreenComponent: ScreenElement;
+  options?: Options;
+  passProps?: object;
+};
 
-  constructor(name: string, ScreenComponent: ScreenElement, options?: Options) {
-    super(options);
+// Options
+export type ComponentOptions = Options;
 
+export class Component<OptionsT = ComponentOptions> extends Layout<ComponentLayout, OptionsT> {
+  name: string;
+
+  constructor(name: string, options?: OptionsT) {
+    super(name, options);
+    
     this.name = name;
-    this.ScreenComponent = ScreenComponent;
   }
 
   getLayout(props?: Props) {
@@ -21,14 +29,18 @@ export class Component extends Layout<ComponentLayout> {
     };
 
     if (this.options) {
-      layout.options = { ...this.options };
+      layout.options = this.getOptions(this.options);
     }
 
     if (props) {
-      layout.passProps = { ...props };
+      layout.passProps = props;
     }
 
     return layout;
+  }
+
+  getOptions(options: OptionsT): Options {
+    return options
   }
 
   getRoot(props?: Props) {
@@ -41,9 +53,5 @@ export class Component extends Layout<ComponentLayout> {
     Navigation.setRoot({
       root: this.getRoot(props),
     });
-  }
-
-  register(Provider?: ReactComponent) {
-    registerComponent(this.name, this.ScreenComponent, Provider);
   }
 }

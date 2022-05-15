@@ -17,13 +17,13 @@ type LayoutType = BottomTabs | Component | Modal | Overlay | Stack | Widget;
 type NavigatorType = Record<string, LayoutType>;
 
 type NavigatorOptions = {
-  Provider: ReactComponent;
-  routes: NavigatorType;
-  SplashScreen: ReactElement;
+  Provider: ReactComponent,
+  routes: NavigatorType,
+  SplashScreen: ReactElement,
 };
 
 type PartialServices = Record<string, any> & {
-  navigator: NavigatorType;
+  navigator: NavigatorType,
 };
 
 export class NavigatorBundle extends Bundle<NavigatorOptions> {
@@ -45,7 +45,7 @@ export class NavigatorBundle extends Bundle<NavigatorOptions> {
     services.navigator;
     registerRoutes(
       screens,
-      createProvider<StoreT>(store, this.options.Provider),
+      createProvider < StoreT > (store, this.options.Provider),
     );
   }
 }

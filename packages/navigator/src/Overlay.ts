@@ -1,9 +1,15 @@
-import { Navigation } from 'react-native-navigation';
+import { Navigation, Options, OverlayOptions } from 'react-native-navigation';
 
 import { Component } from './Component';
 import { Props } from './types';
 
-export class Overlay extends Component {
+export class Overlay extends Component<OverlayOptions> {
+  getOptions(options: OverlayOptions): Options {
+    return {
+      overlay: options,
+    };
+  }
+
   mount(props?: Props) {
     this.show(props);
   }

@@ -1,14 +1,17 @@
 import { Navigation } from 'react-native-navigation';
-
 import {
   createComponents,
   createComponentLayout,
   createStackLayout,
 } from './test-utils';
-import { Layout } from './Layout';
 import { Stack } from './Stack';
 
 let app: Stack;
+
+const options = {
+  iconColor: 'grey',
+  selectedIconColor: 'black',
+};
 
 const props = { foo: 'bar' };
 
@@ -16,28 +19,22 @@ describe('Stack', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    Layout.layoutIndex = 0;
-
     const components = createComponents();
 
-    app = new Stack(components);
+    app = new Stack(components, options);
     app.mount();
   });
 
   test('mount', () => {
-    expect(app.id).toBe('Stack5');
+    expect(app.id).toBe('A-B-C-D');
 
     expect(Navigation.push).not.toHaveBeenCalled();
 
     expect(Navigation.setRoot).toHaveBeenCalledWith({
       root: {
-        stack: createStackLayout('Stack5', [
-          createComponentLayout('Component1', 'A', {
-            topBar: {
-              title: { text: 'Title A' },
-            },
-          }),
-        ]),
+        stack: createStackLayout('A-B-C-D', [createComponentLayout('A')], {
+          bottomTab: options,
+        }),
       },
     });
   });
@@ -45,17 +42,8 @@ describe('Stack', () => {
   test('push', () => {
     app.push('B', props);
 
-    expect(Navigation.push).toHaveBeenCalledWith('Stack5', {
-      component: createComponentLayout(
-        'Component2',
-        'B',
-        {
-          topBar: {
-            title: { text: 'Title B' },
-          },
-        },
-        props,
-      ),
+    expect(Navigation.push).toHaveBeenCalledWith('A-B-C-D', {
+      component: createComponentLayout('B', undefined, props),
     });
   });
 
@@ -64,7 +52,7 @@ describe('Stack', () => {
     app.push('C', props);
     app.pop();
 
-    expect(Navigation.pop).toHaveBeenCalledWith('Stack5');
+    expect(Navigation.pop).toHaveBeenCalledWith('A-B-C-D');
   });
 
   test('popToRoot', () => {
@@ -72,6 +60,6 @@ describe('Stack', () => {
     app.push('C', props);
     app.popToRoot();
 
-    expect(Navigation.popToRoot).toHaveBeenCalledWith('Stack5');
+    expect(Navigation.popToRoot).toHaveBeenCalledWith('A-B-C-D');
   });
 });

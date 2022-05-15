@@ -1,18 +1,38 @@
-import { Navigation, Options } from 'react-native-navigation';
+import {
+  Navigation,
+  Options,
+  OptionsBottomTabs,
+} from 'react-native-navigation';
 
 import { Layout } from './Layout';
-import { Stack } from './Stack';
-import { BottomTabsLayout, Props, ReactComponent } from './types';
+import { Stack, StackLayout } from './Stack';
+import { Props } from './types';
 
-export class BottomTabs extends Layout<BottomTabsLayout> {
+// Layout
+type BottomTabsChildLayout = {
+  stack: StackLayout;
+};
+
+export type BottomTabsLayout = {
+  id: string;
+  children: BottomTabsChildLayout[];
+  options?: Options;
+};
+
+// Options
+export type BottomTabsOptions = OptionsBottomTabs;
+
+export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
   stacks: Stack[];
   order: string[];
 
-  constructor(stacks: Record<string, Stack>, options?: Options) {
-    super(options);
+  constructor(stacks: Record<string, Stack>, options?: BottomTabsOptions) {
+    const order = Object.keys(stacks);
+
+    super(order.join('-'), options);
 
     this.stacks = Object.values(stacks);
-    this.order = Object.keys(stacks);
+    this.order = order;
 
     // Tab loading
     // // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
@@ -21,13 +41,9 @@ export class BottomTabs extends Layout<BottomTabsLayout> {
   }
 
   getLayout(props?: Props) {
-    const children = this.stacks.map((stack, index) => {
-      if (index === 0) {
-        return stack.getRoot(props);
-      }
-
-      return stack.getRoot();
-    });
+    const children = this.stacks.map((stack, index) =>
+      stack.getRoot(index === 0 ? props : undefined),
+    );
 
     const layout: BottomTabsLayout = {
       id: this.id,
@@ -35,10 +51,16 @@ export class BottomTabs extends Layout<BottomTabsLayout> {
     };
 
     if (this.options) {
-      layout.options = { ...this.options };
+      layout.options = this.getOptions(this.options);
     }
 
     return layout;
+  }
+
+  getOptions(options: BottomTabsOptions): Options {
+    return {
+      bottomTabs: options,
+    };
   }
 
   getRoot(props?: Props) {
@@ -66,14 +88,6 @@ export class BottomTabs extends Layout<BottomTabsLayout> {
       index = indexOrName;
     }
 
-    Navigation.mergeOptions(this.id, {
-      bottomTabs: { currentTabIndex: index },
-    });
-  }
-
-  register(Provider?: ReactComponent) {
-    this.stacks.forEach(stack => {
-      stack.register(Provider);
-    });
+    this.setOptions({ currentTabIndex: index });
   }
 }
