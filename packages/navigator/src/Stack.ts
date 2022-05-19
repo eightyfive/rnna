@@ -65,7 +65,7 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     });
   }
 
-  push(name: string, props: Props) {
+  push(name: string, props?: Props) {
     const componentTo = this.components.find(
       component => component.name === name,
     );
