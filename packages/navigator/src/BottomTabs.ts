@@ -40,6 +40,16 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     //   this.options.bottomTabs?.tabsAttachMode || 'onSwitchToTab';
   }
 
+  get(name: string) {
+    const index = this.order.indexOf(name);
+
+    if (this.stacks[index]) {
+      return this.stacks[index];
+    }
+
+    throw new Error(`Tab not found: ${name}`);
+  }
+
   getLayout(props?: Props) {
     const children = this.stacks.map((stack, index) =>
       stack.getRoot(index === 0 ? props : undefined),
