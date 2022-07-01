@@ -15,7 +15,7 @@ export type ModalOptions = OptionsModal & {
 };
 
 export class Modal extends Stack<ModalOptions> {
-  getOptions(options: ModalOptions): Options {
+  protected getOptions(options: ModalOptions): Options {
     const { transitionStyle, presentationStyle, ...modal } = options;
 
     return {
@@ -25,15 +25,15 @@ export class Modal extends Stack<ModalOptions> {
     };
   }
 
-  mount(props?: Props) {
+  public mount(props?: Props) {
     this.show(props);
   }
 
-  show(props?: Props) {
+  public show(props?: Props) {
     Navigation.showModal(this.getRoot(props));
   }
 
-  dismiss() {
+  public dismiss() {
     Navigation.dismissModal(this.id);
   }
 }

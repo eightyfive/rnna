@@ -19,7 +19,7 @@ describe('Overlay', () => {
     app.show(props);
 
     expect(Navigation.showOverlay).toHaveBeenCalledWith({
-      component: createComponentLayout('A'),
+      component: createComponentLayout('A', undefined, props),
     });
   });
 

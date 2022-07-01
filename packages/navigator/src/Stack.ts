@@ -32,7 +32,13 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     this.components = components;
   }
 
-  getLayout(props?: Props) {
+  protected getOptions(options: OptionsT): Options {
+    return {
+      bottomTab: options,
+    };
+  }
+
+  public getLayout(props?: Props) {
     const component = Array.from(this.components).shift();
 
     const layout: StackLayout = {
@@ -47,25 +53,19 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     return layout;
   }
 
-  getOptions(options: OptionsT): Options {
-    return {
-      bottomTab: options,
-    };
-  }
-
-  getRoot(props?: Props) {
+  public getRoot(props?: Props) {
     return {
       stack: this.getLayout(props),
     };
   }
 
-  mount(props?: Props) {
+  public mount(props?: Props) {
     Navigation.setRoot({
       root: this.getRoot(props),
     });
   }
 
-  push(name: string, props?: Props) {
+  public push(name: string, props?: Props) {
     const componentTo = this.components.find(
       component => component.name === name,
     );
@@ -77,11 +77,11 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     Navigation.push(this.id, componentTo.getRoot(props));
   }
 
-  pop() {
+  public pop() {
     Navigation.pop(this.id);
   }
 
-  popTo(name: string) {
+  public popTo(name: string) {
     const componentTo = this.components.find(
       component => component.name === name,
     );
@@ -93,7 +93,7 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     Navigation.popTo(componentTo.id);
   }
 
-  popToRoot() {
+  public popToRoot() {
     Navigation.popToRoot(this.id);
   }
 }

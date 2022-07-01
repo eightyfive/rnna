@@ -5,7 +5,6 @@ import {
   createComponentLayout,
   createStackLayout,
 } from './test-utils';
-import { Layout } from './Layout';
 import { Modal } from './Modal';
 
 let app: Modal;
@@ -19,7 +18,6 @@ describe('Modal', () => {
     const components = createComponents();
 
     app = new Modal(components);
-    app.mount();
   });
 
   test('show', () => {
@@ -28,7 +26,9 @@ describe('Modal', () => {
     app.show(props);
 
     expect(Navigation.showModal).toHaveBeenCalledWith({
-      stack: createStackLayout('A-B-C-D', [createComponentLayout('A')]),
+      stack: createStackLayout('A-B-C-D', [
+        createComponentLayout('A', undefined, props),
+      ]),
     });
   });
 

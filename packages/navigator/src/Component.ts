@@ -22,7 +22,11 @@ export class Component<OptionsT = ComponentOptions> extends Layout<ComponentLayo
     this.name = name;
   }
 
-  getLayout(props?: Props) {
+  protected getOptions(options: OptionsT): Options {
+    return options
+  }
+
+  public getLayout(props?: Props) {
     const layout: ComponentLayout = {
       id: this.id,
       name: this.name,
@@ -39,17 +43,13 @@ export class Component<OptionsT = ComponentOptions> extends Layout<ComponentLayo
     return layout;
   }
 
-  getOptions(options: OptionsT): Options {
-    return options
-  }
-
-  getRoot(props?: Props) {
+  public getRoot(props?: Props) {
     return {
       component: this.getLayout(props),
     };
   }
 
-  mount(props?: Props) {
+  public mount(props?: Props) {
     Navigation.setRoot({
       root: this.getRoot(props),
     });

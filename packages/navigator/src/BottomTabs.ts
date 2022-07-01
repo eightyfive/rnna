@@ -40,7 +40,21 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     //   this.options.bottomTabs?.tabsAttachMode || 'onSwitchToTab';
   }
 
-  protected getLayout(props?: Props) {
+  protected getOptions(options: BottomTabsOptions): Options {
+    return {
+      bottomTabs: options,
+    };
+  }
+
+  private getIndex(indexOrName: number | string) {
+    if (typeof indexOrName === 'string') {
+      return this.order.indexOf(indexOrName);
+    }
+
+    return indexOrName < this.order.length ? indexOrName : -1;
+  }
+
+  public getLayout(props?: Props) {
     const children = this.stacks.map((stack, index) =>
       stack.getRoot(index === 0 ? props : undefined),
     );
@@ -57,24 +71,10 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     return layout;
   }
 
-  protected getOptions(options: BottomTabsOptions): Options {
-    return {
-      bottomTabs: options,
-    };
-  }
-
-  protected getRoot(props?: Props) {
+  public getRoot(props?: Props) {
     return {
       bottomTabs: this.getLayout(props),
     };
-  }
-
-  private getIndex(indexOrName: number | string) {
-    if (typeof indexOrName === 'string') {
-      return this.order.indexOf(indexOrName);
-    }
-
-    return indexOrName < this.order.length ? indexOrName : -1;
   }
 
   public mount(props?: Props) {

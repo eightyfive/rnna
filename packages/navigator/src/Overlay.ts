@@ -4,14 +4,10 @@ import { Component } from './Component';
 import { Props } from './types';
 
 export class Overlay extends Component<OverlayOptions> {
-  getOptions(options: OverlayOptions): Options {
+  protected getOptions(options: OverlayOptions): Options {
     return {
       overlay: options,
     };
-  }
-
-  mount(props?: Props) {
-    this.show(props);
   }
 
   show(props?: Props) {
