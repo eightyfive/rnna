@@ -12,4 +12,8 @@ module.exports = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js'],
+
+  transformIgnorePatterns: [
+    'packages/rnna/node_modules/(?!(react-native-col)/)',
+  ],
 };

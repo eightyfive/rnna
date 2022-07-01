@@ -19,7 +19,7 @@ lodash.mapvalues@^4.6.0:
   resolved "https://registry.yarnpkg.com/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz#1bafa5005de9dd6f4f26668c30ca37230cc9689c"
   integrity sha512-JPFqXFeZQ7BfS00H58kClY7SPVeHertPE0lNuCyZ26/XlN8TvakYD7b9bGyNmXbT/D3BbtPAAmq90gPWqLkxlQ==
 
-react-native-col@2.0.0-4:
-  version "2.0.0-4"
-  resolved "https://registry.yarnpkg.com/react-native-col/-/react-native-col-2.0.0-4.tgz#b2551ca0d144a79cccce7418f8f70ef24ed8eb84"
-  integrity sha512-w7OA7QcP3LP5HhkVEWCgkf6Vp1hGGy32Rl8iwBLAn+adjOuq4P9ynbx/GuXCdxOVNtFNJJF9xaM5+I1mCM/VRQ==
+react-native-col@next:
+  version "2.0.0-5"
+  resolved "https://registry.yarnpkg.com/react-native-col/-/react-native-col-2.0.0-5.tgz#8723e81d684ad18f33f254eddc59f9e15004804a"
+  integrity sha512-pld0/6BIQVuuYZRhgjTtp6NigzoSYQKqwGM6nGDflw+XOoSfm8pcIiFb96PeV/QU1tdHLC6EyxgpJTLNLQ+NEw==

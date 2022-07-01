@@ -27,10 +27,15 @@ test('createStyles', () => {
       px: 's',
       my: 'm',
       marginLeft: 30,
+      col: 5,
+    },
+    row: {
+      mt: 'l',
+      row: 8,
     },
     text: {
-      backgroundColor: 'primary',
-      color: 'onPrimary',
+      backgroundColor: 'accent',
+      color: 'onAccent',
       mb: 'l',
     },
     error: {
@@ -39,16 +44,32 @@ test('createStyles', () => {
     },
   });
 
-  expect(styles.box).toHaveProperty('backgroundColor', colors.primary);
-  expect(styles.box).toHaveProperty('borderColor', colors.accent);
-  expect(styles.box).toHaveProperty('paddingHorizontal', sizes.s);
-  expect(styles.box).toHaveProperty('marginVertical', sizes.m);
-  expect(styles.box).toHaveProperty('marginLeft', 30);
+  expect(styles.box).toEqual({
+    backgroundColor: colors.primary,
+    borderColor: colors.accent,
+    paddingHorizontal: sizes.s,
+    marginVertical: sizes.m,
+    marginLeft: 30,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  });
 
-  expect(styles.text).toHaveProperty('backgroundColor', colors.primary);
-  expect(styles.text).toHaveProperty('color', colors.onPrimary);
-  expect(styles.text).toHaveProperty('marginBottom', sizes.l);
+  expect(styles.row).toEqual({
+    marginTop: sizes.l,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  });
 
-  expect(styles.error).toHaveProperty('backgroundColor', colors.negative);
-  expect(styles.error).toHaveProperty('color', colors.positive);
+  expect(styles.text).toEqual({
+    backgroundColor: colors.accent,
+    color: colors.onAccent,
+    marginBottom: sizes.l,
+  });
+
+  expect(styles.error).toEqual({
+    backgroundColor: colors.negative,
+    color: colors.positive,
+  });
 });

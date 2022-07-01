@@ -5,6 +5,7 @@ import {
   TextStyle as RNTextStyle,
   ViewStyle as RNViewStyle,
 } from 'react-native';
+import { createDialStyle, Dial } from 'react-native-col';
 import _mapValues from 'lodash.mapvalues';
 
 type ThemeT = {
@@ -141,12 +142,17 @@ export function createTheme<TT extends ThemeT>({
             ) {
               const color = colors[value as keyof typeof colors];
 
-              if (!color && __DEV__) {
-                console.warn(`Color not found: ${color}`);
-              }
+              if (color) {
+                // @ts-ignore
+                result[key] = color;
+              } else {
+                // @ts-ignore
+                result[key] = value as ColorValue;
 
-              // @ts-ignore
-              result[key] = color || (value as ColorValue);
+                if (__DEV__) {
+                  console.warn(`Color not found: ${color}`);
+                }
+              }
             } else if (key in spacingShorthands) {
               const rnSpacingProperty =
                 spacingShorthands[key as SpacingProperty];
@@ -156,11 +162,27 @@ export function createTheme<TT extends ThemeT>({
               } else {
                 const size = sizes[value as keyof typeof sizes];
 
-                if (!size && __DEV__) {
-                  console.warn(`Size not found: ${value}`);
-                }
+                if (size) {
+                  result[rnSpacingProperty] = size;
+                } else {
+                  result[rnSpacingProperty] = value as string | number;
 
-                result[rnSpacingProperty] = size || (value as string | number);
+                  if (__DEV__) {
+                    console.warn(`Size not found: ${value}`);
+                  }
+                }
+              }
+            } else if (key === 'col' || key === 'row') {
+              if (typeof value === 'number' && (value >= 1 || value <= 9)) {
+                Object.assign(
+                  result,
+                  createDialStyle(
+                    key === 'col' ? 'column' : 'row',
+                    value as Dial,
+                  ),
+                );
+              } else if (__DEV__) {
+                console.warn(`Flex value invalid: ${key} ${value}`);
               }
             } else {
               // @ts-ignore
