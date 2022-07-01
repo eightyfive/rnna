@@ -10,11 +10,15 @@ export class Overlay extends Component<OverlayOptions> {
     };
   }
 
-  show(props?: Props) {
+  public mount(props?: Props) {
+    this.show(props);
+  }
+
+  public show(props?: Props) {
     Navigation.showOverlay(this.getRoot(props));
   }
 
-  dismiss() {
+  public dismiss() {
     Navigation.dismissOverlay(this.id);
   }
 }
