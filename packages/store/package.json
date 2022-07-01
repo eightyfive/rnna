@@ -25,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/eightyfive/rnna/tree/master/packages/rnna"
   },
-  "author": "Benoit Sagols",
+  "author": "eightyfive",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

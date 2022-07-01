@@ -19,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/eightyfive/rnna/tree/master/packages/bundle-navigator"
   },
-  "author": "Benoit Sagols",
+  "author": "eightyfive",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

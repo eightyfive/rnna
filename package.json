@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com/eightyfive/rnna.git"
   },
-  "author": "Benoit Sagols",
+  "author": "eightyfive",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/eightyfive/rnna/issues"
