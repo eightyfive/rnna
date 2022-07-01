@@ -5,8 +5,6 @@ import { Overlay } from './Overlay';
 import { Stack, StackOptions } from './Stack';
 import { ReactComponent } from './types';
 import { Navigator } from './Navigator';
-export { NavigatorProvider } from './NavigatorContext';
-export { useNavigator } from './useNavigator';
 
 export function createBottomTabs(
   stacks: Record<string, Stack>,
