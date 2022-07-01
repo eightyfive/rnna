@@ -10,13 +10,13 @@ export abstract class Layout<LayoutT, OptionsT = Options> {
     this.options = options;
   }
 
-  abstract mount(props?: Props): void;
+  public abstract mount(props?: Props): void;
 
-  abstract getLayout(props?: Props): LayoutT;
+  protected abstract getLayout(props?: Props): LayoutT;
 
-  abstract getRoot(props?: Props): Record<string, LayoutT>;
+  protected abstract getRoot(props?: Props): Record<string, LayoutT>;
 
-  abstract getOptions(options: OptionsT): Options;
+  protected abstract getOptions(options: OptionsT): Options;
 
   setOptions(options: OptionsT) {
     Navigation.mergeOptions(this.id, this.getOptions(options));

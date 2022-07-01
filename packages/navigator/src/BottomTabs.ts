@@ -40,17 +40,7 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     //   this.options.bottomTabs?.tabsAttachMode || 'onSwitchToTab';
   }
 
-  get(identifier: string | number) {
-    const index = this.getIndex(identifier);
-
-    if (index !== -1) {
-      return this.stacks[index];
-    }
-
-    throw new Error(`Tab not found: ${identifier}`);
-  }
-
-  getLayout(props?: Props) {
+  protected getLayout(props?: Props) {
     const children = this.stacks.map((stack, index) =>
       stack.getRoot(index === 0 ? props : undefined),
     );
@@ -67,32 +57,16 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     return layout;
   }
 
-  getOptions(options: BottomTabsOptions): Options {
+  protected getOptions(options: BottomTabsOptions): Options {
     return {
       bottomTabs: options,
     };
   }
 
-  getRoot(props?: Props) {
+  protected getRoot(props?: Props) {
     return {
       bottomTabs: this.getLayout(props),
     };
-  }
-
-  mount(props?: Props) {
-    Navigation.setRoot({
-      root: this.getRoot(props),
-    });
-  }
-
-  select(identifier: string | number) {
-    const index = this.getIndex(identifier);
-
-    if (index === -1) {
-      throw new Error(`Tab not found: ${identifier}`);
-    }
-
-    this.setOptions({ currentTabIndex: index });
   }
 
   private getIndex(indexOrName: number | string) {
@@ -101,5 +75,31 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     }
 
     return indexOrName < this.order.length ? indexOrName : -1;
+  }
+
+  public mount(props?: Props) {
+    Navigation.setRoot({
+      root: this.getRoot(props),
+    });
+  }
+
+  public get(identifier: string | number) {
+    const index = this.getIndex(identifier);
+
+    if (index !== -1) {
+      return this.stacks[index];
+    }
+
+    throw new Error(`Tab not found: ${identifier}`);
+  }
+
+  public select(identifier: string | number) {
+    const index = this.getIndex(identifier);
+
+    if (index === -1) {
+      throw new Error(`Tab not found: ${identifier}`);
+    }
+
+    this.setOptions({ currentTabIndex: index });
   }
 }
