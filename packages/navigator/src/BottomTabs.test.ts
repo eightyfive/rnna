@@ -46,7 +46,7 @@ describe('BottomTabs', () => {
   });
 
   test('select tab', () => {
-    app.selectTab(1);
+    app.select(1);
 
     expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-cd', {
       bottomTabs: { currentTabIndex: 1 },
