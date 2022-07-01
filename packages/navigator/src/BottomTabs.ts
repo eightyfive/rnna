@@ -85,7 +85,7 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     });
   }
 
-  selectTab(indexOrName: string | number) {
+  select(indexOrName: string | number) {
     let index;
 
     if (typeof indexOrName === 'string') {
