@@ -1,7 +1,7 @@
 {
   "name": "rnna",
   "version": "0.6.18",
-  "description": "React Native Navigation App (RNNA)",
+  "description": "react-native-navigation application (rnna)",
   "keywords": [
     "rnna",
     "react-native"
