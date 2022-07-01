@@ -38,6 +38,14 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     };
   }
 
+  private getIndex(indexOrName: number | string) {
+    if (typeof indexOrName === 'string') {
+      return this.components.findIndex(({ name }) => name === indexOrName);
+    }
+
+    return indexOrName < this.components.length ? indexOrName : -1;
+  }
+
   public getLayout(props?: Props) {
     const component = Array.from(this.components).shift();
 
@@ -66,13 +74,13 @@ export class Stack<OptionsT = StackOptions> extends Layout<
   }
 
   public push(name: string, props?: Props) {
-    const componentTo = this.components.find(
-      component => component.name === name,
-    );
+    const index = this.getIndex(name);
 
-    if (!componentTo) {
+    if (index === -1) {
       throw new Error(`Component not found (push): ${name}`);
     }
+
+    const componentTo = this.components[index];
 
     Navigation.push(this.id, componentTo.getRoot(props));
   }
@@ -82,18 +90,28 @@ export class Stack<OptionsT = StackOptions> extends Layout<
   }
 
   public popTo(name: string) {
-    const componentTo = this.components.find(
-      component => component.name === name,
-    );
+    const index = this.getIndex(name);
 
-    if (!componentTo) {
+    if (index === -1) {
       throw new Error(`Component not found (popTo): ${name}`);
     }
+
+    const componentTo = this.components[index];
 
     Navigation.popTo(componentTo.id);
   }
 
   public popToRoot() {
     Navigation.popToRoot(this.id);
+  }
+
+  public get(identifier: string | number) {
+    const index = this.getIndex(identifier);
+
+    if (index !== -1) {
+      return this.components[index];
+    }
+
+    throw new Error(`Component not found: ${identifier}`);
   }
 }

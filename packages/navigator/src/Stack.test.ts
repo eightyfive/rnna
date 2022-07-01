@@ -62,4 +62,16 @@ describe('Stack', () => {
 
     expect(Navigation.popToRoot).toHaveBeenCalledWith('A-B-C-D');
   });
+
+  test('get(1)', () => {
+    const component = app.get(1);
+
+    expect(component.id).toBe('B');
+  });
+
+  test("get('C')", () => {
+    const component = app.get('C');
+
+    expect(component.id).toBe('C');
+  });
 });

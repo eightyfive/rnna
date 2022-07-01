@@ -45,10 +45,16 @@ describe('BottomTabs', () => {
     });
   });
 
-  test('get tab', () => {
+  test('get tab(1)', () => {
     const stack = app.get(1);
 
     expect(stack.id).toBe('C-D');
+  });
+
+  test("get tab('ab')", () => {
+    const stack = app.get('ab');
+
+    expect(stack.id).toBe('A-B');
   });
 
   test('select tab(1)', () => {
