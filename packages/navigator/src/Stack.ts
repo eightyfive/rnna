@@ -114,4 +114,16 @@ export class Stack<OptionsT = StackOptions> extends Layout<
 
     throw new Error(`Component not found: ${identifier}`);
   }
+
+  public setTitle(identifier: string | number, title: string) {
+    const component = this.get(identifier);
+
+    component.setOptions({
+      topBar: {
+        title: {
+          text: title,
+        },
+      },
+    });
+  }
 }

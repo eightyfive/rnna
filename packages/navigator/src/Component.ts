@@ -1,6 +1,6 @@
 import { Navigation, Options } from 'react-native-navigation';
 import { Layout } from './Layout';
-import type { Props } from './types';
+import { Props } from './types';
 
 // Layout
 export type ComponentLayout = {
@@ -13,17 +13,20 @@ export type ComponentLayout = {
 // Options
 export type ComponentOptions = Options;
 
-export class Component<OptionsT = ComponentOptions> extends Layout<ComponentLayout, OptionsT> {
+export class Component<OptionsT = ComponentOptions> extends Layout<
+  ComponentLayout,
+  OptionsT
+> {
   name: string;
 
   constructor(name: string, options?: OptionsT) {
     super(name, options);
-    
+
     this.name = name;
   }
 
   protected getOptions(options: OptionsT): Options {
-    return options
+    return options;
   }
 
   public getLayout(props?: Props) {
