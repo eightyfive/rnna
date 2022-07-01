@@ -1,9 +1,15 @@
-// const { defaults } = require('jest-config');
+// https://kulshekhar.github.io/ts-jest/docs/guides/react-native/
 
 module.exports = {
-  preset: 'ts-jest',
-  transformIgnorePatterns: ['node_modules/(?!(fetch-run|@rnna/navigator)/)'],
+  preset: 'react-native',
   setupFiles: ['./jest.setup.js'],
-
-  // moduleFileExtensions: [...defaults.moduleFileExtensions, 'native.js'],
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.test.json',
+    },
+  },
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  },
+  moduleFileExtensions: ['ts', 'tsx', 'js'],
 };
