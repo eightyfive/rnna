@@ -40,14 +40,14 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     //   this.options.bottomTabs?.tabsAttachMode || 'onSwitchToTab';
   }
 
-  get(name: string) {
-    const index = this.order.indexOf(name);
+  get(identifier: string | number) {
+    const index = this.getIndex(identifier);
 
-    if (this.stacks[index]) {
+    if (index !== -1) {
       return this.stacks[index];
     }
 
-    throw new Error(`Tab not found: ${name}`);
+    throw new Error(`Tab not found: ${identifier}`);
   }
 
   getLayout(props?: Props) {
@@ -85,19 +85,21 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     });
   }
 
-  select(indexOrName: string | number) {
-    let index;
+  select(identifier: string | number) {
+    const index = this.getIndex(identifier);
 
-    if (typeof indexOrName === 'string') {
-      index = this.order.indexOf(indexOrName);
-
-      if (index === -1) {
-        throw new Error(`Tab not found: ${indexOrName}`);
-      }
-    } else {
-      index = indexOrName;
+    if (index === -1) {
+      throw new Error(`Tab not found: ${identifier}`);
     }
 
     this.setOptions({ currentTabIndex: index });
+  }
+
+  private getIndex(indexOrName: number | string) {
+    if (typeof indexOrName === 'string') {
+      return this.order.indexOf(indexOrName);
+    }
+
+    return indexOrName < this.order.length ? indexOrName : -1;
   }
 }

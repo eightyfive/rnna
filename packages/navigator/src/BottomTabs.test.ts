@@ -45,11 +45,25 @@ describe('BottomTabs', () => {
     });
   });
 
-  test('select tab', () => {
+  test('get tab', () => {
+    const stack = app.get(1);
+
+    expect(stack.id).toBe('C-D');
+  });
+
+  test('select tab(1)', () => {
     app.select(1);
 
     expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-cd', {
       bottomTabs: { currentTabIndex: 1 },
+    });
+  });
+
+  test("select tab('ab')", () => {
+    app.select('ab');
+
+    expect(Navigation.mergeOptions).toHaveBeenCalledWith('ab-cd', {
+      bottomTabs: { currentTabIndex: 0 },
     });
   });
 });
