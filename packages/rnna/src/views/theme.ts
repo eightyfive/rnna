@@ -10,7 +10,6 @@ import _mapValues from 'lodash.mapvalues';
 
 type ThemeT = {
   colors: Record<string, ColorValue>;
-  roundness: number;
   sizes: Record<string, number>;
 };
 
@@ -90,9 +89,10 @@ type FlexStyle = {
 interface ViewStyle<S extends Sizes, C extends Colors>
   extends FlexStyle,
     SpacingStyle<S>,
-    Omit<RNViewStyle, 'backgroundColor' | 'borderColor'> {
+    Omit<RNViewStyle, 'backgroundColor' | 'borderColor' | 'borderRadius'> {
   backgroundColor?: keyof C;
   borderColor?: keyof C;
+  borderRadius?: keyof S;
 }
 
 interface TextStyle<S extends Sizes, C extends Colors>
@@ -123,14 +123,9 @@ type NamedStyles<S extends Sizes, C extends Colors, T> = {
   [P in keyof T]: Style<S, C>;
 };
 
-export function createTheme<TT extends ThemeT>({
-  colors,
-  roundness,
-  sizes,
-}: TT) {
+export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
   return {
     colors,
-    roundness,
     sizes,
     //
     createStyles<
@@ -162,7 +157,19 @@ export function createTheme<TT extends ThemeT>({
                 result[key] = value as ColorValue;
 
                 if (__DEV__) {
-                  console.warn(`Color not found: ${color}`);
+                  console.warn(`Color not found: ${key} (${color})`);
+                }
+              }
+            } else if (key === 'borderRadius') {
+              const size = sizes[value as keyof typeof sizes];
+
+              if (size) {
+                result.borderRadius = size;
+              } else {
+                result.borderRadius = value as number;
+
+                if (__DEV__) {
+                  console.warn(`Size not found: ${key} (${value})`);
                 }
               }
             } else if (key in spacingShorthands) {
@@ -180,7 +187,7 @@ export function createTheme<TT extends ThemeT>({
                   result[rnSpacingProperty] = value as string | number;
 
                   if (__DEV__) {
-                    console.warn(`Size not found: ${value}`);
+                    console.warn(`Size not found: ${key} (${value})`);
                   }
                 }
               }
@@ -194,7 +201,7 @@ export function createTheme<TT extends ThemeT>({
                   ),
                 );
               } else if (__DEV__) {
-                console.warn(`Flex value invalid: ${key} ${value}`);
+                console.warn(`Flex value invalid: ${key} (${value})`);
               }
             } else {
               // @ts-ignore

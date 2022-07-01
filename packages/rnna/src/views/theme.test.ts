@@ -10,11 +10,11 @@ const { colors, createStyles, sizes } = createTheme({
     onPrimary: 'white',
     onAccent: 'black',
   },
-  roundness: 10,
   sizes: {
     s: 4,
     m: 8,
     l: 16,
+    roundness: 10,
   },
 });
 
@@ -32,6 +32,7 @@ test('createStyles', () => {
     row: {
       mt: 'l',
       row: 8,
+      borderRadius: 'roundness',
     },
     text: {
       backgroundColor: 'accent',
@@ -60,6 +61,7 @@ test('createStyles', () => {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-end',
+    borderRadius: sizes.roundness,
   });
 
   expect(styles.text).toEqual({
