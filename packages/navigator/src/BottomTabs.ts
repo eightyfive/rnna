@@ -33,11 +33,6 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
 
     this.stacks = Object.values(stacks);
     this.order = order;
-
-    // Tab loading
-    // // https://wix.github.io/react-native-navigation/docs/bottomTabs#controlling-tab-loading
-    // this.options.bottomTabs?.tabsAttachMode =
-    //   this.options.bottomTabs?.tabsAttachMode || 'onSwitchToTab';
   }
 
   protected getOptions(options: BottomTabsOptions): Options {
@@ -46,12 +41,14 @@ export class BottomTabs extends Layout<BottomTabsLayout, BottomTabsOptions> {
     };
   }
 
-  private getIndex(indexOrName: number | string) {
-    if (typeof indexOrName === 'string') {
-      return this.order.indexOf(indexOrName);
+  private getIndex(identifier: number | string) {
+    if (typeof identifier === 'string') {
+      // Name
+      return this.order.indexOf(identifier);
     }
 
-    return indexOrName < this.order.length ? indexOrName : -1;
+    // Index
+    return identifier < this.order.length ? identifier : -1;
   }
 
   public getLayout(props?: Props) {

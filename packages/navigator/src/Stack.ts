@@ -25,7 +25,7 @@ export class Stack<OptionsT = StackOptions> extends Layout<
   components: Component[];
 
   constructor(components: Component[], options?: OptionsT) {
-    const id = components.map(component => component.name).join('-');
+    const id = components.map(({ name }) => name).join('-');
 
     super(id, options);
 
@@ -38,12 +38,14 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     };
   }
 
-  private getIndex(indexOrName: number | string) {
-    if (typeof indexOrName === 'string') {
-      return this.components.findIndex(({ name }) => name === indexOrName);
+  private getIndex(identifier: number | string) {
+    if (typeof identifier === 'string') {
+      // Name
+      return this.components.findIndex(({ name }) => name === identifier);
     }
 
-    return indexOrName < this.components.length ? indexOrName : -1;
+    // Index
+    return identifier < this.components.length ? identifier : -1;
   }
 
   public getLayout(props?: Props) {
@@ -73,11 +75,11 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     });
   }
 
-  public push(name: string, props?: Props) {
-    const index = this.getIndex(name);
+  public push(identifier: string | number, props?: Props) {
+    const index = this.getIndex(identifier);
 
     if (index === -1) {
-      throw new Error(`Component not found (push): ${name}`);
+      throw new Error(`Component not found (push): ${identifier}`);
     }
 
     const componentTo = this.components[index];
@@ -89,11 +91,11 @@ export class Stack<OptionsT = StackOptions> extends Layout<
     Navigation.pop(this.id);
   }
 
-  public popTo(name: string) {
-    const index = this.getIndex(name);
+  public popTo(identifier: string | number) {
+    const index = this.getIndex(identifier);
 
     if (index === -1) {
-      throw new Error(`Component not found (popTo): ${name}`);
+      throw new Error(`Component not found (popTo): ${identifier}`);
     }
 
     const componentTo = this.components[index];
