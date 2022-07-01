@@ -160,7 +160,8 @@ export function createTheme<TT extends ThemeT>({
                   console.warn(`Size not found: ${value}`);
                 }
 
-                result[rnSpacingProperty] = size;
+                result[rnSpacingProperty] =
+                  size || (value as string | number | undefined);
               }
             } else {
               // @ts-ignore
