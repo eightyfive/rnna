@@ -4,17 +4,19 @@
   "description": "react-native-navigation application (rnna)",
   "keywords": [
     "rnna",
-    "react-native"
+    "react-native",
+    "react-native-navigation",
+    "wix"
   ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json"
+  },
   "dependencies": {
-    "lodash.memoize": "4.x",
-    "react-native-col": "1.x",
-    "react-native-spacing": "0.x",
-    "react-native-textography": "0.x",
-    "redux": "4.x",
-    "redux-devtools-extension": "2.x",
-    "redux-observable": "1.x",
-    "rxjs": "6.x"
+    "lodash.mapvalues": "^4.6.0",
+    "react-native-col": "2.0.0-4"
+  },
+  "devDependencies": {
+    "@types/lodash.mapvalues": "^4.6.7"
   },
   "peerDependencies": {
     "react-native": "*"
