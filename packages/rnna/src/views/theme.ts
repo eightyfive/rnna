@@ -22,13 +22,17 @@ type SpacingProperty =
   | 'ml'
   | 'my'
   | 'mx'
+  | 'ms'
+  | 'me'
   | 'p'
   | 'pt'
   | 'pr'
   | 'pb'
   | 'pl'
   | 'py'
-  | 'px';
+  | 'px'
+  | 'ps'
+  | 'pe';
 
 type RNSpacingProperty =
   | 'margin'
@@ -38,13 +42,17 @@ type RNSpacingProperty =
   | 'marginLeft'
   | 'marginVertical'
   | 'marginHorizontal'
+  | 'marginStart'
+  | 'marginEnd'
   | 'padding'
   | 'paddingTop'
   | 'paddingRight'
   | 'paddingBottom'
   | 'paddingLeft'
   | 'paddingVertical'
-  | 'paddingHorizontal';
+  | 'paddingHorizontal'
+  | 'paddingStart'
+  | 'paddingEnd';
 
 const spacingShorthands: Record<SpacingProperty, RNSpacingProperty> = {
   m: 'margin',
@@ -54,6 +62,8 @@ const spacingShorthands: Record<SpacingProperty, RNSpacingProperty> = {
   ml: 'marginLeft',
   my: 'marginVertical',
   mx: 'marginHorizontal',
+  ms: 'marginStart',
+  me: 'marginEnd',
   //
   p: 'padding',
   pt: 'paddingTop',
@@ -62,6 +72,8 @@ const spacingShorthands: Record<SpacingProperty, RNSpacingProperty> = {
   pl: 'paddingLeft',
   py: 'paddingVertical',
   px: 'paddingHorizontal',
+  ps: 'paddingStart',
+  pe: 'paddingEnd',
 };
 
 type Colors = Record<string, ColorValue>;
