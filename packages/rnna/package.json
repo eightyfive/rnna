@@ -15,9 +15,11 @@
     "@rnna/navigator": "^1.0.0",
     "fetch-run": "^2.1.1",
     "react-native-col": "^2.0.1",
-    "react-native-themesheet": "^0.0.1"
+    "react-native-themesheet": "^0.0.1",
+    "zustand": "^4.0.0-rc.1"
   },
   "peerDependencies": {
+    "@react-native-async-storage/async-storage": "*",
     "react-native": "*",
     "react-native-navigation": "*"
   },
