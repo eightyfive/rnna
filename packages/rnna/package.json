@@ -12,6 +12,7 @@
     "build": "tsc --project tsconfig.build.json"
   },
   "dependencies": {
+    "@rnna/navigator": "^1.0.0",
     "fetch-run": "^2.1.1",
     "react-native-col": "^2.0.1",
     "react-native-themesheet": "^0.0.1"
