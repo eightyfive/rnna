@@ -18,7 +18,8 @@
     "react-native-themesheet": "^0.0.1"
   },
   "peerDependencies": {
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-navigation": "*"
   },
   "repository": {
     "type": "git",
