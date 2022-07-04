@@ -12,6 +12,7 @@
     "build": "tsc --project tsconfig.build.json"
   },
   "dependencies": {
+    "fetch-run": "^2.1.1",
     "lodash.mapvalues": "^4.6.0",
     "react-native-col": "next"
   },
@@ -26,7 +27,7 @@
     "type": "git",
     "url": "https://github.com/eightyfive/rnna/tree/master/packages/rnna"
   },
-  "author": "eightyfive",
+  "author": "0x55 <0xfiftyfive@gmail.com>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

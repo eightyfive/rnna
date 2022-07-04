@@ -2,14 +2,13 @@
   "name": "rnna",
   "scripts": {
     "test": "jest",
-    "format": "prettier --write 'navigator/*.js' 'operators.js'",
-    "release": "np --no-2fa --no-release-draft"
+    "release": "np"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eightyfive/rnna.git"
   },
-  "author": "eightyfive",
+  "author": "0x55 <0xfiftyfive@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/eightyfive/rnna/issues"

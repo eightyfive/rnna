@@ -19,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/eightyfive/rnna/tree/master/packages/bundle-router"
   },
-  "author": "eightyfive",
+  "author": "0x55 <0xfiftyfive@gmail.com>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
