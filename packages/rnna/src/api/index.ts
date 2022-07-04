@@ -2,6 +2,8 @@ import { error, logger } from 'fetch-run/use';
 
 import { Api } from './api';
 
+export { HTTPError } from 'fetch-run';
+
 const defaultOptions = {
   headers: {
     'Content-Type': 'application/json',
