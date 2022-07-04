@@ -10,7 +10,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@rnna/http": "latest",
-    "immer": "8.x",
+    "immer": "9.x",
     "reselect": "4.x"
   },
   "peerDependencies": {

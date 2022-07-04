@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@rnna/http/-/http-0.1.1.tgz#872ad4bfbd006a0ee60188bcd4340d18cf377728"
   integrity sha512-TGAWszwyFqwnC2gEDDxbD0Qyl6jryV4oOYqG/YwpV/Ie3Y8AodeDJW9dD2fwG3086I+9x4NzptgINeyk1k37Xw==
 
-immer@8.x:
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.4.tgz#3a21605a4e2dded852fb2afd208ad50969737b7a"
-  integrity sha512-jMfL18P+/6P6epANRvRk6q8t+3gGhqsJ9EuJ25AXE+9bNTYtssvzeYbEd0mXRYWCmmXSIbnlpz6vd6iJlmGGGQ==
+immer@9.x:
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
+  integrity sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==
 
 reselect@4.x:
   version "4.0.0"
