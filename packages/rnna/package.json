@@ -13,12 +13,11 @@
   },
   "dependencies": {
     "fetch-run": "^2.1.1",
-    "lodash.mapvalues": "^4.6.0",
-    "react-native-col": "next"
+    "react-native-col": "^2.0.1",
+    "react-native-themesheet": "^0.0.1"
   },
   "devDependencies": {
-    "@types/lodash.mapvalues": "^4.6.7",
-    "react-native-col": "2.0.0-4"
+    "react-native-col": "^2.0.1"
   },
   "peerDependencies": {
     "react-native": "*"

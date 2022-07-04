@@ -46,10 +46,18 @@ query-string@^7.1.1:
     split-on-first "^1.0.0"
     strict-uri-encode "^2.0.0"
 
-react-native-col@next:
-  version "2.0.0-5"
-  resolved "https://registry.yarnpkg.com/react-native-col/-/react-native-col-2.0.0-5.tgz#8723e81d684ad18f33f254eddc59f9e15004804a"
-  integrity sha512-pld0/6BIQVuuYZRhgjTtp6NigzoSYQKqwGM6nGDflw+XOoSfm8pcIiFb96PeV/QU1tdHLC6EyxgpJTLNLQ+NEw==
+react-native-col@^2.0.0-5, react-native-col@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-col/-/react-native-col-2.0.1.tgz#07d013abaa23557ba46fdf52f57d7be5a8e40e2a"
+  integrity sha512-+fwzvxJHVwXW/xJJtbxfakJ6GhnZFQFOWnWuW4eur087CJOpz2690js0LOzc2aEsbLYOsZv+fYszCJUEyJIwtQ==
+
+react-native-themesheet@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-themesheet/-/react-native-themesheet-0.0.1.tgz#629e4074cd493b3b5204624415872ccc4ef87788"
+  integrity sha512-m+ZWi8WPsBXkWA7iWb6iNZpQ3C/1JOTpUTub1Y9a2/LL7aAYe9Lc/ZzkkLPjFOtkxe+VKeNpytOQTKLJWydArA==
+  dependencies:
+    lodash.mapvalues "^4.6.0"
+    react-native-col "^2.0.0-5"
 
 split-on-first@^1.0.0:
   version "1.1.0"
