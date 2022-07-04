@@ -17,9 +17,6 @@
     "react-native-col": "^2.0.1",
     "react-native-themesheet": "^0.0.1"
   },
-  "devDependencies": {
-    "react-native-col": "^2.0.1"
-  },
   "peerDependencies": {
     "react-native": "*"
   },
