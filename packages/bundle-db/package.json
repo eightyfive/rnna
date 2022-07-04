@@ -10,7 +10,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@rnna/db": "^0.0.18",
-    "immer": "8.x"
+    "immer": "9.x"
   },
   "peerDependencies": {
     "rnna": "*"
