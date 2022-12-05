@@ -2,10 +2,15 @@
 # yarn lockfile v1
 
 
+"@rnna/navigator@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@rnna/navigator/-/navigator-1.0.0.tgz#da19eef8a46f45a4f0db3a1f9d676b7667ac4af8"
+  integrity sha512-rVLJRzp420RVkGU+qKPfnUm3JyA2exBOlbQQGGDZrS2L1Ep4CUQ7KjgvVS1aFABmYVfBx0G5S8YNy4oaJ9CVAA==
+
 decode-uri-component@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
-  integrity sha512-hjf+xovcEn31w/EUYdTXQh/8smFL/dzYjohQGEIgjyNavaJfBY2p5F527Bo1VPATxv0VYTUC2bOcXvqFwk78Og==
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.2.tgz#e69dbe25d37941171dd540e024c444cd5188e1e9"
+  integrity sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==
 
 fetch-run@^2.1.1:
   version "2.1.1"
